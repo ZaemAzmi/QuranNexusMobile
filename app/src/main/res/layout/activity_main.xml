@@ -5,4 +5,81 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"/>
+    tools:context=".MainActivity">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/gradient_background" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="400dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="145dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/AllTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/RecentTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recent" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/SavedSurahTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Saved Surah" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/SavedAyatTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Saved Ayat" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <ImageView
+        android:id="@+id/sideMenuButton"
+        android:layout_width="43dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_menu_24" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/SurahRecyclerView"
+        android:layout_width="368dp"
+        android:layout_height="674dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SearchView
+        android:id="@+id/searchSurahView"
+        android:layout_width="320dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="95dp"
+        android:background="@drawable/search_view_bg"
+        android:queryHint="Find Surah..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="35dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

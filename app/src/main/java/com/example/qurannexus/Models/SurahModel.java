@@ -1,21 +1,29 @@
 package com.example.qurannexus.Models;
 
-import io.realm.RealmObject;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class SurahModel {
-    public SurahModel(String surahName, String arabicSurahName, String surahNumber, String surahMeaning, int ayatNumber) {
+public class SurahModel implements Parcelable {
+    public SurahModel(String surahName,
+                      String arabicSurahName,
+                      String surahNumber,
+                      String surahMeaning,
+                      String ayatNumber,
+                      boolean isBookmarked) {
         this.surahName = surahName;
         this.arabicSurahName = arabicSurahName;
         this.surahNumber = surahNumber;
         this.surahMeaning = surahMeaning;
         this.ayatNumber = ayatNumber;
+        this.isBookmarked = isBookmarked;
     }
+
     String surahName;
     String arabicSurahName;
     String surahNumber;
     String surahMeaning;
-    int ayatNumber;
-
+    String ayatNumber;
+    private boolean isBookmarked;
     public String getSurahName() {
         return surahName;
     }
@@ -48,11 +56,50 @@ public class SurahModel {
         this.surahMeaning = surahMeaning;
     }
 
-    public int getAyatNumber() {
+    public String getAyatNumber() {
         return ayatNumber;
     }
 
-    public void setAyatNumber(int ayatNumber) {
+    public void setAyatNumber(String ayatNumber) {
         this.ayatNumber = ayatNumber;
+    }
+
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
+    }
+    protected SurahModel(Parcel in) {
+        surahName = in.readString();
+        surahMeaning = in.readString();
+        arabicSurahName = in.readString();
+        ayatNumber = in.readString();
+        surahNumber = in.readString();
+    }
+
+    public static final Creator<SurahModel> CREATOR = new Creator<SurahModel>() {
+        @Override
+        public SurahModel createFromParcel(Parcel in) {
+            return new SurahModel(in);
+        }
+
+        @Override
+        public SurahModel[] newArray(int size) {
+            return new SurahModel[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(surahName);
+        dest.writeString(surahMeaning);
+        dest.writeString(arabicSurahName);
+        dest.writeString(ayatNumber);
+        dest.writeString(surahNumber);
     }
 }
