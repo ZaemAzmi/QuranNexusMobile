@@ -17,7 +17,7 @@
         android:layout_marginTop="4dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:cardBackgroundColor="@color/surah_card_dark_green_300"
+        app:cardBackgroundColor="@color/ayah_card_dark_green_400"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.47" >
 
@@ -34,6 +34,7 @@
                 android:layout_marginEnd="28dp"
                 android:maxWidth="300dp"
                 android:text="بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ "
+                android:fontFamily="@font/uthmanic_scripts_hafs"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

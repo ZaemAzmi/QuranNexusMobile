@@ -1,4 +1,4 @@
-package com.example.qurannexus.Models;
+package com.example.qurannexus.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

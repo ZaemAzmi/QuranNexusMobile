@@ -1,0 +1,14 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/recitation_layout_header">
+
+        <SwitchPreferenceCompat
+            app:key="recitation_layout_by_page"
+            app:title="@string/recitation_layout_title"
+            app:summaryOn="@string/recitation_layout_by_page_summary_on"
+            app:summaryOff="@string/recitation_layout_by_page_summary_off"
+            app:defaultValue="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

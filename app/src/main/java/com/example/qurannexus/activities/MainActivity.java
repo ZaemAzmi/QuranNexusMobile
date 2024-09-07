@@ -1,26 +1,27 @@
-package com.example.qurannexus;
+package com.example.qurannexus.activities;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.ToggleButton;
-
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.qurannexus.Models.SurahListAdapter;
-import com.example.qurannexus.Models.SurahModel;
-import com.google.android.material.tabs.TabLayout;
 
+import com.example.qurannexus.R;
+import com.example.qurannexus.models.SurahListAdapter;
+import com.example.qurannexus.models.SurahModel;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import org.bson.Document;
 import java.util.ArrayList;
-import java.util.Objects;
 import io.realm.Realm;
-import io.realm.internal.async.RealmResultTaskImpl;
 import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
@@ -43,12 +44,16 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     int currentTab = 0;
 
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Realm.init(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        setupNavigationDrawer();
 
         tabLayout = findViewById(R.id.tabLayout);
         searchView = findViewById(R.id.searchSurahView);
@@ -179,5 +184,42 @@ public class MainActivity extends AppCompatActivity {
         surahListAdapter = new SurahListAdapter(this, filteredSurahs, layoutType);
         surahRecyclerView.setAdapter(surahListAdapter);
         surahRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void setupNavigationDrawer() {
+        // Set up the side menu button to open the drawer
+        ImageView sideMenuButton = findViewById(R.id.sideMenuButton);
+        drawerLayout = findViewById(R.id.main);
+        navigationView = findViewById(R.id.side_navigation_view);
+        sideMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(navigationView);
+            }
+        });
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                handleNavigationItemSelected(menuItem);
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
+    }
+    private void handleNavigationItemSelected(MenuItem menuItem) {
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.nav_home) {
+
+        } else if (itemId == R.id.nav_settings) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        } else if (itemId == R.id.nav_tajweed) {
+            // Handle the tajweed action
+        }else if(itemId == R.id.nav_test) {
+            Intent intent = new Intent(MainActivity.this, TestActivity.class);
+            startActivity(intent);
+        } else {
+            // Handle default action
+        }
     }
 }

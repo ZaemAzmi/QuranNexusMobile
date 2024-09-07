@@ -1,9 +1,10 @@
-package com.example.qurannexus.Services;
+package com.example.qurannexus.services;
 
 import android.util.Log;
 
-import com.example.qurannexus.Models.AyatModel;
-import com.example.qurannexus.Models.SurahModel;
+import com.example.qurannexus.models.AyatModel;
+import com.example.qurannexus.models.SurahModel;
+import com.example.qurannexus.models.SurahNameModel;
 
 import org.bson.Document;
 
@@ -106,7 +107,34 @@ public class DatabaseService {
 
         return arabicNumber.toString();
     }
+    public void getSurahModelByIndex(int surahIndex, SurahModelCallback callback) {
+        Document query = new Document("surah_index", surahIndex);
+        RealmResultTask<MongoCursor<Document>> findTask = surahCollection.find(query).iterator();
+        findTask.getAsync(task -> {
+            if (task.isSuccess()) {
+                MongoCursor<Document> results = task.get();
+                if (results.hasNext()) {
+                    Document surahDoc = results.next();
+                    SurahNameModel surahModel = new SurahNameModel(
+                            surahDoc.getInteger("index"),
+                            surahDoc.getString("name"),
+                            surahDoc.getString("tname"),
+                            surahDoc.getString("ename")
+                    );
+                    callback.onSurahModelLoaded(surahModel);
+                } else {
+                    callback.onSurahModelLoaded(null);
+                }
+            } else {
+                Log.e(TAG, "Failed to fetch Surah model", task.getError());
+                callback.onSurahModelLoaded(null);
+            }
+        });
+    }
 
+    public interface SurahModelCallback {
+        void onSurahModelLoaded(SurahNameModel surahModel);
+    }
     public void getVersesByAyat(int surahIndex, AyatCallback callback) {
         Document query = new Document("surah_index", surahIndex);
         RealmResultTask<MongoCursor<Document>> findTask = ayahCollection.find(query).iterator();

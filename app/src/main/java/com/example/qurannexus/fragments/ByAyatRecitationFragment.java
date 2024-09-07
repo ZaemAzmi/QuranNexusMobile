@@ -1,7 +1,9 @@
-package com.example.qurannexus.Fragments;
+package com.example.qurannexus.fragments;
 
 import android.os.Bundle;
-import com.example.qurannexus.Services.DatabaseService;
+
+import com.example.qurannexus.models.SurahNameModel;
+import com.example.qurannexus.services.DatabaseService;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,17 +14,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.qurannexus.Models.AyatModel;
-import com.example.qurannexus.Models.SurahModel;
-import com.example.qurannexus.Models.SurahRecitationByAyatAdapter;
+import com.example.qurannexus.models.AyatModel;
+import com.example.qurannexus.models.SurahModel;
+import com.example.qurannexus.models.SurahRecitationByAyatAdapter;
 import com.example.qurannexus.R;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ByAyatRecitationFragment extends Fragment {
     private static final String ARG_SURAH = "surah";
     private SurahModel surahModel;
+    private SurahNameModel surahNameModel;
     private DatabaseService databaseService;
     private ArrayList<AyatModel> ayatModels = new ArrayList<>();
     SurahRecitationByAyatAdapter byAyatAdapter;
@@ -71,5 +73,10 @@ public class ByAyatRecitationFragment extends Fragment {
             ayatModels.addAll(ayatList);
             byAyatAdapter.notifyDataSetChanged();
         });
+    }
+
+    public void updateSurahContent(SurahNameModel newSurahNameModel) {
+        surahNameModel = newSurahNameModel;
+        fetchVersesByAyat(surahNameModel.getSurahIndex());
     }
 }

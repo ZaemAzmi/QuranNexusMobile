@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:textColor="@color/white"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="18dp"
                 android:text="1"
                 android:textSize="65px"
                 app:layout_constraintStart_toStartOf="parent"

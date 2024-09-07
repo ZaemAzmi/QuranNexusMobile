@@ -1,4 +1,4 @@
-package com.example.qurannexus.Fragments;
+package com.example.qurannexus.fragments;
 
 import android.os.Bundle;
 
@@ -12,14 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.qurannexus.Models.SurahModel;
+import com.example.qurannexus.models.SurahModel;
+import com.example.qurannexus.models.SurahNameModel;
 import com.example.qurannexus.R;
-import com.example.qurannexus.Services.DatabaseService;
+import com.example.qurannexus.services.DatabaseService;
 
 public class ByPageRecitationFragment extends Fragment {
     private static final String ARG_SURAH = "surah";
     private DatabaseService databaseService;
     private SurahModel surahModel;
+    private SurahNameModel surahNameModel;
+    private TextView pageTextView;
 
     public static ByPageRecitationFragment newInstance(SurahModel surahModel) {
         ByPageRecitationFragment fragment = new ByPageRecitationFragment();
@@ -41,7 +44,7 @@ public class ByPageRecitationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_by_page_recitation, container, false);
 
-        TextView pageTextView = view.findViewById(R.id.byPageTextView);
+        pageTextView = view.findViewById(R.id.byPageTextView);
         databaseService = new DatabaseService("application-0-plbqdoy", new DatabaseService.DatabaseInitCallback() {
             @Override
             public void onInitSuccess() {
@@ -61,5 +64,10 @@ public class ByPageRecitationFragment extends Fragment {
         databaseService.getCombinedVerses(surahIndex, combinedVerses -> {
             pageTextView.setText(combinedVerses);
         });
+    }
+    public void updateSurahContent(SurahNameModel newSurahNameModel) {
+        surahNameModel = newSurahNameModel;
+        pageTextView = getView().findViewById(R.id.byPageTextView);
+        fetchCombinedVerses(newSurahNameModel.getSurahIndex(), pageTextView);
     }
 }

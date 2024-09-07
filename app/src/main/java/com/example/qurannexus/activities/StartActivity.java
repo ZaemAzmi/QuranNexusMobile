@@ -1,7 +1,10 @@
-package com.example.qurannexus;
+package com.example.qurannexus.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.example.qurannexus.R;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,7 +19,7 @@ public class StartActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent i = new Intent(new Intent(StartActivity.this, com.example.qurannexus.MainActivity.class));
+                Intent i = new Intent(new Intent(StartActivity.this, MainActivity.class));
                 startActivity(i);
                 finish();
             }

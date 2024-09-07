@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.ByPageRecitationFragment">
+    tools:context=".fragments.ByPageRecitationFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:background="@color/ayah_card_dark_green_400"
         >
 
         <TextView
@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="4dp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
+            android:fontFamily="@font/uthmanic_scripts_hafs"
             android:padding="16dp"
             android:textSize="25sp" />
 

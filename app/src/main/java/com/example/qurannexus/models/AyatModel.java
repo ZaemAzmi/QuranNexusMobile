@@ -1,4 +1,4 @@
-package com.example.qurannexus.Models;
+package com.example.qurannexus.models;
 
 public class AyatModel {
     String arabicScript;
