@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">QuranNexus</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Quran Nexus</string>
     <string name="nav_home">Home</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_tajweed">Tajweed Notes</string>
+    <string name="nav_notes">Notes</string>
+    <string name="nav_irab">I\'rab</string>
+    <string name="nav_faqs">FAQS</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>

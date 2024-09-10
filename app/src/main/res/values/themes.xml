@@ -2,11 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.QuranNexus" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
     <style name="Theme.QuranNexus.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:colorPrimaryDark">@color/black</item>
     </style>
-    <style name="Theme.QuranNexus" parent="Base.Theme.QuranNexus" />
+    <style name="Theme.QuranNexus" parent="Base.Theme.QuranNexus">
+        <item name="android:colorPrimaryDark">@color/dark_green_200</item>
+    </style>
 </resources>

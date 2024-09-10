@@ -17,12 +17,6 @@
             android:name=".activities.TestActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.RecitationPageActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.QuranNexus.NoActionBar">
@@ -32,6 +26,7 @@
         </activity>
         <activity
             android:name=".activities.StartActivity"
+            android:theme="@style/Theme.QuranNexus"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

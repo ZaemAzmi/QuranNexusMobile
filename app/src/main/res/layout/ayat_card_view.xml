@@ -49,6 +49,8 @@
                 android:layout_marginBottom="4dp"
                 android:paddingBottom="8dp"
                 android:maxEms="22"
+                android:lineSpacingExtra="5dp"
+                android:lineSpacingMultiplier="1.2"
                 android:singleLine="false"
                 android:text="In the Name of Allah—the Most Compassionate, Most Merciful."
                 android:textColor="@color/white"
