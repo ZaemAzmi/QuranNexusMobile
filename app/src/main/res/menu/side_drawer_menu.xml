@@ -1,54 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/nav_home" />
+        <item
+            android:id="@+id/nav_tajweed"
+            android:icon="@drawable/ic_home"
+            android:title="@string/nav_tajweed" />
+        <item
+            android:id="@+id/nav_notes"
+            android:icon="@drawable/ic_home"
+            android:title="@string/nav_notes" />
+        <item
+            android:id="@+id/nav_irab"
+            android:icon="@drawable/ic_home"
+            android:title="@string/nav_irab" />
 
 
-    <item android:title="Main">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_home"
-                    android:icon="@drawable/baseline_home_24"
-                    android:title="@string/nav_home"
-                    />
-                <item
-                    android:id="@+id/nav_tajweed"
-                    android:icon="@drawable/baseline_home_24"
-                    android:title="@string/nav_tajweed"
-                    />
-                <item
-                    android:id="@+id/nav_notes"
-                    android:icon="@drawable/baseline_home_24"
-                    android:title="@string/nav_notes"
-                    />
-                <item
-                    android:id="@+id/nav_irab"
-                    android:icon="@drawable/baseline_home_24"
-                    android:title="@string/nav_irab"
-                    />
-            </group>
-        </menu>
-    </item>
-
-    <item android:title="Settings">
-        <menu>
-            <group android:checkableBehavior="none">
-                <item
-                    android:id="@+id/nav_faqs"
-                    android:icon="@drawable/baseline_home_24"
-                    android:title="@string/nav_faqs"
-                    />
-                <item
-                    android:id="@+id/nav_test"
-                    android:icon="@drawable/baseline_home_24"
-                    android:title="Test page"
-                    />
-                <item
-                    android:id="@+id/nav_settings"
-                    android:icon="@drawable/baseline_settings_24"
-                    android:title="@string/nav_settings"
-                    />
-            </group>
-        </menu>
-    </item>
+    <item
+        android:id="@+id/nav_faqs"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_faqs" />
+    <item
+        android:id="@+id/nav_test"
+        android:icon="@drawable/ic_home"
+        android:title="Test page" />
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/nav_settings" />
 
 </menu>

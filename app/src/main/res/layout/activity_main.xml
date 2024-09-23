@@ -7,41 +7,42 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/imageView"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/gradient_background" />
+        android:background="@drawable/gradient_background"
+        >
 
-    <ImageView
-        android:id="@+id/sideMenuButton"
-        android:layout_width="43dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="26dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_menu_24" />
+        <ImageView
+            android:id="@+id/sideMenuButton"
+            android:layout_width="43dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="30dp"
+            app:srcCompat="@drawable/ic_menu" />
 
         <FrameLayout
             android:id="@+id/mainFragmentContainer"
+            android:name="com.example.qurannexus.fragments.HomeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.qurannexus.fragments.HomeFragment"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/fragment_home"
-            >
-        </FrameLayout>
+            tools:layout="@layout/fragment_home" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.etebarian.meowbottomnavigation.MeowBottomNavigation
+            android:id="@+id/meowBottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mbn_backgroundBottomColor="@color/white"
+            app:mbn_circleColor="@color/light_green_side_nav"
+            app:mbn_countTextColor="@color/light_green_side_nav"
+            app:mbn_defaultIconColor="#90a4ae"
+            android:layout_gravity="bottom"
+            app:mbn_rippleColor="@color/dark_green_200"
+            app:mbn_selectedIconColor="@color/light_green_100"
+            app:mbn_shadowColor="#1f212121" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/side_navigation_view"
         android:layout_width="wrap_content"

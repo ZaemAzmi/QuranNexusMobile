@@ -1,16 +1,28 @@
 package com.example.qurannexus.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.qurannexus.R;
+import com.example.qurannexus.enums.BottomMenuItemId;
 import com.example.qurannexus.fragments.HomeFragment;
+import com.example.qurannexus.fragments.IrabFragment;
 import com.example.qurannexus.fragments.SettingsFragment;
+import com.example.qurannexus.fragments.TajweedFragment;
+import com.example.qurannexus.services.UIService;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import io.realm.Realm;
@@ -26,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Realm.init(this);
         setupNavigationDrawer();
-
-        // Initially load HomeFragment
+        setupMeowNavigationBar();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.mainFragmentContainer, new HomeFragment())
@@ -43,13 +54,13 @@ public class MainActivity extends AppCompatActivity {
         sideMenuButton.setOnClickListener(v -> drawerLayout.openDrawer(navigationView));
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
-            handleNavigationItemSelected(menuItem);
+            handleSideNavigationItemSelected(menuItem);
             drawerLayout.closeDrawers();
             return true;
         });
     }
 
-    private void handleNavigationItemSelected(MenuItem menuItem) {
+    private void handleSideNavigationItemSelected(MenuItem menuItem) {
         int itemId = menuItem.getItemId();
         Fragment selectedFragment = null;
 
@@ -57,13 +68,70 @@ public class MainActivity extends AppCompatActivity {
             selectedFragment = new HomeFragment();
         } else if (itemId == R.id.nav_settings) {
             selectedFragment = new SettingsFragment();
-        } else if (itemId == R.id.nav_tajweed) {
+        }  else if (itemId == R.id.nav_irab) {
+            selectedFragment = new IrabFragment();
+        }else if (itemId == R.id.nav_tajweed) {
+        }else if (itemId == R.id.nav_test) {
+            Intent i = new Intent(new Intent(MainActivity.this, TestActivity.class));
+            startActivity(i);
         }
 
         if (selectedFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.mainFragmentContainer, selectedFragment)
-                    .commit();
+          loadFragment(selectedFragment);
         }
+    }
+
+
+    private void setupMeowNavigationBar(){
+
+        MeowBottomNavigation meowBottomNavigation = findViewById(R.id.meowBottomNav);
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.HOME.getId(), R.drawable.ic_home));
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.TAJWEED.getId(), R.drawable.ic_home));
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.IRAB.getId(), R.drawable.ic_home));
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.TEST.getId(), R.drawable.ic_home));
+
+        meowBottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
+            @Override
+            public void onClickItem(MeowBottomNavigation.Model model) {
+                Fragment selectedFragment = null;
+
+                switch (BottomMenuItemId.fromId(model.getId())) {
+                    case HOME:
+                        selectedFragment = new HomeFragment();
+                        break;
+                    case IRAB:
+                        selectedFragment = new IrabFragment();
+                        break;
+                    case TAJWEED:
+                        selectedFragment = new TajweedFragment();
+                        break;
+                    case TEST:
+                        break;
+                }
+
+                if (selectedFragment != null) {
+                    loadFragment(selectedFragment); // Method to load the fragment
+                }
+            }
+        });
+        meowBottomNavigation.setOnReselectListener(new MeowBottomNavigation.ReselectListener() {
+            @Override
+            public void onReselectItem(MeowBottomNavigation.Model model) {
+                // Optionally handle reselection (e.g., scroll to the top of the fragment)
+                // If you don't need special behavior, leave this empty.
+            }
+        });
+        meowBottomNavigation.setOnShowListener(new MeowBottomNavigation.ShowListener() {
+            @Override
+            public void onShowItem(MeowBottomNavigation.Model model) {
+
+            }
+        });
+    }
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainFragmentContainer, fragment)
+                .commit();
     }
 }

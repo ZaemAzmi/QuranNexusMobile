@@ -40,9 +40,9 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
         holder.ayatNumber.setText(ayatModel.ayatNumber);
 
         if (ayatModel.isBookmarked()) {
-            holder.ayatCardBookmarkIcon.setImageResource(R.drawable.bookmarked); // Replace with your bookmarked icon
+            holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmarked); // Replace with your bookmarked icon
         } else {
-            holder.ayatCardBookmarkIcon.setImageResource(R.drawable.bookmark); // Replace with your unbookmarked icon
+            holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark); // Replace with your unbookmarked icon
         }
         holder.ayatCardBookmarkIcon.setOnClickListener(v -> {
             int surahIndex = ayatModel.getSurahIndex();
@@ -53,7 +53,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
                 databaseService.removeBookmark(surahIndex, ayatIndex, success -> {
                     if (success) {
                         ayatModel.setBookmarked(false);
-                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.bookmark); // Replace with your unbookmarked icon
+                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark); // Replace with your unbookmarked icon
                         Toast.makeText(context, "Bookmark removed", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context, "Failed to remove bookmark", Toast.LENGTH_SHORT).show();
@@ -64,7 +64,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
                 databaseService.addBookmark(surahIndex, ayatIndex, success -> {
                     if (success) {
                         ayatModel.setBookmarked(true);
-                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.bookmarked); // Replace with your bookmarked icon
+                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmarked); // Replace with your bookmarked icon
                         Toast.makeText(context, "Bookmark added", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context, "Failed to add bookmark", Toast.LENGTH_SHORT).show();

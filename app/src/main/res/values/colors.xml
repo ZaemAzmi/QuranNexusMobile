@@ -7,4 +7,10 @@
     <color name="surah_card_dark_green_300">#003F30</color>
     <color name="ayah_card_dark_green_400">#0C2414</color>
     <color name="light_green_side_nav">#C6FFD9</color>
+    <color name="bottom_nav_dark_green">#004337</color>
+
+    <!-- bottom navigation selected icon colors -->
+    <color name="selected_color">#108A83</color>
+    <color name="unselected_color">#FFFFFFFF</color>
+    <color name="selected_item_circle_color">#C6FFD9</color>
 </resources>
