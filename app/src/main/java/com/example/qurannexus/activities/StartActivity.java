@@ -19,7 +19,7 @@ public class StartActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent i = new Intent(new Intent(StartActivity.this, MainActivity.class));
+                Intent i = new Intent(new Intent(StartActivity.this, AuthActivity.class));
                 startActivity(i);
                 finish();
             }

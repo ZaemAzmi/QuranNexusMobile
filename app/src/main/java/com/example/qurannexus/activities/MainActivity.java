@@ -1,14 +1,15 @@
 package com.example.qurannexus.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupMeowNavigationBar(){
 
         MeowBottomNavigation meowBottomNavigation = findViewById(R.id.meowBottomNav);
+
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.HOME.getId(), R.drawable.ic_home));
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.TAJWEED.getId(), R.drawable.ic_home));
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.IRAB.getId(), R.drawable.ic_home));

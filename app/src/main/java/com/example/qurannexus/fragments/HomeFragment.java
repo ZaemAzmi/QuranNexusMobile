@@ -2,34 +2,28 @@ package com.example.qurannexus.fragments;
 
 import android.os.Bundle;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import androidx.activity.EdgeToEdge;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
-import com.example.qurannexus.fragments.HomeFragment;
-import com.example.qurannexus.fragments.SettingsFragment;
+import com.example.qurannexus.interfaces.QuranApi;
 import com.example.qurannexus.models.SurahListAdapter;
 import com.example.qurannexus.models.SurahModel;
-import com.google.android.material.navigation.NavigationView;
+import com.example.qurannexus.services.ApiService;
 import com.google.android.material.tabs.TabLayout;
 import org.bson.Document;
 import java.util.ArrayList;
-import io.realm.Realm;
+import java.util.List;
+
 import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
@@ -39,6 +33,9 @@ import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
 import io.realm.mongodb.mongo.iterable.MongoCursor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
@@ -53,6 +50,7 @@ public class HomeFragment extends Fragment {
     SearchView searchView;
     int currentTab = 0;
 
+    private QuranApi quranApi;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,8 +61,9 @@ public class HomeFragment extends Fragment {
 
         setupTabLayout();
         setupSearchView();
-        setUpSurahListModels();
-
+//        setUpSurahListModels();
+        quranApi = ApiService.getClient().create(QuranApi.class);
+        fetchSurahs();
         return view;
     }
 
@@ -126,7 +125,7 @@ public class HomeFragment extends Fragment {
         }
 
         for (SurahModel surah : currentList) {
-            if (surah.getSurahName().toLowerCase().contains(query)) {
+            if (surah.getName().toLowerCase().contains(query)) {
                 filteredSurahModels.add(surah);
             }
         }
@@ -173,11 +172,46 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
     private void updateUI(ArrayList<SurahModel> filteredSurahs) {
         RecyclerView surahRecyclerView = getView().findViewById(R.id.SurahRecyclerView);
         surahListAdapter = new SurahListAdapter(requireActivity(), filteredSurahs, layoutType);
         surahRecyclerView.setAdapter(surahListAdapter);
         surahRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
+
+    private void fetchSurahs() {
+        Call<List<SurahModel>> call = quranApi.getAllSurahs();
+        call.enqueue(new Callback<List<SurahModel>>() {
+            @Override
+            public void onResponse(Call<List<SurahModel>> call, Response<List<SurahModel>> response) {
+                if (response.isSuccessful()) {
+                    List<SurahModel> surahList = response.body();
+
+                    Log.d("API_RESPONSE", "Response: " + surahList.toString());
+                    if (surahList != null) {
+                        surahModels.clear();
+                        surahModels.addAll(surahList);
+
+                        // Check if adapter is already set
+                        if (surahListAdapter == null) {
+                            // Initialize the adapter for the first time
+                            RecyclerView surahRecyclerView = getView().findViewById(R.id.SurahRecyclerView);
+                            surahListAdapter = new SurahListAdapter(requireActivity(), surahModels, layoutType);
+                            surahRecyclerView.setAdapter(surahListAdapter);
+                            surahRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        } else {
+                            // Adapter exists, just update the data
+                            surahListAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SurahModel>> call, Throwable t) {
+                // Handle API call failure
+            }
+        });
+    }
+
 }

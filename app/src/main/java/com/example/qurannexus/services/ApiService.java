@@ -12,54 +12,20 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class ApiService {
-    private RequestQueue requestQueue;
-    private static ApiService instance;
 
-    private ApiService(Context context) {
-        requestQueue = Volley.newRequestQueue(context.getApplicationContext());
-    }
+    private static Retrofit retrofit = null;
 
-    public static synchronized ApiService getInstance(Context context) {
-        if (instance == null) {
-            instance = new ApiService(context);
+    public static Retrofit getClient() {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("http://10.0.2.2:8000") // Your base URL
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
         }
-        return instance;
-    }
-
-    public void getStringResponse(String url, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        listener.onResponse(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-
-        requestQueue.add(stringRequest);
-    }
-
-    public void getJsonResponse(String url, final Response.Listener<JSONObject> listener, final Response.ErrorListener errorListener) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        listener.onResponse(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-
-        requestQueue.add(jsonObjectRequest);
+        return retrofit;
     }
 }

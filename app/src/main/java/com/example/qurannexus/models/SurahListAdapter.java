@@ -37,7 +37,7 @@ public class SurahListAdapter extends RecyclerView.Adapter<SurahListAdapter.MyVi
         // assign values to the views created in the recycler view row layout file based on the position of the RV
         SurahModel surahModel = surahModels.get(position);
         String tempAyatNumber = surahModel.getAyatNumber()+" Ayahs";
-        holder.surahName.setText(surahModel.getSurahName());
+        holder.surahName.setText(surahModel.getName());
         holder.surahMeaning.setText(surahModel.getSurahMeaning());
         holder.arabicSurahName.setText(surahModel.getArabicSurahName());
         holder.ayatNumber.setText(tempAyatNumber);

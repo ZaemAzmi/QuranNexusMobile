@@ -14,8 +14,15 @@
     <string name="surah_name_placeholder">Al-Fatihah</string>
     <string name="english_surah_name_placeholder">The Opening</string>
 
+    <!-- Buttons Titles -->
+
     <string name="next_surah_button">Next Surah</string>
     <string name="previous_surah_button">Previous Surah</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Create Account</string>
+
+    <string name="create_account_button">Create Account</string>
+
 
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="recitation_layout_header">Recitation Layout</string>

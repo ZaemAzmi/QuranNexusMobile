@@ -3,33 +3,39 @@ package com.example.qurannexus.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SurahModel implements Parcelable {
     public SurahModel(String surahName,
                       String arabicSurahName,
                       String surahNumber,
                       String surahMeaning,
-                      String ayatNumber,
+                      String numberOfAyahs,
                       boolean isBookmarked) {
         this.surahName = surahName;
         this.arabicSurahName = arabicSurahName;
         this.surahNumber = surahNumber;
         this.surahMeaning = surahMeaning;
-        this.ayatNumber = ayatNumber;
+        this.ayatNumber = numberOfAyahs;
         this.isBookmarked = isBookmarked;
     }
-
+    @SerializedName("tname")
     String surahName;
+    @SerializedName("name")
     String arabicSurahName;
+    @SerializedName("_id")
     String surahNumber;
+    @SerializedName("ename")
     String surahMeaning;
+    @SerializedName("ayas")
     String ayatNumber;
     private boolean isBookmarked;
-    public String getSurahName() {
+    public String getName() {
         return surahName;
     }
 
-    public void setSurahName(String surahName) {
-        this.surahName = surahName;
+    public void setName(String name) {
+        this.surahName = name;
     }
 
     public String getArabicSurahName() {
@@ -101,5 +107,10 @@ public class SurahModel implements Parcelable {
         dest.writeString(arabicSurahName);
         dest.writeString(ayatNumber);
         dest.writeString(surahNumber);
+    }
+
+    @Override
+    public String toString(){
+       return "Surah " + surahNumber + ": " + surahName;
     }
 }

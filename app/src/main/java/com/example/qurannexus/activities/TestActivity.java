@@ -21,7 +21,6 @@ import com.example.qurannexus.fragments.SettingsFragment;
 import com.example.qurannexus.fragments.TajweedFragment;
 import com.example.qurannexus.interfaces.JokeApi;
 import com.example.qurannexus.models.Joke;
-import com.example.qurannexus.services.ApiService;
 import com.example.qurannexus.services.UIService;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -64,60 +63,5 @@ public class TestActivity extends AppCompatActivity {
         });
 
     }
-
-    protected final int home=1;
-    protected final int irab=2;
-    protected final int tajweed=3;
-    protected final int test=4;
-
-//    private void setupMeow(){
-//        MeowBottomNavigation meowBottomNavigation = findViewById(R.id.meowNavTest);
-//        meowBottomNavigation.add(new MeowBottomNavigation.Model(home, R.drawable.ic_home));
-//        meowBottomNavigation.add(new MeowBottomNavigation.Model(irab, R.drawable.ic_home));
-//        meowBottomNavigation.add(new MeowBottomNavigation.Model(tajweed, R.drawable.ic_home));
-//        meowBottomNavigation.add(new MeowBottomNavigation.Model(test, R.drawable.ic_home));
-//
-//        meowBottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
-//            @Override
-//            public void onClickItem(MeowBottomNavigation.Model model) {
-//                Toast.makeText(TestActivity.this, "Item click: " + model.getId(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        meowBottomNavigation.setOnShowListener(new MeowBottomNavigation.ShowListener() {
-//            Fragment selectedFragment = null;
-//            @Override
-//            public void onShowItem(MeowBottomNavigation.Model model) {
-//                String name = "";
-//                switch (model.getId()) {
-//                    case home:
-//                        selectedFragment = new HomeFragment();
-//                        break;
-//                    case irab:
-//                        selectedFragment = new IrabFragment();
-//                        break;
-//                    case tajweed:
-//                        selectedFragment = new TajweedFragment();
-//                        break;
-//                    case test:
-//                        Intent i = new Intent(new Intent(TestActivity.this, TestActivity.class));
-//                        startActivity(i);
-//                        break;
-//                }
-//                loadFragment(selectedFragment);
-//            }
-//        });
-//    }
-//
-//    private void loadFragment(Fragment fragment) {
-//        if (fragment == null) {
-//            Toast.makeText(this, "Error: Fragment is null", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.mainFragmentContainer, fragment)
-//                .commit();
-//    }
 
 }
