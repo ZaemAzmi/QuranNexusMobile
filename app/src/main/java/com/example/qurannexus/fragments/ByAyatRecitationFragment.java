@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.example.qurannexus.models.AyatModel;
 import com.example.qurannexus.models.SurahModel;
-import com.example.qurannexus.models.SurahRecitationByAyatAdapter;
+import com.example.qurannexus.models.adapters.SurahRecitationByAyatAdapter;
 import com.example.qurannexus.R;
 
 import java.util.ArrayList;

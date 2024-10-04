@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.interfaces.QuranApi;
-import com.example.qurannexus.models.SurahListAdapter;
+import com.example.qurannexus.models.adapters.SurahListAdapter;
 import com.example.qurannexus.models.SurahModel;
 import com.example.qurannexus.services.ApiService;
 import com.google.android.material.tabs.TabLayout;
@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment {
+public class SurahListFragment extends Fragment {
 
     String appID = "application-0-plbqdoy";
     MongoClient mongoClient;
@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_surah_list, container, false);
 
         tabLayout = view.findViewById(R.id.tabLayout);
         searchView = view.findViewById(R.id.searchSurahView);
@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
         setupTabLayout();
         setupSearchView();
 //        setUpSurahListModels();
-        quranApi = ApiService.getClient().create(QuranApi.class);
+        quranApi = ApiService.getQuranClient().create(QuranApi.class);
         fetchSurahs();
         return view;
     }

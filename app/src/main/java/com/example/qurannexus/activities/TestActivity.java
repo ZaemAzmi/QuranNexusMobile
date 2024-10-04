@@ -1,32 +1,15 @@
 package com.example.qurannexus.activities;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.qurannexus.R;
-import com.example.qurannexus.fragments.HomeFragment;
-import com.example.qurannexus.fragments.IrabFragment;
-import com.example.qurannexus.fragments.SettingsFragment;
-import com.example.qurannexus.fragments.TajweedFragment;
 import com.example.qurannexus.interfaces.JokeApi;
 import com.example.qurannexus.models.Joke;
-import com.example.qurannexus.services.UIService;
-import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;

@@ -26,13 +26,13 @@
             android:name="com.example.qurannexus.fragments.HomeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_home" />
+            tools:layout="@layout/fragment_surah_list" />
 
         <com.etebarian.meowbottomnavigation.MeowBottomNavigation
             android:id="@+id/meowBottomNav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:mbn_backgroundBottomColor="@color/white"
+            app:mbn_backgroundBottomColor="@color/highlighted_background"
             app:mbn_circleColor="@color/dark_green_200"
             app:mbn_countTextColor="@color/light_green_side_nav"
             app:mbn_defaultIconColor="#90a4ae"

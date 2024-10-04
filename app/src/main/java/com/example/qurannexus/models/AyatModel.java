@@ -1,9 +1,9 @@
 package com.example.qurannexus.models;
 
 public class AyatModel {
-    String arabicScript;
-    String englishTranslation;
-    String ayatNumber;
+    public String arabicScript;
+    public String englishTranslation;
+    public String ayatNumber;
     int ayatIndex;
     int surahIndex;
     boolean isBookmarked;

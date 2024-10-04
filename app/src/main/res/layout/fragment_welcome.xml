@@ -10,25 +10,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <Button
             android:id="@+id/welcomePageLoginButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
-            android:layout_marginTop="183dp"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="296dp"
+            android:backgroundTint="@color/white"
             android:text="@string/login_button"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-
         <Button
             android:id="@+id/welcomePageRegisterButton"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="412dp"
+            android:backgroundTint="@color/light_green_button"
+            android:text="@string/register_button"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
-            android:layout_marginTop="309dp"
-            android:text="@string/register_button"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="116dp"
+            android:text="السَّلَامُ عَلَيْكُمْ "
+            android:textSize="40sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -17,15 +17,28 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
 
-    private static Retrofit retrofit = null;
+    private static Retrofit quranRetrofit = null;
+    private static Retrofit prayerTimesRetrofit = null;
+    private static final String LOCAL_API_URL = "http://10.0.2.2:8000";
+    private static final String PRAYER_TIMES_API_URL = "https://api.aladhan.com/";
 
-    public static Retrofit getClient() {
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
-                    .baseUrl("http://10.0.2.2:8000") // Your base URL
+    public static Retrofit getQuranClient() {
+        if (quranRetrofit == null) {
+            quranRetrofit = new Retrofit.Builder()
+                    .baseUrl(LOCAL_API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-        return retrofit;
+        return quranRetrofit;
+    }
+
+    public static Retrofit getPrayerTimesClient() {
+        if (prayerTimesRetrofit == null) {
+            prayerTimesRetrofit = new Retrofit.Builder()
+                    .baseUrl(PRAYER_TIMES_API_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return prayerTimesRetrofit;
     }
 }

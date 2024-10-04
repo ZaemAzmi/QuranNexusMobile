@@ -1,15 +1,11 @@
 package com.example.qurannexus.activities;
 
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -17,13 +13,11 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.qurannexus.R;
 import com.example.qurannexus.enums.BottomMenuItemId;
 import com.example.qurannexus.fragments.HomeFragment;
+import com.example.qurannexus.fragments.PrayerTimesFragment;
+import com.example.qurannexus.fragments.SurahListFragment;
 import com.example.qurannexus.fragments.IrabFragment;
 import com.example.qurannexus.fragments.SettingsFragment;
 import com.example.qurannexus.fragments.TajweedFragment;
-import com.example.qurannexus.services.UIService;
-import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import io.realm.Realm;
@@ -66,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment selectedFragment = null;
 
         if (itemId == R.id.nav_home) {
-            selectedFragment = new HomeFragment();
+            selectedFragment = new SurahListFragment();
         } else if (itemId == R.id.nav_settings) {
             selectedFragment = new SettingsFragment();
         }  else if (itemId == R.id.nav_irab) {
@@ -102,12 +96,13 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new HomeFragment();
                         break;
                     case IRAB:
-                        selectedFragment = new IrabFragment();
+                        selectedFragment = new SurahListFragment();
                         break;
                     case TAJWEED:
                         selectedFragment = new TajweedFragment();
                         break;
                     case TEST:
+                        selectedFragment = new PrayerTimesFragment();
                         break;
                 }
 

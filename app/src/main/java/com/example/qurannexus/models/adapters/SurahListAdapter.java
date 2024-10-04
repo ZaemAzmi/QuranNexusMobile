@@ -1,4 +1,4 @@
-package com.example.qurannexus.models;
+package com.example.qurannexus.models.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.fragments.RecitationPageFragment;
+import com.example.qurannexus.models.SurahModel;
 
 import java.util.ArrayList;
 

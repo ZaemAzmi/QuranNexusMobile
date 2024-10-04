@@ -1,4 +1,4 @@
-package com.example.qurannexus.models;
+package com.example.qurannexus.models.adapters;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.qurannexus.R;
+import com.example.qurannexus.models.AyatModel;
 import com.example.qurannexus.services.DatabaseService;
 
 import java.util.ArrayList;
