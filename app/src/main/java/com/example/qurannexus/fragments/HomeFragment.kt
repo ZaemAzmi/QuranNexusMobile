@@ -5,7 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager2.widget.ViewPager2
 import com.example.qurannexus.R
+import com.example.qurannexus.models.adapters.DailyInspirationAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -21,18 +27,39 @@ class HomeFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
+    private val quotes = listOf(
+        "And those who strive for Us- We will surely guide them to Our ways.",
+        "Indeed, Allah is with those who fear Him and those who are doers of good.",
+        "So remember Me; I will remember you."
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        viewPager = view.findViewById(R.id.viewPager)
+        tabLayout = view.findViewById(R.id.tabLayout)
+
+        val adapter = DailyInspirationAdapter(quotes)
+        viewPager.adapter = adapter
+
+        // Setup dots indicator with TabLayout and ViewPager2
+        TabLayoutMediator(tabLayout, viewPager) { _, _ -> }.attach()
+
+        return view
     }
 
     companion object {
