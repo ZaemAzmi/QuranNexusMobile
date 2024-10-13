@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.qurannexus.R;
 import com.example.qurannexus.enums.BottomMenuItemId;
+import com.example.qurannexus.fragments.BookmarkFragment;
 import com.example.qurannexus.fragments.HomeFragment;
 import com.example.qurannexus.fragments.PrayerTimesFragment;
 import com.example.qurannexus.fragments.SurahListFragment;
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new SurahListFragment();
                         break;
                     case TAJWEED:
-                        selectedFragment = new TajweedFragment();
+                        selectedFragment = new BookmarkFragment();
                         break;
                     case TEST:
                         selectedFragment = new PrayerTimesFragment();

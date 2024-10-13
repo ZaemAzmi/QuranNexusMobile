@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background" >
+    android:background="@drawable/bg_gradient" >
 
     <ImageView
         android:id="@+id/wave"
@@ -13,7 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/wave" />
+        app:srcCompat="@drawable/bg_wave" />
 
     <TextView
         android:id="@+id/Title"

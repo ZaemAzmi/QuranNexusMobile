@@ -19,7 +19,7 @@ class DailyInspirationAdapter(private val inspirationQuoteList: List<String>) :
     }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InspirationViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.quote_card_item, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.card_item_daily_quote, parent, false)
             return InspirationViewHolder(view)
         }
 

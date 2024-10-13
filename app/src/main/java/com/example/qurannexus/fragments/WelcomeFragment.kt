@@ -1,18 +1,21 @@
 package com.example.qurannexus.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.example.qurannexus.R
+import com.example.qurannexus.activities.MainActivity
 
 class WelcomeFragment : Fragment() {
 
     private lateinit var loginButton : Button
     private lateinit var registerButon : Button
-
+    private lateinit var skipText : TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -28,7 +31,13 @@ class WelcomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_welcome, container, false)
         loginButton = view.findViewById(R.id.welcomePageLoginButton)
         registerButon = view.findViewById(R.id.welcomePageRegisterButton)
+        skipText = view.findViewById(R.id.skipTextView)
 
+        skipText.setOnClickListener{
+            val intent = Intent(context, MainActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        }
         loginButton.setOnClickListener{
             navigateToFragment(LoginFragment())
         }

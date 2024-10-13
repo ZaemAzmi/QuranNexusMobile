@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,14 +16,13 @@ import com.example.qurannexus.R
 import com.example.qurannexus.models.PrayerTime
 import com.example.qurannexus.models.PrayerTimesResponse
 import com.example.qurannexus.models.adapters.PrayerTimesAdapter
-import com.example.qurannexus.services.ApiService
+import com.example.qurannexus.services.retrofit.ApiService
 // Ensure you import the correct Retrofit callback
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Arrays
 
 
 class PrayerTimesFragment : Fragment() {

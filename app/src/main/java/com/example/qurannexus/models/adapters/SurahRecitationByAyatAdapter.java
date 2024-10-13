@@ -29,7 +29,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
     @Override
     public SurahRecitationByAyatAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.ayat_card_view, parent, false);
+        View view = inflater.inflate(R.layout.card_item_single_ayat, parent, false);
         return new SurahRecitationByAyatAdapter.MyViewHolder(view);
     }
 

@@ -29,7 +29,7 @@ public class SurahListAdapter extends RecyclerView.Adapter<SurahListAdapter.MyVi
     @Override
     public SurahListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(fragmentActivity);
-        View view = inflater.inflate(R.layout.surah_card_view, parent, false);
+        View view = inflater.inflate(R.layout.card_item_single_surah, parent, false);
         return new SurahListAdapter.MyViewHolder(view);
     }
 

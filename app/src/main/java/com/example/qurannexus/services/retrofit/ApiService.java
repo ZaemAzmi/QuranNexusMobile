@@ -1,4 +1,4 @@
-package com.example.qurannexus.services;
+package com.example.qurannexus.services.retrofit;
 
 import android.content.Context;
 

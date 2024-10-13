@@ -29,13 +29,13 @@
                 android:id="@+id/ArabicScriptTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:textSize="20sp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="28dp"
+                android:fontFamily="@font/uthmanic_scripts_hafs"
                 android:maxWidth="300dp"
                 android:text="بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ "
-                android:fontFamily="@font/uthmanic_scripts_hafs"
                 android:textColor="@color/white"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,43 +44,79 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginTop="40dp"
                 android:layout_marginBottom="4dp"
-                android:paddingBottom="8dp"
-                android:maxEms="22"
                 android:lineSpacingExtra="5dp"
                 android:lineSpacingMultiplier="1.2"
+                android:maxEms="22"
+                android:paddingBottom="8dp"
                 android:singleLine="false"
                 android:text="In the Name of Allah—the Most Compassionate, Most Merciful."
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ArabicScriptTV"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <TextView
-                android:id="@+id/AyatNumberByAyatTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="16dp"
-                android:text="1 : 1"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/ayatCardBookmarkIcon"
-                android:layout_width="20dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="44dp"
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_bookmark" />
+                app:layout_constraintTop_toBottomOf="@+id/EnglishTranslationTV"
+                >
+                <TextView
+                    android:id="@+id/AyatNumberByAyatTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:text="1 : 1"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ayatCardBookmarkIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="100dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_bookmark" />
+
+                <ImageView
+                    android:id="@+id/ayatCardAudioRecitationIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="40dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_play_audio" />
+
+                <ImageView
+                    android:id="@+id/ayatCardAddNotesIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="40dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_add_notes" />
+
+                <ImageView
+                    android:id="@+id/ayatCardShareIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="40dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_share" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

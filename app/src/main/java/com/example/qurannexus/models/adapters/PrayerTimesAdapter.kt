@@ -16,7 +16,7 @@ class PrayerTimesAdapter(private val prayerTimes: List<PrayerTime>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrayerTimeViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.prayer_time_card_view, parent, false)
+            .inflate(R.layout.card_item_prayer_time, parent, false)
         return PrayerTimeViewHolder(view)
     }
 
