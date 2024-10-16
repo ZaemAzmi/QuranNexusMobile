@@ -14,13 +14,14 @@ import com.example.qurannexus.fragments.RecitationPageFragment;
 import com.example.qurannexus.models.SurahModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SurahListAdapter extends RecyclerView.Adapter<SurahListAdapter.MyViewHolder> {
     Context context;
     FragmentActivity fragmentActivity;
-    ArrayList<SurahModel> surahModels;
+    List<SurahModel> surahModels;
     String layoutType;
-    public SurahListAdapter(FragmentActivity fragmentActivity, ArrayList<SurahModel> surahModels, String layoutType){
+    public SurahListAdapter(FragmentActivity fragmentActivity, List<SurahModel> surahModels, String layoutType){
         this.fragmentActivity = fragmentActivity;
         this.surahModels = surahModels;
         this.layoutType = layoutType;

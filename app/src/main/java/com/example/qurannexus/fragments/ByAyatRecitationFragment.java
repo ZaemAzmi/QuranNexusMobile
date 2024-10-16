@@ -1,38 +1,50 @@
 package com.example.qurannexus.fragments;
 
 import android.os.Bundle;
-
-import com.example.qurannexus.models.SurahNameModel;
-import com.example.qurannexus.services.DatabaseService;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.qurannexus.R;
+import com.example.qurannexus.interfaces.QuranApi;
+import com.example.qurannexus.models.Ayah;
+import com.example.qurannexus.models.AyahRecitationModel;
 import com.example.qurannexus.models.AyatModel;
 import com.example.qurannexus.models.SurahModel;
+import com.example.qurannexus.models.SurahNameModel;
+import com.example.qurannexus.models.AyahRecitationModel;
 import com.example.qurannexus.models.adapters.SurahRecitationByAyatAdapter;
-import com.example.qurannexus.R;
+import com.example.qurannexus.services.retrofit.ApiService;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ByAyatRecitationFragment extends Fragment {
-    private static final String ARG_SURAH = "surah";
+    private static final String ARG_SURAH_NUMBER = "surah_number";
     private SurahModel surahModel;
-    private SurahNameModel surahNameModel;
-    private DatabaseService databaseService;
-    private ArrayList<AyatModel> ayatModels = new ArrayList<>();
+    private int surahNumber;
+    private ArrayList<Ayah> ayatModels = new ArrayList<>();
     SurahRecitationByAyatAdapter byAyatAdapter;
+    RecyclerView byAyatRecyclerView;
+    private QuranApi quranApi;
     public ByAyatRecitationFragment() {}
-    public static ByAyatRecitationFragment newInstance(SurahModel surahModel) {
+    public static ByAyatRecitationFragment newInstance(int surahNumber) {
         ByAyatRecitationFragment fragment = new ByAyatRecitationFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_SURAH, surahModel);
+//        args.putParcelable(ARG_SURAH, surahModel);
+        Log.e("inside byayat fragment","surahNumber;"+surahNumber);
+        args.putInt(ARG_SURAH_NUMBER, surahNumber);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,43 +52,62 @@ public class ByAyatRecitationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            surahModel = getArguments().getParcelable(ARG_SURAH);
+            surahNumber = getArguments().getInt(ARG_SURAH_NUMBER);
         }
+        quranApi = ApiService.getQuranClient().create(QuranApi.class);
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_by_ayat_recitation, container, false);
 
-        RecyclerView byAyatRecyclerView = view.findViewById(R.id.byAyatRecyclerView);
+        byAyatRecyclerView = view.findViewById(R.id.byAyatRecyclerView);
         byAyatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        databaseService = new DatabaseService("application-0-plbqdoy", new DatabaseService.DatabaseInitCallback() {
-            @Override
-            public void onInitSuccess() {
-                byAyatAdapter = new SurahRecitationByAyatAdapter(getContext(), ayatModels, databaseService);
-                byAyatRecyclerView.setAdapter(byAyatAdapter);
-                if (surahModel != null) {
-                    fetchVersesByAyat(Integer.parseInt(surahModel.getSurahNumber()));
-                }
-            }
-            @Override
-            public void onInitFailure(Throwable error) {
-                Log.e("ByAyatRecitationFragment", "Database initialization failed", error);
-            }
-        });
+        byAyatAdapter = new SurahRecitationByAyatAdapter(getContext(), ayatModels);
+        byAyatRecyclerView.setAdapter(byAyatAdapter);
+
+        if (surahNumber != 0) {
+            fetchVersesByAyat(surahNumber);
+        }
         return view;
     }
 
-    private void fetchVersesByAyat(int surahIndex){
-        databaseService.getVersesByAyat(surahIndex, ayatList-> {
-            ayatModels.clear();
-            ayatModels.addAll(ayatList);
-            byAyatAdapter.notifyDataSetChanged();
-        });
-    }
+    private void fetchVersesByAyat(int surahIndex) {
+        quranApi.getVersesBySurah(surahIndex).enqueue(new Callback<AyahRecitationModel>() {
+            @Override
+            public void onResponse(Call<AyahRecitationModel> call, Response<AyahRecitationModel> response) {
+                Log.d("API Response", "Response: " + response.body().getData().toString());
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Ayah> ayahs = response.body().getData();
+                    ayatModels.clear();
+                    // Loop through each Ayah in the response and create AyatModel instances
+                    for (Ayah ayah : ayahs) {
+                        // Create the AyatModel instance
+                        Ayah ayatModel = new Ayah(
+                                ayah.getId(),
+                                ayah.getSurahId(),
+                                ayah.getAyahIndex(),
+                                ayah.getAyahKey(),
+                                ayah.getPageId(),
+                                ayah.getJuzId(),
+                                ayah.getBismillah(),
+                                ayah.getArabicText(),
+                                ayah.getWords(),
+                                ayah.getTranslations()
+                        );
+                        // Add to the list
+                        ayatModels.add(ayatModel);
+                    }
 
-    public void updateSurahContent(SurahNameModel newSurahNameModel) {
-        surahNameModel = newSurahNameModel;
-        fetchVersesByAyat(surahNameModel.getSurahIndex());
+                    // Notify the adapter of data changes
+                    byAyatAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AyahRecitationModel> call, Throwable t) {
+                Log.e("ByAyatRecitationFragment", "Failed to fetch verses", t);
+            }
+        });
     }
 }

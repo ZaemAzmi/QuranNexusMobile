@@ -1,7 +1,6 @@
 package com.example.qurannexus.fragments;
 
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,33 +15,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.interfaces.QuranApi;
-import com.example.qurannexus.models.adapters.SurahListAdapter;
+import com.example.qurannexus.models.SurahListResponse;
 import com.example.qurannexus.models.SurahModel;
+import com.example.qurannexus.models.adapters.SurahListAdapter;
 import com.example.qurannexus.services.retrofit.ApiService;
-import com.google.android.material.tabs.TabLayout;
-import org.bson.Document;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import io.realm.mongodb.App;
-import io.realm.mongodb.AppConfiguration;
-import io.realm.mongodb.Credentials;
-import io.realm.mongodb.RealmResultTask;
-import io.realm.mongodb.User;
-import io.realm.mongodb.mongo.MongoClient;
-import io.realm.mongodb.mongo.MongoCollection;
-import io.realm.mongodb.mongo.MongoDatabase;
-import io.realm.mongodb.mongo.iterable.MongoCursor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SurahListFragment extends Fragment {
 
-    String appID = "application-0-plbqdoy";
-    MongoClient mongoClient;
-    MongoDatabase mongoDatabase;
-    ArrayList<SurahModel> surahModels = new ArrayList<>();
+    SurahListResponse surahListResponse;
     ArrayList<SurahModel> filteredSurahModels = new ArrayList<>();
     String layoutType = "verseByVerse";
     SurahListAdapter surahListAdapter;
@@ -81,26 +69,26 @@ public class SurahListFragment extends Fragment {
     }
 
     private void filterSurahList(String query) {
-        query = query.toLowerCase();
-        filteredSurahModels.clear();
-        ArrayList<SurahModel> currentList = new ArrayList<>();
-
-        if (currentTab == 0) {
-            currentList = surahModels;
-        } else if (currentTab == 2) {
-            for (SurahModel surah : surahModels) {
-                if (surah.isBookmarked()) {
-                    currentList.add(surah);
-                }
-            }
-        }
-
-        for (SurahModel surah : currentList) {
-            if (surah.getName().toLowerCase().contains(query)) {
-                filteredSurahModels.add(surah);
-            }
-        }
-        updateUI(filteredSurahModels);
+//        query = query.toLowerCase();
+//        filteredSurahModels.clear();
+//        ArrayList<SurahModel> currentList = new ArrayList<>();
+//
+//        if (currentTab == 0) {
+//            currentList = surahListResponse;
+//        } else if (currentTab == 2) {
+//            for (SurahModel surah : surahListResponse) {
+//                if (surah.isBookmarked()) {
+//                    currentList.add(surah);
+//                }
+//            }
+//        }
+//
+//        for (SurahModel surah : currentList) {
+//            if (surah.getName().toLowerCase().contains(query)) {
+//                filteredSurahModels.add(surah);
+//            }
+//        }
+//        updateUI(filteredSurahModels);
     }
 
     private void updateUI(ArrayList<SurahModel> filteredSurahs) {
@@ -111,23 +99,18 @@ public class SurahListFragment extends Fragment {
     }
 
     private void fetchSurahs() {
-        Call<List<SurahModel>> call = quranApi.getAllSurahs();
-        call.enqueue(new Callback<List<SurahModel>>() {
+        Call<SurahListResponse> call = quranApi.getAllSurahs();
+        call.enqueue(new Callback<SurahListResponse>() {
             @Override
-            public void onResponse(Call<List<SurahModel>> call, Response<List<SurahModel>> response) {
-                if (response.isSuccessful()) {
-                    List<SurahModel> surahList = response.body();
-
-                    Log.d("API_RESPONSE", "Response: " + surahList.toString());
-                    if (surahList != null) {
-                        surahModels.clear();
-                        surahModels.addAll(surahList);
-
+            public void onResponse(Call<SurahListResponse> call, Response<SurahListResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().getData() != null) {
+                        surahListResponse = response.body();
                         // Check if adapter is already set
                         if (surahListAdapter == null) {
                             // Initialize the adapter for the first time
                             RecyclerView surahRecyclerView = getView().findViewById(R.id.SurahRecyclerView);
-                            surahListAdapter = new SurahListAdapter(requireActivity(), surahModels, layoutType);
+                            surahListAdapter = new SurahListAdapter(requireActivity(), surahListResponse.getData(), layoutType);
                             surahRecyclerView.setAdapter(surahListAdapter);
                             surahRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                         } else {
@@ -139,7 +122,7 @@ public class SurahListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<SurahModel>> call, Throwable t) {
+            public void onFailure(Call<SurahListResponse> call, Throwable t) {
                 // Handle API call failure
             }
         });

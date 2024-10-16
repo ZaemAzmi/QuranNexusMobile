@@ -135,63 +135,6 @@ public class DatabaseService {
     public interface SurahModelCallback {
         void onSurahModelLoaded(SurahNameModel surahModel);
     }
-    public void getVersesByAyat(int surahIndex, AyatCallback callback) {
-        Document query = new Document("surah_index", surahIndex);
-        RealmResultTask<MongoCursor<Document>> findTask = ayahCollection.find(query).iterator();
-        findTask.getAsync(task -> {
-            if (task.isSuccess()) {
-                MongoCursor<Document> results = task.get();
-                List<AyatModel> ayahList = new ArrayList<>();
-                List<Integer> bookmarkedAyatIndices = new ArrayList<>();
-
-                // Fetch all bookmarked ayat indices for this surah
-                Document bookmarkQuery = new Document("surah_index", surahIndex);
-                RealmResultTask<MongoCursor<Document>> bookmarkFindTask = bookmarkCollection.find(bookmarkQuery).iterator();
-                bookmarkFindTask.getAsync(bookmarkTask -> {
-                    if (bookmarkTask.isSuccess()) {
-                        MongoCursor<Document> bookmarkResults = bookmarkTask.get();
-                        while (bookmarkResults.hasNext()) {
-                            Document bookmarkDoc = bookmarkResults.next();
-                            bookmarkedAyatIndices.add(bookmarkDoc.getInteger("ayah_index"));
-                        }
-
-                        // Iterate through the ayat results and create AyatModel instances
-                        while (results.hasNext()) {
-                            Document currentDoc = results.next();
-                            String arabicScript = "";
-                            String englishTranslation = "";
-                            int intAyatNumber = currentDoc.getInteger("index");
-                            String ayatNumber = "";
-                            boolean isBookmarked = bookmarkedAyatIndices.contains(intAyatNumber);
-
-                            if (currentDoc.getString("text") != null) {
-                                arabicScript = currentDoc.getString("text");
-                            }
-                            if (currentDoc.getString("translate_mal") != null) {
-                                englishTranslation = currentDoc.getString("translate_mal");
-                            }
-                            if (intAyatNumber != 0) {
-                                ayatNumber = String.valueOf(intAyatNumber);
-                            }
-                            ayahList.add(new AyatModel(
-                                    arabicScript,
-                                    englishTranslation,
-                                    ayatNumber,
-                                    surahIndex,
-                                    intAyatNumber,
-                                    isBookmarked
-                            ));
-                        }
-                        callback.onAyatLoaded(ayahList);
-                    } else {
-                        Log.e(TAG, "Failed to fetch bookmarks", bookmarkTask.getError());
-                    }
-                });
-            } else {
-                Log.e(TAG, "Failed to fetch ayat", task.getError());
-            }
-        });
-    }
 
     public void updateBookmarkStatus(String surahNumber, boolean isBookmarked, UpdateCallback callback) {
         Document filter = new Document("index", Integer.parseInt(surahNumber));

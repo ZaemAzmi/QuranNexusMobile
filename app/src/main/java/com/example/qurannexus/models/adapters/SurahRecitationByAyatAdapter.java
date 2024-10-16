@@ -1,5 +1,6 @@
 package com.example.qurannexus.models.adapters;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.qurannexus.R;
+import com.example.qurannexus.models.Ayah;
 import com.example.qurannexus.models.AyatModel;
 import com.example.qurannexus.services.DatabaseService;
 
@@ -18,12 +20,10 @@ import java.util.ArrayList;
 public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahRecitationByAyatAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<AyatModel> ayatModels;
-    DatabaseService databaseService;
-    public SurahRecitationByAyatAdapter(Context context, ArrayList<AyatModel> ayatModels, DatabaseService databaseService){
+    ArrayList<Ayah> ayahList;
+    public SurahRecitationByAyatAdapter(Context context, ArrayList<Ayah> ayahList){
         this.context = context;
-        this.ayatModels = ayatModels;
-        this.databaseService = databaseService;
+        this.ayahList = ayahList;
     }
     @NonNull
     @Override
@@ -35,49 +35,31 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
 
     @Override
     public void onBindViewHolder(@NonNull SurahRecitationByAyatAdapter.MyViewHolder holder, int position) {
-        AyatModel ayatModel = ayatModels.get(position);
-        holder.arabicScript.setText(ayatModel.arabicScript);
-        holder.englishTranslation.setText(ayatModel.englishTranslation);
-        holder.ayatNumber.setText(ayatModel.ayatNumber);
+        Ayah ayah = ayahList.get(position);
+        holder.arabicScript.setText(ayah.getArabicText());
+        holder.englishTranslation.setText(ayah.getTranslations().get(1).getText());
+        holder.ayatNumber.setText(ayah.getAyahKey());
 
-        if (ayatModel.isBookmarked()) {
-            holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmarked); // Replace with your bookmarked icon
-        } else {
-            holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark); // Replace with your unbookmarked icon
-        }
-        holder.ayatCardBookmarkIcon.setOnClickListener(v -> {
-            int surahIndex = ayatModel.getSurahIndex();
-            int ayatIndex = ayatModel.getAyatIndex();
-
-            if (ayatModel.isBookmarked()) {
-                // Remove bookmark
-                databaseService.removeBookmark(surahIndex, ayatIndex, success -> {
-                    if (success) {
-                        ayatModel.setBookmarked(false);
-                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark); // Replace with your unbookmarked icon
-                        Toast.makeText(context, "Bookmark removed", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, "Failed to remove bookmark", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                // Add bookmark
-                databaseService.addBookmark(surahIndex, ayatIndex, success -> {
-                    if (success) {
-                        ayatModel.setBookmarked(true);
-                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmarked); // Replace with your bookmarked icon
-                        Toast.makeText(context, "Bookmark added", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, "Failed to add bookmark", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+//        holder.ayatCardBookmarkIcon.setImageResource(
+//                ayah.isBookmarked() ? R.drawable.ic_bookmarked : R.drawable.ic_bookmark
+//        );
+//        holder.ayatCardBookmarkIcon.setOnClickListener(v -> {
+//            int surahIndex = ayahList.getSurahIndex();
+//            int ayatIndex = ayahList.getAyatIndex();
+//
+//            if (ayatModel.isBookmarked()) {
+//                // Remove bookmark
+//
+//            } else {
+//                // Add bookmark
+//
+//            }
+//        });
     }
 
     @Override
     public int getItemCount() {
-        return this.ayatModels.size();
+        return this.ayahList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
