@@ -7,11 +7,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.qurannexus.R;
-import com.example.qurannexus.interfaces.JokeApi;
-import com.example.qurannexus.models.Joke;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -27,23 +23,6 @@ public class TestActivity extends AppCompatActivity {
                 .baseUrl("https://official-joke-api.appspot.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-        JokeApi jokeApi = retrofit.create(JokeApi.class);
-
-        jokeApi.getRandomJoke().enqueue(new Callback<Joke>() {
-            @Override
-            public void onResponse(Call<Joke> call, retrofit2.Response<Joke> response) {
-                if (response.isSuccessful()) {
-                    Joke joke = response.body();
-                    jokeTextView.setText(joke.getSetup() + "\n" + joke.getPunchline());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Joke> call, Throwable t) {
-                jokeTextView.setText("Failed to get a joke");
-            }
-        });
 
     }
 

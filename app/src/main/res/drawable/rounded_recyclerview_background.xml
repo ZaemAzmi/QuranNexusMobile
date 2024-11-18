@@ -1,6 +1,0 @@
-<!-- res/drawable/rounded_recyclerview_background.xml -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/white" />
-    <corners android:radius="12dp" /> <!-- Adjust the radius as needed -->
-    <elevation android:value="4dp"/> <!-- Optional for slight shadow effect -->
-</shape>

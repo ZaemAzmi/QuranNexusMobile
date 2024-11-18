@@ -3,6 +3,7 @@ package com.example.qurannexus.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-
+    MeowBottomNavigation meowBottomNavigation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment selectedFragment = null;
 
         if (itemId == R.id.nav_home) {
-            selectedFragment = new SurahListFragment();
+            selectedFragment = new HomeFragment();
         } else if (itemId == R.id.nav_settings) {
             selectedFragment = new SettingsFragment();
         }  else if (itemId == R.id.nav_irab) {
@@ -80,13 +81,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupMeowNavigationBar(){
 
-        MeowBottomNavigation meowBottomNavigation = findViewById(R.id.meowBottomNav);
+        meowBottomNavigation = findViewById(R.id.meowBottomNav);
 
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.HOME.getId(), R.drawable.ic_home));
-        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.TAJWEED.getId(), R.drawable.ic_home));
-        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.IRAB.getId(), R.drawable.ic_home));
-        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.TEST.getId(), R.drawable.ic_home));
-
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.SURAHLIST.getId(), R.drawable.ic_quran));
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.BOOKMARK.getId(), R.drawable.ic_bookmark));
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.PRAYERTIMES.getId(), R.drawable.ic_mosque));
         meowBottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
             @Override
             public void onClickItem(MeowBottomNavigation.Model model) {
@@ -96,19 +96,19 @@ public class MainActivity extends AppCompatActivity {
                     case HOME:
                         selectedFragment = new HomeFragment();
                         break;
-                    case IRAB:
+                    case SURAHLIST:
                         selectedFragment = new SurahListFragment();
                         break;
-                    case TAJWEED:
+                    case BOOKMARK:
                         selectedFragment = new BookmarkFragment();
                         break;
-                    case TEST:
+                    case PRAYERTIMES:
                         selectedFragment = new PrayerTimesFragment();
                         break;
                 }
 
                 if (selectedFragment != null) {
-                    loadFragment(selectedFragment); // Method to load the fragment
+                    loadFragment(selectedFragment);
                 }
             }
         });
@@ -131,5 +131,18 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.mainFragmentContainer, fragment)
                 .commit();
+
+        if(meowBottomNavigation != null){
+            if (fragment instanceof HomeFragment) {
+                meowBottomNavigation.show(BottomMenuItemId.HOME.getId(), true);
+            } else if (fragment instanceof SurahListFragment) {
+                meowBottomNavigation.show(BottomMenuItemId.SURAHLIST.getId(), true);
+            } else if (fragment instanceof BookmarkFragment) {
+                meowBottomNavigation.show(BottomMenuItemId.BOOKMARK.getId(), true);
+            } else if (fragment instanceof PrayerTimesFragment) {
+                meowBottomNavigation.show(BottomMenuItemId.PRAYERTIMES.getId(), true);
+            }
+        }
     }
+
 }

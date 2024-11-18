@@ -8,26 +8,23 @@ public class RegisterRequest {
     private String password;
     @SerializedName("password_confirmation")
     private String passwordConfirmation;
+    @SerializedName("device_name")
+    private String deviceName;
     private String role;
 
-    // Constructor with role (if needed)
-    public RegisterRequest(String name, String email, String password, String passwordConfirmation, String role) {
+    public RegisterRequest(String name, String email, String password, String passwordConfirmation, String deviceName, String role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.passwordConfirmation = passwordConfirmation;
+        this.deviceName = deviceName;
         this.role = role;
     }
 
-    // Constructor without role (default "User" will be used)
-    public RegisterRequest(String name, String email, String password, String passwordConfirmation) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.passwordConfirmation = passwordConfirmation;
-        this.role = "USER";  // Default role if not provided
+    // Constructor without role (default role "USER" used)
+    public RegisterRequest(String name, String email, String password, String passwordConfirmation, String deviceName) {
+        this(name, email, password, passwordConfirmation, deviceName, "USER");
     }
-
     // Getters and Setters for the fields
     public String getName() {
         return name;

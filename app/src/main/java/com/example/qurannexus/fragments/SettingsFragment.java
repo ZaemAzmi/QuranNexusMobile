@@ -3,6 +3,7 @@ package com.example.qurannexus.fragments;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -18,6 +19,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // Retrieve the SharedPreferences
         SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
         SwitchPreferenceCompat recitationLayoutSwitch = findPreference("recitation_layout_by_page");
+
         // Set up change listener
         if (recitationLayoutSwitch != null) {
             recitationLayoutSwitch.setOnPreferenceChangeListener((preference, newValue) -> {

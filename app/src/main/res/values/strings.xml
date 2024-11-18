@@ -23,7 +23,10 @@
     <string name="register_button">Create Account</string>
 
     <string name="create_account_button">Create Account</string>
+    <string name="forgot_password">Forgot Password?</string>
 
+    <string name="terms_and_conditions">By creating an account, you agree to our Terms of Service and Privacy Policy.</string>
+    <string name="chatbot">Chat Bot</string>
 
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="recitation_layout_header">Recitation Layout</string>

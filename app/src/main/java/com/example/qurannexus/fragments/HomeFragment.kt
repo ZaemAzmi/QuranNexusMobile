@@ -1,47 +1,51 @@
 package com.example.qurannexus.fragments
 
+import PrayerTimesApi
+import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
+import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.qurannexus.R
+import com.example.qurannexus.interfaces.HighlightClickListener
+import com.example.qurannexus.models.HighlightItem
+import com.example.qurannexus.models.PrayerTimesResponse
 import com.example.qurannexus.models.adapters.DailyInspirationAdapter
+import com.example.qurannexus.models.adapters.HighlightsRecyclerAdapter
+import com.example.qurannexus.services.AuthService
+import com.example.qurannexus.services.retrofit.ApiService
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+import org.bson.AbstractBsonWriter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class HomeFragment : Fragment(), HighlightClickListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+    private lateinit var prayerTrailerCard: View
+    private lateinit var nextPrayerTextView: TextView
+    private lateinit var timerTextView: TextView
+    private lateinit var dateTextView: TextView
+    private lateinit var greetingsText: TextView
+    private lateinit var authService: AuthService
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
+
     private val quotes = listOf(
         "And those who strive for Us- We will surely guide them to Our ways.",
         "Indeed, Allah is with those who fear Him and those who are doers of good.",
         "So remember Me; I will remember you."
     )
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,35 +53,195 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+        authService = AuthService()
+        greetingsText = view.findViewById(R.id.homepageGreetingsText)
+        prayerTrailerCard = view.findViewById(R.id.prayerTrailerCard)
+        nextPrayerTextView = prayerTrailerCard.findViewById(R.id.nextPrayerTextView)
+        timerTextView = prayerTrailerCard.findViewById(R.id.timerTextView)
+        dateTextView = prayerTrailerCard.findViewById(R.id.dateTextView)
+        loadUserGreeting()
+        prayerTrailerCard.setOnClickListener {
+           loadFragment(PrayerTimesFragment())
+        }
+        fetchPrayerTimes()
+
 
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
-
-        val adapter = DailyInspirationAdapter(quotes)
+        val adapter = DailyInspirationAdapter(quotes, requireContext())
         viewPager.adapter = adapter
 
-        // Setup dots indicator with TabLayout and ViewPager2
-        TabLayoutMediator(tabLayout, viewPager) { _, _ -> }.attach()
-
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            // Optionally, you can customize the tab, but this will show dots by default
+        }.attach()
+        highlightSectionSetup(view)
         return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic fun newInstance(param1: String, param2: String) =
-                HomeFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
+    fun highlightSectionSetup(rootView : View){
+        val highlightsRecyclerView: RecyclerView = rootView.findViewById(R.id.highlightsRecyclerView)
+
+        // Create the list of highlights
+        val highlightsList = listOf(
+            HighlightItem(R.drawable.ic_mosque, "Prayer Times"),
+            HighlightItem(R.drawable.ic_duas, "Duas"),
+            HighlightItem(R.drawable.ic_mosque, "Bookmarks"),
+            HighlightItem(R.drawable.ic_mosque, "Tajweed"),
+            HighlightItem(R.drawable.ic_mosque, "NexusAI")
+        )
+
+        val layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
+            override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
+                // Adjust item width to show approximately 2.5 items
+                lp?.width = (width / 4.5).toInt()
+                return true
+            }
+        }
+        highlightsRecyclerView.layoutManager = layoutManager
+
+        val adapter = HighlightsRecyclerAdapter(highlightsList, this)
+        highlightsRecyclerView.adapter = adapter
+
+        // Add a small space between items
+        val itemSpacing = resources.getDimensionPixelSize(R.dimen.highlight_item_spacing)
+        highlightsRecyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.right = itemSpacing
+                outRect.left = itemSpacing
+            }
+        })
+        // Enable snapping to each item
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(highlightsRecyclerView)
     }
+
+    override fun onHighlightClick(position: Int) {
+        val selectedFragment : Fragment = when(position){
+            0 -> PrayerTimesFragment()
+//            1 -> DuasFragment()
+            2 -> BookmarkFragment()
+            3 -> TajweedFragment()
+//            4 -> NexusAIFragment()
+            else -> return
+        }
+        loadFragment(selectedFragment)
+    }
+    private fun loadFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.mainFragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+    private fun fetchPrayerTimes() {
+//        val apiService = ApiService.getPrayerTimesClient().create(PrayerTimesApi::class.java)
+//        val call = apiService.getPrayerTimes("04-10-2024","Kuala Lumpur", "MY")
+//
+//        call.enqueue(object : Callback<PrayerTimesResponse> {
+//            override fun onResponse(
+//                call: Call<PrayerTimesResponse>,
+//                response: Response<PrayerTimesResponse>
+//            ) {
+//                if (response.isSuccessful) {
+//                    val prayerTimesResponse = response.body()
+//                    prayerTimesResponse?.let { data ->
+//                        val timings = data.data?.timings
+//                        val date = data.data?.date
+//
+//                        // Set date and location
+//                        dateTextView.text = date?.readable
+//                        locationTextView.text = "Kuala Lumpur, Malaysia"
+//                        weekdayTextView.text = date?.gregorian?.weekday?.en
+//
+//                        // Set prayer times in RecyclerView
+//                        val prayerTimesList = listOf(
+//                            PrayerTime("Fajr", timings?.Fajr ?: ""),
+//                            PrayerTime("Sunrise", timings?.Sunrise ?: ""),
+//                            PrayerTime("Dhuhr", timings?.Dhuhr ?: ""),
+//                            PrayerTime("Asr", timings?.Asr ?: ""),
+//                            PrayerTime("Maghrib", timings?.Maghrib ?: ""),
+//                            PrayerTime("Isha", timings?.Isha ?: "")
+//                        )
+//
+//                        prayerTimesRecycler.layoutManager = LinearLayoutManager(context)
+//                        prayerTimesRecycler.adapter = PrayerTimesAdapter(prayerTimesList)
+//
+//                        // Calculate next prayer and start countdown timer
+//                        calculateNextPrayer(timings)
+//                        startCountdownTimer(timings)
+//                    }
+//                } else {
+//                    handleApiFailure("Failed to fetch prayer times")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<PrayerTimesResponse>, t: Throwable) {
+//                handleApiFailure("Network error: Unable to retrieve prayer times")
+//            }
+//        })
+    }
+
+    private fun handleApiFailure(message: String) {
+        // Display a message to the user in case of failure
+        timerTextView.text = message
+        nextPrayerTextView.text = ""
+    }
+
+    private fun calculateNextPrayer(timings: PrayerTimesResponse.Timings?) {
+//        val currentTime = getCurrentTimeIn24H()
+//
+//        // Convert prayer times to minutes and find the next prayer
+//        val prayerTimesList = listOf(
+//            timings?.Fajr,
+//            timings?.Sunrise,
+//            timings?.Dhuhr,
+//            timings?.Asr,
+//            timings?.Maghrib,
+//            timings?.Isha
+//        ).mapIndexed { index, time ->
+//            Pair(index, convertTimeToMinutes(time))
+//        }
+//
+//        // Get the next prayer time
+//        val nextPrayer = prayerTimesList.find { currentTime < it.second }
+//            ?: prayerTimesList.first() // Wrap to the first prayer if all times have passed
+//
+//        currentPrayerIndex = nextPrayer.first
+//        nextPrayerTextView.text = "Next Prayer: ${getPrayerName(currentPrayerIndex)}"
+    }
+
+    private fun startCountdownTimer(timings: PrayerTimesResponse.Timings?) {
+        var currentTimer: CountDownTimer? = null
+
+        // Prepare the schedule and start timer for the next prayer
+//        val prayers = getPrayerSchedule(timings)
+//        val nextPrayer = findNextPrayer(prayers)
+//
+//        nextPrayer?.let {
+//            startNewTimer(it)
+//        }
+    }
+    private fun loadUserGreeting() {
+        // Try to get the username from SharedPreferences first
+        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val username = sharedPreferences.getString("username", null)
+
+        if (username != null) {
+            // If username is available, display it
+            greetingsText.text = "Salaam, $username"
+        } else {
+            // Otherwise, make a network request to fetch it
+            authService.getUserProfile { user ->
+                if (user?.name != null) {
+                    // Save username in SharedPreferences for future use
+                    sharedPreferences.edit().putString("username", user.name).apply()
+                    greetingsText.text = "Salaam, ${user.name}"
+                } else {
+                    greetingsText.text = "Salaam, Guest"
+                }
+            }
+        }
+    }
+
 }
+
+

@@ -143,8 +143,9 @@ public class ByPageRecitationFragment extends Fragment {
                         }
 
                         // Append the ayah text
+                        String arabicText = ayah.getArabicText() != null ? ayah.getArabicText() : "";
                         String arabicNumber = utilityService.convertToArabicNumber(currentAyahNumber);
-                        pageContent.append(ayah.getArabicText()).append(arabicNumber).append("");
+                        pageContent.append(arabicText).append(arabicNumber).append("");
 
                         previousSurahId = currentSurahId;
                     }
@@ -184,7 +185,6 @@ public class ByPageRecitationFragment extends Fragment {
         // Convert drawable resource name to resource ID
         int resId = context.getResources().getIdentifier(fileName, "drawable", context.getPackageName());
         if (resId != 0) {
-            // Return the VectorDrawableCompat for SVG files
             return ContextCompat.getDrawable(context, resId);
         }
         return null;

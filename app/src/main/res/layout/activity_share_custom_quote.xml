@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ShareCustomQuoteActivity">
+
+    <ImageView
+        android:id="@+id/customQuotePreviousButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/button_previous"
+        android:layout_margin="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:text="Daily Inspiration"
+        android:textSize="24dp"
+        app:layout_constraintStart_toStartOf="@+id/customQuotePreviousButton"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="55dp"
+        android:text="Choose your Background"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="@+id/customQuotePreviousButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/quoteContainer"
+        android:layout_width="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_height="302dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.4"
+        android:alpha="1.25"
+        android:background="@drawable/bg_daily_quote2">
+        <View
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+             android:alpha="0.9"/>
+        <!-- Main Quote Text -->
+        <TextView
+            android:id="@+id/dailyQuoteText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="And those who strive for Us- We will surely guide them to Our ways."
+            android:textColor="#E4A9DD"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/quoteSourceText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            android:padding="8dp"
+            android:lineSpacingExtra="4dp"
+            android:maxLines="4"/>
+
+        <!-- Source Text at the Bottom -->
+        <TextView
+            android:id="@+id/quoteSourceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily=""
+            android:paddingBottom="8dp"
+            android:text="Quran 29:69"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dailyQuoteText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/styleTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="22dp"
+        android:text="Choose your style"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/quoteContainer" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/styleTitleText"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Background Color Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Background Image"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/backgroundRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/redBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1" />
+
+            <RadioButton
+                android:id="@+id/blueBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2" />
+        </RadioGroup>
+
+        <!-- Alignment Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Text Alignment"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/alignmentRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/leftAlign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Left" />
+
+            <RadioButton
+                android:id="@+id/centerAlign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Center" />
+
+            <RadioButton
+                android:id="@+id/rightAlign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Right" />
+        </RadioGroup>
+
+        <!-- Font Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fonts"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/fontRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/arialFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Arial" />
+
+            <RadioButton
+                android:id="@+id/sansFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sans" />
+
+            <RadioButton
+                android:id="@+id/serifFont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Serif" />
+        </RadioGroup>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/shareButton"
+        android:layout_width="272dp"
+        android:layout_height="wrap_content"
+        android:text="Share the Khayr"
+        android:textColor="@android:color/black"
+        android:background="@drawable/btn_border_share_quote"
+        android:drawableLeft="@drawable/ic_share_quote"
+        android:drawablePadding="36dp"
+        android:layout_marginBottom="36dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16sp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

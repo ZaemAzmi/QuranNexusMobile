@@ -5,6 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,8 +45,7 @@ public class ByAyatRecitationFragment extends Fragment {
     public static ByAyatRecitationFragment newInstance(int surahNumber) {
         ByAyatRecitationFragment fragment = new ByAyatRecitationFragment();
         Bundle args = new Bundle();
-//        args.putParcelable(ARG_SURAH, surahModel);
-        Log.e("inside byayat fragment","surahNumber;"+surahNumber);
+//        Log.e("inside byayat fragment","surahNumber;"+surahNumber);
         args.putInt(ARG_SURAH_NUMBER, surahNumber);
         fragment.setArguments(args);
         return fragment;
@@ -76,7 +78,6 @@ public class ByAyatRecitationFragment extends Fragment {
         quranApi.getVersesBySurah(surahIndex).enqueue(new Callback<AyahRecitationModel>() {
             @Override
             public void onResponse(Call<AyahRecitationModel> call, Response<AyahRecitationModel> response) {
-                Log.d("API Response", "Response: " + response.body().getData().toString());
                 if (response.isSuccessful() && response.body() != null) {
                     List<Ayah> ayahs = response.body().getData();
                     ayatModels.clear();

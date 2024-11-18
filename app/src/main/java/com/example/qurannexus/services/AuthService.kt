@@ -7,6 +7,7 @@ import com.example.qurannexus.models.LoginRequest
 import com.example.qurannexus.models.LoginResponse
 import com.example.qurannexus.models.RegisterRequest
 import com.example.qurannexus.models.RegisterResponse
+import com.example.qurannexus.models.User
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -71,4 +72,22 @@ class AuthService {
             }
         })
     }
+
+    fun getUserProfile(callback: (User?) -> Unit) {
+        val call: Call<User?> = authApi.getUserProfile()
+        call.enqueue(object : Callback<User?> {
+            override fun onResponse(call: Call<User?>, response: Response<User?>) {
+                if (response.isSuccessful && response.body() != null) {
+                    callback(response.body())
+                } else {
+                    callback(null) // Handle failure case
+                }
+            }
+
+            override fun onFailure(call: Call<User?>, t: Throwable) {
+                callback(null) // Handle network or other failure
+            }
+        })
+    }
+
 }

@@ -2,9 +2,9 @@ package com.example.qurannexus.enums
 
 enum class BottomMenuItemId(val  id: Int) {
     HOME(1),
-    IRAB(2),
-    TAJWEED(3),
-    TEST(4);
+    SURAHLIST(2),
+    BOOKMARK(3),
+    PRAYERTIMES(4);
 
     companion object {
         @JvmStatic

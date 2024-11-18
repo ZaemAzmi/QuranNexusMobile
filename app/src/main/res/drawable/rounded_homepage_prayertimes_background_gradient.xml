@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="@color/ayah_card_dark_green_400"
+        android:endColor="@color/surah_card_dark_green_350"
+        android:angle="45" />
+
+    <corners android:radius="12dp" /> <!-- Adjust the radius as needed -->
+    <elevation android:value="4dp"/> <!-- Optional for slight shadow effect -->
+</shape>

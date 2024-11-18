@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <gradient
+        android:type="linear"
+    android:gradientRadius="45dp"
+    android:startColor="@color/light_green_side_nav"
+    android:endColor="@color/surah_card_dark_green_300"
+    android:centerColor="@color/dark_green_200"
+    android:angle="75" />
+
+    <size
+        android:width="90dp"
+        android:height="90dp" />
+
+    <corners android:radius="50dp" />
+</shape>

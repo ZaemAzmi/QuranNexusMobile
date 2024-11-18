@@ -22,7 +22,7 @@ class LoginFragment : Fragment() {
     private lateinit var loginPasswordInput: EditText
     private lateinit var loginButton: Button
     private lateinit var authService: AuthService
-
+    val deviceName = "My Android Device"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
             return
         }
 
-        val request = LoginRequest(email, password)
+        val request = LoginRequest(email, password, deviceName)
 
         authService.login(requireContext(), request, object : AuthCallback {
             override fun onSuccess(message: String) {

@@ -6,48 +6,102 @@
     android:layout_height="match_parent"
     tools:context=".fragments.RegisterFragment">
 
-   <androidx.constraintlayout.widget.ConstraintLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-       <EditText
-           android:id="@+id/registerNameInput"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginStart="100dp"
-           android:layout_marginTop="80dp"
-           android:tooltipText="email"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/registerBackButton"
+            android:layout_width="wrap_content"
 
-       <EditText
-           android:id="@+id/registerEmailInput"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginStart="100dp"
-           android:layout_marginTop="140dp"
-           android:tooltipText="email"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:src="@drawable/button_previous"
+            android:layout_margin="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <EditText
+            android:id="@+id/registerNameInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="244dp"
+            android:background="@drawable/bg_edit_text"
+            android:hint="Enter Name"
+            android:drawableStart="@drawable/ic_username"
+            android:padding="10dp"
+            android:drawablePadding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.7" />
 
-       <EditText
-           android:id="@+id/registerPasswordInput"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginStart="100dp"
-           android:layout_marginTop="228dp"
-           android:tooltipText="password"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="parent" />
-       <Button
-           android:id="@+id/registerButton"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginStart="172dp"
-           android:layout_marginTop="408dp"
-           android:text="Button"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="parent" />
-   </androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/registerEmailInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="332dp"
+            android:background="@drawable/bg_edit_text"
+            android:hint="Enter Email"
+            android:drawableStart="@drawable/ic_email"
+            android:padding="10dp"
+            android:drawablePadding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.7" />
+
+        <EditText
+            android:id="@+id/registerPasswordInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="420dp"
+            android:background="@drawable/bg_edit_text"
+            android:hint="Enter Password"
+            android:inputType="textPassword"
+            android:drawableEnd="@drawable/ic_eye_closed"
+            android:drawableStart="@drawable/ic_password"
+            android:padding="10dp"
+            android:drawablePadding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.7" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="60dp"
+            android:text="@string/forgot_password"
+            android:textColor="@color/light_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/registerPasswordInput" />
+
+        <CheckBox
+            android:id="@+id/termsCheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/terms_and_conditions"
+            android:layout_marginTop="32dp"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/registerPasswordInput"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.7"/>
+
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="50dp"
+            android:text="@string/register_button"
+            android:backgroundTint="@color/surah_card_dark_green_300"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/termsCheckBox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.7"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
