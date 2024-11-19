@@ -16,6 +16,9 @@
         android:theme="@style/Theme.QuranNexus"
         tools:targetApi="31">
         <activity
+            android:name=".activities.WordDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ShareCustomQuoteActivity"
             android:exported="false" />
         <activity

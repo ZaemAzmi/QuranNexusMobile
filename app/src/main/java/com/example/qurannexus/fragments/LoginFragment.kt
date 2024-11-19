@@ -1,7 +1,9 @@
 package com.example.qurannexus.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,16 +56,30 @@ class LoginFragment : Fragment() {
         val request = LoginRequest(email, password, deviceName)
 
         authService.login(requireContext(), request, object : AuthCallback {
-            override fun onSuccess(message: String) {
-                Toast.makeText(activity, "Login successful! Token: $message", Toast.LENGTH_SHORT).show()
-                val intent = Intent(activity, MainActivity::class.java)
-                startActivity(intent)
-                activity?.finish()
+            override fun onSuccess(token: String) {
+                val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                sharedPreferences.edit().putString("token", token).apply()
+
+                // Fetch user profile to get the username
+                authService.getUserProfile(token) { user ->
+                    if (user?.name != null) {
+                        sharedPreferences.edit().putString("username", user.name).apply()
+                        Log.d("AuthDebug", "Username saved: ${user.name}")
+                    } else {
+                        Log.e("AuthDebug", "Failed to fetch username.")
+                    }
+
+                    Toast.makeText(activity, "Login successful! Token: $token", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(activity, MainActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                }
             }
 
             override fun onError(error: String) {
                 Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
             }
         })
+
     }
 }

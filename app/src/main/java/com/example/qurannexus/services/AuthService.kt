@@ -73,9 +73,9 @@ class AuthService {
         })
     }
 
-    fun getUserProfile(callback: (User?) -> Unit) {
-        val call: Call<User?> = authApi.getUserProfile()
-        call.enqueue(object : Callback<User?> {
+    fun getUserProfile(token: String, callback: (User?) -> Unit) {
+        val call: Call<User?>? = authApi.getUserProfile("Bearer $token")
+        call?.enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 if (response.isSuccessful && response.body() != null) {
                     callback(response.body())

@@ -1,9 +1,9 @@
 package com.example.qurannexus.interfaces
 
-import com.example.qurannexus.models.Ayah
 import com.example.qurannexus.models.AyahRecitationModel
 import com.example.qurannexus.models.PageVerseResponse
 import com.example.qurannexus.models.SurahListResponse
+import com.example.qurannexus.models.WordDetailsResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -21,5 +21,6 @@ interface QuranApi {
         @Path("page_id") pageId: Int,
         @Query("page_ayahs") pageAyahs: Boolean
     ): Call<PageVerseResponse?>?
-
+    @GET("api/v1/words/{word_key}")
+    fun getWordDetails(@Path("word_key") wordKey: String?): Call<WordDetailsResponse?>?
 }

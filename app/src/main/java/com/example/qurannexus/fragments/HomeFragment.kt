@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -221,26 +222,31 @@ class HomeFragment : Fragment(), HighlightClickListener {
 //        }
     }
     private fun loadUserGreeting() {
-        // Try to get the username from SharedPreferences first
         val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val username = sharedPreferences.getString("username", null)
-
+        var username = sharedPreferences.getString("username", null)
+        val token = sharedPreferences.getString("token", null) // Get the stored token
         if (username != null) {
             // If username is available, display it
             greetingsText.text = "Salaam, $username"
         } else {
-            // Otherwise, make a network request to fetch it
-            authService.getUserProfile { user ->
-                if (user?.name != null) {
-                    // Save username in SharedPreferences for future use
-                    sharedPreferences.edit().putString("username", user.name).apply()
-                    greetingsText.text = "Salaam, ${user.name}"
-                } else {
-                    greetingsText.text = "Salaam, Guest"
+            // If no username, try to fetch it using the token
+            if (token != null) {
+                // If token is available, make the network request
+                authService.getUserProfile(token) { user ->
+                    if (user?.name != null) {
+                        // Save the username in SharedPreferences
+                        sharedPreferences.edit().putString("username", user.name).apply()
+                        greetingsText.text = "Salaam, ${user.name}"
+                    } else {
+                        greetingsText.text = "Salaam, Guest"
+                    }
                 }
+            } else {
+                greetingsText.text = "Salaam, Guest"
             }
         }
     }
+
 
 }
 

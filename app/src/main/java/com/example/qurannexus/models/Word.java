@@ -21,7 +21,27 @@ public class Word {
     private int LineNumber;
     @SerializedName("Text")
     private String Text;
+    @SerializedName("Translation")
+    private String Translation;
 
+    public String getTranslation() {
+        return Translation;
+    }
+
+    public void setTranslation(String translation) {
+        Translation = translation;
+    }
+
+    public String getTransliteration() {
+        return Transliteration;
+    }
+
+    public void setTransliteration(String transliteration) {
+        Transliteration = transliteration;
+    }
+
+    @SerializedName("Transliteration")
+    private String Transliteration;
     public String getId() {
         return Id;
     }
