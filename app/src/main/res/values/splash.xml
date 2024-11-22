@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.QuranNexus.Splash" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Set your app logo or splash image -->
+        <item name="windowSplashScreenBackground">@color/primaryColor</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/quran_nexus_logo</item>
+        <item name="windowSplashScreenAnimationDuration">2000</item>
+        <!-- Set your main app theme to be applied after splash screen -->
+        <item name="postSplashScreenTheme">@style/Theme.QuranNexus</item>
+    </style>
+</resources>

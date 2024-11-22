@@ -2,4 +2,5 @@
 <resources>
     <dimen name="highlight_item_spacing">2dp</dimen>
     <dimen name="highlight_edge_spacing">6dp</dimen>
+    <dimen name="recycler_item_spacing">8dp</dimen>
 </resources>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- badge_card.xml -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#72FBD4"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/ivPopupBadgeIcon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/badge_1"
+            android:contentDescription="Badge Icon" />
+
+        <TextView
+            android:id="@+id/tvPopupBadgeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Badge Name"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvPopupBadgeDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Badge Description"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/gray" />
+
+        <Button
+            android:id="@+id/btnShareBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

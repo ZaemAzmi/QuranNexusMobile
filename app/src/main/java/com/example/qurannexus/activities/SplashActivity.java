@@ -8,18 +8,18 @@ import com.example.qurannexus.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class StartActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_startup);
+        setContentView(R.layout.activity_splash);
 
         Timer timer =new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent i = new Intent(new Intent(StartActivity.this, AuthActivity.class));
+                Intent i = new Intent(new Intent(SplashActivity.this, AuthActivity.class));
                 startActivity(i);
                 finish();
             }

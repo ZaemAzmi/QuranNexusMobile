@@ -8,8 +8,8 @@
     <!-- Circular Image -->
     <ImageView
         android:id="@+id/highlightIcon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:background="@drawable/bg_circle"

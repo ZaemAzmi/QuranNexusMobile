@@ -30,7 +30,7 @@
     <color name="editTextBackgroundColor">#FFFFFF</color> <!-- White background -->
     <color name="editTextBorderColor">#C8E6C9</color> <!-- Light green border -->
 
-    <color name="primaryColor">#4CAF50</color>
+    <color name="primaryColor">#7FFB84</color>
     <color name="background_color">#FAFAFA</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#757575</color>

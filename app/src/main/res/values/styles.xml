@@ -33,4 +33,7 @@
         <item name="tabTextColor">@color/black</item>
         <item name="background">@color/transparent</item>
     </style>
+
+    <!-- res/values/themes.xml -->
+
 </resources>
