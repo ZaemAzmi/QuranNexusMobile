@@ -1,0 +1,37 @@
+package com.example.qurannexus.features.settings;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
+
+import com.example.qurannexus.R;
+
+public class SettingsFragment extends PreferenceFragmentCompat {
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+        // Retrieve the SharedPreferences
+        SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+        SwitchPreferenceCompat recitationLayoutSwitch = findPreference("recitation_layout_by_page");
+
+        // Set up change listener
+        if (recitationLayoutSwitch != null) {
+            recitationLayoutSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean isByPage = (Boolean) newValue;
+                // Save preference
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("recitation_layout_by_page", isByPage);
+                editor.apply();
+                Log.d("SettingsFragment", "Preference changed: " + isByPage);
+                return true;
+            });
+        }
+
+    }
+}

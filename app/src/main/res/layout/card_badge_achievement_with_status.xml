@@ -44,7 +44,6 @@
                 android:src="@drawable/badge_1"
                 android:contentDescription="Badge Icon" />
 
-            <!-- Badge Title -->
 
             <!-- Badge Status -->
             <TextView

@@ -16,19 +16,19 @@
         android:theme="@style/Theme.QuranNexus"
         tools:targetApi="31">
         <activity
-            android:name=".activities.BadgesActivity"
+            android:name=".features.home.BadgesActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.WordDetailsActivity"
+            android:name=".features.home.WordDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ShareCustomQuoteActivity"
+            android:name=".features.home.dailyQuote.ShareCustomQuoteActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.TestActivity"
+            android:name=".core.activities.TestActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".core.activities.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.QuranNexus.NoActionBar"
             android:windowSoftInputMode="adjustPan">
@@ -37,10 +37,10 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.AuthActivity"
+            android:name=".features.auth.AuthActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SplashActivity"
+            android:name=".features.onboard.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.QuranNexus">
             <intent-filter>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
-    tools:context=".activities.AuthActivity">
+    tools:context=".features.auth.AuthActivity">
 
     <FrameLayout
         android:id="@+id/authFragmentContainer"
@@ -15,4 +15,8 @@
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_welcome" />
 
+    <Button
+        android:id="@+id/mybtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

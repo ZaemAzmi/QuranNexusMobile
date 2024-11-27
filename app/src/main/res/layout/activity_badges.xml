@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_green_200"
-    tools:context=".activities.BadgesActivity">
+    tools:context=".features.home.BadgesActivity">
 
     <ImageView
         android:id="@+id/badgePageHeader"
