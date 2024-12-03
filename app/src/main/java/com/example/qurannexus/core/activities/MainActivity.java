@@ -15,13 +15,15 @@ import com.example.qurannexus.core.enums.BottomMenuItemId;
 import com.example.qurannexus.features.bookmark.BookmarkFragment;
 import com.example.qurannexus.features.home.HomeFragment;
 import com.example.qurannexus.features.prayerTimes.PrayerTimesFragment;
+import com.example.qurannexus.features.quiz.QuizActivity;
 import com.example.qurannexus.features.recitation.SurahListFragment;
 import com.example.qurannexus.features.irab.IrabFragment;
 import com.example.qurannexus.features.settings.SettingsFragment;
 import com.google.android.material.navigation.NavigationView;
 
-import io.realm.Realm;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
@@ -31,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Realm.init(this);
         setupNavigationDrawer();
         setupMeowNavigationBar();
         if (savedInstanceState == null) {
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.HOME.getId(), R.drawable.ic_home));
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.SURAHLIST.getId(), R.drawable.ic_quran));
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.BOOKMARK.getId(), R.drawable.ic_bookmark));
-        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.PRAYERTIMES.getId(), R.drawable.ic_mosque));
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.QUIZ.getId(), R.drawable.ic_mosque));
         meowBottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
             @Override
             public void onClickItem(MeowBottomNavigation.Model model) {
@@ -100,8 +101,9 @@ public class MainActivity extends AppCompatActivity {
                     case BOOKMARK:
                         selectedFragment = new BookmarkFragment();
                         break;
-                    case PRAYERTIMES:
-                        selectedFragment = new PrayerTimesFragment();
+                    case QUIZ:
+                        Intent i = new Intent(new Intent(MainActivity.this, QuizActivity.class));
+                        startActivity(i);
                         break;
                 }
 
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (fragment instanceof BookmarkFragment) {
                 meowBottomNavigation.show(BottomMenuItemId.BOOKMARK.getId(), true);
             } else if (fragment instanceof PrayerTimesFragment) {
-                meowBottomNavigation.show(BottomMenuItemId.PRAYERTIMES.getId(), true);
+                meowBottomNavigation.show(BottomMenuItemId.QUIZ.getId(), true);
             }
         }
     }

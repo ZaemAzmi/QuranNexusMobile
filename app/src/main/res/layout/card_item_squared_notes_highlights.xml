@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+  >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/bg_gradient_daily_word"
+        android:padding="12dp">
+
+        <!-- Image -->
+        <ImageView
+            android:id="@+id/highlightImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/temp_img1"
+            android:contentDescription="Highlight Image"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Text -->
+        <TextView
+            android:id="@+id/highlightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tajweed Notes"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

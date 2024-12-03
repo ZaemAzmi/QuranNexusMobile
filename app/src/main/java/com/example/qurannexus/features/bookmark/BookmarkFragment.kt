@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -27,6 +28,11 @@ class BookmarkFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_bookmark, container, false)
+        val activity = requireActivity() as AppCompatActivity
+        activity.supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.button_previous)
+        }
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
@@ -41,7 +47,8 @@ class BookmarkFragment : Fragment() {
                 0 -> "Chapters"
                 1 -> "Verses"
                 2 -> "Daily Quotes"
-                3 -> "History"
+                3 -> "Words"
+                4 -> "History"
                 else -> "Chapters"
             }
             tab.view.background = ContextCompat.getDrawable(requireContext(), R.drawable.tab_background_selector)

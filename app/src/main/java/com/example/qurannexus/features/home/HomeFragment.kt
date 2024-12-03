@@ -170,7 +170,7 @@ class HomeFragment : Fragment(), HighlightClickListener {
             .commit()
     }
     private fun fetchPrayerTimes() {
-//        val apiService = ApiService.getPrayerTimesClient().create(PrayerTimesApi::class.java)
+//        val apiService = ApiService.getPrayerTimesClient().create(com.example.qurannexus.features.prayerTimes.di.PrayerTimesApi::class.java)
 //        val call = apiService.getPrayerTimes("04-10-2024","Kuala Lumpur", "MY")
 //
 //        call.enqueue(object : Callback<PrayerTimesResponse> {
@@ -290,8 +290,8 @@ class HomeFragment : Fragment(), HighlightClickListener {
 
             badgeIcon.setImageResource(badge.iconRes)
             badgeTitle.text = badge.title
-            badgeView.isClickable = true
-            badgeView.isFocusable = true
+//            badgeView.isClickable = true
+//            badgeView.isFocusable = true
             badgeView.setOnClickListener {
                 Log.d("BadgeClick", "Clicked on: ${badge.title}")
                 showBadgePopup(badge)

@@ -2,8 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
-apply plugin: 'realm-android'
+//apply plugin: 'realm-android'
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.dagger.hilt.android'
+apply plugin: 'androidx.navigation.safeargs'
+
 android {
     namespace 'com.example.qurannexus'
     compileSdk 34
@@ -14,7 +19,7 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -27,6 +32,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enable true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -35,10 +43,25 @@ android {
         jvmTarget = '1.8'
     }
 }
-realm {
-    syncEnabled = true
+kapt {
+    correctErrorTypes true
 }
+//realm {
+//    syncEnabled = true
+//}
 dependencies {
+    implementation(libs.multidex)
+    // Hilt dependencies
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
+    implementation 'androidx.hilt:hilt-navigation-fragment:1.2.0'
+    kapt "androidx.hilt:hilt-compiler:1.2.0"
+
+    implementation "androidx.navigation:navigation-fragment-ktx:2.8.4"
+    implementation "androidx.navigation:navigation-ui-ktx:2.8.4"
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -49,8 +72,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'androidx.core:core-splashscreen:1.0.1'
-    implementation 'androidx.cardview:cardview:1.0.0'
-//    implementation 'com.github.LottieFiles:dotlottie-android:0.5.0' // Add this line
+    implementation libs.cardview
     implementation libs.kotlin.stdlib
     implementation libs.appcompat
     implementation libs.activity

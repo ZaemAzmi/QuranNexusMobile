@@ -1,141 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:padding="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Back Button -->
-    <ImageView
-        android:id="@+id/backButton"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/button_previous"
-        android:contentDescription="Back"
-        android:clickable="true"
-        android:focusable="true"
-        app:tint="@color/textColorPrimary" />
+    <data>
 
-    <!-- Main Content -->
-    <ScrollView
-        android:id="@+id/scrollView"
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/backButton">
+        android:background="@color/background_color"
+        android:padding="16dp">
 
-        <LinearLayout
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/button_previous"
+            android:contentDescription="Back"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/textColorPrimary" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="16dp">
+            android:layout_height="match_parent"
+            android:layout_below="@id/backButton">
 
-            <!-- Word Text -->
-            <TextView
-                android:id="@+id/wordText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Word"
-                android:textSize="24sp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:textColor="@color/textColorPrimary"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center" />
+                android:orientation="vertical"
+                android:paddingTop="16dp">
 
-            <!-- Translation -->
-            <TextView
-                android:id="@+id/translationText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Translation"
-                android:paddingVertical="4dp"
-                android:textColor="@color/textColorSecondary"
-                android:fontFamily="sans-serif" />
+                <!-- Word Text -->
+                <TextView
+                    android:id="@+id/wordText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Word"
+                    android:textSize="24sp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/textColorPrimary"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center" />
 
-            <!-- Transliteration -->
-            <TextView
-                android:id="@+id/transliterationText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Transliteration"
-                android:paddingVertical="4dp"
-                android:textColor="@color/textColorSecondary"
-                android:fontFamily="sans-serif" />
+                <!-- Translation -->
+                <TextView
+                    android:id="@+id/translationText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Translation"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:fontFamily="sans-serif" />
 
-            <!-- Surah Name -->
-            <TextView
-                android:id="@+id/surahNameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Surah Name"
-                android:paddingVertical="4dp"
-                android:textColor="@color/textColorSecondary"
-                android:fontFamily="sans-serif" />
+                <!-- Transliteration -->
+                <TextView
+                    android:id="@+id/transliterationText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Transliteration"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:fontFamily="sans-serif" />
 
-            <!-- Ayah Key -->
-            <TextView
-                android:id="@+id/ayahKeyText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ayah Key"
-                android:paddingVertical="4dp"
-                android:textColor="@color/textColorSecondary"
-                android:fontFamily="sans-serif" />
+                <!-- Surah Name -->
+                <TextView
+                    android:id="@+id/surahNameText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Surah Name"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:fontFamily="sans-serif" />
 
-            <!-- Surah Number -->
-            <TextView
-                android:id="@+id/surahNumberText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Surah Number"
-                android:paddingVertical="4dp"
-                android:textColor="@color/textColorSecondary"
-                android:fontFamily="sans-serif" />
+                <!-- Ayah Key -->
+                <TextView
+                    android:id="@+id/ayahKeyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ayah Key"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:fontFamily="sans-serif" />
 
-            <!-- Line Number -->
-            <TextView
-                android:id="@+id/lineNumberText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Line Number"
-                android:paddingVertical="4dp"
-                android:textColor="@color/textColorSecondary"
-                android:fontFamily="sans-serif" />
+                <!-- Surah Number -->
+                <TextView
+                    android:id="@+id/surahNumberText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Surah Number"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:fontFamily="sans-serif" />
 
-            <!-- Word Number -->
-            <TextView
-                android:id="@+id/wordNumberText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Word Number"
-                android:paddingVertical="4dp"
-                android:textColor="@color/textColorSecondary"
-                android:fontFamily="sans-serif" />
+                <!-- Line Number -->
+                <TextView
+                    android:id="@+id/lineNumberText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Line Number"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:fontFamily="sans-serif" />
 
-            <!-- Page ID -->
-            <TextView
-                android:id="@+id/pageIdText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Page ID"
-                android:paddingVertical="4dp"
-                android:textColor="@color/textColorSecondary"
-                android:fontFamily="sans-serif" />
+                <!-- Word Number -->
+                <TextView
+                    android:id="@+id/wordNumberText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Word Number"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:fontFamily="sans-serif" />
 
-            <!-- Play Audio Button -->
-            <Button
-                android:id="@+id/playAudioButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/primaryColor"
-                android:text="Play Audio"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+                <!-- Page ID -->
+                <TextView
+                    android:id="@+id/pageIdText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Page ID"
+                    android:paddingVertical="4dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:fontFamily="sans-serif" />
+
+                <!-- Play Audio Button -->
+                <Button
+                    android:id="@+id/playAudioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/primaryColor"
+                    android:text="Play Audio"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+        </ScrollView>
+
+        <com.github.mikephil.charting.charts.RadarChart
+            android:id="@+id/radarChart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
+    </RelativeLayout>
+</layout>

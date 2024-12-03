@@ -41,17 +41,17 @@
             app:mbn_selectedIconColor="@color/light_green_100"
             app:mbn_shadowColor="#1f212121" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabChatbot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="16dp"
-            android:contentDescription="@string/chatbot"
-            android:src="@drawable/ic_chatbot"
-            app:layout_anchor="@+id/mainFragmentContainer"
-            app:layout_anchorGravity="end|center" />
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fabChatbot"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:contentDescription="@string/chatbot"-->
+<!--            android:src="@drawable/ic_chatbot"-->
+<!--            app:layout_anchor="@+id/mainFragmentContainer"-->
+<!--            app:layout_anchorGravity="end|center" />-->
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView

@@ -1,19 +1,26 @@
 package com.example.qurannexus.features.home
 
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.example.qurannexus.R
+import com.github.mikephil.charting.charts.RadarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.data.RadarDataSet
+import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import java.io.IOException
 
-
 class WordDetailsActivity : AppCompatActivity() {
+    private lateinit var radarChart: RadarChart
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_details)
@@ -69,6 +76,59 @@ class WordDetailsActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to play audio", Toast.LENGTH_SHORT).show()
             }
         }
+        radarChart = findViewById(R.id.radarChart)
+        setupRadialChart()
+    }
+
+    private fun setupRadialChart(){
+        val entries = ArrayList<RadarEntry>()
+        entries.add(RadarEntry(70f)) // Value for first category
+        entries.add(RadarEntry(50f)) // Value for second category
+        entries.add(RadarEntry(90f)) // Value for third category
+        entries.add(RadarEntry(60f)) // Value for fourth category
+        entries.add(RadarEntry(80f)) // Value for fifth category
+
+
+        // Create the dataset
+        val dataSet = RadarDataSet(entries, "Performance")
+        dataSet.color = Color.BLUE
+        dataSet.fillColor = Color.BLUE
+        dataSet.setDrawFilled(true)
+        dataSet.fillAlpha = 180
+        dataSet.lineWidth = 2f
+
+
+        // Prepare the RadarData object
+        val data = RadarData(dataSet)
+        data.setValueTextSize(8f)
+        data.setDrawValues(true)
+
+
+        // Customize the chart
+        radarChart.setData(data)
+        radarChart.getDescription().setEnabled(false)
+
+
+        // Customize X-Axis (categories)
+        val xAxis: XAxis = radarChart.getXAxis()
+        xAxis.textSize = 9f
+        val labels = arrayOf("Category 1", "Category 2", "Category 3", "Category 4", "Category 5")
+        xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+
+
+        // Customize Y-Axis
+        val yAxis: YAxis = radarChart.getYAxis()
+        yAxis.setLabelCount(5, true)
+        yAxis.axisMinimum = 0f
+        yAxis.axisMaximum = 100f
+
+
+        // Optional: Animate the chart
+        radarChart.animateXY(1400, 1400)
+
+
+        // Refresh the chart
+        radarChart.invalidate()
     }
 }
 

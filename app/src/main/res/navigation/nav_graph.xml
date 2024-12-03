@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/quizCategoryFragment">
+
+    <fragment
+        android:id="@+id/quizCategoryFragment"
+        android:name="com.example.qurannexus.features.quiz.QuizCategoryFragment"
+        android:label="Categories" >
+        <action
+            android:id="@+id/action_quizCategoryFragment_to_quizQuestionFragment"
+            app:destination="@id/quizQuestionFragment"
+            app:popUpTo="@id/quizCategoryFragment"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/quizQuestionFragment"
+        android:name="com.example.qurannexus.features.quiz.QuizQuestionFragment"
+        android:label="Questions" >
+        <argument
+            android:name="category"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_quizQuestionFragment_to_quizResultFragment"
+            app:destination="@id/quizResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/quizResultFragment"
+        android:name="com.example.qurannexus.features.quiz.QuizResultFragment"
+        android:label="Results" />
+
+</navigation>

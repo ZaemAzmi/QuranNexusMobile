@@ -1,3 +1,5 @@
+package com.example.qurannexus.features.prayerTimes.di
+
 import com.example.qurannexus.features.prayerTimes.models.PrayerTimesResponse
 import retrofit2.Call
 import retrofit2.http.GET

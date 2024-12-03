@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/surah_number_frame" />
 
-                <com.example.qurannexus.customViews.AutoFitTextView
+                <com.example.qurannexus.core.customViews.AutoFitTextView
                     android:id="@+id/bookmarkChapterNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
