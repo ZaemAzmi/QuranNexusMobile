@@ -1,0 +1,377 @@
+{
+  "surah_id": "94",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "94:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ نَشْرَحْ لَكَ صَدْرَكَ",
+          "answer": "أَلَمْ",
+          "options": [
+            "وَرَفَعْنَا",
+            "مَعَ",
+            "فَإِنَّ",
+            "أَلَمْ"
+          ],
+          "translation": "Have not"
+        },
+        {
+          "question_id": 2,
+          "question": "أَلَمْ _____ لَكَ صَدْرَكَ",
+          "answer": "نَشْرَحْ",
+          "options": [
+            "نَشْرَحْ",
+            "عَنكَ",
+            "فَٱنصَبْ",
+            "ﰇ"
+          ],
+          "translation": "We expanded"
+        },
+        {
+          "question_id": 3,
+          "question": "أَلَمْ نَشْرَحْ _____ صَدْرَكَ",
+          "answer": "لَكَ",
+          "options": [
+            "صَدْرَكَ",
+            "ﰄ",
+            "لَكَ",
+            "أَلَمْ"
+          ],
+          "translation": "for you"
+        },
+        {
+          "question_id": 4,
+          "question": "أَلَمْ نَشْرَحْ لَكَ _____",
+          "answer": "صَدْرَكَ",
+          "options": [
+            "صَدْرَكَ",
+            "يُسْرًا",
+            "ﰀ",
+            "لَكَ"
+          ],
+          "translation": "your breast"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "94:2",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ عَنكَ وِزْرَكَ",
+          "answer": "وَوَضَعْنَا",
+          "options": [
+            "أَنقَضَ",
+            "يُسْرًا",
+            "ﰂ",
+            "وَوَضَعْنَا"
+          ],
+          "translation": "And We removed"
+        },
+        {
+          "question_id": 6,
+          "question": "وَوَضَعْنَا _____ وِزْرَكَ",
+          "answer": "عَنكَ",
+          "options": [
+            "مَعَ",
+            "فَإِذَا",
+            "وِزْرَكَ",
+            "عَنكَ"
+          ],
+          "translation": "from you"
+        },
+        {
+          "question_id": 7,
+          "question": "وَوَضَعْنَا عَنكَ _____",
+          "answer": "وِزْرَكَ",
+          "options": [
+            "وِزْرَكَ",
+            "ﰄ",
+            "وَرَفَعْنَا",
+            "ٱلْعُسْرِ"
+          ],
+          "translation": "your burden"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "94:3",
+      "questions": [
+        {
+          "question_id": 8,
+          "question": "_____ أَنقَضَ ظَهْرَكَ",
+          "answer": "ٱلَّذِىٓ",
+          "options": [
+            "ﰅ",
+            "وِزْرَكَ",
+            "ٱلَّذِىٓ",
+            "فَإِنَّ"
+          ],
+          "translation": "Which"
+        },
+        {
+          "question_id": 9,
+          "question": "ٱلَّذِىٓ _____ ظَهْرَكَ",
+          "answer": "أَنقَضَ",
+          "options": [
+            "ﰁ",
+            "وِزْرَكَ",
+            "أَنقَضَ",
+            "ﰆ"
+          ],
+          "translation": "weighed upon"
+        },
+        {
+          "question_id": 10,
+          "question": "ٱلَّذِىٓ أَنقَضَ _____",
+          "answer": "ظَهْرَكَ",
+          "options": [
+            "ﰆ",
+            "فَٱنصَبْ",
+            "ظَهْرَكَ",
+            "ﰃ"
+          ],
+          "translation": "your back"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "94:4",
+      "questions": [
+        {
+          "question_id": 11,
+          "question": "_____ لَكَ ذِكْرَكَ",
+          "answer": "وَرَفَعْنَا",
+          "options": [
+            "لَكَ",
+            "وَرَفَعْنَا",
+            "نَشْرَحْ",
+            "ٱلْعُسْرِ"
+          ],
+          "translation": "And We raised high"
+        },
+        {
+          "question_id": 12,
+          "question": "وَرَفَعْنَا _____ ذِكْرَكَ",
+          "answer": "لَكَ",
+          "options": [
+            "لَكَ",
+            "أَلَمْ",
+            "صَدْرَكَ",
+            "يُسْرًا"
+          ],
+          "translation": "for you"
+        },
+        {
+          "question_id": 13,
+          "question": "وَرَفَعْنَا لَكَ _____",
+          "answer": "ذِكْرَكَ",
+          "options": [
+            "ذِكْرَكَ",
+            "نَشْرَحْ",
+            "ظَهْرَكَ",
+            "ﰁ"
+          ],
+          "translation": "your reputation"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "94:5",
+      "questions": [
+        {
+          "question_id": 14,
+          "question": "_____ مَعَ ٱلْعُسْرِ يُسْرًا",
+          "answer": "فَإِنَّ",
+          "options": [
+            "وِزْرَكَ",
+            "فَإِنَّ",
+            "عَنكَ",
+            "إِنَّ"
+          ],
+          "translation": "So indeed"
+        },
+        {
+          "question_id": 15,
+          "question": "فَإِنَّ _____ ٱلْعُسْرِ يُسْرًا",
+          "answer": "مَعَ",
+          "options": [
+            "ﰁ",
+            "وِزْرَكَ",
+            "مَعَ",
+            "عَنكَ"
+          ],
+          "translation": "with"
+        },
+        {
+          "question_id": 16,
+          "question": "فَإِنَّ مَعَ _____ يُسْرًا",
+          "answer": "ٱلْعُسْرِ",
+          "options": [
+            "لَكَ",
+            "ﰆ",
+            "ٱلْعُسْرِ",
+            "وَإِلَىٰ"
+          ],
+          "translation": "the hardship"
+        },
+        {
+          "question_id": 17,
+          "question": "فَإِنَّ مَعَ ٱلْعُسْرِ _____",
+          "answer": "يُسْرًا",
+          "options": [
+            "أَنقَضَ",
+            "نَشْرَحْ",
+            "يُسْرًا",
+            "عَنكَ"
+          ],
+          "translation": "(is) ease"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "94:6",
+      "questions": [
+        {
+          "question_id": 18,
+          "question": "_____ مَعَ ٱلْعُسْرِ يُسْرًا",
+          "answer": "إِنَّ",
+          "options": [
+            "إِنَّ",
+            "ﰆ",
+            "فَرَغْتَ",
+            "فَإِذَا"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 19,
+          "question": "إِنَّ _____ ٱلْعُسْرِ يُسْرًا",
+          "answer": "مَعَ",
+          "options": [
+            "فَرَغْتَ",
+            "مَعَ",
+            "ذِكْرَكَ",
+            "ﰁ"
+          ],
+          "translation": "with"
+        },
+        {
+          "question_id": 20,
+          "question": "إِنَّ مَعَ _____ يُسْرًا",
+          "answer": "ٱلْعُسْرِ",
+          "options": [
+            "ٱلْعُسْرِ",
+            "فَإِذَا",
+            "لَكَ",
+            "فَٱنصَبْ"
+          ],
+          "translation": "the hardship"
+        },
+        {
+          "question_id": 21,
+          "question": "إِنَّ مَعَ ٱلْعُسْرِ _____",
+          "answer": "يُسْرًا",
+          "options": [
+            "وَرَفَعْنَا",
+            "يُسْرًا",
+            "عَنكَ",
+            "أَنقَضَ"
+          ],
+          "translation": "(is) ease"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "94:7",
+      "questions": [
+        {
+          "question_id": 22,
+          "question": "_____ فَرَغْتَ فَٱنصَبْ",
+          "answer": "فَإِذَا",
+          "options": [
+            "ﰆ",
+            "وَإِلَىٰ",
+            "لَكَ",
+            "فَإِذَا"
+          ],
+          "translation": "So when"
+        },
+        {
+          "question_id": 23,
+          "question": "فَإِذَا _____ فَٱنصَبْ",
+          "answer": "فَرَغْتَ",
+          "options": [
+            "وَإِلَىٰ",
+            "فَإِنَّ",
+            "فَرَغْتَ",
+            "لَكَ"
+          ],
+          "translation": "you have finished"
+        },
+        {
+          "question_id": 24,
+          "question": "فَإِذَا فَرَغْتَ _____",
+          "answer": "فَٱنصَبْ",
+          "options": [
+            "رَبِّكَ",
+            "فَرَغْتَ",
+            "فَٱنصَبْ",
+            "ﰀ"
+          ],
+          "translation": "then labor hard"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "94:8",
+      "questions": [
+        {
+          "question_id": 25,
+          "question": "_____ رَبِّكَ فَٱرْغَب",
+          "answer": "وَإِلَىٰ",
+          "options": [
+            "فَٱنصَبْ",
+            "وَرَفَعْنَا",
+            "فَٱرْغَب",
+            "وَإِلَىٰ"
+          ],
+          "translation": "And to"
+        },
+        {
+          "question_id": 26,
+          "question": "وَإِلَىٰ _____ فَٱرْغَب",
+          "answer": "رَبِّكَ",
+          "options": [
+            "رَبِّكَ",
+            "يُسْرًا",
+            "وَرَفَعْنَا",
+            "فَإِذَا"
+          ],
+          "translation": "your Lord"
+        },
+        {
+          "question_id": 27,
+          "question": "وَإِلَىٰ رَبِّكَ _____",
+          "answer": "فَٱرْغَب",
+          "options": [
+            "لَكَ",
+            "وِزْرَكَ",
+            "ٱلْعُسْرِ",
+            "فَٱرْغَب"
+          ],
+          "translation": "turn your attention"
+        }
+      ]
+    }
+  ]
+}

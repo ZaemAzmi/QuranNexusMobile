@@ -34,6 +34,11 @@
         <item name="background">@color/transparent</item>
     </style>
 
+    <style name="PreferenceCategoryStyle" parent="Preference.Category">
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+    </style>
+
     <!-- res/values/themes.xml -->
 
 </resources>

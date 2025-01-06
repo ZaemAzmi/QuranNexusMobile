@@ -6,11 +6,11 @@
     <color name="gray">#818080</color>
     <color name="light_gray">#B3B2B2</color>
 
-
     <color name="light_green_100">#80F184</color>
     <color name="dark_green_200">#108A83</color>
     <color name="surah_card_dark_green_300">#003F30</color>
     <color name="surah_card_dark_green_350">#1D6050</color>
+    <color name="green_blue_100">#BAFFEE</color>
 
     <color name="ayah_card_dark_green_400">#0C2414</color>
     <color name="light_green_side_nav">#C6FFD9</color>

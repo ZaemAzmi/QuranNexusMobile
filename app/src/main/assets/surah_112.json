@@ -1,0 +1,209 @@
+{
+  "surah_id": "112",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "112:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ هُوَ ٱللَّهُ أَحَدٌ",
+          "answer": "قُلْ",
+          "options": [
+            "ﰀ",
+            "ٱللَّهُ",
+            "ﰃ",
+            "قُلْ"
+          ],
+          "translation": "Say"
+        },
+        {
+          "question_id": 2,
+          "question": "قُلْ _____ ٱللَّهُ أَحَدٌ",
+          "answer": "هُوَ",
+          "options": [
+            "ﰂ",
+            "ٱللَّهُ",
+            "أَحَدٌۢ",
+            "هُوَ"
+          ],
+          "translation": "He"
+        },
+        {
+          "question_id": 3,
+          "question": "قُلْ هُوَ _____ أَحَدٌ",
+          "answer": "ٱللَّهُ",
+          "options": [
+            "ﰂ",
+            "يُولَدْ",
+            "ﰁ",
+            "ٱللَّهُ"
+          ],
+          "translation": "(is) Allah"
+        },
+        {
+          "question_id": 4,
+          "question": "قُلْ هُوَ ٱللَّهُ _____",
+          "answer": "أَحَدٌ",
+          "options": [
+            "ٱللَّهُ",
+            "ﰀ",
+            "أَحَدٌ",
+            "يَلِدْ"
+          ],
+          "translation": "the One"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "112:2",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ ٱلصَّمَدُ",
+          "answer": "ٱللَّهُ",
+          "options": [
+            "كُفُوًا",
+            "ٱللَّهُ",
+            "وَلَمْ",
+            "قُلْ"
+          ],
+          "translation": "Allah"
+        },
+        {
+          "question_id": 6,
+          "question": "ٱللَّهُ _____",
+          "answer": "ٱلصَّمَدُ",
+          "options": [
+            "يَلِدْ",
+            "ﰂ",
+            "لَمْ",
+            "ٱلصَّمَدُ"
+          ],
+          "translation": "the Eternal, the Absolute"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "112:3",
+      "questions": [
+        {
+          "question_id": 7,
+          "question": "_____ يَلِدْ وَلَمْ يُولَدْ",
+          "answer": "لَمْ",
+          "options": [
+            "ﰁ",
+            "يُولَدْ",
+            "لَمْ",
+            "يَلِدْ"
+          ],
+          "translation": "Not"
+        },
+        {
+          "question_id": 8,
+          "question": "لَمْ _____ وَلَمْ يُولَدْ",
+          "answer": "يَلِدْ",
+          "options": [
+            "وَلَمْ",
+            "يَلِدْ",
+            "ٱللَّهُ",
+            "هُوَ"
+          ],
+          "translation": "He begets"
+        },
+        {
+          "question_id": 9,
+          "question": "لَمْ يَلِدْ _____ يُولَدْ",
+          "answer": "وَلَمْ",
+          "options": [
+            "يَلِدْ",
+            "وَلَمْ",
+            "ﰀ",
+            "ﰁ"
+          ],
+          "translation": "and not"
+        },
+        {
+          "question_id": 10,
+          "question": "لَمْ يَلِدْ وَلَمْ _____",
+          "answer": "يُولَدْ",
+          "options": [
+            "وَلَمْ",
+            "يُولَدْ",
+            "هُوَ",
+            "يَلِدْ"
+          ],
+          "translation": "He is begotten"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "112:4",
+      "questions": [
+        {
+          "question_id": 11,
+          "question": "_____ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ",
+          "answer": "وَلَمْ",
+          "options": [
+            "يَلِدْ",
+            "كُفُوًا",
+            "يُولَدْ",
+            "وَلَمْ"
+          ],
+          "translation": "And not"
+        },
+        {
+          "question_id": 12,
+          "question": "وَلَمْ _____ لَّهُۥ كُفُوًا أَحَدٌۢ",
+          "answer": "يَكُن",
+          "options": [
+            "ٱلصَّمَدُ",
+            "يُولَدْ",
+            "يَكُن",
+            "ﰀ"
+          ],
+          "translation": "is"
+        },
+        {
+          "question_id": 13,
+          "question": "وَلَمْ يَكُن _____ كُفُوًا أَحَدٌۢ",
+          "answer": "لَّهُۥ",
+          "options": [
+            "وَلَمْ",
+            "لَّهُۥ",
+            "قُلْ",
+            "ٱللَّهُ"
+          ],
+          "translation": "for Him"
+        },
+        {
+          "question_id": 14,
+          "question": "وَلَمْ يَكُن لَّهُۥ _____ أَحَدٌۢ",
+          "answer": "كُفُوًا",
+          "options": [
+            "كُفُوًا",
+            "ﰂ",
+            "ﰀ",
+            "أَحَدٌۢ"
+          ],
+          "translation": "equivalent"
+        },
+        {
+          "question_id": 15,
+          "question": "وَلَمْ يَكُن لَّهُۥ كُفُوًا _____",
+          "answer": "أَحَدٌۢ",
+          "options": [
+            "ﰂ",
+            "أَحَدٌۢ",
+            "ﰃ",
+            "وَلَمْ"
+          ],
+          "translation": "any [one]"
+        }
+      ]
+    }
+  ]
+}

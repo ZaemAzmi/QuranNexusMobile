@@ -1,0 +1,311 @@
+{
+  "surah_id": "113",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "113:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ أَعُوذُ بِرَبِّ ٱلْفَلَقِ",
+          "answer": "قُلْ",
+          "options": [
+            "وَمِن",
+            "إِذَا",
+            "شَرِّ",
+            "قُلْ"
+          ],
+          "translation": "Say"
+        },
+        {
+          "question_id": 2,
+          "question": "قُلْ _____ بِرَبِّ ٱلْفَلَقِ",
+          "answer": "أَعُوذُ",
+          "options": [
+            "أَعُوذُ",
+            "وَمِن",
+            "ﰃ",
+            "شَرِّ"
+          ],
+          "translation": "I seek refuge"
+        },
+        {
+          "question_id": 3,
+          "question": "قُلْ أَعُوذُ _____ ٱلْفَلَقِ",
+          "answer": "بِرَبِّ",
+          "options": [
+            "ٱلْفَلَقِ",
+            "شَرِّ",
+            "قُلْ",
+            "بِرَبِّ"
+          ],
+          "translation": "in (the) Lord"
+        },
+        {
+          "question_id": 4,
+          "question": "قُلْ أَعُوذُ بِرَبِّ _____",
+          "answer": "ٱلْفَلَقِ",
+          "options": [
+            "وَمِن",
+            "فِى",
+            "ٱلْفَلَقِ",
+            "شَرِّ"
+          ],
+          "translation": "(of) the dawn"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "113:2",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ شَرِّ مَا خَلَقَ",
+          "answer": "مِن",
+          "options": [
+            "وَمِن",
+            "أَعُوذُ",
+            "مِن",
+            "قُلْ"
+          ],
+          "translation": "From"
+        },
+        {
+          "question_id": 6,
+          "question": "مِن _____ مَا خَلَقَ",
+          "answer": "شَرِّ",
+          "options": [
+            "ﰃ",
+            "قُلْ",
+            "شَرِّ",
+            "حَاسِدٍ"
+          ],
+          "translation": "(the) evil"
+        },
+        {
+          "question_id": 7,
+          "question": "مِن شَرِّ _____ خَلَقَ",
+          "answer": "مَا",
+          "options": [
+            "مَا",
+            "ﰃ",
+            "وَمِن",
+            "قُلْ"
+          ],
+          "translation": "(of) what"
+        },
+        {
+          "question_id": 8,
+          "question": "مِن شَرِّ مَا _____",
+          "answer": "خَلَقَ",
+          "options": [
+            "شَرِّ",
+            "خَلَقَ",
+            "مَا",
+            "غَاسِقٍ"
+          ],
+          "translation": "He created"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "113:3",
+      "questions": [
+        {
+          "question_id": 9,
+          "question": "_____ شَرِّ غَاسِقٍ إِذَا وَقَبَ",
+          "answer": "وَمِن",
+          "options": [
+            "وَمِن",
+            "ٱلْفَلَقِ",
+            "ﰃ",
+            "شَرِّ"
+          ],
+          "translation": "And from"
+        },
+        {
+          "question_id": 10,
+          "question": "وَمِن _____ غَاسِقٍ إِذَا وَقَبَ",
+          "answer": "شَرِّ",
+          "options": [
+            "وَمِن",
+            "وَقَبَ",
+            "شَرِّ",
+            "ٱلنَّفَّٰثَٰتِ"
+          ],
+          "translation": "(the) evil"
+        },
+        {
+          "question_id": 11,
+          "question": "وَمِن شَرِّ _____ إِذَا وَقَبَ",
+          "answer": "غَاسِقٍ",
+          "options": [
+            "وَقَبَ",
+            "غَاسِقٍ",
+            "ﰃ",
+            "حَاسِدٍ"
+          ],
+          "translation": "(of) darkness"
+        },
+        {
+          "question_id": 12,
+          "question": "وَمِن شَرِّ غَاسِقٍ _____ وَقَبَ",
+          "answer": "إِذَا",
+          "options": [
+            "ٱلنَّفَّٰثَٰتِ",
+            "شَرِّ",
+            "وَمِن",
+            "إِذَا"
+          ],
+          "translation": "when"
+        },
+        {
+          "question_id": 13,
+          "question": "وَمِن شَرِّ غَاسِقٍ إِذَا _____",
+          "answer": "وَقَبَ",
+          "options": [
+            "قُلْ",
+            "مَا",
+            "وَقَبَ",
+            "أَعُوذُ"
+          ],
+          "translation": "it spreads"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "113:4",
+      "questions": [
+        {
+          "question_id": 14,
+          "question": "_____ شَرِّ ٱلنَّفَّٰثَٰتِ فِى ٱلْعُقَدِ",
+          "answer": "وَمِن",
+          "options": [
+            "شَرِّ",
+            "حَاسِدٍ",
+            "وَمِن",
+            "قُلْ"
+          ],
+          "translation": "And from"
+        },
+        {
+          "question_id": 15,
+          "question": "وَمِن _____ ٱلنَّفَّٰثَٰتِ فِى ٱلْعُقَدِ",
+          "answer": "شَرِّ",
+          "options": [
+            "إِذَا",
+            "غَاسِقٍ",
+            "شَرِّ",
+            "مَا"
+          ],
+          "translation": "(the) evil"
+        },
+        {
+          "question_id": 16,
+          "question": "وَمِن شَرِّ _____ فِى ٱلْعُقَدِ",
+          "answer": "ٱلنَّفَّٰثَٰتِ",
+          "options": [
+            "ٱلنَّفَّٰثَٰتِ",
+            "أَعُوذُ",
+            "شَرِّ",
+            "غَاسِقٍ"
+          ],
+          "translation": "(of) the blowers"
+        },
+        {
+          "question_id": 17,
+          "question": "وَمِن شَرِّ ٱلنَّفَّٰثَٰتِ _____ ٱلْعُقَدِ",
+          "answer": "فِى",
+          "options": [
+            "بِرَبِّ",
+            "ﰁ",
+            "ٱلْعُقَدِ",
+            "فِى"
+          ],
+          "translation": "in"
+        },
+        {
+          "question_id": 18,
+          "question": "وَمِن شَرِّ ٱلنَّفَّٰثَٰتِ فِى _____",
+          "answer": "ٱلْعُقَدِ",
+          "options": [
+            "وَمِن",
+            "خَلَقَ",
+            "فِى",
+            "ٱلْعُقَدِ"
+          ],
+          "translation": "the knots"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "113:5",
+      "questions": [
+        {
+          "question_id": 19,
+          "question": "_____ شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+          "answer": "وَمِن",
+          "options": [
+            "وَقَبَ",
+            "إِذَا",
+            "فِى",
+            "وَمِن"
+          ],
+          "translation": "And from"
+        },
+        {
+          "question_id": 20,
+          "question": "وَمِن _____ حَاسِدٍ إِذَا حَسَدَ",
+          "answer": "شَرِّ",
+          "options": [
+            "ﰂ",
+            "وَمِن",
+            "شَرِّ",
+            "ﰀ"
+          ],
+          "translation": "(the) evil"
+        },
+        {
+          "question_id": 21,
+          "question": "وَمِن شَرِّ _____ إِذَا حَسَدَ",
+          "answer": "حَاسِدٍ",
+          "options": [
+            "حَاسِدٍ",
+            "ﰄ",
+            "ﰂ",
+            "شَرِّ"
+          ],
+          "translation": "(of) an envier"
+        },
+        {
+          "question_id": 22,
+          "question": "وَمِن شَرِّ حَاسِدٍ _____ حَسَدَ",
+          "answer": "إِذَا",
+          "options": [
+            "إِذَا",
+            "حَاسِدٍ",
+            "ﰄ",
+            "غَاسِقٍ"
+          ],
+          "translation": "when"
+        },
+        {
+          "question_id": 23,
+          "question": "وَمِن شَرِّ حَاسِدٍ إِذَا _____",
+          "answer": "حَسَدَ",
+          "options": [
+            "شَرِّ",
+            "غَاسِقٍ",
+            "ٱلْعُقَدِ",
+            "حَسَدَ"
+          ],
+          "translation": "he envies"
+        }
+      ]
+    }
+  ]
+}

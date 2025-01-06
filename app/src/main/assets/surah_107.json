@@ -1,0 +1,347 @@
+{
+  "surah_id": "107",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "107:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ ٱلَّذِى يُكَذِّبُ بِٱلدِّينِ",
+          "answer": "أَرَءَيْتَ",
+          "options": [
+            "لِّلْمُصَلِّينَ",
+            "ٱلَّذِينَ",
+            "أَرَءَيْتَ",
+            "ﰆ"
+          ],
+          "translation": "Have you seen"
+        },
+        {
+          "question_id": 2,
+          "question": "أَرَءَيْتَ _____ يُكَذِّبُ بِٱلدِّينِ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "ٱلْيَتِيمَ",
+            "ﰅ",
+            "ٱلَّذِينَ",
+            "ٱلَّذِى"
+          ],
+          "translation": "the one who"
+        },
+        {
+          "question_id": 3,
+          "question": "أَرَءَيْتَ ٱلَّذِى _____ بِٱلدِّينِ",
+          "answer": "يُكَذِّبُ",
+          "options": [
+            "أَرَءَيْتَ",
+            "يُكَذِّبُ",
+            "صَلَاتِهِمْ",
+            "لِّلْمُصَلِّينَ"
+          ],
+          "translation": "denies"
+        },
+        {
+          "question_id": 4,
+          "question": "أَرَءَيْتَ ٱلَّذِى يُكَذِّبُ _____",
+          "answer": "بِٱلدِّينِ",
+          "options": [
+            "بِٱلدِّينِ",
+            "ﰅ",
+            "ٱلَّذِى",
+            "لِّلْمُصَلِّينَ"
+          ],
+          "translation": "the Judgment"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "107:2",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ ٱلَّذِى يَدُعُّ ٱلْيَتِيمَ",
+          "answer": "فَذَٰلِكَ",
+          "options": [
+            "بِٱلدِّينِ",
+            "ٱلَّذِينَ",
+            "فَذَٰلِكَ",
+            "هُمْ"
+          ],
+          "translation": "Then that"
+        },
+        {
+          "question_id": 6,
+          "question": "فَذَٰلِكَ _____ يَدُعُّ ٱلْيَتِيمَ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "ٱلَّذِى",
+            "سَاهُونَ",
+            "ٱلَّذِينَ",
+            "ﰆ"
+          ],
+          "translation": "(is) the one who"
+        },
+        {
+          "question_id": 7,
+          "question": "فَذَٰلِكَ ٱلَّذِى _____ ٱلْيَتِيمَ",
+          "answer": "يَدُعُّ",
+          "options": [
+            "وَلَا",
+            "يُرَآءُونَ",
+            "يَدُعُّ",
+            "فَذَٰلِكَ"
+          ],
+          "translation": "repulses"
+        },
+        {
+          "question_id": 8,
+          "question": "فَذَٰلِكَ ٱلَّذِى يَدُعُّ _____",
+          "answer": "ٱلْيَتِيمَ",
+          "options": [
+            "يُرَآءُونَ",
+            "ﰄ",
+            "ٱلْيَتِيمَ",
+            "صَلَاتِهِمْ"
+          ],
+          "translation": "the orphan"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "107:3",
+      "questions": [
+        {
+          "question_id": 9,
+          "question": "_____ يَحُضُّ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ",
+          "answer": "وَلَا",
+          "options": [
+            "وَلَا",
+            "ٱلْيَتِيمَ",
+            "سَاهُونَ",
+            "ﰃ"
+          ],
+          "translation": "And (does) not"
+        },
+        {
+          "question_id": 10,
+          "question": "وَلَا _____ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ",
+          "answer": "يَحُضُّ",
+          "options": [
+            "يَحُضُّ",
+            "يَدُعُّ",
+            "ٱلْيَتِيمَ",
+            "ٱلَّذِى"
+          ],
+          "translation": "feel the urge"
+        },
+        {
+          "question_id": 11,
+          "question": "وَلَا يَحُضُّ _____ طَعَامِ ٱلْمِسْكِينِ",
+          "answer": "عَلَىٰ",
+          "options": [
+            "عَن",
+            "عَلَىٰ",
+            "ٱلْمَاعُونَ",
+            "ٱلَّذِينَ"
+          ],
+          "translation": "to"
+        },
+        {
+          "question_id": 12,
+          "question": "وَلَا يَحُضُّ عَلَىٰ _____ ٱلْمِسْكِينِ",
+          "answer": "طَعَامِ",
+          "options": [
+            "عَلَىٰ",
+            "طَعَامِ",
+            "ٱلَّذِينَ",
+            "ٱلَّذِى"
+          ],
+          "translation": "feed"
+        },
+        {
+          "question_id": 13,
+          "question": "وَلَا يَحُضُّ عَلَىٰ طَعَامِ _____",
+          "answer": "ٱلْمِسْكِينِ",
+          "options": [
+            "فَوَيْلٌ",
+            "ﰁ",
+            "هُمْ",
+            "ٱلْمِسْكِينِ"
+          ],
+          "translation": "the poor"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "107:4",
+      "questions": [
+        {
+          "question_id": 14,
+          "question": "_____ لِّلْمُصَلِّينَ",
+          "answer": "فَوَيْلٌ",
+          "options": [
+            "ﰂ",
+            "ﰄ",
+            "فَوَيْلٌ",
+            "ٱلْمَاعُونَ"
+          ],
+          "translation": "So woe"
+        },
+        {
+          "question_id": 15,
+          "question": "فَوَيْلٌ _____",
+          "answer": "لِّلْمُصَلِّينَ",
+          "options": [
+            "لِّلْمُصَلِّينَ",
+            "ٱلَّذِى",
+            "طَعَامِ",
+            "أَرَءَيْتَ"
+          ],
+          "translation": "to those who pray"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "107:5",
+      "questions": [
+        {
+          "question_id": 16,
+          "question": "_____ هُمْ عَن صَلَاتِهِمْ سَاهُونَ",
+          "answer": "ٱلَّذِينَ",
+          "options": [
+            "ٱلَّذِينَ",
+            "ﰂ",
+            "ٱلْيَتِيمَ",
+            "ٱلْمِسْكِينِ"
+          ],
+          "translation": "Those who"
+        },
+        {
+          "question_id": 17,
+          "question": "ٱلَّذِينَ _____ عَن صَلَاتِهِمْ سَاهُونَ",
+          "answer": "هُمْ",
+          "options": [
+            "ﰅ",
+            "ﰄ",
+            "هُمْ",
+            "ٱلْمِسْكِينِ"
+          ],
+          "translation": "[they]"
+        },
+        {
+          "question_id": 18,
+          "question": "ٱلَّذِينَ هُمْ _____ صَلَاتِهِمْ سَاهُونَ",
+          "answer": "عَن",
+          "options": [
+            "ﰅ",
+            "ﰄ",
+            "عَن",
+            "فَوَيْلٌ"
+          ],
+          "translation": "about"
+        },
+        {
+          "question_id": 19,
+          "question": "ٱلَّذِينَ هُمْ عَن _____ سَاهُونَ",
+          "answer": "صَلَاتِهِمْ",
+          "options": [
+            "صَلَاتِهِمْ",
+            "ٱلَّذِى",
+            "ﰀ",
+            "هُمْ"
+          ],
+          "translation": "their prayers"
+        },
+        {
+          "question_id": 20,
+          "question": "ٱلَّذِينَ هُمْ عَن صَلَاتِهِمْ _____",
+          "answer": "سَاهُونَ",
+          "options": [
+            "ﰄ",
+            "بِٱلدِّينِ",
+            "سَاهُونَ",
+            "وَلَا"
+          ],
+          "translation": "(are) neglectful"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "107:6",
+      "questions": [
+        {
+          "question_id": 21,
+          "question": "_____ هُمْ يُرَآءُونَ",
+          "answer": "ٱلَّذِينَ",
+          "options": [
+            "ٱلَّذِينَ",
+            "بِٱلدِّينِ",
+            "عَلَىٰ",
+            "طَعَامِ"
+          ],
+          "translation": "Those who"
+        },
+        {
+          "question_id": 22,
+          "question": "ٱلَّذِينَ _____ يُرَآءُونَ",
+          "answer": "هُمْ",
+          "options": [
+            "يُرَآءُونَ",
+            "ٱلَّذِى",
+            "هُمْ",
+            "ﰄ"
+          ],
+          "translation": "[they]"
+        },
+        {
+          "question_id": 23,
+          "question": "ٱلَّذِينَ هُمْ _____",
+          "answer": "يُرَآءُونَ",
+          "options": [
+            "بِٱلدِّينِ",
+            "يَحُضُّ",
+            "يُرَآءُونَ",
+            "ٱلْمِسْكِينِ"
+          ],
+          "translation": "make show"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "107:7",
+      "questions": [
+        {
+          "question_id": 24,
+          "question": "_____ ٱلْمَاعُونَ",
+          "answer": "وَيَمْنَعُونَ",
+          "options": [
+            "لِّلْمُصَلِّينَ",
+            "يُرَآءُونَ",
+            "وَيَمْنَعُونَ",
+            "ﰁ"
+          ],
+          "translation": "And they deny"
+        },
+        {
+          "question_id": 25,
+          "question": "وَيَمْنَعُونَ _____",
+          "answer": "ٱلْمَاعُونَ",
+          "options": [
+            "ٱلْمَاعُونَ",
+            "ﰆ",
+            "يَحُضُّ",
+            "فَوَيْلٌ"
+          ],
+          "translation": "[the] small kindnesses"
+        }
+      ]
+    }
+  ]
+}

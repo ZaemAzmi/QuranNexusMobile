@@ -269,16 +269,22 @@ class HomeFragment : Fragment(), HighlightClickListener {
             if (token != null) {
                 // If token is available, make the network request
                 authService.getUserProfile(token) { user ->
+
+                    if (user != null) {
+                        Log.d("AuthDebugHme", "User fetched: ${user.name}")
+                    } else {
+                        Log.e("AuthDebugHome", "Failed to fetch user profile.")
+                    }
                     if (user?.name != null) {
                         // Save the username in SharedPreferences
                         sharedPreferences.edit().putString("username", user.name).apply()
                         greetingsText.text = "Salaam, ${user.name}"
                     } else {
-                        greetingsText.text = "Salaam, Guest"
+                        greetingsText.text = "Salaam, User"
                     }
                 }
             } else {
-                greetingsText.text = "Salaam, Guest"
+                greetingsText.text = "Salaam, User"
             }
         }
     }

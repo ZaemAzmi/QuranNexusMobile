@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.qurannexus.R;
+import com.example.qurannexus.features.bookmark.models.BookmarkRequest;
 import com.example.qurannexus.features.home.WordDetailsActivity;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.features.home.models.WordDetails;
@@ -66,22 +67,65 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
         holder.englishTranslation.setText(ayah.getTranslations().get(1).getText());
         holder.ayatNumber.setText(ayah.getAyahKey());
         holder.ayatCardAddNotesIcon.setOnClickListener(view -> showAddNotesDialog());
-//        holder.ayatCardBookmarkIcon.setImageResource(
-//                ayah.isBookmarked() ? R.drawable.ic_bookmarked : R.drawable.ic_bookmark
-//        );
-//        holder.ayatCardBookmarkIcon.setOnClickListener(v -> {
-//            int surahIndex = ayahList.getSurahIndex();
-//            int ayatIndex = ayahList.getAyatIndex();
+
+        holder.ayatCardBookmarkIcon.setImageResource(
+                ayah.isBookmarked() ? R.drawable.ic_bookmarked : R.drawable.ic_bookmark
+        );
+
+        // Bookmark click listener
+        holder.ayatCardBookmarkIcon.setOnClickListener(v -> {
+            if (ayah.isBookmarked()) {
+                // Remove bookmark
+                removeBookmark(holder, ayah, position);
+            } else {
+                // Add bookmark
+                addBookmark(holder, ayah, position);
+            }
+        });
+    }
+
+    private void addBookmark(MyViewHolder holder, Ayah ayah, int position) {
+//        BookmarkRequest request = new BookmarkRequest(ayah.getSurahId(), ayah.getAyahIndex());
+//        quranApi.addBookmark(request).enqueue(new Callback<GenericResponse>() {
+//            @Override
+//            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    ayah.setBookmarked(true);
+//                    holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmarked);
+//                    Toast.makeText(context, "Bookmark added!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(context, "Failed to add bookmark", Toast.LENGTH_SHORT).show();
+//                }
+//            }
 //
-//            if (ayatModel.isBookmarked()) {
-//                // Remove bookmark
-//
-//            } else {
-//                // Add bookmark
-//
+//            @Override
+//            public void onFailure(Call<GenericResponse> call, Throwable t) {
+//                Toast.makeText(context, "API Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
 //            }
 //        });
     }
+
+    private void removeBookmark(MyViewHolder holder, Ayah ayah, int position) {
+//        int bookmarkId = ayah.getBookmarkId(); // Assuming each Ayah has a unique bookmark ID
+//        quranApi.removeBookmark(bookmarkId).enqueue(new Callback<GenericResponse>() {
+//            @Override
+//            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    ayah.setBookmarked(false);
+//                    holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark);
+//                    Toast.makeText(context, "Bookmark removed!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(context, "Failed to remove bookmark", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<GenericResponse> call, Throwable t) {
+//                Toast.makeText(context, "API Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+    }
+
     private void setupWordClickListeners(MyViewHolder holder, Ayah ayah) {
         holder.arabicWordsContainer.removeAllViews();
 

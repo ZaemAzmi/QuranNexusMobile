@@ -12,7 +12,16 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_quiz1"
         tools:context=".features.quiz.QuizQuestionFragment">
-
+        <ImageView
+            android:id="@+id/previousButton"
+            android:src="@drawable/ic_arrow_left"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_circle_white"
+            android:layout_margin="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,41 +74,48 @@
                     android:id="@+id/optionA"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
+                    android:layout_marginVertical="16dp"
                     android:background="@drawable/rounded_recyclerview_background_white"
                     android:text="Option A"
                     android:buttonTint="@color/light_green_button"
+                    android:textSize="18sp"
+                    android:padding="12dp"
                     android:textColor="@android:color/black" />
 
                 <RadioButton
                     android:id="@+id/optionB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
+                    android:layout_marginVertical="16dp"
                     android:text="Option B"
                     android:background="@drawable/rounded_recyclerview_background_white"
-
                     android:buttonTint="@color/light_green_button"
+                    android:textSize="18sp"
+                    android:padding="12dp"
                     android:textColor="@android:color/black" />
 
                 <RadioButton
                     android:id="@+id/optionC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
+                    android:layout_marginVertical="16dp"
                     android:text="Option C"
                     android:background="@drawable/rounded_recyclerview_background_white"
                     android:buttonTint="@color/light_green_button"
+                    android:textSize="18sp"
+                    android:padding="12dp"
                     android:textColor="@android:color/black" />
 
                 <RadioButton
                     android:id="@+id/optionD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
+                    android:layout_marginVertical="16dp"
                     android:text="Option D"
                     android:background="@drawable/rounded_recyclerview_background_white"
                     android:buttonTint="@color/light_green_button"
+                    android:textSize="18sp"
+                    android:padding="12dp"
                     android:textColor="@android:color/black" />
             </RadioGroup>
             <Button

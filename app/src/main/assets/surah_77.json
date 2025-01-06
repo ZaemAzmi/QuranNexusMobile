@@ -1,0 +1,2477 @@
+{
+  "surah_id": "77",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "77:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ عُرْفًا",
+          "answer": "وَٱلْمُرْسَلَٰتِ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "وَٱلْمُرْسَلَٰتِ",
+            "فِيهَا",
+            "فَكِيدُونِ"
+          ],
+          "translation": "By the ones sent forth"
+        },
+        {
+          "question_id": 2,
+          "question": "وَٱلْمُرْسَلَٰتِ _____",
+          "answer": "عُرْفًا",
+          "options": [
+            "فَٱلْعَٰصِفَٰتِ",
+            "عُرْفًا",
+            "فَٱلْفَٰرِقَٰتِ",
+            "يُؤْمِنُونَ"
+          ],
+          "translation": "one after another"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "77:2",
+      "questions": [
+        {
+          "question_id": 3,
+          "question": "_____ عَصْفًا",
+          "answer": "فَٱلْعَٰصِفَٰتِ",
+          "options": [
+            "ظِلٍّ",
+            "ٱنطَلِقُوٓا۟",
+            "فَٱلْعَٰصِفَٰتِ",
+            "لَهُمْ"
+          ],
+          "translation": "And the winds that blow"
+        },
+        {
+          "question_id": 4,
+          "question": "فَٱلْعَٰصِفَٰتِ _____",
+          "answer": "عَصْفًا",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "ﰓ",
+            "عَصْفًا",
+            "مَا"
+          ],
+          "translation": "violently"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "77:3",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ نَشْرًا",
+          "answer": "وَٱلنَّٰشِرَٰتِ",
+          "options": [
+            "يَوْمٍ",
+            "إِلَىٰ",
+            "وَٱلنَّٰشِرَٰتِ",
+            "يُغْنِى"
+          ],
+          "translation": "And the ones that scatter"
+        },
+        {
+          "question_id": 6,
+          "question": "وَٱلنَّٰشِرَٰتِ _____",
+          "answer": "نَشْرًا",
+          "options": [
+            "نَشْرًا",
+            "ﰱ",
+            "يَوْمَئِذٍ",
+            "ﰢ"
+          ],
+          "translation": "far and wide"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "77:4",
+      "questions": [
+        {
+          "question_id": 7,
+          "question": "_____ فَرْقًا",
+          "answer": "فَٱلْفَٰرِقَٰتِ",
+          "options": [
+            "إِلَىٰ",
+            "عُذْرًا",
+            "فَٱلْفَٰرِقَٰتِ",
+            "ﰍ"
+          ],
+          "translation": "And those who separate"
+        },
+        {
+          "question_id": 8,
+          "question": "فَٱلْفَٰرِقَٰتِ _____",
+          "answer": "فَرْقًا",
+          "options": [
+            "ٱلرُّسُلُ",
+            "وَلَا",
+            "إِنَّا",
+            "فَرْقًا"
+          ],
+          "translation": "(by the) Criterion"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "77:5",
+      "questions": [
+        {
+          "question_id": 9,
+          "question": "_____ ذِكْرًا",
+          "answer": "فَٱلْمُلْقِيَٰتِ",
+          "options": [
+            "يَوْمَئِذٍ",
+            "ﰞ",
+            "كَذَٰلِكَ",
+            "فَٱلْمُلْقِيَٰتِ"
+          ],
+          "translation": "And those who bring down"
+        },
+        {
+          "question_id": 10,
+          "question": "فَٱلْمُلْقِيَٰتِ _____",
+          "answer": "ذِكْرًا",
+          "options": [
+            "ﰌ",
+            "ذِكْرًا",
+            "نَجْعَلِ",
+            "أَوْ"
+          ],
+          "translation": "(the) Reminder"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "77:6",
+      "questions": [
+        {
+          "question_id": 11,
+          "question": "_____ أَوْ نُذْرًا",
+          "answer": "عُذْرًا",
+          "options": [
+            "عُذْرًا",
+            "يَشْتَهُونَ",
+            "كُنتُم",
+            "قَرَارٍ"
+          ],
+          "translation": "(As) justification"
+        },
+        {
+          "question_id": 12,
+          "question": "عُذْرًا _____ نُذْرًا",
+          "answer": "أَوْ",
+          "options": [
+            "أَدْرَىٰكَ",
+            "كَأَنَّهُۥ",
+            "أَوْ",
+            "مِّن"
+          ],
+          "translation": "or"
+        },
+        {
+          "question_id": 13,
+          "question": "عُذْرًا أَوْ _____",
+          "answer": "نُذْرًا",
+          "options": [
+            "ﰚ",
+            "يَوْمٍ",
+            "بِمَا",
+            "نُذْرًا"
+          ],
+          "translation": "warning"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "77:7",
+      "questions": [
+        {
+          "question_id": 14,
+          "question": "_____ تُوعَدُونَ لَوَٰقِعٌ",
+          "answer": "إِنَّمَا",
+          "options": [
+            "ﰪ",
+            "إِنَّمَا",
+            "ﰆ",
+            "ﰣ"
+          ],
+          "translation": "Indeed, what"
+        },
+        {
+          "question_id": 15,
+          "question": "إِنَّمَا _____ لَوَٰقِعٌ",
+          "answer": "تُوعَدُونَ",
+          "options": [
+            "تُوعَدُونَ",
+            "قِيلَ",
+            "لَا",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "you are promised"
+        },
+        {
+          "question_id": 16,
+          "question": "إِنَّمَا تُوعَدُونَ _____",
+          "answer": "لَوَٰقِعٌ",
+          "options": [
+            "إِنَّ",
+            "تُوعَدُونَ",
+            "مَّآءً",
+            "لَوَٰقِعٌ"
+          ],
+          "translation": "will surely occur"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "77:8",
+      "questions": [
+        {
+          "question_id": 17,
+          "question": "_____ ٱلنُّجُومُ طُمِسَتْ",
+          "answer": "فَإِذَا",
+          "options": [
+            "ﰢ",
+            "فَإِذَا",
+            "وَأَمْوَٰتًا",
+            "هَٰذَا"
+          ],
+          "translation": "So when"
+        },
+        {
+          "question_id": 18,
+          "question": "فَإِذَا _____ طُمِسَتْ",
+          "answer": "ٱلنُّجُومُ",
+          "options": [
+            "فَنِعْمَ",
+            "ٱلنُّجُومُ",
+            "فَإِن",
+            "نَجْعَلِ"
+          ],
+          "translation": "the stars"
+        },
+        {
+          "question_id": 19,
+          "question": "فَإِذَا ٱلنُّجُومُ _____",
+          "answer": "طُمِسَتْ",
+          "options": [
+            "طُمِسَتْ",
+            "ﰰ",
+            "أَدْرَىٰكَ",
+            "نُسِفَتْ"
+          ],
+          "translation": "are obliterated"
+        }
+      ]
+    },
+    {
+      "ayah_index": "9",
+      "ayah_key": "77:9",
+      "questions": [
+        {
+          "question_id": 20,
+          "question": "_____ ٱلسَّمَآءُ فُرِجَتْ",
+          "answer": "وَإِذَا",
+          "options": [
+            "ثَلَٰثِ",
+            "فَجَعَلْنَٰهُ",
+            "فَٱلْفَٰرِقَٰتِ",
+            "وَإِذَا"
+          ],
+          "translation": "And when"
+        },
+        {
+          "question_id": 21,
+          "question": "وَإِذَا _____ فُرِجَتْ",
+          "answer": "ٱلسَّمَآءُ",
+          "options": [
+            "رَوَٰسِىَ",
+            "ٱلسَّمَآءُ",
+            "وَيْلٌ",
+            "إِنَّ"
+          ],
+          "translation": "the heaven"
+        },
+        {
+          "question_id": 22,
+          "question": "وَإِذَا ٱلسَّمَآءُ _____",
+          "answer": "فُرِجَتْ",
+          "options": [
+            "ٱلْجِبَالُ",
+            "مَّكِينٍ",
+            "جَمَعْنَٰكُمْ",
+            "فُرِجَتْ"
+          ],
+          "translation": "is cleft asunder"
+        }
+      ]
+    },
+    {
+      "ayah_index": "10",
+      "ayah_key": "77:10",
+      "questions": [
+        {
+          "question_id": 23,
+          "question": "_____ ٱلْجِبَالُ نُسِفَتْ",
+          "answer": "وَإِذَا",
+          "options": [
+            "وَإِذَا",
+            "بِٱلْمُجْرِمِينَ",
+            "ﰬ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "And when"
+        },
+        {
+          "question_id": 24,
+          "question": "وَإِذَا _____ نُسِفَتْ",
+          "answer": "ٱلْجِبَالُ",
+          "options": [
+            "كَذَٰلِكَ",
+            "ٱلْجِبَالُ",
+            "يَوْمَئِذٍ",
+            "وَعُيُونٍ"
+          ],
+          "translation": "the mountains"
+        },
+        {
+          "question_id": 25,
+          "question": "وَإِذَا ٱلْجِبَالُ _____",
+          "answer": "نُسِفَتْ",
+          "options": [
+            "وَيْلٌ",
+            "نُسِفَتْ",
+            "كِفَاتًا",
+            "ﰯ"
+          ],
+          "translation": "are blown away"
+        }
+      ]
+    },
+    {
+      "ayah_index": "11",
+      "ayah_key": "77:11",
+      "questions": [
+        {
+          "question_id": 26,
+          "question": "_____ ٱلرُّسُلُ أُقِّتَتْ",
+          "answer": "وَإِذَا",
+          "options": [
+            "ٱنطَلِقُوٓا۟",
+            "ﰓ",
+            "وَإِذَا",
+            "ﰑ"
+          ],
+          "translation": "And when"
+        },
+        {
+          "question_id": 27,
+          "question": "وَإِذَا _____ أُقِّتَتْ",
+          "answer": "ٱلرُّسُلُ",
+          "options": [
+            "يَنطِقُونَ",
+            "يَوْمَئِذٍ",
+            "لِّلْمُكَذِّبِينَ",
+            "ٱلرُّسُلُ"
+          ],
+          "translation": "the Messengers"
+        },
+        {
+          "question_id": 28,
+          "question": "وَإِذَا ٱلرُّسُلُ _____",
+          "answer": "أُقِّتَتْ",
+          "options": [
+            "كَٱلْقَصْرِ",
+            "أُقِّتَتْ",
+            "لِّلْمُكَذِّبِينَ",
+            "ٱلْأَوَّلِينَ"
+          ],
+          "translation": "are gathered to their appointed time"
+        }
+      ]
+    },
+    {
+      "ayah_index": "12",
+      "ayah_key": "77:12",
+      "questions": [
+        {
+          "question_id": 29,
+          "question": "_____ يَوْمٍ أُجِّلَتْ",
+          "answer": "لِأَىِّ",
+          "options": [
+            "يَوْمَئِذٍ",
+            "يَوْمُ",
+            "لِأَىِّ",
+            "يُؤْذَنُ"
+          ],
+          "translation": "For what"
+        },
+        {
+          "question_id": 30,
+          "question": "لِأَىِّ _____ أُجِّلَتْ",
+          "answer": "يَوْمٍ",
+          "options": [
+            "ﰂ",
+            "يَوْمٍ",
+            "ﰙ",
+            "جَمَعْنَٰكُمْ"
+          ],
+          "translation": "Day"
+        },
+        {
+          "question_id": 31,
+          "question": "لِأَىِّ يَوْمٍ _____",
+          "answer": "أُجِّلَتْ",
+          "options": [
+            "أُجِّلَتْ",
+            "كَيْدٌ",
+            "ٱلْفَصْلِ",
+            "ذِى"
+          ],
+          "translation": "are (these) postponed"
+        }
+      ]
+    },
+    {
+      "ayah_index": "13",
+      "ayah_key": "77:13",
+      "questions": [
+        {
+          "question_id": 32,
+          "question": "_____ ٱلْفَصْلِ",
+          "answer": "لِيَوْمِ",
+          "options": [
+            "لِيَوْمِ",
+            "أَدْرَىٰكَ",
+            "لِّلْمُكَذِّبِينَ",
+            "ﰤ"
+          ],
+          "translation": "For (the) Day"
+        },
+        {
+          "question_id": 33,
+          "question": "لِيَوْمِ _____",
+          "answer": "ٱلْفَصْلِ",
+          "options": [
+            "وَيْلٌ",
+            "ٱلْفَصْلِ",
+            "ٱنطَلِقُوٓا۟",
+            "مَا"
+          ],
+          "translation": "(of) Judgment"
+        }
+      ]
+    },
+    {
+      "ayah_index": "14",
+      "ayah_key": "77:14",
+      "questions": [
+        {
+          "question_id": 34,
+          "question": "_____ أَدْرَىٰكَ مَا يَوْمُ ٱلْفَصْلِ",
+          "answer": "وَمَآ",
+          "options": [
+            "وَمَآ",
+            "إِنَّ",
+            "فَكِيدُونِ",
+            "مَا"
+          ],
+          "translation": "And what"
+        },
+        {
+          "question_id": 35,
+          "question": "وَمَآ _____ مَا يَوْمُ ٱلْفَصْلِ",
+          "answer": "أَدْرَىٰكَ",
+          "options": [
+            "يُغْنِى",
+            "فُرِجَتْ",
+            "أَدْرَىٰكَ",
+            "كُنتُم"
+          ],
+          "translation": "will make you know"
+        },
+        {
+          "question_id": 36,
+          "question": "وَمَآ أَدْرَىٰكَ _____ يَوْمُ ٱلْفَصْلِ",
+          "answer": "مَا",
+          "options": [
+            "ﰐ",
+            "ﰮ",
+            "بَعْدَهُۥ",
+            "مَا"
+          ],
+          "translation": "what"
+        },
+        {
+          "question_id": 37,
+          "question": "وَمَآ أَدْرَىٰكَ مَا _____ ٱلْفَصْلِ",
+          "answer": "يَوْمُ",
+          "options": [
+            "يَوْمُ",
+            "ﰎ",
+            "ﰈ",
+            "ٱلْمُتَّقِينَ"
+          ],
+          "translation": "(is the) Day"
+        },
+        {
+          "question_id": 38,
+          "question": "وَمَآ أَدْرَىٰكَ مَا يَوْمُ _____",
+          "answer": "ٱلْفَصْلِ",
+          "options": [
+            "ٱلْفَصْلِ",
+            "تُكَذِّبُونَ",
+            "شَٰمِخَٰتٍ",
+            "ﰟ"
+          ],
+          "translation": "(of) the Judgment"
+        }
+      ]
+    },
+    {
+      "ayah_index": "15",
+      "ayah_key": "77:15",
+      "questions": [
+        {
+          "question_id": 39,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "لِيَوْمِ",
+            "صُفْرٌ",
+            "ﰫ",
+            "وَيْلٌ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 40,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "جَمَعْنَٰكُمْ",
+            "ﰑ",
+            "وَيْلٌ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 41,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "يُغْنِى",
+            "شَٰمِخَٰتٍ",
+            "لِّلْمُكَذِّبِينَ",
+            "ٱلْأَوَّلِينَ"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "16",
+      "ayah_key": "77:16",
+      "questions": [
+        {
+          "question_id": 42,
+          "question": "_____ نُهْلِكِ ٱلْأَوَّلِينَ",
+          "answer": "أَلَمْ",
+          "options": [
+            "أَلَمْ",
+            "نَشْرًا",
+            "كُلُوا۟",
+            "ﰙ"
+          ],
+          "translation": "Did not"
+        },
+        {
+          "question_id": 43,
+          "question": "أَلَمْ _____ ٱلْأَوَّلِينَ",
+          "answer": "نُهْلِكِ",
+          "options": [
+            "إِنَّ",
+            "لَكُمْ",
+            "نُهْلِكِ",
+            "لَهُمُ"
+          ],
+          "translation": "We destroy"
+        },
+        {
+          "question_id": 44,
+          "question": "أَلَمْ نُهْلِكِ _____",
+          "answer": "ٱلْأَوَّلِينَ",
+          "options": [
+            "بَعْدَهُۥ",
+            "ٱلْأَوَّلِينَ",
+            "يَوْمَئِذٍ",
+            "ٱلْقَٰدِرُونَ"
+          ],
+          "translation": "the former (people)"
+        }
+      ]
+    },
+    {
+      "ayah_index": "17",
+      "ayah_key": "77:17",
+      "questions": [
+        {
+          "question_id": 45,
+          "question": "_____ نُتْبِعُهُمُ ٱلْءَاخِرِينَ",
+          "answer": "ثُمَّ",
+          "options": [
+            "ٱرْكَعُوا۟",
+            "ﰅ",
+            "ثُمَّ",
+            "وَتَمَتَّعُوا۟"
+          ],
+          "translation": "Then"
+        },
+        {
+          "question_id": 46,
+          "question": "ثُمَّ _____ ٱلْءَاخِرِينَ",
+          "answer": "نُتْبِعُهُمُ",
+          "options": [
+            "يَرْكَعُونَ",
+            "وَإِذَا",
+            "لِيَوْمِ",
+            "نُتْبِعُهُمُ"
+          ],
+          "translation": "We follow them up"
+        },
+        {
+          "question_id": 47,
+          "question": "ثُمَّ نُتْبِعُهُمُ _____",
+          "answer": "ٱلْءَاخِرِينَ",
+          "options": [
+            "مِنَ",
+            "يَوْمَئِذٍ",
+            "ٱلْءَاخِرِينَ",
+            "ﰯ"
+          ],
+          "translation": "(with) the later ones"
+        }
+      ]
+    },
+    {
+      "ayah_index": "18",
+      "ayah_key": "77:18",
+      "questions": [
+        {
+          "question_id": 48,
+          "question": "_____ نَفْعَلُ بِٱلْمُجْرِمِينَ",
+          "answer": "كَذَٰلِكَ",
+          "options": [
+            "كَذَٰلِكَ",
+            "جَمَعْنَٰكُمْ",
+            "يَشْتَهُونَ",
+            "ٱنطَلِقُوٓا۟"
+          ],
+          "translation": "Thus"
+        },
+        {
+          "question_id": 49,
+          "question": "كَذَٰلِكَ _____ بِٱلْمُجْرِمِينَ",
+          "answer": "نَفْعَلُ",
+          "options": [
+            "كَيْدٌ",
+            "نَفْعَلُ",
+            "جَمَعْنَٰكُمْ",
+            "كَذَٰلِكَ"
+          ],
+          "translation": "We deal"
+        },
+        {
+          "question_id": 50,
+          "question": "كَذَٰلِكَ نَفْعَلُ _____",
+          "answer": "بِٱلْمُجْرِمِينَ",
+          "options": [
+            "وَيْلٌ",
+            "ﰕ",
+            "جِمَٰلَتٌ",
+            "بِٱلْمُجْرِمِينَ"
+          ],
+          "translation": "with the criminals"
+        }
+      ]
+    },
+    {
+      "ayah_index": "19",
+      "ayah_key": "77:19",
+      "questions": [
+        {
+          "question_id": 51,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "ﰠ",
+            "وَيْلٌ",
+            "مَّآءً",
+            "لِّلْمُكَذِّبِينَ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 52,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "وَإِذَا",
+            "يُؤْذَنُ",
+            "يَوْمَئِذٍ",
+            "ﰐ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 53,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "كَٱلْقَصْرِ",
+            "ظِلٍّ",
+            "مِمَّا"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "20",
+      "ayah_key": "77:20",
+      "questions": [
+        {
+          "question_id": 54,
+          "question": "_____ نَخْلُقكُّم مِّن مَّآءٍ مَّهِينٍ",
+          "answer": "أَلَمْ",
+          "options": [
+            "فَكِيدُونِ",
+            "أَلَمْ",
+            "أُقِّتَتْ",
+            "كُلُوا۟"
+          ],
+          "translation": "Did not"
+        },
+        {
+          "question_id": 55,
+          "question": "أَلَمْ _____ مِّن مَّآءٍ مَّهِينٍ",
+          "answer": "نَخْلُقكُّم",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "نَخْلُقكُّم",
+            "بَعْدَهُۥ",
+            "تَرْمِى"
+          ],
+          "translation": "We create you"
+        },
+        {
+          "question_id": 56,
+          "question": "أَلَمْ نَخْلُقكُّم _____ مَّآءٍ مَّهِينٍ",
+          "answer": "مِّن",
+          "options": [
+            "مِّن",
+            "ذِكْرًا",
+            "ٱلْأَوَّلِينَ",
+            "ﰟ"
+          ],
+          "translation": "from"
+        },
+        {
+          "question_id": 57,
+          "question": "أَلَمْ نَخْلُقكُّم مِّن _____ مَّهِينٍ",
+          "answer": "مَّآءٍ",
+          "options": [
+            "لَا",
+            "وَتَمَتَّعُوا۟",
+            "مَّآءٍ",
+            "كِفَاتًا"
+          ],
+          "translation": "a water"
+        },
+        {
+          "question_id": 58,
+          "question": "أَلَمْ نَخْلُقكُّم مِّن مَّآءٍ _____",
+          "answer": "مَّهِينٍ",
+          "options": [
+            "مَّهِينٍ",
+            "يَوْمَئِذٍ",
+            "ﰝ",
+            "فِيهَا"
+          ],
+          "translation": "despicable"
+        }
+      ]
+    },
+    {
+      "ayah_index": "21",
+      "ayah_key": "77:21",
+      "questions": [
+        {
+          "question_id": 59,
+          "question": "_____ فِى قَرَارٍ مَّكِينٍ",
+          "answer": "فَجَعَلْنَٰهُ",
+          "options": [
+            "أَلَمْ",
+            "فَجَعَلْنَٰهُ",
+            "أُجِّلَتْ",
+            "ﰡ"
+          ],
+          "translation": "Then We placed it"
+        },
+        {
+          "question_id": 60,
+          "question": "فَجَعَلْنَٰهُ _____ قَرَارٍ مَّكِينٍ",
+          "answer": "فِى",
+          "options": [
+            "فِى",
+            "ﰖ",
+            "أَحْيَآءً",
+            "لِّلْمُكَذِّبِينَ"
+          ],
+          "translation": "in"
+        },
+        {
+          "question_id": 61,
+          "question": "فَجَعَلْنَٰهُ فِى _____ مَّكِينٍ",
+          "answer": "قَرَارٍ",
+          "options": [
+            "فِيهَا",
+            "صُفْرٌ",
+            "قَرَارٍ",
+            "ظِلٍّ"
+          ],
+          "translation": "an abode"
+        },
+        {
+          "question_id": 62,
+          "question": "فَجَعَلْنَٰهُ فِى قَرَارٍ _____",
+          "answer": "مَّكِينٍ",
+          "options": [
+            "ذِكْرًا",
+            "مَّكِينٍ",
+            "ﰋ",
+            "ﰧ"
+          ],
+          "translation": "safe"
+        }
+      ]
+    },
+    {
+      "ayah_index": "22",
+      "ayah_key": "77:22",
+      "questions": [
+        {
+          "question_id": 63,
+          "question": "_____ قَدَرٍ مَّعْلُومٍ",
+          "answer": "إِلَىٰ",
+          "options": [
+            "إِلَىٰ",
+            "نُتْبِعُهُمُ",
+            "شُعَبٍ",
+            "وَٱلنَّٰشِرَٰتِ"
+          ],
+          "translation": "For"
+        },
+        {
+          "question_id": 64,
+          "question": "إِلَىٰ _____ مَّعْلُومٍ",
+          "answer": "قَدَرٍ",
+          "options": [
+            "ٱلْفَصْلِ",
+            "يُؤْذَنُ",
+            "قَدَرٍ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "a period"
+        },
+        {
+          "question_id": 65,
+          "question": "إِلَىٰ قَدَرٍ _____",
+          "answer": "مَّعْلُومٍ",
+          "options": [
+            "ﰛ",
+            "لِّلْمُكَذِّبِينَ",
+            "ٱلْءَاخِرِينَ",
+            "مَّعْلُومٍ"
+          ],
+          "translation": "known"
+        }
+      ]
+    },
+    {
+      "ayah_index": "23",
+      "ayah_key": "77:23",
+      "questions": [
+        {
+          "question_id": 66,
+          "question": "_____ فَنِعْمَ ٱلْقَٰدِرُونَ",
+          "answer": "فَقَدَرْنَا",
+          "options": [
+            "يَوْمُ",
+            "ٱنطَلِقُوٓا۟",
+            "فَقَدَرْنَا",
+            "لِّلْمُكَذِّبِينَ"
+          ],
+          "translation": "So We measured"
+        },
+        {
+          "question_id": 67,
+          "question": "فَقَدَرْنَا _____ ٱلْقَٰدِرُونَ",
+          "answer": "فَنِعْمَ",
+          "options": [
+            "وَيْلٌ",
+            "إِلَىٰ",
+            "ظِلَٰلٍ",
+            "فَنِعْمَ"
+          ],
+          "translation": "and Best"
+        },
+        {
+          "question_id": 68,
+          "question": "فَقَدَرْنَا فَنِعْمَ _____",
+          "answer": "ٱلْقَٰدِرُونَ",
+          "options": [
+            "ﰦ",
+            "مِّن",
+            "شَٰمِخَٰتٍ",
+            "ٱلْقَٰدِرُونَ"
+          ],
+          "translation": "(are We to) measure"
+        }
+      ]
+    },
+    {
+      "ayah_index": "24",
+      "ayah_key": "77:24",
+      "questions": [
+        {
+          "question_id": 69,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "بِشَرَرٍ",
+            "وَٱلْأَوَّلِينَ",
+            "وَيْلٌ",
+            "إِنَّ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 70,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "كَذَٰلِكَ",
+            "نُهْلِكِ",
+            "يَوْمَئِذٍ",
+            "مِنَ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 71,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "وَإِذَا",
+            "وَيْلٌ",
+            "لِّلْمُكَذِّبِينَ",
+            "عُذْرًا"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "25",
+      "ayah_key": "77:25",
+      "questions": [
+        {
+          "question_id": 72,
+          "question": "_____ نَجْعَلِ ٱلْأَرْضَ كِفَاتًا",
+          "answer": "أَلَمْ",
+          "options": [
+            "كَانَ",
+            "مَّكِينٍ",
+            "نُهْلِكِ",
+            "أَلَمْ"
+          ],
+          "translation": "Have not"
+        },
+        {
+          "question_id": 73,
+          "question": "أَلَمْ _____ ٱلْأَرْضَ كِفَاتًا",
+          "answer": "نَجْعَلِ",
+          "options": [
+            "نَجْعَلِ",
+            "يُؤْذَنُ",
+            "مَّعْلُومٍ",
+            "يَشْتَهُونَ"
+          ],
+          "translation": "We made"
+        },
+        {
+          "question_id": 74,
+          "question": "أَلَمْ نَجْعَلِ _____ كِفَاتًا",
+          "answer": "ٱلْأَرْضَ",
+          "options": [
+            "ٱلْأَرْضَ",
+            "يَنطِقُونَ",
+            "أَدْرَىٰكَ",
+            "ٱلْمُحْسِنِينَ"
+          ],
+          "translation": "the earth"
+        },
+        {
+          "question_id": 75,
+          "question": "أَلَمْ نَجْعَلِ ٱلْأَرْضَ _____",
+          "answer": "كِفَاتًا",
+          "options": [
+            "كِفَاتًا",
+            "وَٱلْمُرْسَلَٰتِ",
+            "عُرْفًا",
+            "فَٱلْفَٰرِقَٰتِ"
+          ],
+          "translation": "a receptacle"
+        }
+      ]
+    },
+    {
+      "ayah_index": "26",
+      "ayah_key": "77:26",
+      "questions": [
+        {
+          "question_id": 76,
+          "question": "_____ وَأَمْوَٰتًا",
+          "answer": "أَحْيَآءً",
+          "options": [
+            "نُسِفَتْ",
+            "أَحْيَآءً",
+            "جِمَٰلَتٌ",
+            "لَوَٰقِعٌ"
+          ],
+          "translation": "(For the) living"
+        },
+        {
+          "question_id": 77,
+          "question": "أَحْيَآءً _____",
+          "answer": "وَأَمْوَٰتًا",
+          "options": [
+            "وَأَمْوَٰتًا",
+            "يُؤْذَنُ",
+            "هَٰذَا",
+            "ٱلنُّجُومُ"
+          ],
+          "translation": "and (the) dead"
+        }
+      ]
+    },
+    {
+      "ayah_index": "27",
+      "ayah_key": "77:27",
+      "questions": [
+        {
+          "question_id": 78,
+          "question": "_____ فِيهَا رَوَٰسِىَ شَٰمِخَٰتٍ وَأَسْقَيْنَٰكُم مَّآءً فُرَاتًا",
+          "answer": "وَجَعَلْنَا",
+          "options": [
+            "مِمَّا",
+            "ﰧ",
+            "كَذَٰلِكَ",
+            "وَجَعَلْنَا"
+          ],
+          "translation": "And We made"
+        },
+        {
+          "question_id": 79,
+          "question": "وَجَعَلْنَا _____ رَوَٰسِىَ شَٰمِخَٰتٍ وَأَسْقَيْنَٰكُم مَّآءً فُرَاتًا",
+          "answer": "فِيهَا",
+          "options": [
+            "فِيهَا",
+            "لَكُمْ",
+            "هَٰذَا",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "therein"
+        },
+        {
+          "question_id": 80,
+          "question": "وَجَعَلْنَا فِيهَا _____ شَٰمِخَٰتٍ وَأَسْقَيْنَٰكُم مَّآءً فُرَاتًا",
+          "answer": "رَوَٰسِىَ",
+          "options": [
+            "نَخْلُقكُّم",
+            "رَوَٰسِىَ",
+            "لَا",
+            "ﰅ"
+          ],
+          "translation": "firmly set mountains"
+        },
+        {
+          "question_id": 81,
+          "question": "وَجَعَلْنَا فِيهَا رَوَٰسِىَ _____ وَأَسْقَيْنَٰكُم مَّآءً فُرَاتًا",
+          "answer": "شَٰمِخَٰتٍ",
+          "options": [
+            "شَٰمِخَٰتٍ",
+            "وَيْلٌ",
+            "أُجِّلَتْ",
+            "ﰋ"
+          ],
+          "translation": "lofty"
+        },
+        {
+          "question_id": 82,
+          "question": "وَجَعَلْنَا فِيهَا رَوَٰسِىَ شَٰمِخَٰتٍ _____ مَّآءً فُرَاتًا",
+          "answer": "وَأَسْقَيْنَٰكُم",
+          "options": [
+            "ﰯ",
+            "فَبِأَىِّ",
+            "ﰭ",
+            "وَأَسْقَيْنَٰكُم"
+          ],
+          "translation": "and We gave you to drink"
+        },
+        {
+          "question_id": 83,
+          "question": "وَجَعَلْنَا فِيهَا رَوَٰسِىَ شَٰمِخَٰتٍ وَأَسْقَيْنَٰكُم _____ فُرَاتًا",
+          "answer": "مَّآءً",
+          "options": [
+            "ﰧ",
+            "نُهْلِكِ",
+            "مَّآءً",
+            "ﰮ"
+          ],
+          "translation": "water "
+        },
+        {
+          "question_id": 84,
+          "question": "وَجَعَلْنَا فِيهَا رَوَٰسِىَ شَٰمِخَٰتٍ وَأَسْقَيْنَٰكُم مَّآءً _____",
+          "answer": "فُرَاتًا",
+          "options": [
+            "فَقَدَرْنَا",
+            "لِّلْمُكَذِّبِينَ",
+            "ٱلْفَصْلِ",
+            "فُرَاتًا"
+          ],
+          "translation": "sweet"
+        }
+      ]
+    },
+    {
+      "ayah_index": "28",
+      "ayah_key": "77:28",
+      "questions": [
+        {
+          "question_id": 85,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "لِيَوْمِ",
+            "وَيْلٌ",
+            "مَّهِينٍ",
+            "ﰦ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 86,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "يَوْمَئِذٍ",
+            "وَيْلٌ",
+            "ﰗ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 87,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "قَلِيلًا",
+            "فَإِن",
+            "فِى"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "29",
+      "ayah_key": "77:29",
+      "questions": [
+        {
+          "question_id": 88,
+          "question": "_____ إِلَىٰ مَا كُنتُم بِهِۦ تُكَذِّبُونَ",
+          "answer": "ٱنطَلِقُوٓا۟",
+          "options": [
+            "ٱنطَلِقُوٓا۟",
+            "يَوْمَئِذٍ",
+            "ﰏ",
+            "كِفَاتًا"
+          ],
+          "translation": "Proceed"
+        },
+        {
+          "question_id": 89,
+          "question": "ٱنطَلِقُوٓا۟ _____ مَا كُنتُم بِهِۦ تُكَذِّبُونَ",
+          "answer": "إِلَىٰ",
+          "options": [
+            "وَٱلْأَوَّلِينَ",
+            "ﰒ",
+            "فِيهَا",
+            "إِلَىٰ"
+          ],
+          "translation": "to"
+        },
+        {
+          "question_id": 90,
+          "question": "ٱنطَلِقُوٓا۟ إِلَىٰ _____ كُنتُم بِهِۦ تُكَذِّبُونَ",
+          "answer": "مَا",
+          "options": [
+            "أُجِّلَتْ",
+            "مَا",
+            "لِّلْمُكَذِّبِينَ",
+            "كَيْدٌ"
+          ],
+          "translation": "what"
+        },
+        {
+          "question_id": 91,
+          "question": "ٱنطَلِقُوٓا۟ إِلَىٰ مَا _____ بِهِۦ تُكَذِّبُونَ",
+          "answer": "كُنتُم",
+          "options": [
+            "كُنتُم",
+            "ﰚ",
+            "ﰆ",
+            "كَيْدٌ"
+          ],
+          "translation": "you used to"
+        },
+        {
+          "question_id": 92,
+          "question": "ٱنطَلِقُوٓا۟ إِلَىٰ مَا كُنتُم _____ تُكَذِّبُونَ",
+          "answer": "بِهِۦ",
+          "options": [
+            "بِهِۦ",
+            "وَتَمَتَّعُوا۟",
+            "جِمَٰلَتٌ",
+            "جَمَعْنَٰكُمْ"
+          ],
+          "translation": "in it"
+        },
+        {
+          "question_id": 93,
+          "question": "ٱنطَلِقُوٓا۟ إِلَىٰ مَا كُنتُم بِهِۦ _____",
+          "answer": "تُكَذِّبُونَ",
+          "options": [
+            "عُذْرًا",
+            "تُكَذِّبُونَ",
+            "ظِلَٰلٍ",
+            "يَوْمُ"
+          ],
+          "translation": "deny"
+        }
+      ]
+    },
+    {
+      "ayah_index": "30",
+      "ayah_key": "77:30",
+      "questions": [
+        {
+          "question_id": 94,
+          "question": "_____ إِلَىٰ ظِلٍّ ذِى ثَلَٰثِ شُعَبٍ",
+          "answer": "ٱنطَلِقُوٓا۟",
+          "options": [
+            "ﰠ",
+            "ٱنطَلِقُوٓا۟",
+            "ﰦ",
+            "ﰭ"
+          ],
+          "translation": "Proceed"
+        },
+        {
+          "question_id": 95,
+          "question": "ٱنطَلِقُوٓا۟ _____ ظِلٍّ ذِى ثَلَٰثِ شُعَبٍ",
+          "answer": "إِلَىٰ",
+          "options": [
+            "ﰡ",
+            "كُنتُمْ",
+            "ٱللَّهَبِ",
+            "إِلَىٰ"
+          ],
+          "translation": "to"
+        },
+        {
+          "question_id": 96,
+          "question": "ٱنطَلِقُوٓا۟ إِلَىٰ _____ ذِى ثَلَٰثِ شُعَبٍ",
+          "answer": "ظِلٍّ",
+          "options": [
+            "فَرْقًا",
+            "ﰁ",
+            "لِّلْمُكَذِّبِينَ",
+            "ظِلٍّ"
+          ],
+          "translation": "a shadow"
+        },
+        {
+          "question_id": 97,
+          "question": "ٱنطَلِقُوٓا۟ إِلَىٰ ظِلٍّ _____ ثَلَٰثِ شُعَبٍ",
+          "answer": "ذِى",
+          "options": [
+            "مَّعْلُومٍ",
+            "ذِى",
+            "إِلَىٰ",
+            "وَيْلٌ"
+          ],
+          "translation": "having"
+        },
+        {
+          "question_id": 98,
+          "question": "ٱنطَلِقُوٓا۟ إِلَىٰ ظِلٍّ ذِى _____ شُعَبٍ",
+          "answer": "ثَلَٰثِ",
+          "options": [
+            "عَصْفًا",
+            "ثَلَٰثِ",
+            "نَجْعَلِ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "three"
+        },
+        {
+          "question_id": 99,
+          "question": "ٱنطَلِقُوٓا۟ إِلَىٰ ظِلٍّ ذِى ثَلَٰثِ _____",
+          "answer": "شُعَبٍ",
+          "options": [
+            "شُعَبٍ",
+            "فَقَدَرْنَا",
+            "وَٱشْرَبُوا۟",
+            "أُقِّتَتْ"
+          ],
+          "translation": "columns"
+        }
+      ]
+    },
+    {
+      "ayah_index": "31",
+      "ayah_key": "77:31",
+      "questions": [
+        {
+          "question_id": 100,
+          "question": "_____ ظَلِيلٍ وَلَا يُغْنِى مِنَ ٱللَّهَبِ",
+          "answer": "لَّا",
+          "options": [
+            "فَٱلْفَٰرِقَٰتِ",
+            "ظِلَٰلٍ",
+            "ٱلْمُتَّقِينَ",
+            "لَّا"
+          ],
+          "translation": "No"
+        },
+        {
+          "question_id": 101,
+          "question": "لَّا _____ وَلَا يُغْنِى مِنَ ٱللَّهَبِ",
+          "answer": "ظَلِيلٍ",
+          "options": [
+            "نُسِفَتْ",
+            "ﰥ",
+            "أَلَمْ",
+            "ظَلِيلٍ"
+          ],
+          "translation": "cool shade"
+        },
+        {
+          "question_id": 102,
+          "question": "لَّا ظَلِيلٍ _____ يُغْنِى مِنَ ٱللَّهَبِ",
+          "answer": "وَلَا",
+          "options": [
+            "ٱلْفَصْلِ",
+            "مِّن",
+            "كَانَ",
+            "وَلَا"
+          ],
+          "translation": "and not"
+        },
+        {
+          "question_id": 103,
+          "question": "لَّا ظَلِيلٍ وَلَا _____ مِنَ ٱللَّهَبِ",
+          "answer": "يُغْنِى",
+          "options": [
+            "يَوْمَئِذٍ",
+            "يُغْنِى",
+            "جَمَعْنَٰكُمْ",
+            "تَعْمَلُونَ"
+          ],
+          "translation": "availing"
+        },
+        {
+          "question_id": 104,
+          "question": "لَّا ظَلِيلٍ وَلَا يُغْنِى _____ ٱللَّهَبِ",
+          "answer": "مِنَ",
+          "options": [
+            "رَوَٰسِىَ",
+            "مِنَ",
+            "نَجْزِى",
+            "إِنَّا"
+          ],
+          "translation": "against"
+        },
+        {
+          "question_id": 105,
+          "question": "لَّا ظَلِيلٍ وَلَا يُغْنِى مِنَ _____",
+          "answer": "ٱللَّهَبِ",
+          "options": [
+            "ٱللَّهَبِ",
+            "ﰜ",
+            "أَلَمْ",
+            "ﰨ"
+          ],
+          "translation": "the flame"
+        }
+      ]
+    },
+    {
+      "ayah_index": "32",
+      "ayah_key": "77:32",
+      "questions": [
+        {
+          "question_id": 106,
+          "question": "_____ تَرْمِى بِشَرَرٍ كَٱلْقَصْرِ",
+          "answer": "إِنَّهَا",
+          "options": [
+            "ذِى",
+            "إِنَّهَا",
+            "نَفْعَلُ",
+            "ﰖ"
+          ],
+          "translation": "Indeed, it"
+        },
+        {
+          "question_id": 107,
+          "question": "إِنَّهَا _____ بِشَرَرٍ كَٱلْقَصْرِ",
+          "answer": "تَرْمِى",
+          "options": [
+            "مَا",
+            "ﰝ",
+            "تَرْمِى",
+            "ﰩ"
+          ],
+          "translation": "throws up"
+        },
+        {
+          "question_id": 108,
+          "question": "إِنَّهَا تَرْمِى _____ كَٱلْقَصْرِ",
+          "answer": "بِشَرَرٍ",
+          "options": [
+            "نُتْبِعُهُمُ",
+            "يَوْمُ",
+            "ٱلْفَصْلِ",
+            "بِشَرَرٍ"
+          ],
+          "translation": "sparks"
+        },
+        {
+          "question_id": 109,
+          "question": "إِنَّهَا تَرْمِى بِشَرَرٍ _____",
+          "answer": "كَٱلْقَصْرِ",
+          "options": [
+            "فَإِن",
+            "ﰥ",
+            "كَٱلْقَصْرِ",
+            "ﰦ"
+          ],
+          "translation": "as the fortress"
+        }
+      ]
+    },
+    {
+      "ayah_index": "33",
+      "ayah_key": "77:33",
+      "questions": [
+        {
+          "question_id": 110,
+          "question": "_____ جِمَٰلَتٌ صُفْرٌ",
+          "answer": "كَأَنَّهُۥ",
+          "options": [
+            "كَأَنَّهُۥ",
+            "مَّكِينٍ",
+            "نُسِفَتْ",
+            "عُذْرًا"
+          ],
+          "translation": "As if they (were)"
+        },
+        {
+          "question_id": 111,
+          "question": "كَأَنَّهُۥ _____ صُفْرٌ",
+          "answer": "جِمَٰلَتٌ",
+          "options": [
+            "جِمَٰلَتٌ",
+            "كُنتُمْ",
+            "ٱلْمُحْسِنِينَ",
+            "ﰞ"
+          ],
+          "translation": "camels"
+        },
+        {
+          "question_id": 112,
+          "question": "كَأَنَّهُۥ جِمَٰلَتٌ _____",
+          "answer": "صُفْرٌ",
+          "options": [
+            "يُؤْذَنُ",
+            "يَرْكَعُونَ",
+            "كُنتُم",
+            "صُفْرٌ"
+          ],
+          "translation": "yellow"
+        }
+      ]
+    },
+    {
+      "ayah_index": "34",
+      "ayah_key": "77:34",
+      "questions": [
+        {
+          "question_id": 113,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "وَيْلٌ",
+            "ﰅ",
+            "ﰞ",
+            "ﰏ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 114,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "ﰡ",
+            "يَوْمَئِذٍ",
+            "فَرْقًا",
+            "ٱلرُّسُلُ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 115,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "فُرَاتًا",
+            "إِلَىٰ",
+            "فِيهَا"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "35",
+      "ayah_key": "77:35",
+      "questions": [
+        {
+          "question_id": 116,
+          "question": "_____ يَوْمُ لَا يَنطِقُونَ",
+          "answer": "هَٰذَا",
+          "options": [
+            "ٱلنُّجُومُ",
+            "لِّلْمُكَذِّبِينَ",
+            "هَٰذَا",
+            "إِلَىٰ"
+          ],
+          "translation": "This"
+        },
+        {
+          "question_id": 117,
+          "question": "هَٰذَا _____ لَا يَنطِقُونَ",
+          "answer": "يَوْمُ",
+          "options": [
+            "كَٱلْقَصْرِ",
+            "إِنَّ",
+            "وَإِذَا",
+            "يَوْمُ"
+          ],
+          "translation": "(is) a Day"
+        },
+        {
+          "question_id": 118,
+          "question": "هَٰذَا يَوْمُ _____ يَنطِقُونَ",
+          "answer": "لَا",
+          "options": [
+            "لَا",
+            "ﰤ",
+            "أَدْرَىٰكَ",
+            "فَقَدَرْنَا"
+          ],
+          "translation": "not"
+        },
+        {
+          "question_id": 119,
+          "question": "هَٰذَا يَوْمُ لَا _____",
+          "answer": "يَنطِقُونَ",
+          "options": [
+            "يَوْمُ",
+            "ذِكْرًا",
+            "ﰙ",
+            "يَنطِقُونَ"
+          ],
+          "translation": "they will speak"
+        }
+      ]
+    },
+    {
+      "ayah_index": "36",
+      "ayah_key": "77:36",
+      "questions": [
+        {
+          "question_id": 120,
+          "question": "_____ يُؤْذَنُ لَهُمْ فَيَعْتَذِرُونَ",
+          "answer": "وَلَا",
+          "options": [
+            "يَوْمَئِذٍ",
+            "لِّلْمُكَذِّبِينَ",
+            "وَلَا",
+            "مَّآءٍ"
+          ],
+          "translation": "And not"
+        },
+        {
+          "question_id": 121,
+          "question": "وَلَا _____ لَهُمْ فَيَعْتَذِرُونَ",
+          "answer": "يُؤْذَنُ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "وَيْلٌ",
+            "ٱلْفَصْلِ",
+            "يُؤْذَنُ"
+          ],
+          "translation": "will it be permitted"
+        },
+        {
+          "question_id": 122,
+          "question": "وَلَا يُؤْذَنُ _____ فَيَعْتَذِرُونَ",
+          "answer": "لَهُمْ",
+          "options": [
+            "لَهُمْ",
+            "ﰰ",
+            "وَلَا",
+            "لِّلْمُكَذِّبِينَ"
+          ],
+          "translation": "for them"
+        },
+        {
+          "question_id": 123,
+          "question": "وَلَا يُؤْذَنُ لَهُمْ _____",
+          "answer": "فَيَعْتَذِرُونَ",
+          "options": [
+            "لِيَوْمِ",
+            "مَّعْلُومٍ",
+            "يَوْمُ",
+            "فَيَعْتَذِرُونَ"
+          ],
+          "translation": "to make excuses"
+        }
+      ]
+    },
+    {
+      "ayah_index": "37",
+      "ayah_key": "77:37",
+      "questions": [
+        {
+          "question_id": 124,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "وَيْلٌ",
+            "كِفَاتًا",
+            "فَبِأَىِّ",
+            "هَٰذَا"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 125,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "أَدْرَىٰكَ",
+            "يَوْمَئِذٍ",
+            "ﰁ",
+            "ﰨ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 126,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "ﰁ",
+            "كَيْدٌ",
+            "وَيْلٌ"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "38",
+      "ayah_key": "77:38",
+      "questions": [
+        {
+          "question_id": 127,
+          "question": "_____ يَوْمُ ٱلْفَصْلِ جَمَعْنَٰكُمْ وَٱلْأَوَّلِينَ",
+          "answer": "هَٰذَا",
+          "options": [
+            "وَإِذَا",
+            "قَرَارٍ",
+            "ٱلرُّسُلُ",
+            "هَٰذَا"
+          ],
+          "translation": "This"
+        },
+        {
+          "question_id": 128,
+          "question": "هَٰذَا _____ ٱلْفَصْلِ جَمَعْنَٰكُمْ وَٱلْأَوَّلِينَ",
+          "answer": "يَوْمُ",
+          "options": [
+            "مَّآءً",
+            "أَحْيَآءً",
+            "مِمَّا",
+            "يَوْمُ"
+          ],
+          "translation": "(is the) Day"
+        },
+        {
+          "question_id": 129,
+          "question": "هَٰذَا يَوْمُ _____ جَمَعْنَٰكُمْ وَٱلْأَوَّلِينَ",
+          "answer": "ٱلْفَصْلِ",
+          "options": [
+            "ٱلْفَصْلِ",
+            "ﰚ",
+            "مِنَ",
+            "وَعُيُونٍ"
+          ],
+          "translation": "(of) Judgment"
+        },
+        {
+          "question_id": 130,
+          "question": "هَٰذَا يَوْمُ ٱلْفَصْلِ _____ وَٱلْأَوَّلِينَ",
+          "answer": "جَمَعْنَٰكُمْ",
+          "options": [
+            "ﰇ",
+            "جَمَعْنَٰكُمْ",
+            "ﰠ",
+            "لَوَٰقِعٌ"
+          ],
+          "translation": "We have gathered you"
+        },
+        {
+          "question_id": 131,
+          "question": "هَٰذَا يَوْمُ ٱلْفَصْلِ جَمَعْنَٰكُمْ _____",
+          "answer": "وَٱلْأَوَّلِينَ",
+          "options": [
+            "مُّجْرِمُونَ",
+            "وَٱلْأَوَّلِينَ",
+            "ثَلَٰثِ",
+            "عُذْرًا"
+          ],
+          "translation": "and the former (people)"
+        }
+      ]
+    },
+    {
+      "ayah_index": "39",
+      "ayah_key": "77:39",
+      "questions": [
+        {
+          "question_id": 132,
+          "question": "_____ كَانَ لَكُمْ كَيْدٌ فَكِيدُونِ",
+          "answer": "فَإِن",
+          "options": [
+            "فَإِن",
+            "يَوْمَئِذٍ",
+            "وَجَعَلْنَا",
+            "ﰎ"
+          ],
+          "translation": "So if"
+        },
+        {
+          "question_id": 133,
+          "question": "فَإِن _____ لَكُمْ كَيْدٌ فَكِيدُونِ",
+          "answer": "كَانَ",
+          "options": [
+            "تَعْمَلُونَ",
+            "فِيهَا",
+            "كَانَ",
+            "لِّلْمُكَذِّبِينَ"
+          ],
+          "translation": "is"
+        },
+        {
+          "question_id": 134,
+          "question": "فَإِن كَانَ _____ كَيْدٌ فَكِيدُونِ",
+          "answer": "لَكُمْ",
+          "options": [
+            "وَإِذَا",
+            "ﰱ",
+            "يَوْمَئِذٍ",
+            "لَكُمْ"
+          ],
+          "translation": "for you"
+        },
+        {
+          "question_id": 135,
+          "question": "فَإِن كَانَ لَكُمْ _____ فَكِيدُونِ",
+          "answer": "كَيْدٌ",
+          "options": [
+            "كَيْدٌ",
+            "فِى",
+            "ﰮ",
+            "ٱلنُّجُومُ"
+          ],
+          "translation": "a plan"
+        },
+        {
+          "question_id": 136,
+          "question": "فَإِن كَانَ لَكُمْ كَيْدٌ _____",
+          "answer": "فَكِيدُونِ",
+          "options": [
+            "فَكِيدُونِ",
+            "عُرْفًا",
+            "يَوْمَئِذٍ",
+            "كَأَنَّهُۥ"
+          ],
+          "translation": "then plan against Me"
+        }
+      ]
+    },
+    {
+      "ayah_index": "40",
+      "ayah_key": "77:40",
+      "questions": [
+        {
+          "question_id": 137,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "بِشَرَرٍ",
+            "إِنَّكُم",
+            "ﰓ",
+            "وَيْلٌ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 138,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "وَٱلْأَوَّلِينَ",
+            "بِهِۦ",
+            "يَوْمَئِذٍ",
+            "بَعْدَهُۥ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 139,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "مِنَ",
+            "عُرْفًا",
+            "قَرَارٍ"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "41",
+      "ayah_key": "77:41",
+      "questions": [
+        {
+          "question_id": 140,
+          "question": "_____ ٱلْمُتَّقِينَ فِى ظِلَٰلٍ وَعُيُونٍ",
+          "answer": "إِنَّ",
+          "options": [
+            "إِنَّ",
+            "ﰠ",
+            "ٱلْءَاخِرِينَ",
+            "ﰌ"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 141,
+          "question": "إِنَّ _____ فِى ظِلَٰلٍ وَعُيُونٍ",
+          "answer": "ٱلْمُتَّقِينَ",
+          "options": [
+            "ٱلْمُتَّقِينَ",
+            "وَٱلْأَوَّلِينَ",
+            "كَأَنَّهُۥ",
+            "لِّلْمُكَذِّبِينَ"
+          ],
+          "translation": "the righteous"
+        },
+        {
+          "question_id": 142,
+          "question": "إِنَّ ٱلْمُتَّقِينَ _____ ظِلَٰلٍ وَعُيُونٍ",
+          "answer": "فِى",
+          "options": [
+            "فِى",
+            "يُؤْذَنُ",
+            "ٱلرُّسُلُ",
+            "لِيَوْمِ"
+          ],
+          "translation": "(will be) in"
+        },
+        {
+          "question_id": 143,
+          "question": "إِنَّ ٱلْمُتَّقِينَ فِى _____ وَعُيُونٍ",
+          "answer": "ظِلَٰلٍ",
+          "options": [
+            "ظِلَٰلٍ",
+            "مِمَّا",
+            "رَوَٰسِىَ",
+            "لِأَىِّ"
+          ],
+          "translation": "shades"
+        },
+        {
+          "question_id": 144,
+          "question": "إِنَّ ٱلْمُتَّقِينَ فِى ظِلَٰلٍ _____",
+          "answer": "وَعُيُونٍ",
+          "options": [
+            "نَجْعَلِ",
+            "ﰩ",
+            "وَعُيُونٍ",
+            "قَلِيلًا"
+          ],
+          "translation": "and springs"
+        }
+      ]
+    },
+    {
+      "ayah_index": "42",
+      "ayah_key": "77:42",
+      "questions": [
+        {
+          "question_id": 145,
+          "question": "_____ مِمَّا يَشْتَهُونَ",
+          "answer": "وَفَوَٰكِهَ",
+          "options": [
+            "نُهْلِكِ",
+            "وَفَوَٰكِهَ",
+            "كَٱلْقَصْرِ",
+            "لِّلْمُكَذِّبِينَ"
+          ],
+          "translation": "And fruits"
+        },
+        {
+          "question_id": 146,
+          "question": "وَفَوَٰكِهَ _____ يَشْتَهُونَ",
+          "answer": "مِمَّا",
+          "options": [
+            "ﰇ",
+            "مِمَّا",
+            "نَفْعَلُ",
+            "فَإِذَا"
+          ],
+          "translation": "from what"
+        },
+        {
+          "question_id": 147,
+          "question": "وَفَوَٰكِهَ مِمَّا _____",
+          "answer": "يَشْتَهُونَ",
+          "options": [
+            "يَشْتَهُونَ",
+            "شَٰمِخَٰتٍ",
+            "بِمَا",
+            "فَإِذَا"
+          ],
+          "translation": "they desire"
+        }
+      ]
+    },
+    {
+      "ayah_index": "43",
+      "ayah_key": "77:43",
+      "questions": [
+        {
+          "question_id": 148,
+          "question": "_____ وَٱشْرَبُوا۟ هَنِيٓـًٔۢا بِمَا كُنتُمْ تَعْمَلُونَ",
+          "answer": "كُلُوا۟",
+          "options": [
+            "كُلُوا۟",
+            "فَٱلْمُلْقِيَٰتِ",
+            "ثُمَّ",
+            "فَقَدَرْنَا"
+          ],
+          "translation": "Eat"
+        },
+        {
+          "question_id": 149,
+          "question": "كُلُوا۟ _____ هَنِيٓـًٔۢا بِمَا كُنتُمْ تَعْمَلُونَ",
+          "answer": "وَٱشْرَبُوا۟",
+          "options": [
+            "مِنَ",
+            "ﰰ",
+            "وَٱشْرَبُوا۟",
+            "وَمَآ"
+          ],
+          "translation": "and drink"
+        },
+        {
+          "question_id": 150,
+          "question": "كُلُوا۟ وَٱشْرَبُوا۟ _____ بِمَا كُنتُمْ تَعْمَلُونَ",
+          "answer": "هَنِيٓـًٔۢا",
+          "options": [
+            "أُجِّلَتْ",
+            "فَٱلْمُلْقِيَٰتِ",
+            "هَنِيٓـًٔۢا",
+            "ﰉ"
+          ],
+          "translation": "(in) satisfaction"
+        },
+        {
+          "question_id": 151,
+          "question": "كُلُوا۟ وَٱشْرَبُوا۟ هَنِيٓـًٔۢا _____ كُنتُمْ تَعْمَلُونَ",
+          "answer": "بِمَا",
+          "options": [
+            "ﰓ",
+            "ذِى",
+            "ﰜ",
+            "بِمَا"
+          ],
+          "translation": "for what"
+        },
+        {
+          "question_id": 152,
+          "question": "كُلُوا۟ وَٱشْرَبُوا۟ هَنِيٓـًٔۢا بِمَا _____ تَعْمَلُونَ",
+          "answer": "كُنتُمْ",
+          "options": [
+            "يَوْمُ",
+            "نَخْلُقكُّم",
+            "كُنتُمْ",
+            "ﰅ"
+          ],
+          "translation": "you used to"
+        },
+        {
+          "question_id": 153,
+          "question": "كُلُوا۟ وَٱشْرَبُوا۟ هَنِيٓـًٔۢا بِمَا كُنتُمْ _____",
+          "answer": "تَعْمَلُونَ",
+          "options": [
+            "ﰃ",
+            "ﰢ",
+            "تَعْمَلُونَ",
+            "ٱلْأَوَّلِينَ"
+          ],
+          "translation": "do"
+        }
+      ]
+    },
+    {
+      "ayah_index": "44",
+      "ayah_key": "77:44",
+      "questions": [
+        {
+          "question_id": 154,
+          "question": "_____ كَذَٰلِكَ نَجْزِى ٱلْمُحْسِنِينَ",
+          "answer": "إِنَّا",
+          "options": [
+            "أُجِّلَتْ",
+            "إِنَّا",
+            "وَإِذَا",
+            "فَإِن"
+          ],
+          "translation": "Indeed, We"
+        },
+        {
+          "question_id": 155,
+          "question": "إِنَّا _____ نَجْزِى ٱلْمُحْسِنِينَ",
+          "answer": "كَذَٰلِكَ",
+          "options": [
+            "ٱلْفَصْلِ",
+            "كَذَٰلِكَ",
+            "فَٱلْعَٰصِفَٰتِ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "thus"
+        },
+        {
+          "question_id": 156,
+          "question": "إِنَّا كَذَٰلِكَ _____ ٱلْمُحْسِنِينَ",
+          "answer": "نَجْزِى",
+          "options": [
+            "نَجْزِى",
+            "وَيْلٌ",
+            "ﰱ",
+            "لِّلْمُكَذِّبِينَ"
+          ],
+          "translation": "reward"
+        },
+        {
+          "question_id": 157,
+          "question": "إِنَّا كَذَٰلِكَ نَجْزِى _____",
+          "answer": "ٱلْمُحْسِنِينَ",
+          "options": [
+            "وَٱلْأَوَّلِينَ",
+            "ذِى",
+            "ٱلْمُحْسِنِينَ",
+            "ﰝ"
+          ],
+          "translation": "the good-doers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "45",
+      "ayah_key": "77:45",
+      "questions": [
+        {
+          "question_id": 158,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "مِّن",
+            "لِّلْمُكَذِّبِينَ",
+            "إِلَىٰ",
+            "وَيْلٌ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 159,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "كَذَٰلِكَ",
+            "مِمَّا",
+            "يَوْمَئِذٍ",
+            "ٱنطَلِقُوٓا۟"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 160,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "ﰯ",
+            "إِنَّهَا",
+            "إِلَىٰ"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "46",
+      "ayah_key": "77:46",
+      "questions": [
+        {
+          "question_id": 161,
+          "question": "_____ وَتَمَتَّعُوا۟ قَلِيلًا إِنَّكُم مُّجْرِمُونَ",
+          "answer": "كُلُوا۟",
+          "options": [
+            "جَمَعْنَٰكُمْ",
+            "إِنَّهَا",
+            "كُلُوا۟",
+            "إِنَّمَا"
+          ],
+          "translation": "Eat"
+        },
+        {
+          "question_id": 162,
+          "question": "كُلُوا۟ _____ قَلِيلًا إِنَّكُم مُّجْرِمُونَ",
+          "answer": "وَتَمَتَّعُوا۟",
+          "options": [
+            "مَّهِينٍ",
+            "ﰥ",
+            "ظِلٍّ",
+            "وَتَمَتَّعُوا۟"
+          ],
+          "translation": "and enjoy yourselves"
+        },
+        {
+          "question_id": 163,
+          "question": "كُلُوا۟ وَتَمَتَّعُوا۟ _____ إِنَّكُم مُّجْرِمُونَ",
+          "answer": "قَلِيلًا",
+          "options": [
+            "قَلِيلًا",
+            "ﰖ",
+            "يُغْنِى",
+            "وَيْلٌ"
+          ],
+          "translation": "a little"
+        },
+        {
+          "question_id": 164,
+          "question": "كُلُوا۟ وَتَمَتَّعُوا۟ قَلِيلًا _____ مُّجْرِمُونَ",
+          "answer": "إِنَّكُم",
+          "options": [
+            "فَإِذَا",
+            "إِنَّكُم",
+            "يَوْمَئِذٍ",
+            "ﰭ"
+          ],
+          "translation": "indeed, you"
+        },
+        {
+          "question_id": 165,
+          "question": "كُلُوا۟ وَتَمَتَّعُوا۟ قَلِيلًا إِنَّكُم _____",
+          "answer": "مُّجْرِمُونَ",
+          "options": [
+            "مُّجْرِمُونَ",
+            "ذِى",
+            "ٱلْءَاخِرِينَ",
+            "وَيْلٌ"
+          ],
+          "translation": "(are) criminals"
+        }
+      ]
+    },
+    {
+      "ayah_index": "47",
+      "ayah_key": "77:47",
+      "questions": [
+        {
+          "question_id": 166,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "ﰉ",
+            "أَلَمْ",
+            "لَهُمُ",
+            "وَيْلٌ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 167,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "أَحْيَآءً",
+            "أَلَمْ",
+            "وَلَا",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 168,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "كَذَٰلِكَ",
+            "ﰌ",
+            "ٱلْفَصْلِ"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "48",
+      "ayah_key": "77:48",
+      "questions": [
+        {
+          "question_id": 169,
+          "question": "_____ قِيلَ لَهُمُ ٱرْكَعُوا۟ لَا يَرْكَعُونَ",
+          "answer": "وَإِذَا",
+          "options": [
+            "نَفْعَلُ",
+            "يُؤْمِنُونَ",
+            "وَإِذَا",
+            "ﰱ"
+          ],
+          "translation": "And when"
+        },
+        {
+          "question_id": 170,
+          "question": "وَإِذَا _____ لَهُمُ ٱرْكَعُوا۟ لَا يَرْكَعُونَ",
+          "answer": "قِيلَ",
+          "options": [
+            "قِيلَ",
+            "مِنَ",
+            "ﰥ",
+            "تُكَذِّبُونَ"
+          ],
+          "translation": "it is said"
+        },
+        {
+          "question_id": 171,
+          "question": "وَإِذَا قِيلَ _____ ٱرْكَعُوا۟ لَا يَرْكَعُونَ",
+          "answer": "لَهُمُ",
+          "options": [
+            "جَمَعْنَٰكُمْ",
+            "مُّجْرِمُونَ",
+            "قَلِيلًا",
+            "لَهُمُ"
+          ],
+          "translation": "to them"
+        },
+        {
+          "question_id": 172,
+          "question": "وَإِذَا قِيلَ لَهُمُ _____ لَا يَرْكَعُونَ",
+          "answer": "ٱرْكَعُوا۟",
+          "options": [
+            "قِيلَ",
+            "لَهُمْ",
+            "ٱرْكَعُوا۟",
+            "ﰂ"
+          ],
+          "translation": "Bow"
+        },
+        {
+          "question_id": 173,
+          "question": "وَإِذَا قِيلَ لَهُمُ ٱرْكَعُوا۟ _____ يَرْكَعُونَ",
+          "answer": "لَا",
+          "options": [
+            "كَذَٰلِكَ",
+            "لَا",
+            "لِأَىِّ",
+            "ثُمَّ"
+          ],
+          "translation": "not"
+        },
+        {
+          "question_id": 174,
+          "question": "وَإِذَا قِيلَ لَهُمُ ٱرْكَعُوا۟ لَا _____",
+          "answer": "يَرْكَعُونَ",
+          "options": [
+            "ﰁ",
+            "فَٱلْمُلْقِيَٰتِ",
+            "يَرْكَعُونَ",
+            "وَيْلٌ"
+          ],
+          "translation": "they bow"
+        }
+      ]
+    },
+    {
+      "ayah_index": "49",
+      "ayah_key": "77:49",
+      "questions": [
+        {
+          "question_id": 175,
+          "question": "_____ يَوْمَئِذٍ لِّلْمُكَذِّبِينَ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "تُكَذِّبُونَ",
+            "مَّآءٍ",
+            "فَٱلْمُلْقِيَٰتِ",
+            "وَيْلٌ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 176,
+          "question": "وَيْلٌ _____ لِّلْمُكَذِّبِينَ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "ﰇ",
+            "لَا",
+            "ﰟ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 177,
+          "question": "وَيْلٌ يَوْمَئِذٍ _____",
+          "answer": "لِّلْمُكَذِّبِينَ",
+          "options": [
+            "لِّلْمُكَذِّبِينَ",
+            "وَيْلٌ",
+            "ﰱ",
+            "كَذَٰلِكَ"
+          ],
+          "translation": "to the deniers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "50",
+      "ayah_key": "77:50",
+      "questions": [
+        {
+          "question_id": 178,
+          "question": "_____ حَدِيثٍۭ بَعْدَهُۥ يُؤْمِنُونَ",
+          "answer": "فَبِأَىِّ",
+          "options": [
+            "ﰬ",
+            "فَبِأَىِّ",
+            "ظِلَٰلٍ",
+            "ﰅ"
+          ],
+          "translation": "Then in what"
+        },
+        {
+          "question_id": 179,
+          "question": "فَبِأَىِّ _____ بَعْدَهُۥ يُؤْمِنُونَ",
+          "answer": "حَدِيثٍۭ",
+          "options": [
+            "نُسِفَتْ",
+            "حَدِيثٍۭ",
+            "نَشْرًا",
+            "يُؤْذَنُ"
+          ],
+          "translation": "statement"
+        },
+        {
+          "question_id": 180,
+          "question": "فَبِأَىِّ حَدِيثٍۭ _____ يُؤْمِنُونَ",
+          "answer": "بَعْدَهُۥ",
+          "options": [
+            "ﰓ",
+            "بَعْدَهُۥ",
+            "لِّلْمُكَذِّبِينَ",
+            "ﰘ"
+          ],
+          "translation": "after it"
+        },
+        {
+          "question_id": 181,
+          "question": "فَبِأَىِّ حَدِيثٍۭ بَعْدَهُۥ _____",
+          "answer": "يُؤْمِنُونَ",
+          "options": [
+            "يَوْمَئِذٍ",
+            "ﰆ",
+            "يُؤْمِنُونَ",
+            "بَعْدَهُۥ"
+          ],
+          "translation": "will they believe"
+        }
+      ]
+    }
+  ]
+}

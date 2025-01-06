@@ -1,0 +1,281 @@
+{
+  "surah_id": "114",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "114:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ أَعُوذُ بِرَبِّ ٱلنَّاسِ",
+          "answer": "قُلْ",
+          "options": [
+            "ﰁ",
+            "قُلْ",
+            "مِنَ",
+            "ﰄ"
+          ],
+          "translation": "Say"
+        },
+        {
+          "question_id": 2,
+          "question": "قُلْ _____ بِرَبِّ ٱلنَّاسِ",
+          "answer": "أَعُوذُ",
+          "options": [
+            "أَعُوذُ",
+            "بِرَبِّ",
+            "ٱلْخَنَّاسِ",
+            "ﰅ"
+          ],
+          "translation": "I seek refuge"
+        },
+        {
+          "question_id": 3,
+          "question": "قُلْ أَعُوذُ _____ ٱلنَّاسِ",
+          "answer": "بِرَبِّ",
+          "options": [
+            "بِرَبِّ",
+            "شَرِّ",
+            "ٱلنَّاسِ",
+            "ٱلْخَنَّاسِ"
+          ],
+          "translation": "in (the) Lord"
+        },
+        {
+          "question_id": 4,
+          "question": "قُلْ أَعُوذُ بِرَبِّ _____",
+          "answer": "ٱلنَّاسِ",
+          "options": [
+            "فِى",
+            "ٱلَّذِى",
+            "ٱلنَّاسِ",
+            "ﰃ"
+          ],
+          "translation": "(of) mankind"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "114:2",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ ٱلنَّاسِ",
+          "answer": "مَلِكِ",
+          "options": [
+            "ﰅ",
+            "ٱلنَّاسِ",
+            "شَرِّ",
+            "مَلِكِ"
+          ],
+          "translation": "(The) King"
+        },
+        {
+          "question_id": 6,
+          "question": "مَلِكِ _____",
+          "answer": "ٱلنَّاسِ",
+          "options": [
+            "صُدُورِ",
+            "ٱلْخَنَّاسِ",
+            "وَٱلنَّاسِ",
+            "ٱلنَّاسِ"
+          ],
+          "translation": "(of) mankind"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "114:3",
+      "questions": [
+        {
+          "question_id": 7,
+          "question": "_____ ٱلنَّاسِ",
+          "answer": "إِلَٰهِ",
+          "options": [
+            "ﰅ",
+            "ٱلَّذِى",
+            "إِلَٰهِ",
+            "ٱلنَّاسِ"
+          ],
+          "translation": "(The) God"
+        },
+        {
+          "question_id": 8,
+          "question": "إِلَٰهِ _____",
+          "answer": "ٱلنَّاسِ",
+          "options": [
+            "مِن",
+            "صُدُورِ",
+            "ﰄ",
+            "ٱلنَّاسِ"
+          ],
+          "translation": "(of) mankind"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "114:4",
+      "questions": [
+        {
+          "question_id": 9,
+          "question": "_____ شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ",
+          "answer": "مِن",
+          "options": [
+            "بِرَبِّ",
+            "ٱلنَّاسِ",
+            "مِن",
+            "شَرِّ"
+          ],
+          "translation": "From"
+        },
+        {
+          "question_id": 10,
+          "question": "مِن _____ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ",
+          "answer": "شَرِّ",
+          "options": [
+            "شَرِّ",
+            "قُلْ",
+            "ﰀ",
+            "مِن"
+          ],
+          "translation": "(the) evil"
+        },
+        {
+          "question_id": 11,
+          "question": "مِن شَرِّ _____ ٱلْخَنَّاسِ",
+          "answer": "ٱلْوَسْوَاسِ",
+          "options": [
+            "ﰄ",
+            "ٱلْوَسْوَاسِ",
+            "مِن",
+            "ٱلْجِنَّةِ"
+          ],
+          "translation": "(of) the whisperer"
+        },
+        {
+          "question_id": 12,
+          "question": "مِن شَرِّ ٱلْوَسْوَاسِ _____",
+          "answer": "ٱلْخَنَّاسِ",
+          "options": [
+            "ٱلَّذِى",
+            "ٱلنَّاسِ",
+            "ٱلْخَنَّاسِ",
+            "وَٱلنَّاسِ"
+          ],
+          "translation": "the one who withdraws"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "114:5",
+      "questions": [
+        {
+          "question_id": 13,
+          "question": "_____ يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "ﰁ",
+            "فِى",
+            "ٱلَّذِى",
+            "ﰄ"
+          ],
+          "translation": "The one who"
+        },
+        {
+          "question_id": 14,
+          "question": "ٱلَّذِى _____ فِى صُدُورِ ٱلنَّاسِ",
+          "answer": "يُوَسْوِسُ",
+          "options": [
+            "ٱلَّذِى",
+            "وَٱلنَّاسِ",
+            "يُوَسْوِسُ",
+            "ٱلنَّاسِ"
+          ],
+          "translation": "whispers"
+        },
+        {
+          "question_id": 15,
+          "question": "ٱلَّذِى يُوَسْوِسُ _____ صُدُورِ ٱلنَّاسِ",
+          "answer": "فِى",
+          "options": [
+            "فِى",
+            "مِنَ",
+            "أَعُوذُ",
+            "بِرَبِّ"
+          ],
+          "translation": "in"
+        },
+        {
+          "question_id": 16,
+          "question": "ٱلَّذِى يُوَسْوِسُ فِى _____ ٱلنَّاسِ",
+          "answer": "صُدُورِ",
+          "options": [
+            "ٱلنَّاسِ",
+            "مِن",
+            "فِى",
+            "صُدُورِ"
+          ],
+          "translation": "(the) breasts"
+        },
+        {
+          "question_id": 17,
+          "question": "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ _____",
+          "answer": "ٱلنَّاسِ",
+          "options": [
+            "ٱلنَّاسِ",
+            "أَعُوذُ",
+            "إِلَٰهِ",
+            "ﰂ"
+          ],
+          "translation": "(of) mankind"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "114:6",
+      "questions": [
+        {
+          "question_id": 18,
+          "question": "_____ ٱلْجِنَّةِ وَٱلنَّاسِ",
+          "answer": "مِنَ",
+          "options": [
+            "صُدُورِ",
+            "مِنَ",
+            "ﰀ",
+            "ٱلنَّاسِ"
+          ],
+          "translation": "From"
+        },
+        {
+          "question_id": 19,
+          "question": "مِنَ _____ وَٱلنَّاسِ",
+          "answer": "ٱلْجِنَّةِ",
+          "options": [
+            "ﰂ",
+            "ﰃ",
+            "ٱلْجِنَّةِ",
+            "مَلِكِ"
+          ],
+          "translation": "the jinn"
+        },
+        {
+          "question_id": 20,
+          "question": "مِنَ ٱلْجِنَّةِ _____",
+          "answer": "وَٱلنَّاسِ",
+          "options": [
+            "ٱلنَّاسِ",
+            "أَعُوذُ",
+            "وَٱلنَّاسِ",
+            "مِنَ"
+          ],
+          "translation": "and men"
+        }
+      ]
+    }
+  ]
+}

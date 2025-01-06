@@ -1,0 +1,743 @@
+{
+  "surah_id": "91",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "91:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ وَضُحَىٰهَا",
+          "answer": "وَٱلشَّمْسِ",
+          "options": [
+            "فُجُورَهَا",
+            "وَٱلشَّمْسِ",
+            "وَلَا",
+            "وَٱلنَّهَارِ"
+          ],
+          "translation": "By the sun"
+        },
+        {
+          "question_id": 2,
+          "question": "وَٱلشَّمْسِ _____",
+          "answer": "وَضُحَىٰهَا",
+          "options": [
+            "وَٱلنَّهَارِ",
+            "ﰎ",
+            "وَضُحَىٰهَا",
+            "ٱنۢبَعَثَ"
+          ],
+          "translation": "and its brightness"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "91:2",
+      "questions": [
+        {
+          "question_id": 3,
+          "question": "_____ إِذَا تَلَىٰهَا",
+          "answer": "وَٱلْقَمَرِ",
+          "options": [
+            "يَغْشَىٰهَا",
+            "يَخَافُ",
+            "وَٱلْقَمَرِ",
+            "فَقَالَ"
+          ],
+          "translation": "And the moon"
+        },
+        {
+          "question_id": 4,
+          "question": "وَٱلْقَمَرِ _____ تَلَىٰهَا",
+          "answer": "إِذَا",
+          "options": [
+            "فَأَلْهَمَهَا",
+            "ﰃ",
+            "إِذَا",
+            "أَفْلَحَ"
+          ],
+          "translation": "when"
+        },
+        {
+          "question_id": 5,
+          "question": "وَٱلْقَمَرِ إِذَا _____",
+          "answer": "تَلَىٰهَا",
+          "options": [
+            "وَٱلْأَرْضِ",
+            "وَنَفْسٍ",
+            "تَلَىٰهَا",
+            "ﰋ"
+          ],
+          "translation": "it follows it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "91:3",
+      "questions": [
+        {
+          "question_id": 6,
+          "question": "_____ إِذَا جَلَّىٰهَا",
+          "answer": "وَٱلنَّهَارِ",
+          "options": [
+            "إِذَا",
+            "وَٱلنَّهَارِ",
+            "ٱنۢبَعَثَ",
+            "فَسَوَّىٰهَا"
+          ],
+          "translation": "And the day"
+        },
+        {
+          "question_id": 7,
+          "question": "وَٱلنَّهَارِ _____ جَلَّىٰهَا",
+          "answer": "إِذَا",
+          "options": [
+            "إِذَا",
+            "وَلَا",
+            "قَدْ",
+            "ﰃ"
+          ],
+          "translation": "when"
+        },
+        {
+          "question_id": 8,
+          "question": "وَٱلنَّهَارِ إِذَا _____",
+          "answer": "جَلَّىٰهَا",
+          "options": [
+            "أَشْقَىٰهَا",
+            "بِطَغْوَىٰهَآ",
+            "جَلَّىٰهَا",
+            "لَهُمْ"
+          ],
+          "translation": "it displays it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "91:4",
+      "questions": [
+        {
+          "question_id": 9,
+          "question": "_____ إِذَا يَغْشَىٰهَا",
+          "answer": "وَٱلَّيْلِ",
+          "options": [
+            "ﰅ",
+            "وَمَا",
+            "ﰊ",
+            "وَٱلَّيْلِ"
+          ],
+          "translation": "And the night"
+        },
+        {
+          "question_id": 10,
+          "question": "وَٱلَّيْلِ _____ يَغْشَىٰهَا",
+          "answer": "إِذَا",
+          "options": [
+            "إِذَا",
+            "أَفْلَحَ",
+            "ﰈ",
+            "فَقَالَ"
+          ],
+          "translation": "when"
+        },
+        {
+          "question_id": 11,
+          "question": "وَٱلَّيْلِ إِذَا _____",
+          "answer": "يَغْشَىٰهَا",
+          "options": [
+            "يَغْشَىٰهَا",
+            "تَلَىٰهَا",
+            "وَنَفْسٍ",
+            "سَوَّىٰهَا"
+          ],
+          "translation": "it covers it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "91:5",
+      "questions": [
+        {
+          "question_id": 12,
+          "question": "_____ وَمَا بَنَىٰهَا",
+          "answer": "وَٱلسَّمَآءِ",
+          "options": [
+            "عُقْبَٰهَا",
+            "ﰆ",
+            "وَٱلسَّمَآءِ",
+            "ثَمُودُ"
+          ],
+          "translation": "And the heaven"
+        },
+        {
+          "question_id": 13,
+          "question": "وَٱلسَّمَآءِ _____ بَنَىٰهَا",
+          "answer": "وَمَا",
+          "options": [
+            "ﰍ",
+            "وَمَا",
+            "ﰌ",
+            "ﰂ"
+          ],
+          "translation": "and (He) Who"
+        },
+        {
+          "question_id": 14,
+          "question": "وَٱلسَّمَآءِ وَمَا _____",
+          "answer": "بَنَىٰهَا",
+          "options": [
+            "بِطَغْوَىٰهَآ",
+            "زَكَّىٰهَا",
+            "بَنَىٰهَا",
+            "بِذَنۢبِهِمْ"
+          ],
+          "translation": "constructed it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "91:6",
+      "questions": [
+        {
+          "question_id": 15,
+          "question": "_____ وَمَا طَحَىٰهَا",
+          "answer": "وَٱلْأَرْضِ",
+          "options": [
+            "وَٱلسَّمَآءِ",
+            "وَسُقْيَٰهَا",
+            "ﰈ",
+            "وَٱلْأَرْضِ"
+          ],
+          "translation": "And the earth"
+        },
+        {
+          "question_id": 16,
+          "question": "وَٱلْأَرْضِ _____ طَحَىٰهَا",
+          "answer": "وَمَا",
+          "options": [
+            "ﰋ",
+            "وَمَا",
+            "أَشْقَىٰهَا",
+            "عَلَيْهِمْ"
+          ],
+          "translation": "and by (He) Who"
+        },
+        {
+          "question_id": 17,
+          "question": "وَٱلْأَرْضِ وَمَا _____",
+          "answer": "طَحَىٰهَا",
+          "options": [
+            "ﰍ",
+            "طَحَىٰهَا",
+            "عَلَيْهِمْ",
+            "وَتَقْوَىٰهَا"
+          ],
+          "translation": "spread it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "91:7",
+      "questions": [
+        {
+          "question_id": 18,
+          "question": "_____ وَمَا سَوَّىٰهَا",
+          "answer": "وَنَفْسٍ",
+          "options": [
+            "وَمَا",
+            "وَسُقْيَٰهَا",
+            "ﰄ",
+            "وَنَفْسٍ"
+          ],
+          "translation": "And (the) soul"
+        },
+        {
+          "question_id": 19,
+          "question": "وَنَفْسٍ _____ سَوَّىٰهَا",
+          "answer": "وَمَا",
+          "options": [
+            "وَسُقْيَٰهَا",
+            "إِذَا",
+            "وَمَا",
+            "ﰂ"
+          ],
+          "translation": "and (He) Who"
+        },
+        {
+          "question_id": 20,
+          "question": "وَنَفْسٍ وَمَا _____",
+          "answer": "سَوَّىٰهَا",
+          "options": [
+            "عَلَيْهِمْ",
+            "مَن",
+            "ﰉ",
+            "سَوَّىٰهَا"
+          ],
+          "translation": "proportioned it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "91:8",
+      "questions": [
+        {
+          "question_id": 21,
+          "question": "_____ فُجُورَهَا وَتَقْوَىٰهَا",
+          "answer": "فَأَلْهَمَهَا",
+          "options": [
+            "ﰌ",
+            "عَلَيْهِمْ",
+            "مَن",
+            "فَأَلْهَمَهَا"
+          ],
+          "translation": "And He inspired it"
+        },
+        {
+          "question_id": 22,
+          "question": "فَأَلْهَمَهَا _____ وَتَقْوَىٰهَا",
+          "answer": "فُجُورَهَا",
+          "options": [
+            "فُجُورَهَا",
+            "يَغْشَىٰهَا",
+            "فَعَقَرُوهَا",
+            "وَٱلسَّمَآءِ"
+          ],
+          "translation": "(to distinguish) its wickedness"
+        },
+        {
+          "question_id": 23,
+          "question": "فَأَلْهَمَهَا فُجُورَهَا _____",
+          "answer": "وَتَقْوَىٰهَا",
+          "options": [
+            "ٱنۢبَعَثَ",
+            "ٱللَّهِ",
+            "طَحَىٰهَا",
+            "وَتَقْوَىٰهَا"
+          ],
+          "translation": "and its righteousness"
+        }
+      ]
+    },
+    {
+      "ayah_index": "9",
+      "ayah_key": "91:9",
+      "questions": [
+        {
+          "question_id": 24,
+          "question": "_____ أَفْلَحَ مَن زَكَّىٰهَا",
+          "answer": "قَدْ",
+          "options": [
+            "وَمَا",
+            "بِذَنۢبِهِمْ",
+            "ﰍ",
+            "قَدْ"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 25,
+          "question": "قَدْ _____ مَن زَكَّىٰهَا",
+          "answer": "أَفْلَحَ",
+          "options": [
+            "عَلَيْهِمْ",
+            "وَٱلسَّمَآءِ",
+            "أَفْلَحَ",
+            "وَٱلنَّهَارِ"
+          ],
+          "translation": "he succeeds"
+        },
+        {
+          "question_id": 26,
+          "question": "قَدْ أَفْلَحَ _____ زَكَّىٰهَا",
+          "answer": "مَن",
+          "options": [
+            "ﰀ",
+            "مَن",
+            "ﰉ",
+            "عَلَيْهِمْ"
+          ],
+          "translation": "who"
+        },
+        {
+          "question_id": 27,
+          "question": "قَدْ أَفْلَحَ مَن _____",
+          "answer": "زَكَّىٰهَا",
+          "options": [
+            "لَهُمْ",
+            "وَلَا",
+            "وَٱلْقَمَرِ",
+            "زَكَّىٰهَا"
+          ],
+          "translation": "purifies it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "10",
+      "ayah_key": "91:10",
+      "questions": [
+        {
+          "question_id": 28,
+          "question": "_____ خَابَ مَن دَسَّىٰهَا",
+          "answer": "وَقَدْ",
+          "options": [
+            "ﰎ",
+            "مَن",
+            "أَشْقَىٰهَا",
+            "وَقَدْ"
+          ],
+          "translation": "And indeed"
+        },
+        {
+          "question_id": 29,
+          "question": "وَقَدْ _____ مَن دَسَّىٰهَا",
+          "answer": "خَابَ",
+          "options": [
+            "إِذِ",
+            "خَابَ",
+            "وَتَقْوَىٰهَا",
+            "وَٱلشَّمْسِ"
+          ],
+          "translation": "he fails"
+        },
+        {
+          "question_id": 30,
+          "question": "وَقَدْ خَابَ _____ دَسَّىٰهَا",
+          "answer": "مَن",
+          "options": [
+            "ﰈ",
+            "عَلَيْهِمْ",
+            "مَن",
+            "فَعَقَرُوهَا"
+          ],
+          "translation": "who"
+        },
+        {
+          "question_id": 31,
+          "question": "وَقَدْ خَابَ مَن _____",
+          "answer": "دَسَّىٰهَا",
+          "options": [
+            "دَسَّىٰهَا",
+            "فَسَوَّىٰهَا",
+            "خَابَ",
+            "ٱللَّهِ"
+          ],
+          "translation": "buries it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "11",
+      "ayah_key": "91:11",
+      "questions": [
+        {
+          "question_id": 32,
+          "question": "_____ ثَمُودُ بِطَغْوَىٰهَآ",
+          "answer": "كَذَّبَتْ",
+          "options": [
+            "كَذَّبَتْ",
+            "مَن",
+            "زَكَّىٰهَا",
+            "تَلَىٰهَا"
+          ],
+          "translation": "Denied"
+        },
+        {
+          "question_id": 33,
+          "question": "كَذَّبَتْ _____ بِطَغْوَىٰهَآ",
+          "answer": "ثَمُودُ",
+          "options": [
+            "وَٱلشَّمْسِ",
+            "ﰊ",
+            "طَحَىٰهَا",
+            "ثَمُودُ"
+          ],
+          "translation": "Thamud"
+        },
+        {
+          "question_id": 34,
+          "question": "كَذَّبَتْ ثَمُودُ _____",
+          "answer": "بِطَغْوَىٰهَآ",
+          "options": [
+            "بِطَغْوَىٰهَآ",
+            "ﰈ",
+            "ٱللَّهِ",
+            "خَابَ"
+          ],
+          "translation": "by their transgression"
+        }
+      ]
+    },
+    {
+      "ayah_index": "12",
+      "ayah_key": "91:12",
+      "questions": [
+        {
+          "question_id": 35,
+          "question": "_____ ٱنۢبَعَثَ أَشْقَىٰهَا",
+          "answer": "إِذِ",
+          "options": [
+            "وَٱلْأَرْضِ",
+            "فَكَذَّبُوهُ",
+            "إِذِ",
+            "ٱللَّهِ"
+          ],
+          "translation": "When"
+        },
+        {
+          "question_id": 36,
+          "question": "إِذِ _____ أَشْقَىٰهَا",
+          "answer": "ٱنۢبَعَثَ",
+          "options": [
+            "فَأَلْهَمَهَا",
+            "ٱنۢبَعَثَ",
+            "أَشْقَىٰهَا",
+            "وَمَا"
+          ],
+          "translation": "(was) sent forth"
+        },
+        {
+          "question_id": 37,
+          "question": "إِذِ ٱنۢبَعَثَ _____",
+          "answer": "أَشْقَىٰهَا",
+          "options": [
+            "ﰍ",
+            "ٱنۢبَعَثَ",
+            "وَٱلَّيْلِ",
+            "أَشْقَىٰهَا"
+          ],
+          "translation": "(the) most wicked of them"
+        }
+      ]
+    },
+    {
+      "ayah_index": "13",
+      "ayah_key": "91:13",
+      "questions": [
+        {
+          "question_id": 38,
+          "question": "_____ لَهُمْ رَسُولُ ٱللَّهِ نَاقَةَ ٱللَّهِ وَسُقْيَٰهَا",
+          "answer": "فَقَالَ",
+          "options": [
+            "فَقَالَ",
+            "ٱللَّهِ",
+            "وَتَقْوَىٰهَا",
+            "أَفْلَحَ"
+          ],
+          "translation": "But said"
+        },
+        {
+          "question_id": 39,
+          "question": "فَقَالَ _____ رَسُولُ ٱللَّهِ نَاقَةَ ٱللَّهِ وَسُقْيَٰهَا",
+          "answer": "لَهُمْ",
+          "options": [
+            "مَن",
+            "لَهُمْ",
+            "ﰍ",
+            "عَلَيْهِمْ"
+          ],
+          "translation": "to them"
+        },
+        {
+          "question_id": 40,
+          "question": "فَقَالَ لَهُمْ _____ ٱللَّهِ نَاقَةَ ٱللَّهِ وَسُقْيَٰهَا",
+          "answer": "رَسُولُ",
+          "options": [
+            "فَأَلْهَمَهَا",
+            "زَكَّىٰهَا",
+            "فَكَذَّبُوهُ",
+            "رَسُولُ"
+          ],
+          "translation": "(the) Messenger"
+        },
+        {
+          "question_id": 41,
+          "question": "فَقَالَ لَهُمْ رَسُولُ _____ نَاقَةَ ٱللَّهِ وَسُقْيَٰهَا",
+          "answer": "ٱللَّهِ",
+          "options": [
+            "وَٱلشَّمْسِ",
+            "طَحَىٰهَا",
+            "ٱللَّهِ",
+            "وَمَا"
+          ],
+          "translation": "(of) Allah"
+        },
+        {
+          "question_id": 42,
+          "question": "فَقَالَ لَهُمْ رَسُولُ ٱللَّهِ _____ ٱللَّهِ وَسُقْيَٰهَا",
+          "answer": "نَاقَةَ",
+          "options": [
+            "وَقَدْ",
+            "ﰉ",
+            "نَاقَةَ",
+            "ﰅ"
+          ],
+          "translation": "(It is the) she-camel"
+        },
+        {
+          "question_id": 43,
+          "question": "فَقَالَ لَهُمْ رَسُولُ ٱللَّهِ نَاقَةَ _____ وَسُقْيَٰهَا",
+          "answer": "ٱللَّهِ",
+          "options": [
+            "إِذَا",
+            "سَوَّىٰهَا",
+            "أَفْلَحَ",
+            "ٱللَّهِ"
+          ],
+          "translation": "(of) Allah"
+        },
+        {
+          "question_id": 44,
+          "question": "فَقَالَ لَهُمْ رَسُولُ ٱللَّهِ نَاقَةَ ٱللَّهِ _____",
+          "answer": "وَسُقْيَٰهَا",
+          "options": [
+            "وَسُقْيَٰهَا",
+            "بَنَىٰهَا",
+            "ٱللَّهِ",
+            "بِذَنۢبِهِمْ"
+          ],
+          "translation": "and her drink"
+        }
+      ]
+    },
+    {
+      "ayah_index": "14",
+      "ayah_key": "91:14",
+      "questions": [
+        {
+          "question_id": 45,
+          "question": "_____ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم بِذَنۢبِهِمْ فَسَوَّىٰهَا",
+          "answer": "فَكَذَّبُوهُ",
+          "options": [
+            "لَهُمْ",
+            "كَذَّبَتْ",
+            "وَٱلشَّمْسِ",
+            "فَكَذَّبُوهُ"
+          ],
+          "translation": "But they denied him"
+        },
+        {
+          "question_id": 46,
+          "question": "فَكَذَّبُوهُ _____ فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم بِذَنۢبِهِمْ فَسَوَّىٰهَا",
+          "answer": "فَعَقَرُوهَا",
+          "options": [
+            "وَٱلسَّمَآءِ",
+            "ﰋ",
+            "فَعَقَرُوهَا",
+            "ﰀ"
+          ],
+          "translation": "and they hamstrung her"
+        },
+        {
+          "question_id": 47,
+          "question": "فَكَذَّبُوهُ فَعَقَرُوهَا _____ عَلَيْهِمْ رَبُّهُم بِذَنۢبِهِمْ فَسَوَّىٰهَا",
+          "answer": "فَدَمْدَمَ",
+          "options": [
+            "مَن",
+            "ﰃ",
+            "فَدَمْدَمَ",
+            "بَنَىٰهَا"
+          ],
+          "translation": "So destroyed"
+        },
+        {
+          "question_id": 48,
+          "question": "فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ _____ رَبُّهُم بِذَنۢبِهِمْ فَسَوَّىٰهَا",
+          "answer": "عَلَيْهِمْ",
+          "options": [
+            "فَسَوَّىٰهَا",
+            "إِذَا",
+            "فُجُورَهَا",
+            "عَلَيْهِمْ"
+          ],
+          "translation": "them"
+        },
+        {
+          "question_id": 49,
+          "question": "فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ _____ بِذَنۢبِهِمْ فَسَوَّىٰهَا",
+          "answer": "رَبُّهُم",
+          "options": [
+            "رَبُّهُم",
+            "أَفْلَحَ",
+            "ٱنۢبَعَثَ",
+            "فَأَلْهَمَهَا"
+          ],
+          "translation": "their Lord"
+        },
+        {
+          "question_id": 50,
+          "question": "فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم _____ فَسَوَّىٰهَا",
+          "answer": "بِذَنۢبِهِمْ",
+          "options": [
+            "ﰍ",
+            "ﰇ",
+            "مَن",
+            "بِذَنۢبِهِمْ"
+          ],
+          "translation": "for their sin"
+        },
+        {
+          "question_id": 51,
+          "question": "فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم بِذَنۢبِهِمْ _____",
+          "answer": "فَسَوَّىٰهَا",
+          "options": [
+            "فَسَوَّىٰهَا",
+            "وَمَا",
+            "رَسُولُ",
+            "فَدَمْدَمَ"
+          ],
+          "translation": "and leveled them"
+        }
+      ]
+    },
+    {
+      "ayah_index": "15",
+      "ayah_key": "91:15",
+      "questions": [
+        {
+          "question_id": 52,
+          "question": "_____ يَخَافُ عُقْبَٰهَا",
+          "answer": "وَلَا",
+          "options": [
+            "ﰈ",
+            "وَلَا",
+            "ﰀ",
+            "فَقَالَ"
+          ],
+          "translation": "And not"
+        },
+        {
+          "question_id": 53,
+          "question": "وَلَا _____ عُقْبَٰهَا",
+          "answer": "يَخَافُ",
+          "options": [
+            "فَعَقَرُوهَا",
+            "إِذِ",
+            "ﰅ",
+            "يَخَافُ"
+          ],
+          "translation": "He fears"
+        },
+        {
+          "question_id": 54,
+          "question": "وَلَا يَخَافُ _____",
+          "answer": "عُقْبَٰهَا",
+          "options": [
+            "وَمَا",
+            "ٱنۢبَعَثَ",
+            "عُقْبَٰهَا",
+            "وَٱلسَّمَآءِ"
+          ],
+          "translation": "its consequences"
+        }
+      ]
+    }
+  ]
+}

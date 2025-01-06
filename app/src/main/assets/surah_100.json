@@ -1,0 +1,551 @@
+{
+  "surah_id": "100",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "100:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ ضَبْحًا",
+          "answer": "وَٱلْعَٰدِيَٰتِ",
+          "options": [
+            "ضَبْحًا",
+            "قَدْحًا",
+            "وَٱلْعَٰدِيَٰتِ",
+            "وَإِنَّهُۥ"
+          ],
+          "translation": "By the racers"
+        },
+        {
+          "question_id": 2,
+          "question": "وَٱلْعَٰدِيَٰتِ _____",
+          "answer": "ضَبْحًا",
+          "options": [
+            "لَشَدِيدٌ",
+            "ضَبْحًا",
+            "ﰉ",
+            "ﰆ"
+          ],
+          "translation": "panting"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "100:2",
+      "questions": [
+        {
+          "question_id": 3,
+          "question": "_____ قَدْحًا",
+          "answer": "فَٱلْمُورِيَٰتِ",
+          "options": [
+            "بُعْثِرَ",
+            "يَوْمَئِذٍ",
+            "فَٱلْمُورِيَٰتِ",
+            "إِنَّ"
+          ],
+          "translation": "And the producers of sparks"
+        },
+        {
+          "question_id": 4,
+          "question": "فَٱلْمُورِيَٰتِ _____",
+          "answer": "قَدْحًا",
+          "options": [
+            "فَأَثَرْنَ",
+            "وَإِنَّهُۥ",
+            "قَدْحًا",
+            "ﰉ"
+          ],
+          "translation": "striking"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "100:3",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ صُبْحًا",
+          "answer": "فَٱلْمُغِيرَٰتِ",
+          "options": [
+            "بِهِۦ",
+            "وَحُصِّلَ",
+            "فَأَثَرْنَ",
+            "فَٱلْمُغِيرَٰتِ"
+          ],
+          "translation": "And the chargers"
+        },
+        {
+          "question_id": 6,
+          "question": "فَٱلْمُغِيرَٰتِ _____",
+          "answer": "صُبْحًا",
+          "options": [
+            "صُبْحًا",
+            "ﰄ",
+            "جَمْعًا",
+            "بِهِمْ"
+          ],
+          "translation": "(at) dawn"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "100:4",
+      "questions": [
+        {
+          "question_id": 7,
+          "question": "_____ بِهِۦ نَقْعًا",
+          "answer": "فَأَثَرْنَ",
+          "options": [
+            "ﰈ",
+            "فَأَثَرْنَ",
+            "ﰇ",
+            "ﰄ"
+          ],
+          "translation": "Then raise"
+        },
+        {
+          "question_id": 8,
+          "question": "فَأَثَرْنَ _____ نَقْعًا",
+          "answer": "بِهِۦ",
+          "options": [
+            "ضَبْحًا",
+            "لِحُبِّ",
+            "ﰄ",
+            "بِهِۦ"
+          ],
+          "translation": "thereby"
+        },
+        {
+          "question_id": 9,
+          "question": "فَأَثَرْنَ بِهِۦ _____",
+          "answer": "نَقْعًا",
+          "options": [
+            "لِحُبِّ",
+            "ٱلصُّدُورِ",
+            "نَقْعًا",
+            "جَمْعًا"
+          ],
+          "translation": "dust"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "100:5",
+      "questions": [
+        {
+          "question_id": 10,
+          "question": "_____ بِهِۦ جَمْعًا",
+          "answer": "فَوَسَطْنَ",
+          "options": [
+            "ٱلْقُبُورِ",
+            "فَوَسَطْنَ",
+            "ٱلْإِنسَٰنَ",
+            "مَا"
+          ],
+          "translation": "Then penetrate (in the) center"
+        },
+        {
+          "question_id": 11,
+          "question": "فَوَسَطْنَ _____ جَمْعًا",
+          "answer": "بِهِۦ",
+          "options": [
+            "فَٱلْمُورِيَٰتِ",
+            "ٱلْإِنسَٰنَ",
+            "ﰈ",
+            "بِهِۦ"
+          ],
+          "translation": "thereby"
+        },
+        {
+          "question_id": 12,
+          "question": "فَوَسَطْنَ بِهِۦ _____",
+          "answer": "جَمْعًا",
+          "options": [
+            "مَا",
+            "إِنَّ",
+            "لَشَدِيدٌ",
+            "جَمْعًا"
+          ],
+          "translation": "collectively"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "100:6",
+      "questions": [
+        {
+          "question_id": 13,
+          "question": "_____ ٱلْإِنسَٰنَ لِرَبِّهِۦ لَكَنُودٌ",
+          "answer": "إِنَّ",
+          "options": [
+            "ﰇ",
+            "ٱلْخَيْرِ",
+            "ﰁ",
+            "إِنَّ"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 14,
+          "question": "إِنَّ _____ لِرَبِّهِۦ لَكَنُودٌ",
+          "answer": "ٱلْإِنسَٰنَ",
+          "options": [
+            "فِى",
+            "مَا",
+            "ٱلْإِنسَٰنَ",
+            "لِرَبِّهِۦ"
+          ],
+          "translation": "mankind"
+        },
+        {
+          "question_id": 15,
+          "question": "إِنَّ ٱلْإِنسَٰنَ _____ لَكَنُودٌ",
+          "answer": "لِرَبِّهِۦ",
+          "options": [
+            "ﰆ",
+            "ٱلْإِنسَٰنَ",
+            "لِرَبِّهِۦ",
+            "لِحُبِّ"
+          ],
+          "translation": "to his Lord"
+        },
+        {
+          "question_id": 16,
+          "question": "إِنَّ ٱلْإِنسَٰنَ لِرَبِّهِۦ _____",
+          "answer": "لَكَنُودٌ",
+          "options": [
+            "وَٱلْعَٰدِيَٰتِ",
+            "ﰆ",
+            "ﰁ",
+            "لَكَنُودٌ"
+          ],
+          "translation": "(is) surely ungrateful"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "100:7",
+      "questions": [
+        {
+          "question_id": 17,
+          "question": "_____ عَلَىٰ ذَٰلِكَ لَشَهِيدٌ",
+          "answer": "وَإِنَّهُۥ",
+          "options": [
+            "لِرَبِّهِۦ",
+            "ٱلصُّدُورِ",
+            "وَإِنَّهُۥ",
+            "مَا"
+          ],
+          "translation": "And indeed, he"
+        },
+        {
+          "question_id": 18,
+          "question": "وَإِنَّهُۥ _____ ذَٰلِكَ لَشَهِيدٌ",
+          "answer": "عَلَىٰ",
+          "options": [
+            "فَٱلْمُغِيرَٰتِ",
+            "مَا",
+            "وَإِنَّهُۥ",
+            "عَلَىٰ"
+          ],
+          "translation": "on"
+        },
+        {
+          "question_id": 19,
+          "question": "وَإِنَّهُۥ عَلَىٰ _____ لَشَهِيدٌ",
+          "answer": "ذَٰلِكَ",
+          "options": [
+            "وَحُصِّلَ",
+            "ﰀ",
+            "ذَٰلِكَ",
+            "فَوَسَطْنَ"
+          ],
+          "translation": "that"
+        },
+        {
+          "question_id": 20,
+          "question": "وَإِنَّهُۥ عَلَىٰ ذَٰلِكَ _____",
+          "answer": "لَشَهِيدٌ",
+          "options": [
+            "لَشَهِيدٌ",
+            "ﰇ",
+            "فَٱلْمُغِيرَٰتِ",
+            "ذَٰلِكَ"
+          ],
+          "translation": "surely (is) a witness"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "100:8",
+      "questions": [
+        {
+          "question_id": 21,
+          "question": "_____ لِحُبِّ ٱلْخَيْرِ لَشَدِيدٌ",
+          "answer": "وَإِنَّهُۥ",
+          "options": [
+            "وَإِنَّهُۥ",
+            "ﰉ",
+            "جَمْعًا",
+            "ﰆ"
+          ],
+          "translation": "And indeed he"
+        },
+        {
+          "question_id": 22,
+          "question": "وَإِنَّهُۥ _____ ٱلْخَيْرِ لَشَدِيدٌ",
+          "answer": "لِحُبِّ",
+          "options": [
+            "وَحُصِّلَ",
+            "لِحُبِّ",
+            "نَقْعًا",
+            "إِنَّ"
+          ],
+          "translation": "in (the) love"
+        },
+        {
+          "question_id": 23,
+          "question": "وَإِنَّهُۥ لِحُبِّ _____ لَشَدِيدٌ",
+          "answer": "ٱلْخَيْرِ",
+          "options": [
+            "ٱلْخَيْرِ",
+            "يَعْلَمُ",
+            "لَشَدِيدٌ",
+            "لِحُبِّ"
+          ],
+          "translation": "(of) wealth"
+        },
+        {
+          "question_id": 24,
+          "question": "وَإِنَّهُۥ لِحُبِّ ٱلْخَيْرِ _____",
+          "answer": "لَشَدِيدٌ",
+          "options": [
+            "عَلَىٰ",
+            "لَّخَبِيرٌۢ",
+            "ﰀ",
+            "لَشَدِيدٌ"
+          ],
+          "translation": "(is) surely intense"
+        }
+      ]
+    },
+    {
+      "ayah_index": "9",
+      "ayah_key": "100:9",
+      "questions": [
+        {
+          "question_id": 25,
+          "question": "_____ يَعْلَمُ إِذَا بُعْثِرَ مَا فِى ٱلْقُبُورِ",
+          "answer": "أَفَلَا",
+          "options": [
+            "نَقْعًا",
+            "أَفَلَا",
+            "يَعْلَمُ",
+            "جَمْعًا"
+          ],
+          "translation": "But does not"
+        },
+        {
+          "question_id": 26,
+          "question": "أَفَلَا _____ إِذَا بُعْثِرَ مَا فِى ٱلْقُبُورِ",
+          "answer": "يَعْلَمُ",
+          "options": [
+            "فِى",
+            "ﰁ",
+            "ذَٰلِكَ",
+            "يَعْلَمُ"
+          ],
+          "translation": "he know"
+        },
+        {
+          "question_id": 27,
+          "question": "أَفَلَا يَعْلَمُ _____ بُعْثِرَ مَا فِى ٱلْقُبُورِ",
+          "answer": "إِذَا",
+          "options": [
+            "ﰉ",
+            "مَا",
+            "إِذَا",
+            "ﰅ"
+          ],
+          "translation": "when"
+        },
+        {
+          "question_id": 28,
+          "question": "أَفَلَا يَعْلَمُ إِذَا _____ مَا فِى ٱلْقُبُورِ",
+          "answer": "بُعْثِرَ",
+          "options": [
+            "بُعْثِرَ",
+            "إِنَّ",
+            "وَإِنَّهُۥ",
+            "لَشَدِيدٌ"
+          ],
+          "translation": "will be scattered"
+        },
+        {
+          "question_id": 29,
+          "question": "أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ _____ فِى ٱلْقُبُورِ",
+          "answer": "مَا",
+          "options": [
+            "فَٱلْمُغِيرَٰتِ",
+            "إِنَّ",
+            "رَبَّهُم",
+            "مَا"
+          ],
+          "translation": "what"
+        },
+        {
+          "question_id": 30,
+          "question": "أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا _____ ٱلْقُبُورِ",
+          "answer": "فِى",
+          "options": [
+            "بُعْثِرَ",
+            "بِهِۦ",
+            "فِى",
+            "ٱلْقُبُورِ"
+          ],
+          "translation": "(is) in"
+        },
+        {
+          "question_id": 31,
+          "question": "أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِى _____",
+          "answer": "ٱلْقُبُورِ",
+          "options": [
+            "إِنَّ",
+            "لِحُبِّ",
+            "ٱلْقُبُورِ",
+            "فِى"
+          ],
+          "translation": "the graves"
+        }
+      ]
+    },
+    {
+      "ayah_index": "10",
+      "ayah_key": "100:10",
+      "questions": [
+        {
+          "question_id": 32,
+          "question": "_____ مَا فِى ٱلصُّدُورِ",
+          "answer": "وَحُصِّلَ",
+          "options": [
+            "يَعْلَمُ",
+            "وَٱلْعَٰدِيَٰتِ",
+            "لِرَبِّهِۦ",
+            "وَحُصِّلَ"
+          ],
+          "translation": "And is made apparent"
+        },
+        {
+          "question_id": 33,
+          "question": "وَحُصِّلَ _____ فِى ٱلصُّدُورِ",
+          "answer": "مَا",
+          "options": [
+            "مَا",
+            "ﰁ",
+            "لَشَهِيدٌ",
+            "إِنَّ"
+          ],
+          "translation": "what"
+        },
+        {
+          "question_id": 34,
+          "question": "وَحُصِّلَ مَا _____ ٱلصُّدُورِ",
+          "answer": "فِى",
+          "options": [
+            "ﰀ",
+            "فِى",
+            "إِنَّ",
+            "فَٱلْمُغِيرَٰتِ"
+          ],
+          "translation": "(is) in"
+        },
+        {
+          "question_id": 35,
+          "question": "وَحُصِّلَ مَا فِى _____",
+          "answer": "ٱلصُّدُورِ",
+          "options": [
+            "فَٱلْمُغِيرَٰتِ",
+            "ﰈ",
+            "ٱلصُّدُورِ",
+            "بِهِمْ"
+          ],
+          "translation": "the breasts"
+        }
+      ]
+    },
+    {
+      "ayah_index": "11",
+      "ayah_key": "100:11",
+      "questions": [
+        {
+          "question_id": 36,
+          "question": "_____ رَبَّهُم بِهِمْ يَوْمَئِذٍ لَّخَبِيرٌۢ",
+          "answer": "إِنَّ",
+          "options": [
+            "إِنَّ",
+            "ﰃ",
+            "وَإِنَّهُۥ",
+            "لِحُبِّ"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 37,
+          "question": "إِنَّ _____ بِهِمْ يَوْمَئِذٍ لَّخَبِيرٌۢ",
+          "answer": "رَبَّهُم",
+          "options": [
+            "إِنَّ",
+            "جَمْعًا",
+            "رَبَّهُم",
+            "ﰃ"
+          ],
+          "translation": "their Lord"
+        },
+        {
+          "question_id": 38,
+          "question": "إِنَّ رَبَّهُم _____ يَوْمَئِذٍ لَّخَبِيرٌۢ",
+          "answer": "بِهِمْ",
+          "options": [
+            "لِرَبِّهِۦ",
+            "بِهِمْ",
+            "إِنَّ",
+            "إِذَا"
+          ],
+          "translation": "about them"
+        },
+        {
+          "question_id": 39,
+          "question": "إِنَّ رَبَّهُم بِهِمْ _____ لَّخَبِيرٌۢ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "يَوْمَئِذٍ",
+            "وَحُصِّلَ",
+            "وَٱلْعَٰدِيَٰتِ",
+            "ﰈ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 40,
+          "question": "إِنَّ رَبَّهُم بِهِمْ يَوْمَئِذٍ _____",
+          "answer": "لَّخَبِيرٌۢ",
+          "options": [
+            "لِحُبِّ",
+            "قَدْحًا",
+            "لَّخَبِيرٌۢ",
+            "ﰅ"
+          ],
+          "translation": "(is) surely All-Aware"
+        }
+      ]
+    }
+  ]
+}

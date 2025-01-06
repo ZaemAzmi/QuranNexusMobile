@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 
-class BookmarkChaptersAdapter(private val chaptersList: List<BookmarkChapter>) : RecyclerView.Adapter<BookmarkChaptersAdapter.BookmarkChapterViewHolder>() {
+class BookmarkChaptersAdapter(private var chaptersList: List<BookmarkChapter>) : RecyclerView.Adapter<BookmarkChaptersAdapter.BookmarkChapterViewHolder>() {
 
     class BookmarkChapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val chapterNumberTextView: TextView = itemView.findViewById(R.id.bookmarkChapterNumber)
@@ -29,4 +29,9 @@ class BookmarkChaptersAdapter(private val chaptersList: List<BookmarkChapter>) :
     }
 
     override fun getItemCount() = chaptersList.size
+
+    fun updateData(newList: List<BookmarkChapter>) {
+        chaptersList = newList
+        notifyDataSetChanged()
+    }
 }

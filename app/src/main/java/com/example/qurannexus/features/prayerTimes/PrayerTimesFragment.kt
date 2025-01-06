@@ -41,7 +41,7 @@ class PrayerTimesFragment : Fragment() {
         dateTextView = view.findViewById(R.id.dateTextView)
         locationTextView = view.findViewById(R.id.locationTextView)
         weekdayTextView = view.findViewById(R.id.weekdayTextView)
-        currentTimeTextView = view.findViewById(R.id.tv_current_time)
+        currentTimeTextView = view.findViewById(R.id.currentTimeTextView)
         nextPrayerTextView = view.findViewById(R.id.nextPrayerTextView)
         timerTextView = view.findViewById(R.id.timerTextView)
         prayerTimesRecycler = view.findViewById(R.id.prayerTimesRecycler)

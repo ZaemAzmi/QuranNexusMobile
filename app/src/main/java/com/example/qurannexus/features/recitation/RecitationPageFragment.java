@@ -103,19 +103,7 @@ public class RecitationPageFragment extends Fragment {
         transaction.replace(R.id.recitationFragmentContainerView, fragment);
         transaction.commit();
     }
-//    private void updateBookmarkStatusInDatabase(String surahNumber, boolean isBookmarked) {
-//        databaseService.updateBookmarkStatus(surahNumber, isBookmarked, new DatabaseService.UpdateCallback() {
-//            @Override
-//            public void onUpdateComplete(boolean success) {
-//                if (success) {
-//                    Toast.makeText(getContext(), "Bookmark updated successfully", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(getContext(), "Failed to update bookmark", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
-//
+
 //    private void navigateToSurah(int newIndex) {
 //        if (newIndex >= 0 && newIndex <= 114) {
 //            currentSurahIndex = newIndex;
@@ -138,11 +126,6 @@ public class RecitationPageFragment extends Fragment {
 //                }
 //            });
 //        }
-//    }
-
-//    private void toggleBookmarkStatus() {
-//        surahModel.setBookmarked(!surahModel.isBookmarked());
-//        updateBookmarkStatusInDatabase(surahModel.getSurahNumber(), surahModel.isBookmarked());
 //    }
 
 }

@@ -1,0 +1,551 @@
+{
+  "surah_id": "93",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "93:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____",
+          "answer": "وَٱلضُّحَىٰ",
+          "options": [
+            "أَلَمْ",
+            "وَدَّعَكَ",
+            "وَٱلضُّحَىٰ",
+            "يَتِيمًا"
+          ],
+          "translation": "By the morning brightness"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "93:2",
+      "questions": [
+        {
+          "question_id": 2,
+          "question": "_____ إِذَا سَجَىٰ",
+          "answer": "وَٱلَّيْلِ",
+          "options": [
+            "ﰇ",
+            "ٱلْأُولَىٰ",
+            "إِذَا",
+            "وَٱلَّيْلِ"
+          ],
+          "translation": "And the night"
+        },
+        {
+          "question_id": 3,
+          "question": "وَٱلَّيْلِ _____ سَجَىٰ",
+          "answer": "إِذَا",
+          "options": [
+            "إِذَا",
+            "ﰈ",
+            "عَآئِلًا",
+            "وَمَا"
+          ],
+          "translation": "when"
+        },
+        {
+          "question_id": 4,
+          "question": "وَٱلَّيْلِ إِذَا _____",
+          "answer": "سَجَىٰ",
+          "options": [
+            "فَحَدِّثْ",
+            "سَجَىٰ",
+            "ﰉ",
+            "ٱلسَّآئِلَ"
+          ],
+          "translation": "it covers with darkness"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "93:3",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ",
+          "answer": "مَا",
+          "options": [
+            "ٱلْأُولَىٰ",
+            "مَا",
+            "يَجِدْكَ",
+            "يُعْطِيكَ"
+          ],
+          "translation": "Not"
+        },
+        {
+          "question_id": 6,
+          "question": "مَا _____ رَبُّكَ وَمَا قَلَىٰ",
+          "answer": "وَدَّعَكَ",
+          "options": [
+            "لَّكَ",
+            "وَدَّعَكَ",
+            "ﰉ",
+            "يَتِيمًا"
+          ],
+          "translation": "has forsaken you"
+        },
+        {
+          "question_id": 7,
+          "question": "مَا وَدَّعَكَ _____ وَمَا قَلَىٰ",
+          "answer": "رَبُّكَ",
+          "options": [
+            "وَأَمَّا",
+            "رَبُّكَ",
+            "فَتَرْضَىٰٓ",
+            "وَلَلْءَاخِرَةُ"
+          ],
+          "translation": "your Lord"
+        },
+        {
+          "question_id": 8,
+          "question": "مَا وَدَّعَكَ رَبُّكَ _____ قَلَىٰ",
+          "answer": "وَمَا",
+          "options": [
+            "وَمَا",
+            "فَلَا",
+            "وَوَجَدَكَ",
+            "قَلَىٰ"
+          ],
+          "translation": "and not"
+        },
+        {
+          "question_id": 9,
+          "question": "مَا وَدَّعَكَ رَبُّكَ وَمَا _____",
+          "answer": "قَلَىٰ",
+          "options": [
+            "وَلَسَوْفَ",
+            "تَقْهَرْ",
+            "وَأَمَّا",
+            "قَلَىٰ"
+          ],
+          "translation": "He is displeased"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "93:4",
+      "questions": [
+        {
+          "question_id": 10,
+          "question": "_____ خَيْرٌ لَّكَ مِنَ ٱلْأُولَىٰ",
+          "answer": "وَلَلْءَاخِرَةُ",
+          "options": [
+            "مِنَ",
+            "وَلَلْءَاخِرَةُ",
+            "ﰅ",
+            "لَّكَ"
+          ],
+          "translation": "And surely the Hereafter"
+        },
+        {
+          "question_id": 11,
+          "question": "وَلَلْءَاخِرَةُ _____ لَّكَ مِنَ ٱلْأُولَىٰ",
+          "answer": "خَيْرٌ",
+          "options": [
+            "وَٱلضُّحَىٰ",
+            "خَيْرٌ",
+            "عَآئِلًا",
+            "فَأَمَّا"
+          ],
+          "translation": "(is) better"
+        },
+        {
+          "question_id": 12,
+          "question": "وَلَلْءَاخِرَةُ خَيْرٌ _____ مِنَ ٱلْأُولَىٰ",
+          "answer": "لَّكَ",
+          "options": [
+            "وَدَّعَكَ",
+            "فَحَدِّثْ",
+            "فَلَا",
+            "لَّكَ"
+          ],
+          "translation": "for you"
+        },
+        {
+          "question_id": 13,
+          "question": "وَلَلْءَاخِرَةُ خَيْرٌ لَّكَ _____ ٱلْأُولَىٰ",
+          "answer": "مِنَ",
+          "options": [
+            "أَلَمْ",
+            "مِنَ",
+            "وَٱلضُّحَىٰ",
+            "ﰃ"
+          ],
+          "translation": "than"
+        },
+        {
+          "question_id": 14,
+          "question": "وَلَلْءَاخِرَةُ خَيْرٌ لَّكَ مِنَ _____",
+          "answer": "ٱلْأُولَىٰ",
+          "options": [
+            "ﰆ",
+            "ٱلْأُولَىٰ",
+            "ﰀ",
+            "فَأَغْنَىٰ"
+          ],
+          "translation": "the first"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "93:5",
+      "questions": [
+        {
+          "question_id": 15,
+          "question": "_____ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰٓ",
+          "answer": "وَلَسَوْفَ",
+          "options": [
+            "ﰆ",
+            "لَّكَ",
+            "ٱلْأُولَىٰ",
+            "وَلَسَوْفَ"
+          ],
+          "translation": "And soon"
+        },
+        {
+          "question_id": 16,
+          "question": "وَلَسَوْفَ _____ رَبُّكَ فَتَرْضَىٰٓ",
+          "answer": "يُعْطِيكَ",
+          "options": [
+            "ﰊ",
+            "بِنِعْمَةِ",
+            "يُعْطِيكَ",
+            "أَلَمْ"
+          ],
+          "translation": "will give you"
+        },
+        {
+          "question_id": 17,
+          "question": "وَلَسَوْفَ يُعْطِيكَ _____ فَتَرْضَىٰٓ",
+          "answer": "رَبُّكَ",
+          "options": [
+            "فَـَٔاوَىٰ",
+            "ﰇ",
+            "مَا",
+            "رَبُّكَ"
+          ],
+          "translation": "your Lord"
+        },
+        {
+          "question_id": 18,
+          "question": "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ _____",
+          "answer": "فَتَرْضَىٰٓ",
+          "options": [
+            "ﰆ",
+            "تَقْهَرْ",
+            "ٱلسَّآئِلَ",
+            "فَتَرْضَىٰٓ"
+          ],
+          "translation": "then you will be satisfied"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "93:6",
+      "questions": [
+        {
+          "question_id": 19,
+          "question": "_____ يَجِدْكَ يَتِيمًا فَـَٔاوَىٰ",
+          "answer": "أَلَمْ",
+          "options": [
+            "أَلَمْ",
+            "ﰄ",
+            "وَوَجَدَكَ",
+            "وَأَمَّا"
+          ],
+          "translation": "Did not"
+        },
+        {
+          "question_id": 20,
+          "question": "أَلَمْ _____ يَتِيمًا فَـَٔاوَىٰ",
+          "answer": "يَجِدْكَ",
+          "options": [
+            "يَجِدْكَ",
+            "ﰃ",
+            "رَبُّكَ",
+            "فَحَدِّثْ"
+          ],
+          "translation": "He find you"
+        },
+        {
+          "question_id": 21,
+          "question": "أَلَمْ يَجِدْكَ _____ فَـَٔاوَىٰ",
+          "answer": "يَتِيمًا",
+          "options": [
+            "ﰀ",
+            "ﰈ",
+            "قَلَىٰ",
+            "يَتِيمًا"
+          ],
+          "translation": "an orphan"
+        },
+        {
+          "question_id": 22,
+          "question": "أَلَمْ يَجِدْكَ يَتِيمًا _____",
+          "answer": "فَـَٔاوَىٰ",
+          "options": [
+            "فَـَٔاوَىٰ",
+            "بِنِعْمَةِ",
+            "ﰂ",
+            "وَٱلضُّحَىٰ"
+          ],
+          "translation": "and give shelter"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "93:7",
+      "questions": [
+        {
+          "question_id": 23,
+          "question": "_____ ضَآلًّا فَهَدَىٰ",
+          "answer": "وَوَجَدَكَ",
+          "options": [
+            "فَحَدِّثْ",
+            "خَيْرٌ",
+            "وَوَجَدَكَ",
+            "رَبُّكَ"
+          ],
+          "translation": "And He found you"
+        },
+        {
+          "question_id": 24,
+          "question": "وَوَجَدَكَ _____ فَهَدَىٰ",
+          "answer": "ضَآلًّا",
+          "options": [
+            "ضَآلًّا",
+            "رَبِّكَ",
+            "إِذَا",
+            "لَّكَ"
+          ],
+          "translation": "lost"
+        },
+        {
+          "question_id": 25,
+          "question": "وَوَجَدَكَ ضَآلًّا _____",
+          "answer": "فَهَدَىٰ",
+          "options": [
+            "لَّكَ",
+            "فَتَرْضَىٰٓ",
+            "فَهَدَىٰ",
+            "تَقْهَرْ"
+          ],
+          "translation": "so He guided"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "93:8",
+      "questions": [
+        {
+          "question_id": 26,
+          "question": "_____ عَآئِلًا فَأَغْنَىٰ",
+          "answer": "وَوَجَدَكَ",
+          "options": [
+            "ﰁ",
+            "وَوَجَدَكَ",
+            "ﰂ",
+            "رَبُّكَ"
+          ],
+          "translation": "And He found you"
+        },
+        {
+          "question_id": 27,
+          "question": "وَوَجَدَكَ _____ فَأَغْنَىٰ",
+          "answer": "عَآئِلًا",
+          "options": [
+            "ﰄ",
+            "عَآئِلًا",
+            "لَّكَ",
+            "إِذَا"
+          ],
+          "translation": "in need"
+        },
+        {
+          "question_id": 28,
+          "question": "وَوَجَدَكَ عَآئِلًا _____",
+          "answer": "فَأَغْنَىٰ",
+          "options": [
+            "فَـَٔاوَىٰ",
+            "وَوَجَدَكَ",
+            "سَجَىٰ",
+            "فَأَغْنَىٰ"
+          ],
+          "translation": "so He made self-sufficient"
+        }
+      ]
+    },
+    {
+      "ayah_index": "9",
+      "ayah_key": "93:9",
+      "questions": [
+        {
+          "question_id": 29,
+          "question": "_____ ٱلْيَتِيمَ فَلَا تَقْهَرْ",
+          "answer": "فَأَمَّا",
+          "options": [
+            "ﰇ",
+            "رَبُّكَ",
+            "فَأَمَّا",
+            "خَيْرٌ"
+          ],
+          "translation": "So as for"
+        },
+        {
+          "question_id": 30,
+          "question": "فَأَمَّا _____ فَلَا تَقْهَرْ",
+          "answer": "ٱلْيَتِيمَ",
+          "options": [
+            "لَّكَ",
+            "وَلَسَوْفَ",
+            "ٱلْيَتِيمَ",
+            "سَجَىٰ"
+          ],
+          "translation": "the orphan"
+        },
+        {
+          "question_id": 31,
+          "question": "فَأَمَّا ٱلْيَتِيمَ _____ تَقْهَرْ",
+          "answer": "فَلَا",
+          "options": [
+            "فَلَا",
+            "ﰀ",
+            "وَٱلَّيْلِ",
+            "فَهَدَىٰ"
+          ],
+          "translation": "then (do) not"
+        },
+        {
+          "question_id": 32,
+          "question": "فَأَمَّا ٱلْيَتِيمَ فَلَا _____",
+          "answer": "تَقْهَرْ",
+          "options": [
+            "إِذَا",
+            "رَبُّكَ",
+            "تَقْهَرْ",
+            "ﰀ"
+          ],
+          "translation": "oppress"
+        }
+      ]
+    },
+    {
+      "ayah_index": "10",
+      "ayah_key": "93:10",
+      "questions": [
+        {
+          "question_id": 33,
+          "question": "_____ ٱلسَّآئِلَ فَلَا تَنْهَرْ",
+          "answer": "وَأَمَّا",
+          "options": [
+            "وَأَمَّا",
+            "فَهَدَىٰ",
+            "رَبُّكَ",
+            "إِذَا"
+          ],
+          "translation": "And as for"
+        },
+        {
+          "question_id": 34,
+          "question": "وَأَمَّا _____ فَلَا تَنْهَرْ",
+          "answer": "ٱلسَّآئِلَ",
+          "options": [
+            "وَٱلَّيْلِ",
+            "ٱلسَّآئِلَ",
+            "ﰅ",
+            "فَأَمَّا"
+          ],
+          "translation": "one who asks"
+        },
+        {
+          "question_id": 35,
+          "question": "وَأَمَّا ٱلسَّآئِلَ _____ تَنْهَرْ",
+          "answer": "فَلَا",
+          "options": [
+            "وَمَا",
+            "سَجَىٰ",
+            "بِنِعْمَةِ",
+            "فَلَا"
+          ],
+          "translation": "then (do) not"
+        },
+        {
+          "question_id": 36,
+          "question": "وَأَمَّا ٱلسَّآئِلَ فَلَا _____",
+          "answer": "تَنْهَرْ",
+          "options": [
+            "وَأَمَّا",
+            "ﰈ",
+            "تَنْهَرْ",
+            "لَّكَ"
+          ],
+          "translation": "repel"
+        }
+      ]
+    },
+    {
+      "ayah_index": "11",
+      "ayah_key": "93:11",
+      "questions": [
+        {
+          "question_id": 37,
+          "question": "_____ بِنِعْمَةِ رَبِّكَ فَحَدِّثْ",
+          "answer": "وَأَمَّا",
+          "options": [
+            "ﰄ",
+            "ﰈ",
+            "سَجَىٰ",
+            "وَأَمَّا"
+          ],
+          "translation": "But as for"
+        },
+        {
+          "question_id": 38,
+          "question": "وَأَمَّا _____ رَبِّكَ فَحَدِّثْ",
+          "answer": "بِنِعْمَةِ",
+          "options": [
+            "رَبُّكَ",
+            "بِنِعْمَةِ",
+            "ﰅ",
+            "ٱلْأُولَىٰ"
+          ],
+          "translation": "(the) Favor"
+        },
+        {
+          "question_id": 39,
+          "question": "وَأَمَّا بِنِعْمَةِ _____ فَحَدِّثْ",
+          "answer": "رَبِّكَ",
+          "options": [
+            "رَبِّكَ",
+            "وَلَسَوْفَ",
+            "ﰄ",
+            "فَأَمَّا"
+          ],
+          "translation": "(of) your Lord"
+        },
+        {
+          "question_id": 40,
+          "question": "وَأَمَّا بِنِعْمَةِ رَبِّكَ _____",
+          "answer": "فَحَدِّثْ",
+          "options": [
+            "وَمَا",
+            "ٱلْأُولَىٰ",
+            "فَحَدِّثْ",
+            "وَلَلْءَاخِرَةُ"
+          ],
+          "translation": "narrate"
+        }
+      ]
+    }
+  ]
+}

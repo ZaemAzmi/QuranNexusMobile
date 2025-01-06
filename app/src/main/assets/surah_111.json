@@ -1,0 +1,311 @@
+{
+  "surah_id": "111",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "111:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ يَدَآ أَبِى لَهَبٍ وَتَبَّ",
+          "answer": "تَبَّتْ",
+          "options": [
+            "أَبِى",
+            "تَبَّتْ",
+            "مِّن",
+            "نَارًا"
+          ],
+          "translation": "Perish"
+        },
+        {
+          "question_id": 2,
+          "question": "تَبَّتْ _____ أَبِى لَهَبٍ وَتَبَّ",
+          "answer": "يَدَآ",
+          "options": [
+            "مِّن",
+            "أَغْنَىٰ",
+            "لَهَبٍ",
+            "يَدَآ"
+          ],
+          "translation": "(the) hands"
+        },
+        {
+          "question_id": 3,
+          "question": "تَبَّتْ يَدَآ _____ لَهَبٍ وَتَبَّ",
+          "answer": "أَبِى",
+          "options": [
+            "ﰁ",
+            "أَبِى",
+            "وَٱمْرَأَتُهُۥ",
+            "ذَاتَ"
+          ],
+          "translation": "(of) Abu"
+        },
+        {
+          "question_id": 4,
+          "question": "تَبَّتْ يَدَآ أَبِى _____ وَتَبَّ",
+          "answer": "لَهَبٍ",
+          "options": [
+            "لَهَبٍ",
+            "ﰃ",
+            "فِى",
+            "مَّسَدٍۭ"
+          ],
+          "translation": "Lahab"
+        },
+        {
+          "question_id": 5,
+          "question": "تَبَّتْ يَدَآ أَبِى لَهَبٍ _____",
+          "answer": "وَتَبَّ",
+          "options": [
+            "أَبِى",
+            "أَغْنَىٰ",
+            "وَتَبَّ",
+            "سَيَصْلَىٰ"
+          ],
+          "translation": "and perish he"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "111:2",
+      "questions": [
+        {
+          "question_id": 6,
+          "question": "_____ أَغْنَىٰ عَنْهُ مَالُهُۥ وَمَا كَسَبَ",
+          "answer": "مَآ",
+          "options": [
+            "وَمَا",
+            "مَآ",
+            "عَنْهُ",
+            "ﰃ"
+          ],
+          "translation": "Not"
+        },
+        {
+          "question_id": 7,
+          "question": "مَآ _____ عَنْهُ مَالُهُۥ وَمَا كَسَبَ",
+          "answer": "أَغْنَىٰ",
+          "options": [
+            "جِيدِهَا",
+            "مَّسَدٍۭ",
+            "مَآ",
+            "أَغْنَىٰ"
+          ],
+          "translation": "(will) avail"
+        },
+        {
+          "question_id": 8,
+          "question": "مَآ أَغْنَىٰ _____ مَالُهُۥ وَمَا كَسَبَ",
+          "answer": "عَنْهُ",
+          "options": [
+            "ﰂ",
+            "ٱلْحَطَبِ",
+            "يَدَآ",
+            "عَنْهُ"
+          ],
+          "translation": "him"
+        },
+        {
+          "question_id": 9,
+          "question": "مَآ أَغْنَىٰ عَنْهُ _____ وَمَا كَسَبَ",
+          "answer": "مَالُهُۥ",
+          "options": [
+            "فِى",
+            "حَبْلٌ",
+            "مِّن",
+            "مَالُهُۥ"
+          ],
+          "translation": "his wealth"
+        },
+        {
+          "question_id": 10,
+          "question": "مَآ أَغْنَىٰ عَنْهُ مَالُهُۥ _____ كَسَبَ",
+          "answer": "وَمَا",
+          "options": [
+            "وَمَا",
+            "مَّسَدٍۭ",
+            "ﰀ",
+            "لَهَبٍ"
+          ],
+          "translation": "and what"
+        },
+        {
+          "question_id": 11,
+          "question": "مَآ أَغْنَىٰ عَنْهُ مَالُهُۥ وَمَا _____",
+          "answer": "كَسَبَ",
+          "options": [
+            "تَبَّتْ",
+            "لَهَبٍ",
+            "ٱلْحَطَبِ",
+            "كَسَبَ"
+          ],
+          "translation": "he earned"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "111:3",
+      "questions": [
+        {
+          "question_id": 12,
+          "question": "_____ نَارًا ذَاتَ لَهَبٍ",
+          "answer": "سَيَصْلَىٰ",
+          "options": [
+            "ﰀ",
+            "تَبَّتْ",
+            "سَيَصْلَىٰ",
+            "نَارًا"
+          ],
+          "translation": "He will be burnt"
+        },
+        {
+          "question_id": 13,
+          "question": "سَيَصْلَىٰ _____ ذَاتَ لَهَبٍ",
+          "answer": "نَارًا",
+          "options": [
+            "مَآ",
+            "نَارًا",
+            "ﰂ",
+            "ﰃ"
+          ],
+          "translation": "(in) a Fire"
+        },
+        {
+          "question_id": 14,
+          "question": "سَيَصْلَىٰ نَارًا _____ لَهَبٍ",
+          "answer": "ذَاتَ",
+          "options": [
+            "حَمَّالَةَ",
+            "ذَاتَ",
+            "فِى",
+            "وَمَا"
+          ],
+          "translation": "of"
+        },
+        {
+          "question_id": 15,
+          "question": "سَيَصْلَىٰ نَارًا ذَاتَ _____",
+          "answer": "لَهَبٍ",
+          "options": [
+            "فِى",
+            "ٱلْحَطَبِ",
+            "ﰁ",
+            "لَهَبٍ"
+          ],
+          "translation": "Blazing Flames"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "111:4",
+      "questions": [
+        {
+          "question_id": 16,
+          "question": "_____ حَمَّالَةَ ٱلْحَطَبِ",
+          "answer": "وَٱمْرَأَتُهُۥ",
+          "options": [
+            "حَمَّالَةَ",
+            "وَٱمْرَأَتُهُۥ",
+            "مَّسَدٍۭ",
+            "ﰂ"
+          ],
+          "translation": "And his wife"
+        },
+        {
+          "question_id": 17,
+          "question": "وَٱمْرَأَتُهُۥ _____ ٱلْحَطَبِ",
+          "answer": "حَمَّالَةَ",
+          "options": [
+            "ﰂ",
+            "حَمَّالَةَ",
+            "وَٱمْرَأَتُهُۥ",
+            "مَّسَدٍۭ"
+          ],
+          "translation": "(the) carrier"
+        },
+        {
+          "question_id": 18,
+          "question": "وَٱمْرَأَتُهُۥ حَمَّالَةَ _____",
+          "answer": "ٱلْحَطَبِ",
+          "options": [
+            "فِى",
+            "يَدَآ",
+            "حَمَّالَةَ",
+            "ٱلْحَطَبِ"
+          ],
+          "translation": "(of) firewood"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "111:5",
+      "questions": [
+        {
+          "question_id": 19,
+          "question": "_____ جِيدِهَا حَبْلٌ مِّن مَّسَدٍۭ",
+          "answer": "فِى",
+          "options": [
+            "ذَاتَ",
+            "ﰀ",
+            "ﰄ",
+            "فِى"
+          ],
+          "translation": "In"
+        },
+        {
+          "question_id": 20,
+          "question": "فِى _____ حَبْلٌ مِّن مَّسَدٍۭ",
+          "answer": "جِيدِهَا",
+          "options": [
+            "ذَاتَ",
+            "جِيدِهَا",
+            "وَمَا",
+            "أَبِى"
+          ],
+          "translation": "her neck"
+        },
+        {
+          "question_id": 21,
+          "question": "فِى جِيدِهَا _____ مِّن مَّسَدٍۭ",
+          "answer": "حَبْلٌ",
+          "options": [
+            "ﰄ",
+            "وَتَبَّ",
+            "حَبْلٌ",
+            "ٱلْحَطَبِ"
+          ],
+          "translation": "(will be) a rope"
+        },
+        {
+          "question_id": 22,
+          "question": "فِى جِيدِهَا حَبْلٌ _____ مَّسَدٍۭ",
+          "answer": "مِّن",
+          "options": [
+            "مَآ",
+            "ٱلْحَطَبِ",
+            "مِّن",
+            "تَبَّتْ"
+          ],
+          "translation": "of"
+        },
+        {
+          "question_id": 23,
+          "question": "فِى جِيدِهَا حَبْلٌ مِّن _____",
+          "answer": "مَّسَدٍۭ",
+          "options": [
+            "فِى",
+            "وَٱمْرَأَتُهُۥ",
+            "مَّسَدٍۭ",
+            "تَبَّتْ"
+          ],
+          "translation": "palm-fiber"
+        }
+      ]
+    }
+  ]
+}

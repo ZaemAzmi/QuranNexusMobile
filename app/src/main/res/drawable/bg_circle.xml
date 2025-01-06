@@ -6,8 +6,8 @@
         android:type="linear"
     android:gradientRadius="45dp"
     android:startColor="@color/light_green_side_nav"
-    android:endColor="@color/surah_card_dark_green_300"
-    android:centerColor="@color/dark_green_200"
+    android:endColor="#00BA8D"
+    android:centerColor="#49F8EE"
     android:angle="75" />
 
     <size

@@ -1,0 +1,353 @@
+{
+  "surah_id": "109",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "109:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ يَٰٓأَيُّهَا ٱلْكَٰفِرُونَ",
+          "answer": "قُلْ",
+          "options": [
+            "ﰅ",
+            "ٱلْكَٰفِرُونَ",
+            "أَعْبُدُ",
+            "قُلْ"
+          ],
+          "translation": "Say"
+        },
+        {
+          "question_id": 2,
+          "question": "قُلْ _____ ٱلْكَٰفِرُونَ",
+          "answer": "يَٰٓأَيُّهَا",
+          "options": [
+            "مَآ",
+            "يَٰٓأَيُّهَا",
+            "ﰃ",
+            "ﰂ"
+          ],
+          "translation": "O"
+        },
+        {
+          "question_id": 3,
+          "question": "قُلْ يَٰٓأَيُّهَا _____",
+          "answer": "ٱلْكَٰفِرُونَ",
+          "options": [
+            "عَابِدٌ",
+            "ٱلْكَٰفِرُونَ",
+            "مَّا",
+            "لَآ"
+          ],
+          "translation": "disbelievers"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "109:2",
+      "questions": [
+        {
+          "question_id": 4,
+          "question": "_____ أَعْبُدُ مَا تَعْبُدُونَ",
+          "answer": "لَآ",
+          "options": [
+            "عَابِدٌ",
+            "لَآ",
+            "مَّا",
+            "وَلَآ"
+          ],
+          "translation": "Not"
+        },
+        {
+          "question_id": 5,
+          "question": "لَآ _____ مَا تَعْبُدُونَ",
+          "answer": "أَعْبُدُ",
+          "options": [
+            "مَآ",
+            "ﰅ",
+            "عَٰبِدُونَ",
+            "أَعْبُدُ"
+          ],
+          "translation": "I worship"
+        },
+        {
+          "question_id": 6,
+          "question": "لَآ أَعْبُدُ _____ تَعْبُدُونَ",
+          "answer": "مَا",
+          "options": [
+            "وَلِىَ",
+            "لَآ",
+            "مَا",
+            "دِينِ"
+          ],
+          "translation": "what"
+        },
+        {
+          "question_id": 7,
+          "question": "لَآ أَعْبُدُ مَا _____",
+          "answer": "تَعْبُدُونَ",
+          "options": [
+            "مَا",
+            "ﰂ",
+            "وَلَآ",
+            "تَعْبُدُونَ"
+          ],
+          "translation": "you worship"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "109:3",
+      "questions": [
+        {
+          "question_id": 8,
+          "question": "_____ أَنتُمْ عَٰبِدُونَ مَآ أَعْبُدُ",
+          "answer": "وَلَآ",
+          "options": [
+            "وَلِىَ",
+            "أَعْبُدُ",
+            "ﰃ",
+            "وَلَآ"
+          ],
+          "translation": "And not"
+        },
+        {
+          "question_id": 9,
+          "question": "وَلَآ _____ عَٰبِدُونَ مَآ أَعْبُدُ",
+          "answer": "أَنتُمْ",
+          "options": [
+            "ٱلْكَٰفِرُونَ",
+            "أَنتُمْ",
+            "تَعْبُدُونَ",
+            "قُلْ"
+          ],
+          "translation": "you"
+        },
+        {
+          "question_id": 10,
+          "question": "وَلَآ أَنتُمْ _____ مَآ أَعْبُدُ",
+          "answer": "عَٰبِدُونَ",
+          "options": [
+            "قُلْ",
+            "أَنتُمْ",
+            "عَبَدتُّمْ",
+            "عَٰبِدُونَ"
+          ],
+          "translation": "(are) worshippers"
+        },
+        {
+          "question_id": 11,
+          "question": "وَلَآ أَنتُمْ عَٰبِدُونَ _____ أَعْبُدُ",
+          "answer": "مَآ",
+          "options": [
+            "عَابِدٌ",
+            "أَنتُمْ",
+            "لَآ",
+            "مَآ"
+          ],
+          "translation": "(of) what"
+        },
+        {
+          "question_id": 12,
+          "question": "وَلَآ أَنتُمْ عَٰبِدُونَ مَآ _____",
+          "answer": "أَعْبُدُ",
+          "options": [
+            "ﰃ",
+            "لَآ",
+            "عَابِدٌ",
+            "أَعْبُدُ"
+          ],
+          "translation": "I worship"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "109:4",
+      "questions": [
+        {
+          "question_id": 13,
+          "question": "_____ أَنَا۠ عَابِدٌ مَّا عَبَدتُّمْ",
+          "answer": "وَلَآ",
+          "options": [
+            "مَا",
+            "وَلَآ",
+            "مَّا",
+            "أَعْبُدُ"
+          ],
+          "translation": "And not"
+        },
+        {
+          "question_id": 14,
+          "question": "وَلَآ _____ عَابِدٌ مَّا عَبَدتُّمْ",
+          "answer": "أَنَا۠",
+          "options": [
+            "أَنَا۠",
+            "أَعْبُدُ",
+            "وَلَآ",
+            "مَآ"
+          ],
+          "translation": "I am"
+        },
+        {
+          "question_id": 15,
+          "question": "وَلَآ أَنَا۠ _____ مَّا عَبَدتُّمْ",
+          "answer": "عَابِدٌ",
+          "options": [
+            "ﰅ",
+            "عَابِدٌ",
+            "ﰁ",
+            "ﰃ"
+          ],
+          "translation": "a worshipper"
+        },
+        {
+          "question_id": 16,
+          "question": "وَلَآ أَنَا۠ عَابِدٌ _____ عَبَدتُّمْ",
+          "answer": "مَّا",
+          "options": [
+            "أَنَا۠",
+            "دِينِ",
+            "لَآ",
+            "مَّا"
+          ],
+          "translation": "(of) what"
+        },
+        {
+          "question_id": 17,
+          "question": "وَلَآ أَنَا۠ عَابِدٌ مَّا _____",
+          "answer": "عَبَدتُّمْ",
+          "options": [
+            "مَا",
+            "عَابِدٌ",
+            "عَبَدتُّمْ",
+            "وَلَآ"
+          ],
+          "translation": "you worship"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "109:5",
+      "questions": [
+        {
+          "question_id": 18,
+          "question": "_____ أَنتُمْ عَٰبِدُونَ مَآ أَعْبُدُ",
+          "answer": "وَلَآ",
+          "options": [
+            "مَآ",
+            "أَعْبُدُ",
+            "وَلَآ",
+            "دِينُكُمْ"
+          ],
+          "translation": "And not"
+        },
+        {
+          "question_id": 19,
+          "question": "وَلَآ _____ عَٰبِدُونَ مَآ أَعْبُدُ",
+          "answer": "أَنتُمْ",
+          "options": [
+            "يَٰٓأَيُّهَا",
+            "أَعْبُدُ",
+            "أَنتُمْ",
+            "ﰀ"
+          ],
+          "translation": "you"
+        },
+        {
+          "question_id": 20,
+          "question": "وَلَآ أَنتُمْ _____ مَآ أَعْبُدُ",
+          "answer": "عَٰبِدُونَ",
+          "options": [
+            "مَآ",
+            "عَٰبِدُونَ",
+            "أَعْبُدُ",
+            "عَبَدتُّمْ"
+          ],
+          "translation": "(are) worshippers"
+        },
+        {
+          "question_id": 21,
+          "question": "وَلَآ أَنتُمْ عَٰبِدُونَ _____ أَعْبُدُ",
+          "answer": "مَآ",
+          "options": [
+            "ٱلْكَٰفِرُونَ",
+            "عَبَدتُّمْ",
+            "مَآ",
+            "عَٰبِدُونَ"
+          ],
+          "translation": "(of) what"
+        },
+        {
+          "question_id": 22,
+          "question": "وَلَآ أَنتُمْ عَٰبِدُونَ مَآ _____",
+          "answer": "أَعْبُدُ",
+          "options": [
+            "لَآ",
+            "عَٰبِدُونَ",
+            "وَلَآ",
+            "أَعْبُدُ"
+          ],
+          "translation": "I worship"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "109:6",
+      "questions": [
+        {
+          "question_id": 23,
+          "question": "_____ دِينُكُمْ وَلِىَ دِينِ",
+          "answer": "لَكُمْ",
+          "options": [
+            "عَبَدتُّمْ",
+            "لَكُمْ",
+            "أَعْبُدُ",
+            "عَٰبِدُونَ"
+          ],
+          "translation": "For you"
+        },
+        {
+          "question_id": 24,
+          "question": "لَكُمْ _____ وَلِىَ دِينِ",
+          "answer": "دِينُكُمْ",
+          "options": [
+            "لَكُمْ",
+            "دِينُكُمْ",
+            "ﰂ",
+            "وَلَآ"
+          ],
+          "translation": "(is) your religion"
+        },
+        {
+          "question_id": 25,
+          "question": "لَكُمْ دِينُكُمْ _____ دِينِ",
+          "answer": "وَلِىَ",
+          "options": [
+            "ﰁ",
+            "مَا",
+            "وَلِىَ",
+            "أَنتُمْ"
+          ],
+          "translation": "and for me"
+        },
+        {
+          "question_id": 26,
+          "question": "لَكُمْ دِينُكُمْ وَلِىَ _____",
+          "answer": "دِينِ",
+          "options": [
+            "عَٰبِدُونَ",
+            "دِينِ",
+            "ﰁ",
+            "يَٰٓأَيُّهَا"
+          ],
+          "translation": "(is) my religion"
+        }
+      ]
+    }
+  ]
+}

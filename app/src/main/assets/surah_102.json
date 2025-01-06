@@ -1,0 +1,389 @@
+{
+  "surah_id": "102",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "102:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ ٱلتَّكَاثُرُ",
+          "answer": "أَلْهَىٰكُمُ",
+          "options": [
+            "تَعْلَمُونَ",
+            "ٱلْيَقِينِ",
+            "أَلْهَىٰكُمُ",
+            "لَتَرَوُنَّ"
+          ],
+          "translation": "Diverts you"
+        },
+        {
+          "question_id": 2,
+          "question": "أَلْهَىٰكُمُ _____",
+          "answer": "ٱلتَّكَاثُرُ",
+          "options": [
+            "ﰄ",
+            "لَوْ",
+            "ٱلتَّكَاثُرُ",
+            "كَلَّا"
+          ],
+          "translation": "the competition to increase"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "102:2",
+      "questions": [
+        {
+          "question_id": 3,
+          "question": "_____ زُرْتُمُ ٱلْمَقَابِرَ",
+          "answer": "حَتَّىٰ",
+          "options": [
+            "عَنِ",
+            "حَتَّىٰ",
+            "لَتَرَوُنَّهَا",
+            "ﰃ"
+          ],
+          "translation": "Until"
+        },
+        {
+          "question_id": 4,
+          "question": "حَتَّىٰ _____ ٱلْمَقَابِرَ",
+          "answer": "زُرْتُمُ",
+          "options": [
+            "زُرْتُمُ",
+            "ٱلْيَقِينِ",
+            "لَتُسْـَٔلُنَّ",
+            "كَلَّا"
+          ],
+          "translation": "you visit"
+        },
+        {
+          "question_id": 5,
+          "question": "حَتَّىٰ زُرْتُمُ _____",
+          "answer": "ٱلْمَقَابِرَ",
+          "options": [
+            "كَلَّا",
+            "عَيْنَ",
+            "ٱلْمَقَابِرَ",
+            "ﰁ"
+          ],
+          "translation": "the graves"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "102:3",
+      "questions": [
+        {
+          "question_id": 6,
+          "question": "_____ سَوْفَ تَعْلَمُونَ",
+          "answer": "كَلَّا",
+          "options": [
+            "كَلَّا",
+            "ثُمَّ",
+            "تَعْلَمُونَ",
+            "ٱلتَّكَاثُرُ"
+          ],
+          "translation": "Nay"
+        },
+        {
+          "question_id": 7,
+          "question": "كَلَّا _____ تَعْلَمُونَ",
+          "answer": "سَوْفَ",
+          "options": [
+            "ﰆ",
+            "سَوْفَ",
+            "ٱلْيَقِينِ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "Soon"
+        },
+        {
+          "question_id": 8,
+          "question": "كَلَّا سَوْفَ _____",
+          "answer": "تَعْلَمُونَ",
+          "options": [
+            "تَعْلَمُونَ",
+            "لَتَرَوُنَّهَا",
+            "ﰅ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "you will know"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "102:4",
+      "questions": [
+        {
+          "question_id": 9,
+          "question": "_____ كَلَّا سَوْفَ تَعْلَمُونَ",
+          "answer": "ثُمَّ",
+          "options": [
+            "يَوْمَئِذٍ",
+            "ﰅ",
+            "سَوْفَ",
+            "ثُمَّ"
+          ],
+          "translation": "Then"
+        },
+        {
+          "question_id": 10,
+          "question": "ثُمَّ _____ سَوْفَ تَعْلَمُونَ",
+          "answer": "كَلَّا",
+          "options": [
+            "كَلَّا",
+            "ﰁ",
+            "عِلْمَ",
+            "ٱلتَّكَاثُرُ"
+          ],
+          "translation": "nay"
+        },
+        {
+          "question_id": 11,
+          "question": "ثُمَّ كَلَّا _____ تَعْلَمُونَ",
+          "answer": "سَوْفَ",
+          "options": [
+            "ثُمَّ",
+            "لَتُسْـَٔلُنَّ",
+            "ﰃ",
+            "سَوْفَ"
+          ],
+          "translation": "Soon"
+        },
+        {
+          "question_id": 12,
+          "question": "ثُمَّ كَلَّا سَوْفَ _____",
+          "answer": "تَعْلَمُونَ",
+          "options": [
+            "ٱلْجَحِيمَ",
+            "عَنِ",
+            "كَلَّا",
+            "تَعْلَمُونَ"
+          ],
+          "translation": "you will know"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "102:5",
+      "questions": [
+        {
+          "question_id": 13,
+          "question": "_____ لَوْ تَعْلَمُونَ عِلْمَ ٱلْيَقِينِ",
+          "answer": "كَلَّا",
+          "options": [
+            "ﰃ",
+            "عِلْمَ",
+            "كَلَّا",
+            "ﰇ"
+          ],
+          "translation": "Nay"
+        },
+        {
+          "question_id": 14,
+          "question": "كَلَّا _____ تَعْلَمُونَ عِلْمَ ٱلْيَقِينِ",
+          "answer": "لَوْ",
+          "options": [
+            "ثُمَّ",
+            "زُرْتُمُ",
+            "لَتُسْـَٔلُنَّ",
+            "لَوْ"
+          ],
+          "translation": "If"
+        },
+        {
+          "question_id": 15,
+          "question": "كَلَّا لَوْ _____ عِلْمَ ٱلْيَقِينِ",
+          "answer": "تَعْلَمُونَ",
+          "options": [
+            "يَوْمَئِذٍ",
+            "تَعْلَمُونَ",
+            "ٱلْيَقِينِ",
+            "ﰄ"
+          ],
+          "translation": "you know"
+        },
+        {
+          "question_id": 16,
+          "question": "كَلَّا لَوْ تَعْلَمُونَ _____ ٱلْيَقِينِ",
+          "answer": "عِلْمَ",
+          "options": [
+            "كَلَّا",
+            "ٱلْيَقِينِ",
+            "عِلْمَ",
+            "ثُمَّ"
+          ],
+          "translation": "(with) a knowledge"
+        },
+        {
+          "question_id": 17,
+          "question": "كَلَّا لَوْ تَعْلَمُونَ عِلْمَ _____",
+          "answer": "ٱلْيَقِينِ",
+          "options": [
+            "ﰇ",
+            "ٱلْيَقِينِ",
+            "ثُمَّ",
+            "ﰆ"
+          ],
+          "translation": "(of) certainty"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "102:6",
+      "questions": [
+        {
+          "question_id": 18,
+          "question": "_____ ٱلْجَحِيمَ",
+          "answer": "لَتَرَوُنَّ",
+          "options": [
+            "يَوْمَئِذٍ",
+            "ٱلْيَقِينِ",
+            "لَتَرَوُنَّ",
+            "ﰆ"
+          ],
+          "translation": "Surely you will see"
+        },
+        {
+          "question_id": 19,
+          "question": "لَتَرَوُنَّ _____",
+          "answer": "ٱلْجَحِيمَ",
+          "options": [
+            "ٱلْيَقِينِ",
+            "ﰄ",
+            "زُرْتُمُ",
+            "ٱلْجَحِيمَ"
+          ],
+          "translation": "the Hellfire"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "102:7",
+      "questions": [
+        {
+          "question_id": 20,
+          "question": "_____ لَتَرَوُنَّهَا عَيْنَ ٱلْيَقِينِ",
+          "answer": "ثُمَّ",
+          "options": [
+            "سَوْفَ",
+            "ثُمَّ",
+            "عَنِ",
+            "ٱلْيَقِينِ"
+          ],
+          "translation": "Then"
+        },
+        {
+          "question_id": 21,
+          "question": "ثُمَّ _____ عَيْنَ ٱلْيَقِينِ",
+          "answer": "لَتَرَوُنَّهَا",
+          "options": [
+            "ﰁ",
+            "تَعْلَمُونَ",
+            "لَتَرَوُنَّهَا",
+            "ﰃ"
+          ],
+          "translation": "surely you will see it"
+        },
+        {
+          "question_id": 22,
+          "question": "ثُمَّ لَتَرَوُنَّهَا _____ ٱلْيَقِينِ",
+          "answer": "عَيْنَ",
+          "options": [
+            "كَلَّا",
+            "عَيْنَ",
+            "ﰂ",
+            "عَنِ"
+          ],
+          "translation": "(with the) eye"
+        },
+        {
+          "question_id": 23,
+          "question": "ثُمَّ لَتَرَوُنَّهَا عَيْنَ _____",
+          "answer": "ٱلْيَقِينِ",
+          "options": [
+            "زُرْتُمُ",
+            "تَعْلَمُونَ",
+            "عَيْنَ",
+            "ٱلْيَقِينِ"
+          ],
+          "translation": "(of) certainty"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "102:8",
+      "questions": [
+        {
+          "question_id": 24,
+          "question": "_____ لَتُسْـَٔلُنَّ يَوْمَئِذٍ عَنِ ٱلنَّعِيمِ",
+          "answer": "ثُمَّ",
+          "options": [
+            "ﰃ",
+            "تَعْلَمُونَ",
+            "لَتُسْـَٔلُنَّ",
+            "ثُمَّ"
+          ],
+          "translation": "Then"
+        },
+        {
+          "question_id": 25,
+          "question": "ثُمَّ _____ يَوْمَئِذٍ عَنِ ٱلنَّعِيمِ",
+          "answer": "لَتُسْـَٔلُنَّ",
+          "options": [
+            "عِلْمَ",
+            "كَلَّا",
+            "حَتَّىٰ",
+            "لَتُسْـَٔلُنَّ"
+          ],
+          "translation": "surely you will be asked"
+        },
+        {
+          "question_id": 26,
+          "question": "ثُمَّ لَتُسْـَٔلُنَّ _____ عَنِ ٱلنَّعِيمِ",
+          "answer": "يَوْمَئِذٍ",
+          "options": [
+            "لَتُسْـَٔلُنَّ",
+            "ٱلْجَحِيمَ",
+            "ٱلْيَقِينِ",
+            "يَوْمَئِذٍ"
+          ],
+          "translation": "that Day"
+        },
+        {
+          "question_id": 27,
+          "question": "ثُمَّ لَتُسْـَٔلُنَّ يَوْمَئِذٍ _____ ٱلنَّعِيمِ",
+          "answer": "عَنِ",
+          "options": [
+            "كَلَّا",
+            "عَنِ",
+            "ﰅ",
+            "ثُمَّ"
+          ],
+          "translation": "about"
+        },
+        {
+          "question_id": 28,
+          "question": "ثُمَّ لَتُسْـَٔلُنَّ يَوْمَئِذٍ عَنِ _____",
+          "answer": "ٱلنَّعِيمِ",
+          "options": [
+            "ﰇ",
+            "ٱلنَّعِيمِ",
+            "حَتَّىٰ",
+            "زُرْتُمُ"
+          ],
+          "translation": "the pleasures"
+        }
+      ]
+    }
+  ]
+}

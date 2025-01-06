@@ -33,7 +33,6 @@ class BookmarkVersesFragment : Fragment() {
         val bookmarkVersesAdapter = BookmarkVersesAdapter(bookmarkVersesList)
         recyclerView.adapter = bookmarkVersesAdapter
 
-
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

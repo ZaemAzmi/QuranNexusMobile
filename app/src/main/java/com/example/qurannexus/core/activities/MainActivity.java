@@ -1,5 +1,6 @@
 package com.example.qurannexus.core.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.enums.BottomMenuItemId;
+import com.example.qurannexus.features.auth.AuthActivity;
+import com.example.qurannexus.features.auth.AuthService;
 import com.example.qurannexus.features.bookmark.BookmarkFragment;
 import com.example.qurannexus.features.home.HomeFragment;
 import com.example.qurannexus.features.prayerTimes.PrayerTimesFragment;
@@ -25,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
-
+    private AuthService authService;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     MeowBottomNavigation meowBottomNavigation;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        authService = new AuthService();
         setupNavigationDrawer();
         setupMeowNavigationBar();
         if (savedInstanceState == null) {
@@ -70,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         }else if (itemId == R.id.nav_test) {
             Intent i = new Intent(new Intent(MainActivity.this, TestActivity.class));
             startActivity(i);
+        }else if (itemId == R.id.nav_logout) {
+            handleLogout();
         }
 
         if (selectedFragment != null) {
@@ -85,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.HOME.getId(), R.drawable.ic_home));
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.SURAHLIST.getId(), R.drawable.ic_quran));
         meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.BOOKMARK.getId(), R.drawable.ic_bookmark));
-        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.QUIZ.getId(), R.drawable.ic_mosque));
+        meowBottomNavigation.add(new MeowBottomNavigation.Model(BottomMenuItemId.QUIZ.getId(), R.drawable.ic_note));
         meowBottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
             @Override
             public void onClickItem(MeowBottomNavigation.Model model) {
@@ -143,6 +149,24 @@ public class MainActivity extends AppCompatActivity {
                 meowBottomNavigation.show(BottomMenuItemId.QUIZ.getId(), true);
             }
         }
+    }
+
+    private void handleLogout() {
+        // Show loading dialog
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Logging out...");
+        progressDialog.show();
+
+        authService.logout(this, success -> {
+            progressDialog.dismiss();
+
+            // Redirect to auth activity regardless of server response
+            Intent intent = new Intent(MainActivity.this, AuthActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return null;
+        });
     }
 
 }

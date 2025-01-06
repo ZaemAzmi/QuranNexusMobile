@@ -115,19 +115,19 @@
                 android:clickable="true"
                 android:focusable="true" />
         </RelativeLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/categoryRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="16dp"
-            android:layout_marginTop="16dp"
-            android:clipToPadding="false"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            app:layout_constraintTop_toBottomOf="@+id/quizzesHighlightSection"
+
+        <Button
+            android:id="@+id/answerQuizButton"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="170dp"
+            android:text="Answer Quiz!"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:backgroundTint="#418C97"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

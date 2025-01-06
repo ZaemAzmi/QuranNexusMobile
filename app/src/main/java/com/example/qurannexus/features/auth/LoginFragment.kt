@@ -3,6 +3,8 @@ package com.example.qurannexus.features.auth
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,74 +16,230 @@ import androidx.fragment.app.Fragment
 import com.example.qurannexus.R
 import com.example.qurannexus.core.activities.MainActivity
 import com.example.qurannexus.core.interfaces.AuthCallback
+import com.example.qurannexus.core.network.ApiService
+import com.example.qurannexus.databinding.FragmentLoginBinding
 import com.example.qurannexus.features.auth.models.LoginRequest
+import com.google.android.material.snackbar.Snackbar
 
 class LoginFragment : Fragment() {
-
-    private lateinit var loginEmailInput: EditText
-    private lateinit var loginPasswordInput: EditText
-    private lateinit var loginButton: Button
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
     private lateinit var authService: AuthService
-    val deviceName = "My Android Device"
+    private val deviceName = "Android Device"
+    private var isFragmentActive = false
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
-
-        loginEmailInput = view.findViewById(R.id.loginEmailInput)
-        loginPasswordInput = view.findViewById(R.id.loginPasswordInput)
-        loginButton = view.findViewById(R.id.loginButton)
-
-        authService = AuthService()
-
-        loginButton.setOnClickListener {
-            login()
-        }
-
-        return view
+    ): View {
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun login() {
-        val email = loginEmailInput.text.toString()
-        val password = loginPasswordInput.text.toString()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        isFragmentActive = true
+        authService = AuthService()
+        setupInputValidation()
+        setupLoginButton()
+        checkExistingToken()
+    }
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(activity, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            return
+    override fun onResume() {
+        super.onResume()
+        isFragmentActive = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isFragmentActive = false
+    }
+
+    private fun setupLoginButton() {
+        binding.loginButton.setOnClickListener {
+            if (!isFragmentActive) return@setOnClickListener
+
+            val email = binding.loginEmailInput.text.toString()
+            val password = binding.loginPasswordInput.text.toString()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                showMessage("Please fill in all fields")
+                return@setOnClickListener
+            }
+
+            setLoadingState(true)
+
+            val request = LoginRequest(email, password, deviceName)
+            try {
+                context?.let { ctx ->
+                    authService.login(ctx, request, object : AuthCallback {
+                        override fun onSuccess(token: String) {
+                            if (!isFragmentActive) return
+
+                            // Set token in ApiService for other API calls
+                            ApiService.setAuthToken(token)
+
+                            // Try to get user profile, but proceed anyway
+                            authService.getUserProfile(token) { user ->
+                                if (!isFragmentActive) return@getUserProfile
+
+                                activity?.runOnUiThread {
+                                    try {
+                                        if (!isFragmentActive) return@runOnUiThread
+
+                                        if (user != null) {
+                                            context?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                                                ?.edit()
+                                                ?.putString("username", user.name)
+                                                ?.apply()
+                                        } else {
+                                            Log.w("LoginFragment", "Could not fetch user profile, but proceeding with login")
+                                        }
+                                        setLoadingState(false)
+                                        startMainActivity()
+                                    } catch (e: Exception) {
+                                        Log.e("LoginFragment", "Error in profile success callback", e)
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onError(error: String) {
+                            if (!isFragmentActive) return
+
+                            activity?.runOnUiThread {
+                                if (!isFragmentActive) return@runOnUiThread
+                                setLoadingState(false)
+                                showMessage(error)
+                            }
+                        }
+                    })
+                }
+            } catch (e: Exception) {
+                Log.e("LoginFragment", "Error during login", e)
+                setLoadingState(false)
+                showMessage("An error occurred during login")
+            }
         }
+    }
 
-        val request = LoginRequest(
-            email,
-            password,
-            deviceName
-        )
+    private fun checkExistingToken() {
+        try {
+            context?.let { ctx ->
+                val token = authService.getStoredToken(ctx)
+                if (!token.isNullOrEmpty()) {
+                    ApiService.setAuthToken(token)
 
-        authService.login(requireContext(), request, object : AuthCallback {
-            override fun onSuccess(token: String) {
-                val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                sharedPreferences.edit().putString("token", token).apply()
+                    // Verify token validity before proceeding
+                    authService.getUserProfile(token) { user ->
+                        if (!isFragmentActive) return@getUserProfile
 
-                // Fetch user profile to get the username
-                authService.getUserProfile(token) { user ->
-                    if (user?.name != null) {
-                        sharedPreferences.edit().putString("username", user.name).apply()
-                        Log.d("AuthDebug", "Username saved: ${user.name}")
-                    } else {
-                        Log.e("AuthDebug", "Failed to fetch username.")
+                        activity?.runOnUiThread {
+                            if (!isFragmentActive) return@runOnUiThread
+
+                            if (user != null) {
+                                context?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                                    ?.edit()
+                                    ?.putString("username", user.name)
+                                    ?.apply()
+                                startMainActivity()
+                            }
+                            // If user is null, token might be invalid, let user login again
+                        }
                     }
-
-                    Toast.makeText(activity, "Login successful! Token: $token", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(activity, MainActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
                 }
             }
+        } catch (e: Exception) {
+            Log.e("LoginFragment", "Error checking existing token", e)
+        }
+    }
 
-            override fun onError(error: String) {
-                Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
+    private fun startMainActivity() {
+        if (!isFragmentActive) return
+
+        try {
+            context?.let { ctx ->
+                val intent = Intent(ctx, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
+                activity?.finish()
             }
-        })
+        } catch (e: Exception) {
+            Log.e("LoginFragment", "Error starting MainActivity", e)
+        }
+    }
 
+    private fun setLoadingState(isLoading: Boolean) {
+        if (!isFragmentActive) return
+
+        try {
+            binding.loginButton.isEnabled = !isLoading
+            binding.loginProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        } catch (e: Exception) {
+            Log.e("LoginFragment", "Error setting loading state", e)
+        }
+    }
+
+    private fun showMessage(message: String) {
+        if (!isFragmentActive) return
+
+        try {
+            view?.let { Snackbar.make(it, message, Snackbar.LENGTH_LONG).show() }
+        } catch (e: Exception) {
+            Log.e("LoginFragment", "Error showing message", e)
+        }
+    }
+
+    private fun setupInputValidation() {
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (!isFragmentActive) return
+                validateInputs()
+            }
+        }
+
+        binding.loginEmailInput.addTextChangedListener(textWatcher)
+        binding.loginPasswordInput.addTextChangedListener(textWatcher)
+    }
+
+    private fun validateInputs() {
+        if (!isFragmentActive) return
+
+        try {
+            val email = binding.loginEmailInput.text.toString()
+            val password = binding.loginPasswordInput.text.toString()
+            binding.loginButton.isEnabled = email.isNotEmpty() && password.isNotEmpty()
+        } catch (e: Exception) {
+            Log.e("LoginFragment", "Error validating inputs", e)
+        }
+    }
+
+    // Commented Register Navigation Function
+    /*
+    private fun setupRegisterButton() {
+        binding.registerButton.setOnClickListener {
+            if (!isFragmentActive) return@setOnClickListener
+
+            try {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.authFragmentContainer, RegisterFragment())
+                    .addToBackStack(null)
+                    .commit()
+            } catch (e: Exception) {
+                Log.e("LoginFragment", "Error navigating to register", e)
+                showMessage("Unable to navigate to registration")
+            }
+        }
+    }
+    */
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        isFragmentActive = false
+        _binding = null
     }
 }

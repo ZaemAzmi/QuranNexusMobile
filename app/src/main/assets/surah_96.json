@@ -1,0 +1,983 @@
+{
+  "surah_id": "96",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "96:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ بِٱسْمِ رَبِّكَ ٱلَّذِى خَلَقَ",
+          "answer": "ٱقْرَأْ",
+          "options": [
+            "ﰍ",
+            "ٱقْرَأْ",
+            "إِن",
+            "إِنَّ"
+          ],
+          "translation": "Read"
+        },
+        {
+          "question_id": 2,
+          "question": "ٱقْرَأْ _____ رَبِّكَ ٱلَّذِى خَلَقَ",
+          "answer": "بِٱسْمِ",
+          "options": [
+            "ﰍ",
+            "بِٱسْمِ",
+            "خَلَقَ",
+            "عَلَقٍ"
+          ],
+          "translation": "in (the) name"
+        },
+        {
+          "question_id": 3,
+          "question": "ٱقْرَأْ بِٱسْمِ _____ ٱلَّذِى خَلَقَ",
+          "answer": "رَبِّكَ",
+          "options": [
+            "يَعْلَمْ",
+            "رَبِّكَ",
+            "لَا",
+            "ٱقْرَأْ"
+          ],
+          "translation": "(of) your Lord"
+        },
+        {
+          "question_id": 4,
+          "question": "ٱقْرَأْ بِٱسْمِ رَبِّكَ _____ خَلَقَ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "ﰇ",
+            "بِٱسْمِ",
+            "ٱلَّذِى",
+            "ٱلزَّبَانِيَةَ"
+          ],
+          "translation": "the One Who"
+        },
+        {
+          "question_id": 5,
+          "question": "ٱقْرَأْ بِٱسْمِ رَبِّكَ ٱلَّذِى _____",
+          "answer": "خَلَقَ",
+          "options": [
+            "خَلَقَ",
+            "ﰆ",
+            "رَّءَاهُ",
+            "ﰀ"
+          ],
+          "translation": "created "
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "96:2",
+      "questions": [
+        {
+          "question_id": 6,
+          "question": "_____ ٱلْإِنسَٰنَ مِنْ عَلَقٍ",
+          "answer": "خَلَقَ",
+          "options": [
+            "ﰁ",
+            "ﰅ",
+            "خَلَقَ",
+            "ﰉ"
+          ],
+          "translation": "He created"
+        },
+        {
+          "question_id": 7,
+          "question": "خَلَقَ _____ مِنْ عَلَقٍ",
+          "answer": "ٱلْإِنسَٰنَ",
+          "options": [
+            "ﰋ",
+            "ٱلْإِنسَٰنَ",
+            "بِٱلتَّقْوَىٰٓ",
+            "أَوْ"
+          ],
+          "translation": "man"
+        },
+        {
+          "question_id": 8,
+          "question": "خَلَقَ ٱلْإِنسَٰنَ _____ عَلَقٍ",
+          "answer": "مِنْ",
+          "options": [
+            "مِنْ",
+            "يَعْلَم",
+            "فَلْيَدْعُ",
+            "خَلَقَ"
+          ],
+          "translation": "from"
+        },
+        {
+          "question_id": 9,
+          "question": "خَلَقَ ٱلْإِنسَٰنَ مِنْ _____",
+          "answer": "عَلَقٍ",
+          "options": [
+            "صَلَّىٰٓ",
+            "ﰏ",
+            "عَلَقٍ",
+            "كَانَ"
+          ],
+          "translation": "a clinging substance"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "96:3",
+      "questions": [
+        {
+          "question_id": 10,
+          "question": "_____ وَرَبُّكَ ٱلْأَكْرَمُ",
+          "answer": "ٱقْرَأْ",
+          "options": [
+            "ٱقْرَأْ",
+            "أَمَرَ",
+            "بِٱلنَّاصِيَةِ",
+            "خَلَقَ"
+          ],
+          "translation": "Read"
+        },
+        {
+          "question_id": 11,
+          "question": "ٱقْرَأْ _____ ٱلْأَكْرَمُ",
+          "answer": "وَرَبُّكَ",
+          "options": [
+            "أَمَرَ",
+            "مَا",
+            "وَرَبُّكَ",
+            "ٱسْتَغْنَىٰٓ"
+          ],
+          "translation": "and your Lord"
+        },
+        {
+          "question_id": 12,
+          "question": "ٱقْرَأْ وَرَبُّكَ _____",
+          "answer": "ٱلْأَكْرَمُ",
+          "options": [
+            "ٱلْإِنسَٰنَ",
+            "وَٱسْجُدْ",
+            "ٱلْأَكْرَمُ",
+            "ﰉ"
+          ],
+          "translation": "(is) the Most Generous"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "96:4",
+      "questions": [
+        {
+          "question_id": 13,
+          "question": "_____ عَلَّمَ بِٱلْقَلَمِ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "بِٱلْقَلَمِ",
+            "كَانَ",
+            "ٱسْتَغْنَىٰٓ",
+            "ٱلَّذِى"
+          ],
+          "translation": "The One Who"
+        },
+        {
+          "question_id": 14,
+          "question": "ٱلَّذِى _____ بِٱلْقَلَمِ",
+          "answer": "عَلَّمَ",
+          "options": [
+            "إِنَّ",
+            "ٱلْإِنسَٰنَ",
+            "عَلَّمَ",
+            "مَا"
+          ],
+          "translation": "taught"
+        },
+        {
+          "question_id": 15,
+          "question": "ٱلَّذِى عَلَّمَ _____",
+          "answer": "بِٱلْقَلَمِ",
+          "options": [
+            "رَبِّكَ",
+            "عَلَقٍ",
+            "كَلَّا",
+            "بِٱلْقَلَمِ"
+          ],
+          "translation": "by the pen"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "96:5",
+      "questions": [
+        {
+          "question_id": 16,
+          "question": "_____ ٱلْإِنسَٰنَ مَا لَمْ يَعْلَمْ",
+          "answer": "عَلَّمَ",
+          "options": [
+            "إِن",
+            "رَّءَاهُ",
+            "عَلَّمَ",
+            "رَبِّكَ"
+          ],
+          "translation": "Taught"
+        },
+        {
+          "question_id": 17,
+          "question": "عَلَّمَ _____ مَا لَمْ يَعْلَمْ",
+          "answer": "ٱلْإِنسَٰنَ",
+          "options": [
+            "كَلَّآ",
+            "ٱلرُّجْعَىٰٓ",
+            "ٱلْإِنسَٰنَ",
+            "وَرَبُّكَ"
+          ],
+          "translation": "man"
+        },
+        {
+          "question_id": 18,
+          "question": "عَلَّمَ ٱلْإِنسَٰنَ _____ لَمْ يَعْلَمْ",
+          "answer": "مَا",
+          "options": [
+            "مَا",
+            "سَنَدْعُ",
+            "ﰅ",
+            "لَّمْ"
+          ],
+          "translation": "what"
+        },
+        {
+          "question_id": 19,
+          "question": "عَلَّمَ ٱلْإِنسَٰنَ مَا _____ يَعْلَمْ",
+          "answer": "لَمْ",
+          "options": [
+            "سَنَدْعُ",
+            "ٱلَّذِى",
+            "لَمْ",
+            "لَيَطْغَىٰٓ"
+          ],
+          "translation": "not"
+        },
+        {
+          "question_id": 20,
+          "question": "عَلَّمَ ٱلْإِنسَٰنَ مَا لَمْ _____",
+          "answer": "يَعْلَمْ",
+          "options": [
+            "وَٱسْجُدْ",
+            "يَعْلَمْ",
+            "ﰉ",
+            "كَٰذِبَةٍ"
+          ],
+          "translation": "he knew"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "96:6",
+      "questions": [
+        {
+          "question_id": 21,
+          "question": "_____ إِنَّ ٱلْإِنسَٰنَ لَيَطْغَىٰٓ",
+          "answer": "كَلَّآ",
+          "options": [
+            "كَلَّآ",
+            "إِنَّ",
+            "ﰀ",
+            "خَاطِئَةٍ"
+          ],
+          "translation": "Nay"
+        },
+        {
+          "question_id": 22,
+          "question": "كَلَّآ _____ ٱلْإِنسَٰنَ لَيَطْغَىٰٓ",
+          "answer": "إِنَّ",
+          "options": [
+            "كَلَّا",
+            "إِنَّ",
+            "ﰂ",
+            "إِن"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 23,
+          "question": "كَلَّآ إِنَّ _____ لَيَطْغَىٰٓ",
+          "answer": "ٱلْإِنسَٰنَ",
+          "options": [
+            "لَا",
+            "ٱلْإِنسَٰنَ",
+            "أَوْ",
+            "ٱلزَّبَانِيَةَ"
+          ],
+          "translation": "man"
+        },
+        {
+          "question_id": 24,
+          "question": "كَلَّآ إِنَّ ٱلْإِنسَٰنَ _____",
+          "answer": "لَيَطْغَىٰٓ",
+          "options": [
+            "ﰋ",
+            "عَلَّمَ",
+            "كَلَّآ",
+            "لَيَطْغَىٰٓ"
+          ],
+          "translation": "surely transgresses"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "96:7",
+      "questions": [
+        {
+          "question_id": 25,
+          "question": "_____ رَّءَاهُ ٱسْتَغْنَىٰٓ",
+          "answer": "أَن",
+          "options": [
+            "إِن",
+            "أَن",
+            "ٱلْأَكْرَمُ",
+            "ﰋ"
+          ],
+          "translation": "That"
+        },
+        {
+          "question_id": 26,
+          "question": "أَن _____ ٱسْتَغْنَىٰٓ",
+          "answer": "رَّءَاهُ",
+          "options": [
+            "نَاصِيَةٍ",
+            "رَّءَاهُ",
+            "كَلَّآ",
+            "ﰅ"
+          ],
+          "translation": "he sees himself"
+        },
+        {
+          "question_id": 27,
+          "question": "أَن رَّءَاهُ _____",
+          "answer": "ٱسْتَغْنَىٰٓ",
+          "options": [
+            "ٱقْرَأْ",
+            "ﰐ",
+            "ٱسْتَغْنَىٰٓ",
+            "وَرَبُّكَ"
+          ],
+          "translation": "self-sufficient"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "96:8",
+      "questions": [
+        {
+          "question_id": 28,
+          "question": "_____ إِلَىٰ رَبِّكَ ٱلرُّجْعَىٰٓ",
+          "answer": "إِنَّ",
+          "options": [
+            "ﰉ",
+            "ﰂ",
+            "ٱقْرَأْ",
+            "إِنَّ"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 29,
+          "question": "إِنَّ _____ رَبِّكَ ٱلرُّجْعَىٰٓ",
+          "answer": "إِلَىٰ",
+          "options": [
+            "أَمَرَ",
+            "بِٱلنَّاصِيَةِ",
+            "إِلَىٰ",
+            "ﰌ"
+          ],
+          "translation": "to"
+        },
+        {
+          "question_id": 30,
+          "question": "إِنَّ إِلَىٰ _____ ٱلرُّجْعَىٰٓ",
+          "answer": "رَبِّكَ",
+          "options": [
+            "لَمْ",
+            "ﰐ",
+            "عَلَقٍ",
+            "رَبِّكَ"
+          ],
+          "translation": "your Lord"
+        },
+        {
+          "question_id": 31,
+          "question": "إِنَّ إِلَىٰ رَبِّكَ _____",
+          "answer": "ٱلرُّجْعَىٰٓ",
+          "options": [
+            "ٱلرُّجْعَىٰٓ",
+            "أَرَءَيْتَ",
+            "مِنْ",
+            "فَلْيَدْعُ"
+          ],
+          "translation": "(is) the return"
+        }
+      ]
+    },
+    {
+      "ayah_index": "9",
+      "ayah_key": "96:9",
+      "questions": [
+        {
+          "question_id": 32,
+          "question": "_____ ٱلَّذِى يَنْهَىٰ",
+          "answer": "أَرَءَيْتَ",
+          "options": [
+            "ٱقْرَأْ",
+            "أَرَءَيْتَ",
+            "كَٰذِبَةٍ",
+            "ﰂ"
+          ],
+          "translation": "Have you seen"
+        },
+        {
+          "question_id": 33,
+          "question": "أَرَءَيْتَ _____ يَنْهَىٰ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "ﰍ",
+            "بِٱلنَّاصِيَةِ",
+            "ٱلَّذِى",
+            "عَلَى"
+          ],
+          "translation": "the one who"
+        },
+        {
+          "question_id": 34,
+          "question": "أَرَءَيْتَ ٱلَّذِى _____",
+          "answer": "يَنْهَىٰ",
+          "options": [
+            "فَلْيَدْعُ",
+            "نَاصِيَةٍ",
+            "يَنْهَىٰ",
+            "ٱلَّذِى"
+          ],
+          "translation": "forbids"
+        }
+      ]
+    },
+    {
+      "ayah_index": "10",
+      "ayah_key": "96:10",
+      "questions": [
+        {
+          "question_id": 35,
+          "question": "_____ إِذَا صَلَّىٰٓ",
+          "answer": "عَبْدًا",
+          "options": [
+            "ٱلَّذِى",
+            "خَاطِئَةٍ",
+            "عَبْدًا",
+            "تُطِعْهُ"
+          ],
+          "translation": "A slave"
+        },
+        {
+          "question_id": 36,
+          "question": "عَبْدًا _____ صَلَّىٰٓ",
+          "answer": "إِذَا",
+          "options": [
+            "ﰆ",
+            "عَلَقٍ",
+            "إِذَا",
+            "نَادِيَهُۥ"
+          ],
+          "translation": "when"
+        },
+        {
+          "question_id": 37,
+          "question": "عَبْدًا إِذَا _____",
+          "answer": "صَلَّىٰٓ",
+          "options": [
+            "ﰐ",
+            "ٱللَّهَ",
+            "صَلَّىٰٓ",
+            "أَلَمْ"
+          ],
+          "translation": "he prays"
+        }
+      ]
+    },
+    {
+      "ayah_index": "11",
+      "ayah_key": "96:11",
+      "questions": [
+        {
+          "question_id": 38,
+          "question": "_____ إِن كَانَ عَلَى ٱلْهُدَىٰٓ",
+          "answer": "أَرَءَيْتَ",
+          "options": [
+            "لَّمْ",
+            "مَا",
+            "بِأَنَّ",
+            "أَرَءَيْتَ"
+          ],
+          "translation": "Have you seen"
+        },
+        {
+          "question_id": 39,
+          "question": "أَرَءَيْتَ _____ كَانَ عَلَى ٱلْهُدَىٰٓ",
+          "answer": "إِن",
+          "options": [
+            "كَذَّبَ",
+            "إِن",
+            "كَلَّآ",
+            "ﰋ"
+          ],
+          "translation": "if"
+        },
+        {
+          "question_id": 40,
+          "question": "أَرَءَيْتَ إِن _____ عَلَى ٱلْهُدَىٰٓ",
+          "answer": "كَانَ",
+          "options": [
+            "كَانَ",
+            "لَئِن",
+            "ﰆ",
+            "إِذَا"
+          ],
+          "translation": "he is"
+        },
+        {
+          "question_id": 41,
+          "question": "أَرَءَيْتَ إِن كَانَ _____ ٱلْهُدَىٰٓ",
+          "answer": "عَلَى",
+          "options": [
+            "أَرَءَيْتَ",
+            "لَّمْ",
+            "إِن",
+            "عَلَى"
+          ],
+          "translation": "upon"
+        },
+        {
+          "question_id": 42,
+          "question": "أَرَءَيْتَ إِن كَانَ عَلَى _____",
+          "answer": "ٱلْهُدَىٰٓ",
+          "options": [
+            "ﰊ",
+            "عَبْدًا",
+            "ٱلْهُدَىٰٓ",
+            "يَنتَهِ"
+          ],
+          "translation": "[the] guidance"
+        }
+      ]
+    },
+    {
+      "ayah_index": "12",
+      "ayah_key": "96:12",
+      "questions": [
+        {
+          "question_id": 43,
+          "question": "_____ أَمَرَ بِٱلتَّقْوَىٰٓ",
+          "answer": "أَوْ",
+          "options": [
+            "أَوْ",
+            "إِن",
+            "كَٰذِبَةٍ",
+            "وَرَبُّكَ"
+          ],
+          "translation": "Or"
+        },
+        {
+          "question_id": 44,
+          "question": "أَوْ _____ بِٱلتَّقْوَىٰٓ",
+          "answer": "أَمَرَ",
+          "options": [
+            "يَعْلَمْ",
+            "أَمَرَ",
+            "رَبِّكَ",
+            "خَلَقَ"
+          ],
+          "translation": "he enjoins"
+        },
+        {
+          "question_id": 45,
+          "question": "أَوْ أَمَرَ _____",
+          "answer": "بِٱلتَّقْوَىٰٓ",
+          "options": [
+            "بِٱلتَّقْوَىٰٓ",
+            "رَّءَاهُ",
+            "ﰀ",
+            "مِنْ"
+          ],
+          "translation": "[of the] righteousness"
+        }
+      ]
+    },
+    {
+      "ayah_index": "13",
+      "ayah_key": "96:13",
+      "questions": [
+        {
+          "question_id": 46,
+          "question": "_____ إِن كَذَّبَ وَتَوَلَّىٰٓ",
+          "answer": "أَرَءَيْتَ",
+          "options": [
+            "كَلَّا",
+            "وَٱقْتَرِب",
+            "أَرَءَيْتَ",
+            "لَا"
+          ],
+          "translation": "Have you seen"
+        },
+        {
+          "question_id": 47,
+          "question": "أَرَءَيْتَ _____ كَذَّبَ وَتَوَلَّىٰٓ",
+          "answer": "إِن",
+          "options": [
+            "لَّمْ",
+            "كَلَّآ",
+            "أَن",
+            "إِن"
+          ],
+          "translation": "if"
+        },
+        {
+          "question_id": 48,
+          "question": "أَرَءَيْتَ إِن _____ وَتَوَلَّىٰٓ",
+          "answer": "كَذَّبَ",
+          "options": [
+            "لَئِن",
+            "خَاطِئَةٍ",
+            "يَنتَهِ",
+            "كَذَّبَ"
+          ],
+          "translation": "he denies"
+        },
+        {
+          "question_id": 49,
+          "question": "أَرَءَيْتَ إِن كَذَّبَ _____",
+          "answer": "وَتَوَلَّىٰٓ",
+          "options": [
+            "ﰅ",
+            "خَلَقَ",
+            "وَتَوَلَّىٰٓ",
+            "لَمْ"
+          ],
+          "translation": "and turns away"
+        }
+      ]
+    },
+    {
+      "ayah_index": "14",
+      "ayah_key": "96:14",
+      "questions": [
+        {
+          "question_id": 50,
+          "question": "_____ يَعْلَم بِأَنَّ ٱللَّهَ يَرَىٰ",
+          "answer": "أَلَمْ",
+          "options": [
+            "أَلَمْ",
+            "أَرَءَيْتَ",
+            "ﰈ",
+            "كَلَّا"
+          ],
+          "translation": "Does not"
+        },
+        {
+          "question_id": 51,
+          "question": "أَلَمْ _____ بِأَنَّ ٱللَّهَ يَرَىٰ",
+          "answer": "يَعْلَم",
+          "options": [
+            "رَبِّكَ",
+            "مِنْ",
+            "إِنَّ",
+            "يَعْلَم"
+          ],
+          "translation": "he know"
+        },
+        {
+          "question_id": 52,
+          "question": "أَلَمْ يَعْلَم _____ ٱللَّهَ يَرَىٰ",
+          "answer": "بِأَنَّ",
+          "options": [
+            "لَنَسْفَعًۢا",
+            "خَلَقَ",
+            "بِأَنَّ",
+            "عَلَّمَ"
+          ],
+          "translation": "that"
+        },
+        {
+          "question_id": 53,
+          "question": "أَلَمْ يَعْلَم بِأَنَّ _____ يَرَىٰ",
+          "answer": "ٱللَّهَ",
+          "options": [
+            "ٱلْإِنسَٰنَ",
+            "وَٱسْجُدْ",
+            "يَعْلَم",
+            "ٱللَّهَ"
+          ],
+          "translation": "Allah"
+        },
+        {
+          "question_id": 54,
+          "question": "أَلَمْ يَعْلَم بِأَنَّ ٱللَّهَ _____",
+          "answer": "يَرَىٰ",
+          "options": [
+            "ٱقْرَأْ",
+            "ﰉ",
+            "يَرَىٰ",
+            "تُطِعْهُ"
+          ],
+          "translation": "sees"
+        }
+      ]
+    },
+    {
+      "ayah_index": "15",
+      "ayah_key": "96:15",
+      "questions": [
+        {
+          "question_id": 55,
+          "question": "_____ لَئِن لَّمْ يَنتَهِ لَنَسْفَعًۢا بِٱلنَّاصِيَةِ",
+          "answer": "كَلَّا",
+          "options": [
+            "ٱلْهُدَىٰٓ",
+            "إِن",
+            "كَلَّا",
+            "ﰐ"
+          ],
+          "translation": "Nay"
+        },
+        {
+          "question_id": 56,
+          "question": "كَلَّا _____ لَّمْ يَنتَهِ لَنَسْفَعًۢا بِٱلنَّاصِيَةِ",
+          "answer": "لَئِن",
+          "options": [
+            "إِذَا",
+            "لَئِن",
+            "لَمْ",
+            "ﰃ"
+          ],
+          "translation": "If"
+        },
+        {
+          "question_id": 57,
+          "question": "كَلَّا لَئِن _____ يَنتَهِ لَنَسْفَعًۢا بِٱلنَّاصِيَةِ",
+          "answer": "لَّمْ",
+          "options": [
+            "لَّمْ",
+            "لَنَسْفَعًۢا",
+            "كَانَ",
+            "ٱللَّهَ"
+          ],
+          "translation": "not"
+        },
+        {
+          "question_id": 58,
+          "question": "كَلَّا لَئِن لَّمْ _____ لَنَسْفَعًۢا بِٱلنَّاصِيَةِ",
+          "answer": "يَنتَهِ",
+          "options": [
+            "لَنَسْفَعًۢا",
+            "يَنتَهِ",
+            "ٱلَّذِى",
+            "إِنَّ"
+          ],
+          "translation": "he desists"
+        },
+        {
+          "question_id": 59,
+          "question": "كَلَّا لَئِن لَّمْ يَنتَهِ _____ بِٱلنَّاصِيَةِ",
+          "answer": "لَنَسْفَعًۢا",
+          "options": [
+            "عَلَّمَ",
+            "مِنْ",
+            "كَلَّآ",
+            "لَنَسْفَعًۢا"
+          ],
+          "translation": "surely We will drag him"
+        },
+        {
+          "question_id": 60,
+          "question": "كَلَّا لَئِن لَّمْ يَنتَهِ لَنَسْفَعًۢا _____",
+          "answer": "بِٱلنَّاصِيَةِ",
+          "options": [
+            "بِٱلنَّاصِيَةِ",
+            "وَٱقْتَرِب",
+            "وَٱسْجُدْ",
+            "بِأَنَّ"
+          ],
+          "translation": "by the forelock"
+        }
+      ]
+    },
+    {
+      "ayah_index": "16",
+      "ayah_key": "96:16",
+      "questions": [
+        {
+          "question_id": 61,
+          "question": "_____ كَٰذِبَةٍ خَاطِئَةٍ",
+          "answer": "نَاصِيَةٍ",
+          "options": [
+            "بِٱلْقَلَمِ",
+            "نَاصِيَةٍ",
+            "ﰎ",
+            "ٱلْهُدَىٰٓ"
+          ],
+          "translation": "A forelock"
+        },
+        {
+          "question_id": 62,
+          "question": "نَاصِيَةٍ _____ خَاطِئَةٍ",
+          "answer": "كَٰذِبَةٍ",
+          "options": [
+            "كَٰذِبَةٍ",
+            "ﰀ",
+            "ٱلْإِنسَٰنَ",
+            "لَا"
+          ],
+          "translation": "lying"
+        },
+        {
+          "question_id": 63,
+          "question": "نَاصِيَةٍ كَٰذِبَةٍ _____",
+          "answer": "خَاطِئَةٍ",
+          "options": [
+            "ٱلرُّجْعَىٰٓ",
+            "خَاطِئَةٍ",
+            "رَبِّكَ",
+            "ﰀ"
+          ],
+          "translation": "sinful"
+        }
+      ]
+    },
+    {
+      "ayah_index": "17",
+      "ayah_key": "96:17",
+      "questions": [
+        {
+          "question_id": 64,
+          "question": "_____ نَادِيَهُۥ",
+          "answer": "فَلْيَدْعُ",
+          "options": [
+            "وَرَبُّكَ",
+            "ﰋ",
+            "فَلْيَدْعُ",
+            "ٱلَّذِى"
+          ],
+          "translation": "Then let him call"
+        },
+        {
+          "question_id": 65,
+          "question": "فَلْيَدْعُ _____",
+          "answer": "نَادِيَهُۥ",
+          "options": [
+            "نَادِيَهُۥ",
+            "ﰆ",
+            "ﰁ",
+            "لَا"
+          ],
+          "translation": "his associates"
+        }
+      ]
+    },
+    {
+      "ayah_index": "18",
+      "ayah_key": "96:18",
+      "questions": [
+        {
+          "question_id": 66,
+          "question": "_____ ٱلزَّبَانِيَةَ",
+          "answer": "سَنَدْعُ",
+          "options": [
+            "بِأَنَّ",
+            "ﰆ",
+            "سَنَدْعُ",
+            "لَمْ"
+          ],
+          "translation": "We will call"
+        },
+        {
+          "question_id": 67,
+          "question": "سَنَدْعُ _____",
+          "answer": "ٱلزَّبَانِيَةَ",
+          "options": [
+            "ٱلزَّبَانِيَةَ",
+            "لَئِن",
+            "خَاطِئَةٍ",
+            "عَلَّمَ"
+          ],
+          "translation": "the Angels of Hell"
+        }
+      ]
+    },
+    {
+      "ayah_index": "19",
+      "ayah_key": "96:19",
+      "questions": [
+        {
+          "question_id": 68,
+          "question": "_____ لَا تُطِعْهُ وَٱسْجُدْ وَٱقْتَرِب",
+          "answer": "كَلَّا",
+          "options": [
+            "ٱللَّهَ",
+            "أَرَءَيْتَ",
+            "كَٰذِبَةٍ",
+            "كَلَّا"
+          ],
+          "translation": "Nay"
+        },
+        {
+          "question_id": 69,
+          "question": "كَلَّا _____ تُطِعْهُ وَٱسْجُدْ وَٱقْتَرِب",
+          "answer": "لَا",
+          "options": [
+            "مِنْ",
+            "ﰐ",
+            "لَا",
+            "أَلَمْ"
+          ],
+          "translation": "(Do) not"
+        },
+        {
+          "question_id": 70,
+          "question": "كَلَّا لَا _____ وَٱسْجُدْ وَٱقْتَرِب",
+          "answer": "تُطِعْهُ",
+          "options": [
+            "لَمْ",
+            "تُطِعْهُ",
+            "لَا",
+            "ٱقْرَأْ"
+          ],
+          "translation": "obey him"
+        },
+        {
+          "question_id": 71,
+          "question": "كَلَّا لَا تُطِعْهُ _____ وَٱقْتَرِب",
+          "answer": "وَٱسْجُدْ",
+          "options": [
+            "كَانَ",
+            "عَلَى",
+            "كَٰذِبَةٍ",
+            "وَٱسْجُدْ"
+          ],
+          "translation": "But prostrate"
+        },
+        {
+          "question_id": 72,
+          "question": "كَلَّا لَا تُطِعْهُ وَٱسْجُدْ _____",
+          "answer": "وَٱقْتَرِب",
+          "options": [
+            "خَلَقَ",
+            "وَٱقْتَرِب",
+            "ﰐ",
+            "ٱقْرَأْ"
+          ],
+          "translation": "and draw near (to Allah)"
+        }
+      ]
+    }
+  ]
+}

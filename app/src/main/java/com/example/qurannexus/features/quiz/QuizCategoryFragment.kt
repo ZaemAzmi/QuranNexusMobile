@@ -9,14 +9,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.databinding.FragmentQuizCategoryBinding
 import com.example.qurannexus.features.quiz.models.NotesHighlightItem
 import com.example.qurannexus.features.quiz.models.QuestionCategoryAdapter
+import com.example.qurannexus.features.quiz.models.QuizViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,16 +37,40 @@ class QuizCategoryFragment : Fragment() {
 
 //        val navController = Navigation.findNavController(requireActivity(), R.id.quizFragmentContainer)
         val adapter = QuestionCategoryAdapter { category ->
-          val action = QuizCategoryFragmentDirections.actionQuizCategoryFragmentToQuizQuestionFragment(category.name)
+            val action = QuizCategoryFragmentDirections.actionQuizCategoryFragmentToQuizChapterOptionsFragment()
             findNavController().navigate(action)
-//            navController.navigate(R.id.action_quizCategoryFragment_to_quizQuestionFragment)
         }
+
         highlightSectionSetup(view)
 
-        binding.categoryRecyclerView.adapter = adapter
-        binding.categoryRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        viewModel.categories.observe(viewLifecycleOwner) { categories ->
-            adapter.submitList(categories)
+        // Handle navigation when the quiz button is clicked
+        binding.answerQuizButton.setOnClickListener {
+            val action = QuizCategoryFragmentDirections
+                .actionQuizCategoryFragmentToQuizChapterOptionsFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.previousButton.setOnClickListener{
+            activity?.finish()
+        }
+
+
+        var isBookmarked = false
+        val heartBookmarkIcon = binding.dailyWordSection.bookmarkButton
+        heartBookmarkIcon.setOnClickListener{
+            if (isBookmarked) {
+                heartBookmarkIcon.setImageResource(R.drawable.ic_heart)
+            } else {
+                heartBookmarkIcon.setImageResource(R.drawable.ic_heart_bookmarked)
+            }
+            isBookmarked = !isBookmarked
+        }
+
+        binding.seeAllQuizzesText.setOnClickListener{
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.quizFragmentContainer, QuizCategoryFragment())
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
     }
 
@@ -97,6 +119,5 @@ class QuizCategoryFragment : Fragment() {
         // Handle fragment navigation or other actions based on position
 
     }
-
 
 }

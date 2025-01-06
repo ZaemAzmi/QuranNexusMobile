@@ -1,0 +1,455 @@
+{
+  "surah_id": "104",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "104:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ",
+          "answer": "وَيْلٌ",
+          "options": [
+            "ٱلَّتِى",
+            "ﰄ",
+            "نَارُ",
+            "وَيْلٌ"
+          ],
+          "translation": "Woe"
+        },
+        {
+          "question_id": 2,
+          "question": "وَيْلٌ _____ هُمَزَةٍ لُّمَزَةٍ",
+          "answer": "لِّكُلِّ",
+          "options": [
+            "لِّكُلِّ",
+            "ﰃ",
+            "ﰀ",
+            "وَمَآ"
+          ],
+          "translation": "to every"
+        },
+        {
+          "question_id": 3,
+          "question": "وَيْلٌ لِّكُلِّ _____ لُّمَزَةٍ",
+          "answer": "هُمَزَةٍ",
+          "options": [
+            "فِى",
+            "هُمَزَةٍ",
+            "نَارُ",
+            "ﰇ"
+          ],
+          "translation": "slanderer"
+        },
+        {
+          "question_id": 4,
+          "question": "وَيْلٌ لِّكُلِّ هُمَزَةٍ _____",
+          "answer": "لُّمَزَةٍ",
+          "options": [
+            "ٱلْحُطَمَةُ",
+            "لُّمَزَةٍ",
+            "ٱلَّذِى",
+            "مَا"
+          ],
+          "translation": "backbiter"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "104:2",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ جَمَعَ مَالًا وَعَدَّدَهُۥ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "مَا",
+            "فِى",
+            "ٱلَّذِى",
+            "ﰃ"
+          ],
+          "translation": "The one who"
+        },
+        {
+          "question_id": 6,
+          "question": "ٱلَّذِى _____ مَالًا وَعَدَّدَهُۥ",
+          "answer": "جَمَعَ",
+          "options": [
+            "يَحْسَبُ",
+            "عَمَدٍ",
+            "جَمَعَ",
+            "ﰂ"
+          ],
+          "translation": "collects"
+        },
+        {
+          "question_id": 7,
+          "question": "ٱلَّذِى جَمَعَ _____ وَعَدَّدَهُۥ",
+          "answer": "مَالًا",
+          "options": [
+            "ٱللَّهِ",
+            "نَارُ",
+            "ٱلْأَفْـِٔدَةِ",
+            "مَالًا"
+          ],
+          "translation": "wealth"
+        },
+        {
+          "question_id": 8,
+          "question": "ٱلَّذِى جَمَعَ مَالًا _____",
+          "answer": "وَعَدَّدَهُۥ",
+          "options": [
+            "ٱللَّهِ",
+            "ٱلْحُطَمَةُ",
+            "وَعَدَّدَهُۥ",
+            "تَطَّلِعُ"
+          ],
+          "translation": "and counts it"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "104:3",
+      "questions": [
+        {
+          "question_id": 9,
+          "question": "_____ أَنَّ مَالَهُۥٓ أَخْلَدَهُۥ",
+          "answer": "يَحْسَبُ",
+          "options": [
+            "يَحْسَبُ",
+            "ٱلَّذِى",
+            "وَمَآ",
+            "وَعَدَّدَهُۥ"
+          ],
+          "translation": "Thinking"
+        },
+        {
+          "question_id": 10,
+          "question": "يَحْسَبُ _____ مَالَهُۥٓ أَخْلَدَهُۥ",
+          "answer": "أَنَّ",
+          "options": [
+            "أَنَّ",
+            "مُّؤْصَدَةٌ",
+            "إِنَّهَا",
+            "كَلَّا"
+          ],
+          "translation": "that"
+        },
+        {
+          "question_id": 11,
+          "question": "يَحْسَبُ أَنَّ _____ أَخْلَدَهُۥ",
+          "answer": "مَالَهُۥٓ",
+          "options": [
+            "ﰆ",
+            "مَالَهُۥٓ",
+            "ﰈ",
+            "عَمَدٍ"
+          ],
+          "translation": "his wealth"
+        },
+        {
+          "question_id": 12,
+          "question": "يَحْسَبُ أَنَّ مَالَهُۥٓ _____",
+          "answer": "أَخْلَدَهُۥ",
+          "options": [
+            "ٱلْحُطَمَةُ",
+            "تَطَّلِعُ",
+            "أَخْلَدَهُۥ",
+            "عَلَيْهِم"
+          ],
+          "translation": "will make him immortal"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "104:4",
+      "questions": [
+        {
+          "question_id": 13,
+          "question": "_____ لَيُنۢبَذَنَّ فِى ٱلْحُطَمَةِ",
+          "answer": "كَلَّا",
+          "options": [
+            "إِنَّهَا",
+            "كَلَّا",
+            "وَمَآ",
+            "هُمَزَةٍ"
+          ],
+          "translation": "Nay"
+        },
+        {
+          "question_id": 14,
+          "question": "كَلَّا _____ فِى ٱلْحُطَمَةِ",
+          "answer": "لَيُنۢبَذَنَّ",
+          "options": [
+            "لَيُنۢبَذَنَّ",
+            "ٱللَّهِ",
+            "ﰆ",
+            "يَحْسَبُ"
+          ],
+          "translation": "Surely he will be thrown"
+        },
+        {
+          "question_id": 15,
+          "question": "كَلَّا لَيُنۢبَذَنَّ _____ ٱلْحُطَمَةِ",
+          "answer": "فِى",
+          "options": [
+            "جَمَعَ",
+            "ﰄ",
+            "فِى",
+            "لِّكُلِّ"
+          ],
+          "translation": "in"
+        },
+        {
+          "question_id": 16,
+          "question": "كَلَّا لَيُنۢبَذَنَّ فِى _____",
+          "answer": "ٱلْحُطَمَةِ",
+          "options": [
+            "ٱلَّتِى",
+            "ٱلْحُطَمَةُ",
+            "لِّكُلِّ",
+            "ٱلْحُطَمَةِ"
+          ],
+          "translation": "the Crusher"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "104:5",
+      "questions": [
+        {
+          "question_id": 17,
+          "question": "_____ أَدْرَىٰكَ مَا ٱلْحُطَمَةُ",
+          "answer": "وَمَآ",
+          "options": [
+            "مَالًا",
+            "وَمَآ",
+            "ٱلَّذِى",
+            "نَارُ"
+          ],
+          "translation": "And what"
+        },
+        {
+          "question_id": 18,
+          "question": "وَمَآ _____ مَا ٱلْحُطَمَةُ",
+          "answer": "أَدْرَىٰكَ",
+          "options": [
+            "نَارُ",
+            "أَدْرَىٰكَ",
+            "جَمَعَ",
+            "فِى"
+          ],
+          "translation": "will make you know"
+        },
+        {
+          "question_id": 19,
+          "question": "وَمَآ أَدْرَىٰكَ _____ ٱلْحُطَمَةُ",
+          "answer": "مَا",
+          "options": [
+            "مَا",
+            "عَلَى",
+            "ﰀ",
+            "مَالًا"
+          ],
+          "translation": "what"
+        },
+        {
+          "question_id": 20,
+          "question": "وَمَآ أَدْرَىٰكَ مَا _____",
+          "answer": "ٱلْحُطَمَةُ",
+          "options": [
+            "ٱللَّهِ",
+            "ٱلَّذِى",
+            "مُّمَدَّدَةٍۭ",
+            "ٱلْحُطَمَةُ"
+          ],
+          "translation": "the Crusher (is)"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "104:6",
+      "questions": [
+        {
+          "question_id": 21,
+          "question": "_____ ٱللَّهِ ٱلْمُوقَدَةُ",
+          "answer": "نَارُ",
+          "options": [
+            "مَا",
+            "نَارُ",
+            "ٱلْمُوقَدَةُ",
+            "يَحْسَبُ"
+          ],
+          "translation": "A Fire"
+        },
+        {
+          "question_id": 22,
+          "question": "نَارُ _____ ٱلْمُوقَدَةُ",
+          "answer": "ٱللَّهِ",
+          "options": [
+            "ﰃ",
+            "ٱللَّهِ",
+            "مُّمَدَّدَةٍۭ",
+            "ﰈ"
+          ],
+          "translation": "Allah"
+        },
+        {
+          "question_id": 23,
+          "question": "نَارُ ٱللَّهِ _____",
+          "answer": "ٱلْمُوقَدَةُ",
+          "options": [
+            "ٱلْمُوقَدَةُ",
+            "ﰈ",
+            "مُّمَدَّدَةٍۭ",
+            "فِى"
+          ],
+          "translation": "kindled"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "104:7",
+      "questions": [
+        {
+          "question_id": 24,
+          "question": "_____ تَطَّلِعُ عَلَى ٱلْأَفْـِٔدَةِ",
+          "answer": "ٱلَّتِى",
+          "options": [
+            "ٱلْمُوقَدَةُ",
+            "ٱلَّتِى",
+            "وَيْلٌ",
+            "فِى"
+          ],
+          "translation": "Which"
+        },
+        {
+          "question_id": 25,
+          "question": "ٱلَّتِى _____ عَلَى ٱلْأَفْـِٔدَةِ",
+          "answer": "تَطَّلِعُ",
+          "options": [
+            "ٱلَّذِى",
+            "تَطَّلِعُ",
+            "أَخْلَدَهُۥ",
+            "مَالًا"
+          ],
+          "translation": "mounts up"
+        },
+        {
+          "question_id": 26,
+          "question": "ٱلَّتِى تَطَّلِعُ _____ ٱلْأَفْـِٔدَةِ",
+          "answer": "عَلَى",
+          "options": [
+            "إِنَّهَا",
+            "ﰆ",
+            "عَلَى",
+            "ﰂ"
+          ],
+          "translation": "to"
+        },
+        {
+          "question_id": 27,
+          "question": "ٱلَّتِى تَطَّلِعُ عَلَى _____",
+          "answer": "ٱلْأَفْـِٔدَةِ",
+          "options": [
+            "وَيْلٌ",
+            "ٱلْأَفْـِٔدَةِ",
+            "ٱلْمُوقَدَةُ",
+            "عَلَيْهِم"
+          ],
+          "translation": "the hearts"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "104:8",
+      "questions": [
+        {
+          "question_id": 28,
+          "question": "_____ عَلَيْهِم مُّؤْصَدَةٌ",
+          "answer": "إِنَّهَا",
+          "options": [
+            "ﰃ",
+            "إِنَّهَا",
+            "ﰄ",
+            "كَلَّا"
+          ],
+          "translation": "Indeed, it"
+        },
+        {
+          "question_id": 29,
+          "question": "إِنَّهَا _____ مُّؤْصَدَةٌ",
+          "answer": "عَلَيْهِم",
+          "options": [
+            "مَالًا",
+            "عَلَيْهِم",
+            "فِى",
+            "ٱلَّتِى"
+          ],
+          "translation": "(will be) upon them"
+        },
+        {
+          "question_id": 30,
+          "question": "إِنَّهَا عَلَيْهِم _____",
+          "answer": "مُّؤْصَدَةٌ",
+          "options": [
+            "مَالَهُۥٓ",
+            "ٱلَّذِى",
+            "كَلَّا",
+            "مُّؤْصَدَةٌ"
+          ],
+          "translation": "closed over"
+        }
+      ]
+    },
+    {
+      "ayah_index": "9",
+      "ayah_key": "104:9",
+      "questions": [
+        {
+          "question_id": 31,
+          "question": "_____ عَمَدٍ مُّمَدَّدَةٍۭ",
+          "answer": "فِى",
+          "options": [
+            "فِى",
+            "ٱلَّتِى",
+            "ٱللَّهِ",
+            "هُمَزَةٍ"
+          ],
+          "translation": "In"
+        },
+        {
+          "question_id": 32,
+          "question": "فِى _____ مُّمَدَّدَةٍۭ",
+          "answer": "عَمَدٍ",
+          "options": [
+            "عَمَدٍ",
+            "مُّؤْصَدَةٌ",
+            "هُمَزَةٍ",
+            "كَلَّا"
+          ],
+          "translation": "columns"
+        },
+        {
+          "question_id": 33,
+          "question": "فِى عَمَدٍ _____",
+          "answer": "مُّمَدَّدَةٍۭ",
+          "options": [
+            "عَمَدٍ",
+            "تَطَّلِعُ",
+            "إِنَّهَا",
+            "مُّمَدَّدَةٍۭ"
+          ],
+          "translation": "extended"
+        }
+      ]
+    }
+  ]
+}

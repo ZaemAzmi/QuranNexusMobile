@@ -1,0 +1,143 @@
+{
+  "surah_id": "108",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "108:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ أَعْطَيْنَٰكَ ٱلْكَوْثَرَ",
+          "answer": "إِنَّآ",
+          "options": [
+            "ﰀ",
+            "فَصَلِّ",
+            "إِنَّآ",
+            "لِرَبِّكَ"
+          ],
+          "translation": "Indeed, We"
+        },
+        {
+          "question_id": 2,
+          "question": "إِنَّآ _____ ٱلْكَوْثَرَ",
+          "answer": "أَعْطَيْنَٰكَ",
+          "options": [
+            "ﰁ",
+            "أَعْطَيْنَٰكَ",
+            "وَٱنْحَرْ",
+            "ﰂ"
+          ],
+          "translation": "We have given you"
+        },
+        {
+          "question_id": 3,
+          "question": "إِنَّآ أَعْطَيْنَٰكَ _____",
+          "answer": "ٱلْكَوْثَرَ",
+          "options": [
+            "ٱلْكَوْثَرَ",
+            "لِرَبِّكَ",
+            "وَٱنْحَرْ",
+            "شَانِئَكَ"
+          ],
+          "translation": "Al-Kauthar"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "108:2",
+      "questions": [
+        {
+          "question_id": 4,
+          "question": "_____ لِرَبِّكَ وَٱنْحَرْ",
+          "answer": "فَصَلِّ",
+          "options": [
+            "ﰀ",
+            "فَصَلِّ",
+            "لِرَبِّكَ",
+            "إِنَّ"
+          ],
+          "translation": "So pray"
+        },
+        {
+          "question_id": 5,
+          "question": "فَصَلِّ _____ وَٱنْحَرْ",
+          "answer": "لِرَبِّكَ",
+          "options": [
+            "ٱلْأَبْتَرُ",
+            "ٱلْكَوْثَرَ",
+            "ﰁ",
+            "لِرَبِّكَ"
+          ],
+          "translation": "to your Lord"
+        },
+        {
+          "question_id": 6,
+          "question": "فَصَلِّ لِرَبِّكَ _____",
+          "answer": "وَٱنْحَرْ",
+          "options": [
+            "فَصَلِّ",
+            "أَعْطَيْنَٰكَ",
+            "وَٱنْحَرْ",
+            "ٱلْأَبْتَرُ"
+          ],
+          "translation": "and sacrifice"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "108:3",
+      "questions": [
+        {
+          "question_id": 7,
+          "question": "_____ شَانِئَكَ هُوَ ٱلْأَبْتَرُ",
+          "answer": "إِنَّ",
+          "options": [
+            "لِرَبِّكَ",
+            "إِنَّ",
+            "ﰁ",
+            "إِنَّآ"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 8,
+          "question": "إِنَّ _____ هُوَ ٱلْأَبْتَرُ",
+          "answer": "شَانِئَكَ",
+          "options": [
+            "ٱلْكَوْثَرَ",
+            "ٱلْأَبْتَرُ",
+            "ﰀ",
+            "شَانِئَكَ"
+          ],
+          "translation": "your enemy "
+        },
+        {
+          "question_id": 9,
+          "question": "إِنَّ شَانِئَكَ _____ ٱلْأَبْتَرُ",
+          "answer": "هُوَ",
+          "options": [
+            "شَانِئَكَ",
+            "هُوَ",
+            "لِرَبِّكَ",
+            "أَعْطَيْنَٰكَ"
+          ],
+          "translation": "he (is)"
+        },
+        {
+          "question_id": 10,
+          "question": "إِنَّ شَانِئَكَ هُوَ _____",
+          "answer": "ٱلْأَبْتَرُ",
+          "options": [
+            "ﰀ",
+            "ٱلْأَبْتَرُ",
+            "أَعْطَيْنَٰكَ",
+            "لِرَبِّكَ"
+          ],
+          "translation": "the one cut off"
+        }
+      ]
+    }
+  ]
+}

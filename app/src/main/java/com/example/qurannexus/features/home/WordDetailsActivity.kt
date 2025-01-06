@@ -1,5 +1,6 @@
 package com.example.qurannexus.features.home
 
+import android.content.Context
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -9,18 +10,34 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.qurannexus.R
+import com.example.qurannexus.features.words.JuzPieChartManager
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.charts.RadarChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.utils.MPPointF
 import java.io.IOException
 
 class WordDetailsActivity : AppCompatActivity() {
-    private lateinit var radarChart: RadarChart
-
+    private lateinit var barChart: BarChart
+    private lateinit var pieChart: PieChart
+    private lateinit var chartManager: JuzPieChartManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_details)
@@ -76,59 +93,145 @@ class WordDetailsActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to play audio", Toast.LENGTH_SHORT).show()
             }
         }
-        radarChart = findViewById(R.id.radarChart)
-        setupRadialChart()
+        pieChart = findViewById(R.id.pieChart)
+        barChart = findViewById(R.id.barChart)
+
+        setupBarChart()
+        setupPieChart()
+
     }
 
-    private fun setupRadialChart(){
-        val entries = ArrayList<RadarEntry>()
-        entries.add(RadarEntry(70f)) // Value for first category
-        entries.add(RadarEntry(50f)) // Value for second category
-        entries.add(RadarEntry(90f)) // Value for third category
-        entries.add(RadarEntry(60f)) // Value for fourth category
-        entries.add(RadarEntry(80f)) // Value for fifth category
+    private fun setupBarChart() {
+        val entries = ArrayList<BarEntry>()
 
+        // Generate temporary data for all 30 Juz
+        val occurrences = (1..30).map { (10..100).random() }
+        for (i in occurrences.indices) {
+            entries.add(BarEntry((i + 1).toFloat(), occurrences[i].toFloat()))
+        }
 
-        // Create the dataset
-        val dataSet = RadarDataSet(entries, "Performance")
+        val dataSet = BarDataSet(entries, "")
         dataSet.color = Color.BLUE
-        dataSet.fillColor = Color.BLUE
-        dataSet.setDrawFilled(true)
-        dataSet.fillAlpha = 180
-        dataSet.lineWidth = 2f
+        dataSet.valueTextSize = 8f // Hide value texts
+        dataSet.valueTextColor = Color.TRANSPARENT
+
+        val data = BarData(dataSet)
+        data.barWidth = 0.8f
+
+        barChart.data = data
+        barChart.description.isEnabled = false
+        barChart.setFitBars(true)
+        barChart.animateY(1400)
+
+        // Customize x-axis
+        val xAxis = barChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.setDrawGridLines(false)
+        xAxis.textSize = 10f
+        xAxis.granularity = 1f
+        xAxis.valueFormatter = IndexAxisValueFormatter(
+            (1..30).map { it.toString() } + listOf("Juz") // Add "Juz" at the end
+        )
+        xAxis.labelRotationAngle = 0f // Keep labels horizontal
+
+        // Customize y-axis
+        barChart.axisLeft.axisMinimum = 0f
+        barChart.axisLeft.axisMaximum = 100f // Example range
+        barChart.axisLeft.labelCount = 5
+        barChart.axisRight.isEnabled = false // Hide right axis
+        barChart.axisLeft.setDrawGridLines(false)
+
+        // Add a MarkerView for long click
+        val marker = CustomMarkerView(this, R.layout.marker_view, occurrences)
+        barChart.marker = marker
+
+        barChart.invalidate()
+
+        // Update TextViews
+        val tvTotalOccurrences: TextView = findViewById(R.id.tvTotalOccurrences)
+        val tvMostLeastOccurrences: TextView = findViewById(R.id.tvMostLeastOccurrences)
+
+        val total = occurrences.sum()
+        val mostIndex = occurrences.indexOf(occurrences.maxOrNull() ?: 0)
+        val leastIndex = occurrences.indexOf(occurrences.minOrNull() ?: 0)
+
+        tvTotalOccurrences.text = "Total Occurrences: $total"
+        tvMostLeastOccurrences.text =
+            "Most: Juz ${mostIndex + 1} (${occurrences[mostIndex]}), " +
+                    "Least: Juz ${leastIndex + 1} (${occurrences[leastIndex]})"
+    }
 
 
-        // Prepare the RadarData object
-        val data = RadarData(dataSet)
-        data.setValueTextSize(8f)
-        data.setDrawValues(true)
+    private fun setupPieChart() {
+        val entries = ArrayList<PieEntry>()
+
+        // Generate temporary data for all 30 Juz
+        val occurrences = (1..30).map { (10..100).random() }
+        for (i in occurrences.indices) {
+            entries.add(PieEntry(occurrences[i].toFloat(), (i + 1).toString())) // Use index as label
+        }
+
+        val dataSet = PieDataSet(entries, "")
+        dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
+        dataSet.sliceSpace = 2f
+        dataSet.valueTextSize = 0f // Hide values on pie sections
+
+        val data = PieData(dataSet)
+        pieChart.data = data
+        pieChart.description.isEnabled = false
+        pieChart.isRotationEnabled = true
+        pieChart.setHoleColor(Color.WHITE)
+        pieChart.setEntryLabelTextSize(10f) // Keep only numbers (1-30)
+        pieChart.setDrawEntryLabels(true)
+
+        // Add MarkerView for long click
+        val markerPie = CustomMarkerViewPie(this, R.layout.marker_view, occurrences)
+        pieChart.marker = markerPie
+
+        pieChart.invalidate()
+    }
 
 
-        // Customize the chart
-        radarChart.setData(data)
-        radarChart.getDescription().setEnabled(false)
+}
+class CustomMarkerView(
+    context: Context,
+    layoutResource: Int,
+    private val occurrences: List<Int>
+) : MarkerView(context, layoutResource) {
+    private val tvContent: TextView = findViewById(R.id.tvContent)
 
+    override fun refreshContent(e: Entry?, highlight: Highlight?) {
+        if (e is BarEntry) {
+            val index = e.x.toInt() - 1 // Adjust for 0-based indexing
+            tvContent.text = "Juz ${index + 1}: ${occurrences[index]} Occurrences"
+        }
+        super.refreshContent(e, highlight)
+    }
 
-        // Customize X-Axis (categories)
-        val xAxis: XAxis = radarChart.getXAxis()
-        xAxis.textSize = 9f
-        val labels = arrayOf("Category 1", "Category 2", "Category 3", "Category 4", "Category 5")
-        xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-
-
-        // Customize Y-Axis
-        val yAxis: YAxis = radarChart.getYAxis()
-        yAxis.setLabelCount(5, true)
-        yAxis.axisMinimum = 0f
-        yAxis.axisMaximum = 100f
-
-
-        // Optional: Animate the chart
-        radarChart.animateXY(1400, 1400)
-
-
-        // Refresh the chart
-        radarChart.invalidate()
+    override fun getOffset(): MPPointF {
+        return MPPointF((-width / 2).toFloat(), (-height).toFloat())
     }
 }
+
+class CustomMarkerViewPie(
+    context: Context,
+    layoutResource: Int,
+    private val occurrences: List<Int>
+) : MarkerView(context, layoutResource) {
+    private val tvContent: TextView = findViewById(R.id.tvContent)
+
+    override fun refreshContent(e: Entry?, highlight: Highlight?) {
+        if (e is PieEntry) {
+            val index = e.label.toInt() - 1 // Convert label back to index
+            tvContent.text = "Juz ${index + 1}: ${occurrences[index]} Occurrences"
+        }
+        super.refreshContent(e, highlight)
+    }
+
+    override fun getOffset(): MPPointF {
+        return MPPointF((-width / 2).toFloat(), (-height).toFloat())
+    }
+}
+
+
 

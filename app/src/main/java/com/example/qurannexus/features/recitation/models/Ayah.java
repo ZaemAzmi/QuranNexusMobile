@@ -25,6 +25,7 @@ public class Ayah {
     private List<Word> Words;
     @SerializedName("Translations")
     private List<Translation> Translations;
+    private boolean isBookmarked;
 
     public Ayah(String id,
                 String surahId,
@@ -35,7 +36,8 @@ public class Ayah {
                 String bismillah,
                 String arabicText,
                 List<Word> words,
-                List<Translation> translations) {
+                List<Translation> translations,
+                boolean isBookmarked) {
         Id = id;
         SurahId = surahId;
         AyahIndex = ayahIndex;
@@ -46,6 +48,7 @@ public class Ayah {
         ArabicText = arabicText;
         Words = words;
         Translations = translations;
+        this.isBookmarked = isBookmarked;
     }
 
     public String getId() {
@@ -126,5 +129,12 @@ public class Ayah {
 
     public void setTranslations(List<Translation> translations) {
         Translations = translations;
+    }
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
     }
 }

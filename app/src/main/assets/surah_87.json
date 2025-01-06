@@ -1,0 +1,983 @@
+{
+  "surah_id": "87",
+  "ayahs": [
+    {
+      "ayah_index": "1",
+      "ayah_key": "87:1",
+      "questions": [
+        {
+          "question_id": 1,
+          "question": "_____ ٱسْمَ رَبِّكَ ٱلْأَعْلَى",
+          "answer": "سَبِّحِ",
+          "options": [
+            "سَبِّحِ",
+            "فَصَلَّىٰ",
+            "فَذَكِّرْ",
+            "يَخْشَىٰ"
+          ],
+          "translation": "Glorify"
+        },
+        {
+          "question_id": 2,
+          "question": "سَبِّحِ _____ رَبِّكَ ٱلْأَعْلَى",
+          "answer": "ٱسْمَ",
+          "options": [
+            "وَٱلْءَاخِرَةُ",
+            "وَأَبْقَىٰٓ",
+            "ٱسْمَ",
+            "قَدْ"
+          ],
+          "translation": "(the) name"
+        },
+        {
+          "question_id": 3,
+          "question": "سَبِّحِ ٱسْمَ _____ ٱلْأَعْلَى",
+          "answer": "رَبِّكَ",
+          "options": [
+            "ﰁ",
+            "ﰏ",
+            "رَبِّكَ",
+            "مَن"
+          ],
+          "translation": "(of) your Lord"
+        },
+        {
+          "question_id": 4,
+          "question": "سَبِّحِ ٱسْمَ رَبِّكَ _____",
+          "answer": "ٱلْأَعْلَى",
+          "options": [
+            "ٱلْأَعْلَى",
+            "وَأَبْقَىٰٓ",
+            "ﰑ",
+            "ٱلْجَهْرَ"
+          ],
+          "translation": "the Most High"
+        }
+      ]
+    },
+    {
+      "ayah_index": "2",
+      "ayah_key": "87:2",
+      "questions": [
+        {
+          "question_id": 5,
+          "question": "_____ خَلَقَ فَسَوَّىٰ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "ٱلْأَعْلَى",
+            "ٱلَّذِى",
+            "أَحْوَىٰ",
+            "بَلْ"
+          ],
+          "translation": "The One Who"
+        },
+        {
+          "question_id": 6,
+          "question": "ٱلَّذِى _____ فَسَوَّىٰ",
+          "answer": "خَلَقَ",
+          "options": [
+            "خَلَقَ",
+            "تَنسَىٰٓ",
+            "فَهَدَىٰ",
+            "ﰃ"
+          ],
+          "translation": "created"
+        },
+        {
+          "question_id": 7,
+          "question": "ٱلَّذِى خَلَقَ _____",
+          "answer": "فَسَوَّىٰ",
+          "options": [
+            "فَسَوَّىٰ",
+            "مَا",
+            "شَآءَ",
+            "ﰐ"
+          ],
+          "translation": "then proportioned"
+        }
+      ]
+    },
+    {
+      "ayah_index": "3",
+      "ayah_key": "87:3",
+      "questions": [
+        {
+          "question_id": 8,
+          "question": "_____ قَدَّرَ فَهَدَىٰ",
+          "answer": "وَٱلَّذِى",
+          "options": [
+            "فَذَكِّرْ",
+            "وَٱلَّذِى",
+            "مَا",
+            "ٱلْأَشْقَى"
+          ],
+          "translation": "And the One Who"
+        },
+        {
+          "question_id": 9,
+          "question": "وَٱلَّذِى _____ فَهَدَىٰ",
+          "answer": "قَدَّرَ",
+          "options": [
+            "فَسَوَّىٰ",
+            "إِنَّ",
+            "قَدَّرَ",
+            "إِنَّهُۥ"
+          ],
+          "translation": "measured"
+        },
+        {
+          "question_id": 10,
+          "question": "وَٱلَّذِى قَدَّرَ _____",
+          "answer": "فَهَدَىٰ",
+          "options": [
+            "لِلْيُسْرَىٰ",
+            "سَبِّحِ",
+            "فَهَدَىٰ",
+            "ٱسْمَ"
+          ],
+          "translation": "then guided"
+        }
+      ]
+    },
+    {
+      "ayah_index": "4",
+      "ayah_key": "87:4",
+      "questions": [
+        {
+          "question_id": 11,
+          "question": "_____ أَخْرَجَ ٱلْمَرْعَىٰ",
+          "answer": "وَٱلَّذِىٓ",
+          "options": [
+            "ﰆ",
+            "شَآءَ",
+            "وَٱلَّذِىٓ",
+            "مَا"
+          ],
+          "translation": "And the One Who"
+        },
+        {
+          "question_id": 12,
+          "question": "وَٱلَّذِىٓ _____ ٱلْمَرْعَىٰ",
+          "answer": "أَخْرَجَ",
+          "options": [
+            "ﰉ",
+            "إِنَّ",
+            "أَخْرَجَ",
+            "وَلَا"
+          ],
+          "translation": "brings forth"
+        },
+        {
+          "question_id": 13,
+          "question": "وَٱلَّذِىٓ أَخْرَجَ _____",
+          "answer": "ٱلْمَرْعَىٰ",
+          "options": [
+            "هَٰذَا",
+            "إِلَّا",
+            "ٱلْمَرْعَىٰ",
+            "ٱلْأَعْلَى"
+          ],
+          "translation": "the pasture"
+        }
+      ]
+    },
+    {
+      "ayah_index": "5",
+      "ayah_key": "87:5",
+      "questions": [
+        {
+          "question_id": 14,
+          "question": "_____ غُثَآءً أَحْوَىٰ",
+          "answer": "فَجَعَلَهُۥ",
+          "options": [
+            "ﰐ",
+            "سَيَذَّكَّرُ",
+            "قَدَّرَ",
+            "فَجَعَلَهُۥ"
+          ],
+          "translation": "And then makes it"
+        },
+        {
+          "question_id": 15,
+          "question": "فَجَعَلَهُۥ _____ أَحْوَىٰ",
+          "answer": "غُثَآءً",
+          "options": [
+            "ﰂ",
+            "ٱلنَّارَ",
+            "غُثَآءً",
+            "إِن"
+          ],
+          "translation": "stubble"
+        },
+        {
+          "question_id": 16,
+          "question": "فَجَعَلَهُۥ غُثَآءً _____",
+          "answer": "أَحْوَىٰ",
+          "options": [
+            "إِنَّهُۥ",
+            "أَحْوَىٰ",
+            "يَحْيَىٰ",
+            "ﰃ"
+          ],
+          "translation": "dark"
+        }
+      ]
+    },
+    {
+      "ayah_index": "6",
+      "ayah_key": "87:6",
+      "questions": [
+        {
+          "question_id": 17,
+          "question": "_____ فَلَا تَنسَىٰٓ",
+          "answer": "سَنُقْرِئُكَ",
+          "options": [
+            "ﰒ",
+            "ٱلدُّنْيَا",
+            "سَنُقْرِئُكَ",
+            "فَلَا"
+          ],
+          "translation": "We will make you recite"
+        },
+        {
+          "question_id": 18,
+          "question": "سَنُقْرِئُكَ _____ تَنسَىٰٓ",
+          "answer": "فَلَا",
+          "options": [
+            "شَآءَ",
+            "فَلَا",
+            "ﰑ",
+            "أَخْرَجَ"
+          ],
+          "translation": "so not"
+        },
+        {
+          "question_id": 19,
+          "question": "سَنُقْرِئُكَ فَلَا _____",
+          "answer": "تَنسَىٰٓ",
+          "options": [
+            "ٱلْمَرْعَىٰ",
+            "تَنسَىٰٓ",
+            "ٱلْأُولَىٰ",
+            "ﰀ"
+          ],
+          "translation": "you will forget"
+        }
+      ]
+    },
+    {
+      "ayah_index": "7",
+      "ayah_key": "87:7",
+      "questions": [
+        {
+          "question_id": 20,
+          "question": "_____ مَا شَآءَ ٱللَّهُ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ وَمَا يَخْفَىٰ",
+          "answer": "إِلَّا",
+          "options": [
+            "ﰇ",
+            "فَذَكِّرْ",
+            "إِلَّا",
+            "تُؤْثِرُونَ"
+          ],
+          "translation": "Except"
+        },
+        {
+          "question_id": 21,
+          "question": "إِلَّا _____ شَآءَ ٱللَّهُ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ وَمَا يَخْفَىٰ",
+          "answer": "مَا",
+          "options": [
+            "مَا",
+            "ﰇ",
+            "ٱلَّذِى",
+            "سَبِّحِ"
+          ],
+          "translation": "what"
+        },
+        {
+          "question_id": 22,
+          "question": "إِلَّا مَا _____ ٱللَّهُ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ وَمَا يَخْفَىٰ",
+          "answer": "شَآءَ",
+          "options": [
+            "شَآءَ",
+            "يَصْلَى",
+            "فَسَوَّىٰ",
+            "مَن"
+          ],
+          "translation": "wills"
+        },
+        {
+          "question_id": 23,
+          "question": "إِلَّا مَا شَآءَ _____ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ وَمَا يَخْفَىٰ",
+          "answer": "ٱللَّهُ",
+          "options": [
+            "ٱللَّهُ",
+            "ٱسْمَ",
+            "ﰐ",
+            "تَزَكَّىٰ"
+          ],
+          "translation": "Allah"
+        },
+        {
+          "question_id": 24,
+          "question": "إِلَّا مَا شَآءَ ٱللَّهُ _____ يَعْلَمُ ٱلْجَهْرَ وَمَا يَخْفَىٰ",
+          "answer": "إِنَّهُۥ",
+          "options": [
+            "مَا",
+            "إِنَّهُۥ",
+            "وَأَبْقَىٰٓ",
+            "إِن"
+          ],
+          "translation": "Indeed, He"
+        },
+        {
+          "question_id": 25,
+          "question": "إِلَّا مَا شَآءَ ٱللَّهُ إِنَّهُۥ _____ ٱلْجَهْرَ وَمَا يَخْفَىٰ",
+          "answer": "يَعْلَمُ",
+          "options": [
+            "قَدَّرَ",
+            "إِنَّ",
+            "خَلَقَ",
+            "يَعْلَمُ"
+          ],
+          "translation": "knows"
+        },
+        {
+          "question_id": 26,
+          "question": "إِلَّا مَا شَآءَ ٱللَّهُ إِنَّهُۥ يَعْلَمُ _____ وَمَا يَخْفَىٰ",
+          "answer": "ٱلْجَهْرَ",
+          "options": [
+            "فِيهَا",
+            "يَحْيَىٰ",
+            "ثُمَّ",
+            "ٱلْجَهْرَ"
+          ],
+          "translation": "the manifest"
+        },
+        {
+          "question_id": 27,
+          "question": "إِلَّا مَا شَآءَ ٱللَّهُ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ _____ يَخْفَىٰ",
+          "answer": "وَمَا",
+          "options": [
+            "أَحْوَىٰ",
+            "وَٱلْءَاخِرَةُ",
+            "وَمَا",
+            "يَخْفَىٰ"
+          ],
+          "translation": "and what"
+        },
+        {
+          "question_id": 28,
+          "question": "إِلَّا مَا شَآءَ ٱللَّهُ إِنَّهُۥ يَعْلَمُ ٱلْجَهْرَ وَمَا _____",
+          "answer": "يَخْفَىٰ",
+          "options": [
+            "خَلَقَ",
+            "فَلَا",
+            "يَخْفَىٰ",
+            "إِلَّا"
+          ],
+          "translation": "is hidden"
+        }
+      ]
+    },
+    {
+      "ayah_index": "8",
+      "ayah_key": "87:8",
+      "questions": [
+        {
+          "question_id": 29,
+          "question": "_____ لِلْيُسْرَىٰ",
+          "answer": "وَنُيَسِّرُكَ",
+          "options": [
+            "تُؤْثِرُونَ",
+            "وَنُيَسِّرُكَ",
+            "يَصْلَى",
+            "لِلْيُسْرَىٰ"
+          ],
+          "translation": "And We will ease you"
+        },
+        {
+          "question_id": 30,
+          "question": "وَنُيَسِّرُكَ _____",
+          "answer": "لِلْيُسْرَىٰ",
+          "options": [
+            "ﰍ",
+            "ﰅ",
+            "لِلْيُسْرَىٰ",
+            "ﰑ"
+          ],
+          "translation": "to the ease"
+        }
+      ]
+    },
+    {
+      "ayah_index": "9",
+      "ayah_key": "87:9",
+      "questions": [
+        {
+          "question_id": 31,
+          "question": "_____ إِن نَّفَعَتِ ٱلذِّكْرَىٰ",
+          "answer": "فَذَكِّرْ",
+          "options": [
+            "ﰇ",
+            "فَذَكِّرْ",
+            "فَسَوَّىٰ",
+            "ﰋ"
+          ],
+          "translation": "So remind"
+        },
+        {
+          "question_id": 32,
+          "question": "فَذَكِّرْ _____ نَّفَعَتِ ٱلذِّكْرَىٰ",
+          "answer": "إِن",
+          "options": [
+            "تُؤْثِرُونَ",
+            "ثُمَّ",
+            "إِن",
+            "ﰂ"
+          ],
+          "translation": "if"
+        },
+        {
+          "question_id": 33,
+          "question": "فَذَكِّرْ إِن _____ ٱلذِّكْرَىٰ",
+          "answer": "نَّفَعَتِ",
+          "options": [
+            "نَّفَعَتِ",
+            "ﰍ",
+            "فَلَا",
+            "إِلَّا"
+          ],
+          "translation": "benefits"
+        },
+        {
+          "question_id": 34,
+          "question": "فَذَكِّرْ إِن نَّفَعَتِ _____",
+          "answer": "ٱلذِّكْرَىٰ",
+          "options": [
+            "يَمُوتُ",
+            "ٱلذِّكْرَىٰ",
+            "هَٰذَا",
+            "ٱلصُّحُفِ"
+          ],
+          "translation": "the reminder"
+        }
+      ]
+    },
+    {
+      "ayah_index": "10",
+      "ayah_key": "87:10",
+      "questions": [
+        {
+          "question_id": 35,
+          "question": "_____ مَن يَخْشَىٰ",
+          "answer": "سَيَذَّكَّرُ",
+          "options": [
+            "سَيَذَّكَّرُ",
+            "لَفِى",
+            "هَٰذَا",
+            "ٱلنَّارَ"
+          ],
+          "translation": "He will pay heed "
+        },
+        {
+          "question_id": 36,
+          "question": "سَيَذَّكَّرُ _____ يَخْشَىٰ",
+          "answer": "مَن",
+          "options": [
+            "رَبِّكَ",
+            "ثُمَّ",
+            "مَن",
+            "إِن"
+          ],
+          "translation": "(one) who"
+        },
+        {
+          "question_id": 37,
+          "question": "سَيَذَّكَّرُ مَن _____",
+          "answer": "يَخْشَىٰ",
+          "options": [
+            "قَدْ",
+            "لِلْيُسْرَىٰ",
+            "يَخْشَىٰ",
+            "إِن"
+          ],
+          "translation": "fears (Allah)"
+        }
+      ]
+    },
+    {
+      "ayah_index": "11",
+      "ayah_key": "87:11",
+      "questions": [
+        {
+          "question_id": 38,
+          "question": "_____ ٱلْأَشْقَى",
+          "answer": "وَيَتَجَنَّبُهَا",
+          "options": [
+            "أَحْوَىٰ",
+            "لَفِى",
+            "ﰏ",
+            "وَيَتَجَنَّبُهَا"
+          ],
+          "translation": "And will avoid it"
+        },
+        {
+          "question_id": 39,
+          "question": "وَيَتَجَنَّبُهَا _____",
+          "answer": "ٱلْأَشْقَى",
+          "options": [
+            "ﰍ",
+            "رَبِّهِۦ",
+            "ٱلذِّكْرَىٰ",
+            "ٱلْأَشْقَى"
+          ],
+          "translation": "the wretched one"
+        }
+      ]
+    },
+    {
+      "ayah_index": "12",
+      "ayah_key": "87:12",
+      "questions": [
+        {
+          "question_id": 40,
+          "question": "_____ يَصْلَى ٱلنَّارَ ٱلْكُبْرَىٰ",
+          "answer": "ٱلَّذِى",
+          "options": [
+            "ٱللَّهُ",
+            "ﰉ",
+            "ٱلَّذِى",
+            "ﰏ"
+          ],
+          "translation": "The one who"
+        },
+        {
+          "question_id": 41,
+          "question": "ٱلَّذِى _____ ٱلنَّارَ ٱلْكُبْرَىٰ",
+          "answer": "يَصْلَى",
+          "options": [
+            "ٱلْمَرْعَىٰ",
+            "يَصْلَى",
+            "ﰅ",
+            "يَخْفَىٰ"
+          ],
+          "translation": "will burn"
+        },
+        {
+          "question_id": 42,
+          "question": "ٱلَّذِى يَصْلَى _____ ٱلْكُبْرَىٰ",
+          "answer": "ٱلنَّارَ",
+          "options": [
+            "ٱلصُّحُفِ",
+            "ﰉ",
+            "ٱلْأَشْقَى",
+            "ٱلنَّارَ"
+          ],
+          "translation": "(in) the Fire"
+        },
+        {
+          "question_id": 43,
+          "question": "ٱلَّذِى يَصْلَى ٱلنَّارَ _____",
+          "answer": "ٱلْكُبْرَىٰ",
+          "options": [
+            "ٱلْكُبْرَىٰ",
+            "لَا",
+            "يَعْلَمُ",
+            "سَبِّحِ"
+          ],
+          "translation": "[the] great"
+        }
+      ]
+    },
+    {
+      "ayah_index": "13",
+      "ayah_key": "87:13",
+      "questions": [
+        {
+          "question_id": 44,
+          "question": "_____ لَا يَمُوتُ فِيهَا وَلَا يَحْيَىٰ",
+          "answer": "ثُمَّ",
+          "options": [
+            "لِلْيُسْرَىٰ",
+            "ثُمَّ",
+            "فَذَكِّرْ",
+            "سَيَذَّكَّرُ"
+          ],
+          "translation": "Then"
+        },
+        {
+          "question_id": 45,
+          "question": "ثُمَّ _____ يَمُوتُ فِيهَا وَلَا يَحْيَىٰ",
+          "answer": "لَا",
+          "options": [
+            "ٱلَّذِى",
+            "ٱلْجَهْرَ",
+            "سَبِّحِ",
+            "لَا"
+          ],
+          "translation": "not"
+        },
+        {
+          "question_id": 46,
+          "question": "ثُمَّ لَا _____ فِيهَا وَلَا يَحْيَىٰ",
+          "answer": "يَمُوتُ",
+          "options": [
+            "يَخْشَىٰ",
+            "يَمُوتُ",
+            "هَٰذَا",
+            "ﰃ"
+          ],
+          "translation": "he will die"
+        },
+        {
+          "question_id": 47,
+          "question": "ثُمَّ لَا يَمُوتُ _____ وَلَا يَحْيَىٰ",
+          "answer": "فِيهَا",
+          "options": [
+            "أَحْوَىٰ",
+            "ٱلْجَهْرَ",
+            "فِيهَا",
+            "فَصَلَّىٰ"
+          ],
+          "translation": "therein"
+        },
+        {
+          "question_id": 48,
+          "question": "ثُمَّ لَا يَمُوتُ فِيهَا _____ يَحْيَىٰ",
+          "answer": "وَلَا",
+          "options": [
+            "وَلَا",
+            "ٱلْمَرْعَىٰ",
+            "ٱلَّذِى",
+            "وَٱلَّذِى"
+          ],
+          "translation": "and not"
+        },
+        {
+          "question_id": 49,
+          "question": "ثُمَّ لَا يَمُوتُ فِيهَا وَلَا _____",
+          "answer": "يَحْيَىٰ",
+          "options": [
+            "تُؤْثِرُونَ",
+            "فَذَكِّرْ",
+            "يَحْيَىٰ",
+            "ﰈ"
+          ],
+          "translation": "will live"
+        }
+      ]
+    },
+    {
+      "ayah_index": "14",
+      "ayah_key": "87:14",
+      "questions": [
+        {
+          "question_id": 50,
+          "question": "_____ أَفْلَحَ مَن تَزَكَّىٰ",
+          "answer": "قَدْ",
+          "options": [
+            "قَدْ",
+            "ٱلْكُبْرَىٰ",
+            "لِلْيُسْرَىٰ",
+            "وَيَتَجَنَّبُهَا"
+          ],
+          "translation": "Certainly"
+        },
+        {
+          "question_id": 51,
+          "question": "قَدْ _____ مَن تَزَكَّىٰ",
+          "answer": "أَفْلَحَ",
+          "options": [
+            "وَذَكَرَ",
+            "أَفْلَحَ",
+            "لَا",
+            "وَيَتَجَنَّبُهَا"
+          ],
+          "translation": "has succeeded"
+        },
+        {
+          "question_id": 52,
+          "question": "قَدْ أَفْلَحَ _____ تَزَكَّىٰ",
+          "answer": "مَن",
+          "options": [
+            "ٱلْأُولَىٰ",
+            "سَيَذَّكَّرُ",
+            "فَهَدَىٰ",
+            "مَن"
+          ],
+          "translation": "(one) who"
+        },
+        {
+          "question_id": 53,
+          "question": "قَدْ أَفْلَحَ مَن _____",
+          "answer": "تَزَكَّىٰ",
+          "options": [
+            "تَنسَىٰٓ",
+            "وَيَتَجَنَّبُهَا",
+            "تَزَكَّىٰ",
+            "ﰉ"
+          ],
+          "translation": "purifies (himself)"
+        }
+      ]
+    },
+    {
+      "ayah_index": "15",
+      "ayah_key": "87:15",
+      "questions": [
+        {
+          "question_id": 54,
+          "question": "_____ ٱسْمَ رَبِّهِۦ فَصَلَّىٰ",
+          "answer": "وَذَكَرَ",
+          "options": [
+            "إِنَّ",
+            "صُحُفِ",
+            "وَذَكَرَ",
+            "سَنُقْرِئُكَ"
+          ],
+          "translation": "And remembers"
+        },
+        {
+          "question_id": 55,
+          "question": "وَذَكَرَ _____ رَبِّهِۦ فَصَلَّىٰ",
+          "answer": "ٱسْمَ",
+          "options": [
+            "ٱلْكُبْرَىٰ",
+            "وَيَتَجَنَّبُهَا",
+            "يَحْيَىٰ",
+            "ٱسْمَ"
+          ],
+          "translation": "(the) name"
+        },
+        {
+          "question_id": 56,
+          "question": "وَذَكَرَ ٱسْمَ _____ فَصَلَّىٰ",
+          "answer": "رَبِّهِۦ",
+          "options": [
+            "غُثَآءً",
+            "ٱلصُّحُفِ",
+            "رَبِّهِۦ",
+            "مَن"
+          ],
+          "translation": "(of) his Lord"
+        },
+        {
+          "question_id": 57,
+          "question": "وَذَكَرَ ٱسْمَ رَبِّهِۦ _____",
+          "answer": "فَصَلَّىٰ",
+          "options": [
+            "فَصَلَّىٰ",
+            "مَن",
+            "إِنَّ",
+            "سَيَذَّكَّرُ"
+          ],
+          "translation": "and prays"
+        }
+      ]
+    },
+    {
+      "ayah_index": "16",
+      "ayah_key": "87:16",
+      "questions": [
+        {
+          "question_id": 58,
+          "question": "_____ تُؤْثِرُونَ ٱلْحَيَوٰةَ ٱلدُّنْيَا",
+          "answer": "بَلْ",
+          "options": [
+            "وَمُوسَىٰ",
+            "لَا",
+            "إِنَّهُۥ",
+            "بَلْ"
+          ],
+          "translation": "Nay"
+        },
+        {
+          "question_id": 59,
+          "question": "بَلْ _____ ٱلْحَيَوٰةَ ٱلدُّنْيَا",
+          "answer": "تُؤْثِرُونَ",
+          "options": [
+            "فِيهَا",
+            "تُؤْثِرُونَ",
+            "إِلَّا",
+            "وَلَا"
+          ],
+          "translation": "You prefer"
+        },
+        {
+          "question_id": 60,
+          "question": "بَلْ تُؤْثِرُونَ _____ ٱلدُّنْيَا",
+          "answer": "ٱلْحَيَوٰةَ",
+          "options": [
+            "وَٱلَّذِى",
+            "ٱلْأَعْلَى",
+            "ﰉ",
+            "ٱلْحَيَوٰةَ"
+          ],
+          "translation": "the life"
+        },
+        {
+          "question_id": 61,
+          "question": "بَلْ تُؤْثِرُونَ ٱلْحَيَوٰةَ _____",
+          "answer": "ٱلدُّنْيَا",
+          "options": [
+            "شَآءَ",
+            "ٱلدُّنْيَا",
+            "وَيَتَجَنَّبُهَا",
+            "ﰇ"
+          ],
+          "translation": "(of) the world"
+        }
+      ]
+    },
+    {
+      "ayah_index": "17",
+      "ayah_key": "87:17",
+      "questions": [
+        {
+          "question_id": 62,
+          "question": "_____ خَيْرٌ وَأَبْقَىٰٓ",
+          "answer": "وَٱلْءَاخِرَةُ",
+          "options": [
+            "ﰉ",
+            "فَسَوَّىٰ",
+            "وَٱلْءَاخِرَةُ",
+            "لِلْيُسْرَىٰ"
+          ],
+          "translation": "While the Hereafter"
+        },
+        {
+          "question_id": 63,
+          "question": "وَٱلْءَاخِرَةُ _____ وَأَبْقَىٰٓ",
+          "answer": "خَيْرٌ",
+          "options": [
+            "وَمُوسَىٰ",
+            "ﰎ",
+            "ٱلَّذِى",
+            "خَيْرٌ"
+          ],
+          "translation": "(is) better"
+        },
+        {
+          "question_id": 64,
+          "question": "وَٱلْءَاخِرَةُ خَيْرٌ _____",
+          "answer": "وَأَبْقَىٰٓ",
+          "options": [
+            "ﰀ",
+            "لَا",
+            "ﰉ",
+            "وَأَبْقَىٰٓ"
+          ],
+          "translation": "and everlasting"
+        }
+      ]
+    },
+    {
+      "ayah_index": "18",
+      "ayah_key": "87:18",
+      "questions": [
+        {
+          "question_id": 65,
+          "question": "_____ هَٰذَا لَفِى ٱلصُّحُفِ ٱلْأُولَىٰ",
+          "answer": "إِنَّ",
+          "options": [
+            "ﰅ",
+            "ﰒ",
+            "ﰑ",
+            "إِنَّ"
+          ],
+          "translation": "Indeed"
+        },
+        {
+          "question_id": 66,
+          "question": "إِنَّ _____ لَفِى ٱلصُّحُفِ ٱلْأُولَىٰ",
+          "answer": "هَٰذَا",
+          "options": [
+            "وَٱلَّذِى",
+            "هَٰذَا",
+            "وَذَكَرَ",
+            "ﰃ"
+          ],
+          "translation": "this"
+        },
+        {
+          "question_id": 67,
+          "question": "إِنَّ هَٰذَا _____ ٱلصُّحُفِ ٱلْأُولَىٰ",
+          "answer": "لَفِى",
+          "options": [
+            "وَأَبْقَىٰٓ",
+            "أَحْوَىٰ",
+            "لَفِى",
+            "فَهَدَىٰ"
+          ],
+          "translation": "surely (is) in"
+        },
+        {
+          "question_id": 68,
+          "question": "إِنَّ هَٰذَا لَفِى _____ ٱلْأُولَىٰ",
+          "answer": "ٱلصُّحُفِ",
+          "options": [
+            "مَن",
+            "ٱلصُّحُفِ",
+            "يَعْلَمُ",
+            "يَخْفَىٰ"
+          ],
+          "translation": "the Scriptures"
+        },
+        {
+          "question_id": 69,
+          "question": "إِنَّ هَٰذَا لَفِى ٱلصُّحُفِ _____",
+          "answer": "ٱلْأُولَىٰ",
+          "options": [
+            "وَٱلَّذِى",
+            "ٱلْأُولَىٰ",
+            "بَلْ",
+            "صُحُفِ"
+          ],
+          "translation": "[the] former"
+        }
+      ]
+    },
+    {
+      "ayah_index": "19",
+      "ayah_key": "87:19",
+      "questions": [
+        {
+          "question_id": 70,
+          "question": "_____ إِبْرَٰهِيمَ وَمُوسَىٰ",
+          "answer": "صُحُفِ",
+          "options": [
+            "ٱلْحَيَوٰةَ",
+            "صُحُفِ",
+            "ﰎ",
+            "ﰍ"
+          ],
+          "translation": "(The) Scriptures"
+        },
+        {
+          "question_id": 71,
+          "question": "صُحُفِ _____ وَمُوسَىٰ",
+          "answer": "إِبْرَٰهِيمَ",
+          "options": [
+            "لِلْيُسْرَىٰ",
+            "ﰃ",
+            "ٱلْأُولَىٰ",
+            "إِبْرَٰهِيمَ"
+          ],
+          "translation": "(of) Ibrahim"
+        },
+        {
+          "question_id": 72,
+          "question": "صُحُفِ إِبْرَٰهِيمَ _____",
+          "answer": "وَمُوسَىٰ",
+          "options": [
+            "وَمُوسَىٰ",
+            "وَذَكَرَ",
+            "أَفْلَحَ",
+            "أَخْرَجَ"
+          ],
+          "translation": "and Musa"
+        }
+      ]
+    }
+  ]
+}

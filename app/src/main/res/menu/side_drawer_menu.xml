@@ -35,4 +35,8 @@
         android:icon="@drawable/ic_home"
         android:title="Test page" />
 
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_home"
+        android:title="Logout" />
 </menu>

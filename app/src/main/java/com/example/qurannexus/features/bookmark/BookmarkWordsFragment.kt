@@ -48,7 +48,7 @@ class BookmarkWordsFragment : Fragment() {
         val mockData = mapOf(
             "أ" to listOf(
                 WordDetails(id = "1", text = "أَسْتَغْفِرُ", translation = "I seek forgiveness"),
-                WordDetails(id = "2", text = "أَحْمَدُ", translation = "Ahmad")
+                WordDetails(id = "2", text = "ٱلْحَمْدُ", translation = "Ahmad")
             ),
             "ب" to listOf(
                 WordDetails(id = "3", text = "بِسْمِ", translation = "In the name"),
@@ -56,7 +56,6 @@ class BookmarkWordsFragment : Fragment() {
             )
         )
 
-        // Prepare accordion sections
         val sections = mockData.map { (title, words) ->
             AccordionSection(title, words)
         }

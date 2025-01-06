@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
+import com.example.qurannexus.features.bookmark.models.Bookmark;
+import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
 import com.example.qurannexus.features.recitation.models.Ayah;
 import com.example.qurannexus.features.recitation.models.AyahRecitationModel;
 import com.example.qurannexus.features.recitation.models.SurahModel;
@@ -29,21 +31,23 @@ import retrofit2.Response;
 
 public class ByAyatRecitationFragment extends Fragment {
     private static final String ARG_SURAH_NUMBER = "surah_number";
-    private SurahModel surahModel;
     private int surahNumber;
     private ArrayList<Ayah> ayatModels = new ArrayList<>();
-    SurahRecitationByAyatAdapter byAyatAdapter;
-    RecyclerView byAyatRecyclerView;
+    private SurahRecitationByAyatAdapter byAyatAdapter;
+    private RecyclerView byAyatRecyclerView;
     private QuranApi quranApi;
+    private ArrayList<String> bookmarkedAyahKeys = new ArrayList<>();
+
     public ByAyatRecitationFragment() {}
+
     public static ByAyatRecitationFragment newInstance(int surahNumber) {
         ByAyatRecitationFragment fragment = new ByAyatRecitationFragment();
         Bundle args = new Bundle();
-//        Log.e("inside byayat fragment","surahNumber;"+surahNumber);
         args.putInt(ARG_SURAH_NUMBER, surahNumber);
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,7 @@ public class ByAyatRecitationFragment extends Fragment {
         }
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_by_ayat_recitation, container, false);
@@ -63,9 +68,34 @@ public class ByAyatRecitationFragment extends Fragment {
         byAyatRecyclerView.setAdapter(byAyatAdapter);
 
         if (surahNumber != 0) {
+            fetchBookmarksAndVerses(surahNumber);
             fetchVersesByAyat(surahNumber);
         }
         return view;
+    }
+
+    private void fetchBookmarksAndVerses(int surahIndex) {
+        // Fetch bookmarks first
+//        quranApi.getBookmarks("verse").enqueue(new Callback<BookmarksResponse>() {
+//            @Override
+//            public void onResponse(Call<BookmarksResponse> call, Response<BookmarksResponse> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    List<Bookmark> bookmarks = response.body().getBookmarks();
+//                    for (Bookmark bookmark : bookmarks) {
+//                        bookmarkedAyahKeys.add(bookmark.getAyahKey());
+//                    }
+//                    // Now fetch verses
+//                    fetchVersesByAyat(surahIndex);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<BookmarksResponse> call, Throwable t) {
+//                Log.e("ByAyatRecitationFragment", "Failed to fetch bookmarks", t);
+//                // Still fetch verses even if bookmarks fail
+//                fetchVersesByAyat(surahIndex);
+//            }
+//        });
     }
 
     private void fetchVersesByAyat(int surahIndex) {
@@ -75,23 +105,11 @@ public class ByAyatRecitationFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Ayah> ayahs = response.body().getData();
                     ayatModels.clear();
-                    // Loop through each Ayah in the response and create AyatModel instances
+
                     for (Ayah ayah : ayahs) {
-                        // Create the AyatModel instance
-                        Ayah ayatModel = new Ayah(
-                                ayah.getId(),
-                                ayah.getSurahId(),
-                                ayah.getAyahIndex(),
-                                ayah.getAyahKey(),
-                                ayah.getPageId(),
-                                ayah.getJuzId(),
-                                ayah.getBismillah(),
-                                ayah.getArabicText(),
-                                ayah.getWords(),
-                                ayah.getTranslations()
-                        );
-                        // Add to the list
-                        ayatModels.add(ayatModel);
+                        // Mark as bookmarked if its AyahKey exists in bookmarkedAyahKeys
+                        ayah.setBookmarked(bookmarkedAyahKeys.contains(ayah.getAyahKey()));
+                        ayatModels.add(ayah);
                     }
 
                     // Notify the adapter of data changes
