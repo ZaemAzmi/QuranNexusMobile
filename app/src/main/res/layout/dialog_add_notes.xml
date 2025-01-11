@@ -16,14 +16,6 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
-    <EditText
-        android:id="@+id/etNoteTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Title"
-        android:background="@drawable/card_edit_text_dialog"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
 
     <EditText
         android:id="@+id/etNoteDescription"

@@ -1,5 +1,6 @@
 package com.example.qurannexus.features.recitation.models;
 
+import com.example.qurannexus.features.recitation.extensions.TextUtils;
 import com.google.gson.annotations.SerializedName;
 
 public class Word {
@@ -24,9 +25,9 @@ public class Word {
     @SerializedName("Translation")
     private String Translation;
 
-    public String getTranslation() {
-        return Translation;
-    }
+    @SerializedName("Transliteration")
+    private String Transliteration;
+
 
     public void setTranslation(String translation) {
         Translation = translation;
@@ -40,8 +41,6 @@ public class Word {
         Transliteration = transliteration;
     }
 
-    @SerializedName("Transliteration")
-    private String Transliteration;
     public String getId() {
         return Id;
     }
@@ -106,10 +105,21 @@ public class Word {
         LineNumber = lineNumber;
     }
 
+//    public String getText() {
+//        return Text;
+//    }
+
+//    public String getTranslation() {
+//        return Translation;
+//    }
+
     public String getText() {
-        return Text;
+        return TextUtils.cleanArabicText(Text);
     }
 
+    public String getTranslation() {
+        return TextUtils.cleanArabicText(Translation);
+    }
     public void setText(String text) {
         Text = text;
     }

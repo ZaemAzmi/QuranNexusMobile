@@ -1,5 +1,6 @@
 package com.example.qurannexus.features.bookmark
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,23 +11,28 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
+import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.network.ApiService
+import com.example.qurannexus.core.utils.QuranMetadata
 import com.example.qurannexus.features.bookmark.interfaces.BookmarkService
 import com.example.qurannexus.features.bookmark.models.BookmarkChapter
 import com.example.qurannexus.features.bookmark.models.BookmarkChaptersAdapter
+import com.example.qurannexus.features.bookmark.models.BookmarksResponse
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class BookmarkChaptersFragment : Fragment() {
 
-    private lateinit var chaptersList: List<BookmarkChapter>
     private lateinit var recyclerView: RecyclerView
     private lateinit var bookmarkChaptersAdapter: BookmarkChaptersAdapter
-
+    private lateinit var quranApi: QuranApi
+    private var authToken: String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_bookmark_chapter, container, false)
     }
 
@@ -39,34 +45,67 @@ class BookmarkChaptersFragment : Fragment() {
         bookmarkChaptersAdapter = BookmarkChaptersAdapter(emptyList())
         recyclerView.adapter = bookmarkChaptersAdapter
 
-        fetchBookmarks()
+        quranApi = ApiService.getQuranClient().create(QuranApi::class.java)
+
+        // Get token from SharedPreferences
+        authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            .getString("token", null)
+
+        if (authToken != null) {
+            fetchBookmarks()
+        } else {
+            Toast.makeText(context, "Please login to view bookmarks", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun fetchBookmarks() {
-        val retrofit = ApiService.getQuranClient()
-        val service = retrofit.create(BookmarkService::class.java)
-
-        lifecycleScope.launch {
-            try {
-                val response = service.getBookmarks()
+        quranApi.getBookmarks("Bearer $authToken").enqueue(object : Callback<BookmarksResponse> {
+            override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
+                if (!isAdded) return
                 if (response.isSuccessful && response.body() != null) {
-                    val bookmarks = response.body()!!.bookmarks
-                        .filter { it.name != null } // Filter chapters only
-                        .map { bookmark ->
-                            BookmarkChapter(
-                                bookmark._id.toInt(),
-                                bookmark.tname ?: "Unknown",
-                                bookmark.ename ?: "Unknown"
-                            )
+                    val bookmarksResponse = response.body()!!
+                    if (bookmarksResponse.status == "success") {
+                        val chapterIds = bookmarksResponse.bookmarks.chapters
+
+                        val bookmarkChapters = chapterIds.mapNotNull { chapterId ->
+                            try {
+                                val chapterNumber = chapterId.toInt()
+                                val surahDetails = QuranMetadata.getInstance().getSurahDetails(chapterNumber)
+
+                                surahDetails?.let {
+                                    BookmarkChapter(
+                                        chapterNumber = it.surahIndex,
+                                        chapterTitle = it.englishName,
+                                        chapterInfo = it.revelationPlace,
+                                        arabicTitle = it.arabicName,
+                                        verseCount = it.numberOfVerses,
+                                        translationName = it.translationName
+                                    )
+                                }
+                            } catch (e: NumberFormatException) {
+                                null
+                            }
                         }
-                    chaptersList = bookmarks
-                    bookmarkChaptersAdapter.updateData(chaptersList)
+
+                        if (bookmarkChapters.isEmpty()) {
+                            Toast.makeText(context, "No bookmarked chapters found", Toast.LENGTH_SHORT).show()
+                        }
+
+                        if (isAdded) {  // Check again before updating UI
+                            bookmarkChaptersAdapter.updateData(bookmarkChapters)
+                        }
+                    } else {
+                        Toast.makeText(context, "Failed to load bookmarks", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(context, "Failed to fetch bookmarks", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-        }
+
+            override fun onFailure(call: Call<BookmarksResponse>, t: Throwable) {
+                if (!isAdded) return
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

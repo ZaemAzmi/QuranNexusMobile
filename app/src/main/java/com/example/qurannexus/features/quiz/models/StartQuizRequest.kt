@@ -1,9 +1,11 @@
 package com.example.qurannexus.features.quiz.models
 
-data class StartQuizRequest(
-    val surah_id: String
-)
+import com.google.gson.annotations.SerializedName
 
+data class StartQuizRequest(
+    @SerializedName("surah_id")
+    val surahId: String
+)
 data class SubmitAnswerRequest(
     val surah_id: String,
     val ayah_key: String,

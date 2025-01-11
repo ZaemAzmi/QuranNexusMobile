@@ -30,28 +30,15 @@ class AuthService {
     }
 
     private val authApi: AuthApi
-    private val gson = GsonBuilder()
-        .setLenient()
-        .create()
+//    private val gson = GsonBuilder()
+//        .setLenient()
+//        .create()
 
     init {
-        val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-
-        val client = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
-
-        authApi = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8000/")
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-            .create(AuthApi::class.java)
+        // Reuse ApiService to create Retrofit instance for authentication
+//        val retrofit = ApiService.createRetrofit("http://192.168.1.10:8000/")
+        val retrofit = ApiService.createRetrofit("http://10.0.2.2:8000")
+        authApi = retrofit.create(AuthApi::class.java)
     }
 
     fun register(context: Context, request: RegisterRequest, callback: AuthCallback) {

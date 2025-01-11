@@ -15,7 +15,8 @@ object QuizModule {
 
     @Provides
     fun provideQuizApi(): QuizApi {
-        return ApiService.getQuranClient().create(QuizApi::class.java)
+        val client = ApiService.getQuranClient()
+        return client.create(QuizApi::class.java)
     }
 
     @Provides

@@ -1,7 +1,8 @@
 package com.example.qurannexus.features.bookmark.models
 
 data class BookmarkVerse(
-    val chapterNumber: Int,
-    val chapterTitle: String,
-    val chapterInfo: String
+    val ayah_id: String,
+    val chapter_id: String,
+    val notes: String?,
+    val created_at: String
 )

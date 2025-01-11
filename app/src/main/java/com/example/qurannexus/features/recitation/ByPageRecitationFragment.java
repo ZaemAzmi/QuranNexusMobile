@@ -26,12 +26,14 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
-import com.example.qurannexus.features.recitation.models.Ayah;
+import com.example.qurannexus.features.recitation.models.PageAyah;
 import com.example.qurannexus.features.recitation.models.PageVerseResponse;
 import com.example.qurannexus.features.recitation.models.PageAdapter;
 import com.example.qurannexus.core.utils.UtilityService;
 import com.example.qurannexus.core.network.ApiService;
+import com.example.qurannexus.features.recitation.models.Word;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,7 +50,7 @@ public class ByPageRecitationFragment extends Fragment {
     private ViewPager2 viewPager;
     private PageAdapter pageAdapter;
     private TextView pageNumberTextView;
-
+    private PageAdapter.PageContentCallback contentCallback;
     public static ByPageRecitationFragment newInstance(int pageNumber) {
         ByPageRecitationFragment fragment = new ByPageRecitationFragment();
         Bundle args = new Bundle();
@@ -105,19 +107,20 @@ public class ByPageRecitationFragment extends Fragment {
     private void updatePageNumber() {
         pageNumberTextView.setText("Page: " + currentPageNumber);
     }
-
-    // This method will be called by the QuranPageAdapter to fetch the page content
+    public void setPageContentCallback(PageAdapter.PageContentCallback callback) {
+        this.contentCallback = callback;
+    }
     public void fetchPageVerses(int pageNumber, PageAdapter.PageContentCallback callback) {
         Log.e("page num", String.valueOf(pageNumber));
-        quranApi.getPageVerses(pageNumber, true).enqueue(new Callback<PageVerseResponse>() {
+        quranApi.getPageVerses(pageNumber, true,true).enqueue(new Callback<PageVerseResponse>() {
             @Override
             public void onResponse(Call<PageVerseResponse> call, Response<PageVerseResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Ayah> verseList = response.body().getData().getAyahs();
+                    List<PageAyah> verseList = response.body().getData().getAyahs();
                     SpannableStringBuilder pageContent = new SpannableStringBuilder();
                     int previousSurahId = -1;
 
-                    for (Ayah ayah : verseList) {
+                    for (PageAyah ayah : verseList) {
                         int currentSurahId = Integer.parseInt(ayah.getSurahId());
                         int currentAyahNumber = Integer.parseInt(ayah.getAyahIndex());
 
@@ -127,14 +130,41 @@ public class ByPageRecitationFragment extends Fragment {
                             pageContent.append("\n");
                         }
 
-                        // Append the ayah text
-                        String arabicText = ayah.getArabicText() != null ? ayah.getArabicText() : "";
+                        // Insert Bismillah if present
+                        if (ayah.getBismillah() != null && !ayah.getBismillah().isEmpty()) {
+                            pageContent.append(ayah.getBismillah()).append("\n");
+                        }
+
+                        // Append text from each word
+                        StringBuilder ayahText = new StringBuilder();
+                        if (ayah.getWords() != null) {
+                            List<Word> words = ayah.getWords();
+                            // Only iterate until the second-to-last word to skip the waqaf
+                            for (int i = 0; i < words.size() - 1; i++) {
+                                Word word = words.get(i);
+                                if (word.getText() != null) {
+                                    ayahText.append(word.getText()).append(" ");
+                                }
+                            }
+                        }
+
+                        // Append the constructed ayah text and number
                         String arabicNumber = utilityService.convertToArabicNumber(currentAyahNumber);
-                        pageContent.append(arabicText).append(arabicNumber).append("");
+                        pageContent.append(ayahText.toString().trim())
+                                .append(" ")
+                                .append(arabicNumber)
+                                .append(" ");
 
                         previousSurahId = currentSurahId;
                     }
+                    if (getParentFragment() instanceof RecitationPageFragment) {
+                        ((RecitationPageFragment) getParentFragment()).onPageChanged(pageNumber);
+                    }
 
+                    // Call the content callback if set
+                    if (contentCallback != null) {
+                        contentCallback.onPageContentFetched(pageContent);
+                    }
                     callback.onPageContentFetched(pageContent);
                 } else {
                     callback.onPageContentFetchFailed(SpannableStringBuilder.valueOf("Failed to fetch page content"));

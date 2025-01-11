@@ -21,6 +21,8 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "AWS_ACCESS_KEY", "\"${project.properties['AWS_ACCESS_KEY']}\""
+        buildConfigField "String", "AWS_SECRET_KEY", "\"${project.properties['AWS_SECRET_KEY']}\""
     }
 
     buildTypes {
@@ -60,7 +62,12 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.8.4"
     implementation "androidx.navigation:navigation-ui-ktx:2.8.4"
 
+    //graph dependencies
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //audio dependencies
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.72.0'
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.72.0'
 
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'

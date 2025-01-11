@@ -22,7 +22,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.qurannexus.R;
+import com.example.qurannexus.features.auth.AuthActivity;
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest;
+import com.example.qurannexus.features.bookmark.models.BookmarkResponse;
+import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse;
 import com.example.qurannexus.features.home.WordDetailsActivity;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.features.home.models.WordDetails;
@@ -32,6 +35,7 @@ import com.example.qurannexus.core.utils.SurahDetails;
 import com.example.qurannexus.core.utils.QuranMetadata;
 import com.google.android.flexbox.FlexboxLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +46,14 @@ import retrofit2.Response;
 public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahRecitationByAyatAdapter.MyViewHolder> {
     private QuranApi quranApi;
     Context context;
-    ArrayList<Ayah> ayahList;
-    public SurahRecitationByAyatAdapter(Context context, ArrayList<Ayah> ayahList){
+    ArrayList<ChapterAyah> ayahList;
+    private String authToken;
+    public SurahRecitationByAyatAdapter(Context context, ArrayList<ChapterAyah> ayahList){
         this.context = context;
         this.ayahList = ayahList;
+        this.quranApi = ApiService.getQuranClient().create(QuranApi.class);
+        this.authToken = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                .getString("token", null);
     }
     @NonNull
     @Override
@@ -57,7 +65,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
 
     @Override
     public void onBindViewHolder(@NonNull SurahRecitationByAyatAdapter.MyViewHolder holder, int position) {
-        Ayah ayah = ayahList.get(position);
+        ChapterAyah ayah = ayahList.get(position);
 
         // Clear any existing views in the FlexboxLayout
         holder.arabicWordsContainer.removeAllViews();
@@ -66,67 +74,120 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
 
         holder.englishTranslation.setText(ayah.getTranslations().get(1).getText());
         holder.ayatNumber.setText(ayah.getAyahKey());
-        holder.ayatCardAddNotesIcon.setOnClickListener(view -> showAddNotesDialog());
-
+        holder.ayatCardAddNotesIcon.setOnClickListener(view -> {
+            if (authToken == null) {
+                showLoginDialog();
+            } else {
+                showAddNotesDialog(holder, ayah);
+            }
+        });
         holder.ayatCardBookmarkIcon.setImageResource(
                 ayah.isBookmarked() ? R.drawable.ic_bookmarked : R.drawable.ic_bookmark
         );
 
-        // Bookmark click listener
         holder.ayatCardBookmarkIcon.setOnClickListener(v -> {
-            if (ayah.isBookmarked()) {
-                // Remove bookmark
-                removeBookmark(holder, ayah, position);
+            if (authToken == null) {
+                showLoginDialog();
             } else {
-                // Add bookmark
-                addBookmark(holder, ayah, position);
+                if (ayah.isBookmarked()) {
+                    removeBookmark(holder, ayah, position);
+                } else {
+                    // When clicking bookmark directly, add without notes
+                    addBookmarkWithNotes(holder, ayah, "");
+                }
             }
         });
     }
 
-    private void addBookmark(MyViewHolder holder, Ayah ayah, int position) {
-//        BookmarkRequest request = new BookmarkRequest(ayah.getSurahId(), ayah.getAyahIndex());
-//        quranApi.addBookmark(request).enqueue(new Callback<GenericResponse>() {
-//            @Override
-//            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    ayah.setBookmarked(true);
-//                    holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmarked);
-//                    Toast.makeText(context, "Bookmark added!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(context, "Failed to add bookmark", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<GenericResponse> call, Throwable t) {
-//                Toast.makeText(context, "API Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
+    private void addBookmarkWithNotes(MyViewHolder holder, ChapterAyah ayah, String notes) {
+        BookmarkRequest request = new BookmarkRequest(
+                "verse",
+                ayah.getId(),
+                ayah.getSurahId(),
+                notes  // This can be empty string
+        );
+
+        Call<BookmarkResponse> call = quranApi.addBookmark("Bearer " + authToken, request);
+        call.enqueue(new Callback<BookmarkResponse>() {
+            @Override
+            public void onResponse(Call<BookmarkResponse> call, Response<BookmarkResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    BookmarkResponse bookmarkResponse = response.body();
+                    if ("success".equals(bookmarkResponse.getStatus())) {
+                        ayah.setBookmarked(true);
+                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmarked);
+                        String message = notes.isEmpty() ?
+                                "Bookmark added successfully" :
+                                "Bookmark and notes added successfully";
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Failed to add bookmark", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    try {
+                        String errorBody = response.errorBody() != null ?
+                                response.errorBody().string() : "Unknown error";
+                        Toast.makeText(context, "Failed to add bookmark: " + errorBody,
+                                Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(context, "Failed to add bookmark", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BookmarkResponse> call, Throwable t) {
+                Toast.makeText(context, "Error adding bookmark: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void removeBookmark(MyViewHolder holder, Ayah ayah, int position) {
-//        int bookmarkId = ayah.getBookmarkId(); // Assuming each Ayah has a unique bookmark ID
-//        quranApi.removeBookmark(bookmarkId).enqueue(new Callback<GenericResponse>() {
-//            @Override
-//            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    ayah.setBookmarked(false);
-//                    holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark);
-//                    Toast.makeText(context, "Bookmark removed!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(context, "Failed to remove bookmark", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<GenericResponse> call, Throwable t) {
-//                Toast.makeText(context, "API Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-    }
 
-    private void setupWordClickListeners(MyViewHolder holder, Ayah ayah) {
+    private void removeBookmark(MyViewHolder holder, ChapterAyah ayah, int position) {
+        if (authToken == null) {
+            Toast.makeText(context, "Please login to remove bookmark", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Call<RemoveBookmarkResponse> call = quranApi.removeBookmark("Bearer " + authToken, "verse", ayah.getId());
+        call.enqueue(new Callback<RemoveBookmarkResponse>() {
+            @Override
+            public void onResponse(Call<RemoveBookmarkResponse> call,
+                                   Response<RemoveBookmarkResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    RemoveBookmarkResponse removeResponse = response.body();
+                    if ("success".equals(removeResponse.getStatus())) {
+                        // Update the ayah object
+                        ayah.setBookmarked(false);
+
+                        // Update the UI
+                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark);
+                        Toast.makeText(context, "Bookmark removed successfully",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Failed to remove bookmark",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    try {
+                        String errorBody = response.errorBody() != null ?
+                                response.errorBody().string() : "Unknown error";
+                        Toast.makeText(context, "Failed to remove bookmark: " + errorBody,
+                                Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(context, "Failed to remove bookmark", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RemoveBookmarkResponse> call, Throwable t) {
+                Toast.makeText(context, "Error removing bookmark: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void setupWordClickListeners(MyViewHolder holder, ChapterAyah ayah) {
         holder.arabicWordsContainer.removeAllViews();
 
         // Create a new list to avoid modifying the original
@@ -256,12 +317,11 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
 
         }
     }
-    private void showAddNotesDialog() {
+    private void showAddNotesDialog(MyViewHolder holder, ChapterAyah ayah) {
         // Inflate the custom layout for the dialog using the adapter's context
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_notes, null);
 
-        // Get references to EditTexts and Buttons
-        EditText etNoteTitle = dialogView.findViewById(R.id.etNoteTitle);
+        // Get references to EditTexts and Button
         EditText etNoteDescription = dialogView.findViewById(R.id.etNoteDescription);
         Button btnCancel = dialogView.findViewById(R.id.btnCancel);
         Button btnSave = dialogView.findViewById(R.id.btnSave);
@@ -277,26 +337,29 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
 
         // Set up the Save button
         btnSave.setOnClickListener(v -> {
-            String title = etNoteTitle.getText().toString().trim();
             String description = etNoteDescription.getText().toString().trim();
-
-            // Perform saving logic here
-            if (!title.isEmpty() && !description.isEmpty()) {
-                // Save the note (e.g., save to database or API call)
-                saveNote(title, description);
-                dialog.dismiss();
-            } else {
-                // Optionally, show a message if fields are empty
-                Toast.makeText(context, "Please fill in both fields", Toast.LENGTH_SHORT).show();
-            }
+            addBookmarkWithNotes(holder, ayah, description);
+            dialog.dismiss();
         });
 
-        // Show the dialog
         dialog.show();
     }
     private void saveNote(String title, String description) {
         // Implement save logic here
         // Example: Save to local database or remote server
         Toast.makeText(context, "Note saved!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showLoginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Login Required")
+                .setMessage("Please login to use bookmark feature")
+                .setPositiveButton("Login", (dialog, which) -> {
+                    // Navigate to login activity
+                    Intent intent = new Intent(context, AuthActivity.class);
+                    context.startActivity(intent);
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }

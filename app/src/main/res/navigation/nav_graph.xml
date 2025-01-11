@@ -18,16 +18,32 @@
         android:name="com.example.qurannexus.features.quiz.QuizChapterOptionsFragment"
         android:label="Chapters">
         <action
-            android:id="@+id/action_quizChapterOptionsFragment_to_quizQuestionFragment"
+            android:id="@+id/action_quizChapterOptionsFragment_to_quizQuestionRangeFragment"
+            app:destination="@id/quizQuestionRangeFragment" />
+    </fragment>
+
+    <!-- Add the new QuizQuestionRangeFragment -->
+    <fragment
+        android:id="@+id/quizQuestionRangeFragment"
+        android:name="com.example.qurannexus.features.quiz.QuizQuestionRangeFragment">
+        <argument
+            android:name="chapterNumber"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_quizQuestionRangeFragment_to_quizQuestionFragment"
             app:destination="@id/quizQuestionFragment" />
     </fragment>
 
+    <!-- Update QuizQuestionFragment to include batch number -->
     <fragment
         android:id="@+id/quizQuestionFragment"
         android:name="com.example.qurannexus.features.quiz.QuizQuestionFragment"
         android:label="Questions">
         <argument
             android:name="chapterNumber"
+            app:argType="integer" />
+        <argument
+            android:name="batchNumber"
             app:argType="integer" />
         <action
             android:id="@+id/action_quizQuestionFragment_to_quizResultFragment"
@@ -36,6 +52,23 @@
 
     <fragment
         android:id="@+id/quizResultFragment"
-        android:name="com.example.qurannexus.features.quiz.QuizResultFragment"
-        android:label="Results" />
+        android:name="com.example.qurannexus.features.quiz.QuizResultFragment">
+        <argument
+            android:name="chapterNumber"
+            app:argType="integer" />
+        <argument
+            android:name="currentBatch"
+            app:argType="integer" />
+        <argument
+            android:name="totalBatches"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_quizResultFragment_to_quizQuestionFragment"
+            app:destination="@id/quizQuestionFragment" />
+        <action
+            android:id="@+id/action_quizResultFragment_to_quizChapterOptionsFragment"
+            app:destination="@id/quizChapterOptionsFragment"
+            app:popUpTo="@id/quizChapterOptionsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

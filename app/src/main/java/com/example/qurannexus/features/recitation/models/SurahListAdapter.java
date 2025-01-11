@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.qurannexus.R;
 import com.example.qurannexus.features.recitation.RecitationPageFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SurahListAdapter extends RecyclerView.Adapter<SurahListAdapter.MyViewHolder> {
@@ -55,6 +56,12 @@ public class SurahListAdapter extends RecyclerView.Adapter<SurahListAdapter.MyVi
     public int getItemCount() {
         return this.surahModels.size();
     }
+
+    public void updateData(List<SurahModel> newData) {
+        surahModels = newData;
+        notifyDataSetChanged();
+    }
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView surahName, surahMeaning, arabicSurahName, ayatNumber, surahNumber;

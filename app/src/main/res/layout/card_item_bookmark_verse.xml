@@ -6,8 +6,11 @@
     android:padding="16dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/bookmarkVerseCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="15dp"
@@ -15,7 +18,7 @@
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="110dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/bookmarkVerseTitle"
@@ -26,7 +29,7 @@
                 android:text="Verse of "
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +41,7 @@
                 android:layout_marginTop="5dp"
                 android:text="الفاتحه (Al - Fatihah)"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkVerseTitle" />
 
@@ -51,7 +54,7 @@
                 android:maxEms="35"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non facilisis nisl. Phasellus ligula leo, egestas et ullamcorper at, hendrerit vitae nibh"
                 android:textColor="@color/white"
-                android:textSize="11sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkVerseChapter" />
 
@@ -75,7 +78,8 @@
                 android:layout_marginEnd="16dp"
                 android:text="Chapter 1, Verse 6"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="14sp"
+                android:paddingBottom="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkVerseDescription"
                 />
@@ -86,3 +90,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

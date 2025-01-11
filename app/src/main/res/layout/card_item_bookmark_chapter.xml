@@ -5,10 +5,12 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
-
     <androidx.cardview.widget.CardView
+        android:id="@+id/bookmarkChapterCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="15dp"
@@ -16,7 +18,7 @@
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp">
+            android:layout_height="wrap_content">
 
             <FrameLayout
                 android:id="@+id/bookmarkChapterNumberFrameLayout"
@@ -54,7 +56,7 @@
                 android:text="Al-Fatihah"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,7 +68,7 @@
                 android:layout_marginTop="3dp"
                 android:text="The Opener"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="13sp"
                 app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkChapterTitle" />
 
@@ -77,9 +79,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="3dp"
+                android:paddingBottom="3dp"
                 android:text="Meccan"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="13sp"
                 app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkChapterEnglishTitle" />
 
@@ -103,7 +106,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="الفاتحه"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toStartOf="@id/bookmarkChapterMenu"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -115,15 +118,9 @@
                 android:layout_marginEnd="16dp"
                 android:text="7 Verses"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toStartOf="@id/bookmarkChapterMenu"
                 app:layout_constraintTop_toBottomOf="@+id/bookmarkChapterArabicTitle" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.cardview.widget.CardView>
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

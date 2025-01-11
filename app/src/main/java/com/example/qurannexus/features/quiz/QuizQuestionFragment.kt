@@ -1,7 +1,7 @@
 package com.example.qurannexus.features.quiz
 
-import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.activity.OnBackPressedCallback
 import com.example.qurannexus.databinding.FragmentQuizQuestionBinding
 import com.example.qurannexus.features.quiz.models.QuestionData
 import com.example.qurannexus.features.quiz.models.QuizState
@@ -18,16 +19,21 @@ import com.example.qurannexus.features.quiz.models.QuizViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import androidx.navigation.fragment.navArgs
+import com.example.qurannexus.features.quiz.models.QuizViewModel.Companion.QUESTIONS_PER_BATCH
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
 
 @AndroidEntryPoint
 class QuizQuestionFragment : Fragment() {
-
     private var _binding: FragmentQuizQuestionBinding? = null
     private val binding get() = _binding!!
     private val viewModel: QuizViewModel by viewModels()
+    private val args: QuizQuestionFragmentArgs by navArgs()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentQuizQuestionBinding.inflate(inflater, container, false)
@@ -37,112 +43,165 @@ class QuizQuestionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val args = QuizQuestionFragmentArgs.fromBundle(requireArguments())
-        viewModel.loadQuestions(args.chapterNumber)
-        setupNavigationButton()
-        observeQuizState()
-        observeCurrentQuestion()
-        setupSubmitButton()
+        // Load surah first
+        viewModel.loadSurah(args.chapterNumber)
+        setupUI()
+        observeViewModel()
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    showExitConfirmationDialog()
+                }
+            }
+        )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.quizState.collect { state ->
+                if (state is QuizState.SurahLoaded) {
+                    viewModel.startBatch(args.batchNumber)
+                }
+            }
+        }
     }
 
-    private fun observeQuizState() {
+    private fun setupUI() {
+        binding.submitButton.setOnClickListener {
+            handleAnswerSubmission()
+        }
+
+        binding.showHintButton.setOnClickListener {
+            viewModel.currentQuestion.value?.let { question ->
+                binding.translationText.visibility = View.VISIBLE
+                binding.translationText.text = question.translation
+            }
+        }
+
+        binding.previousButton.setOnClickListener {
+            showExitConfirmationDialog()
+        }
+    }
+    private fun showExitConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Exit Quiz")
+            .setMessage("Are you sure you want to exit? You will lose all progress.")
+            .setPositiveButton("Exit") { _, _ ->
+                viewModel.clearCurrentBatch()
+                findNavController().popBackStack()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+    private fun observeViewModel() {
+        // Observe quiz state
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.quizState.collectLatest { state ->
+            viewModel.quizState.collect { state ->
                 when (state) {
-                    is QuizState.Initial -> {
-                        // Initial state, nothing to do
-                    }
-                    is QuizState.Started -> {
-                        Toast.makeText(context, "Quiz started!", Toast.LENGTH_SHORT).show()
+                    is QuizState.BatchStarted -> {
+                        showLoading(false)
                     }
                     is QuizState.AnswerSubmitted -> {
                         if (state.isCorrect) {
-                            showPopup("Correct Answer!", "Good job!")
-                            binding.submitButton.text = "Continue"
-                        } else {
-                            val currentQuestion = viewModel.currentQuestion.value
-                            showPopup("Wrong Answer!", "Hint: ${currentQuestion?.translation}")
+                            Toast.makeText(context, "Correct!", Toast.LENGTH_SHORT).show()
                         }
+                        binding.optionsGroup.clearCheck()
+                        binding.translationText.visibility = View.GONE
                     }
                     is QuizState.Finished -> {
                         navigateToResults()
                     }
                     is QuizState.Error -> {
+                        showLoading(false)
                         Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
                     }
+                    else -> {}
                 }
             }
         }
-    }
 
-    private fun observeCurrentQuestion() {
+        // Observe current batch
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.currentQuestion.collectLatest { questionData ->
-                if (questionData != null) {
-                    displayQuestion(questionData)
-                    resetUI()
+            viewModel.currentBatch.collect { batch ->
+                batch?.let {
+                    binding.progressText.text = "Question ${it.currentQuestionNumber} of ${it.questions.size}"
+                    updateQuestionDisplay(it.currentQuestion)
                 }
             }
         }
     }
+    private fun showLoading(show: Boolean) {
+        if (show) {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.submitButton.isEnabled = false
+        } else {
+            binding.progressBar.visibility = View.GONE
+            binding.submitButton.isEnabled = true
+        }
+    }
+    private fun updateQuestionDisplay(question: QuestionData?) {
+        question?.let {
+            binding.questionText.text = it.question
+            binding.optionsGroup.removeAllViews()
+            binding.translationText.visibility = View.GONE
+            binding.translationText.text = it.translation
 
-    private fun setupSubmitButton() {
-        binding.submitButton.setOnClickListener {
-            if (binding.submitButton.text == "Continue") {
-                viewModel.loadNextQuestion()
-                resetUI()
-            } else {
-                handleAnswerSubmission()
+            it.options.forEach { option ->
+                val radioButton = RadioButton(context).apply {
+                    text = option
+                    textSize = 18f
+                    setPadding(12, 12, 12, 12)
+                }
+                binding.optionsGroup.addView(radioButton)
             }
         }
     }
 
     private fun handleAnswerSubmission() {
         val selectedId = binding.optionsGroup.checkedRadioButtonId
-        if (selectedId != -1) {
-            val selectedOption = binding.root.findViewById<RadioButton>(selectedId).text.toString()
-            viewModel.submitAnswer(selectedOption)
+        if (selectedId != View.NO_ID) {
+            val radioButton = binding.root.findViewById<RadioButton>(selectedId)
+            if (radioButton != null) {
+                val selectedOption = radioButton.text.toString()
+                viewModel.submitAnswer(selectedOption)
+            } else {
+                Toast.makeText(context, "Please select an answer", Toast.LENGTH_SHORT).show()
+            }
         } else {
             Toast.makeText(context, "Please select an answer", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun displayQuestion(questionData: QuestionData) {
-        binding.questionText.text = questionData.question
-        binding.optionsGroup.removeAllViews()
+    private fun handleAnswerResponse(isCorrect: Boolean, hasNextQuestion: Boolean) {
+        if (isCorrect) {
+            Toast.makeText(context, "Correct!", Toast.LENGTH_SHORT).show()
+        } else {
+            binding.translationText.visibility = View.VISIBLE
+        }
 
-        questionData.options.forEach { option ->
-            val radioButton = RadioButton(context).apply {
-                text = option
-                textSize = 18f
-                setPadding(12, 12, 12, 12)
-            }
-            binding.optionsGroup.addView(radioButton)
+        if (!hasNextQuestion) {
+            navigateToResults()
         }
     }
 
-    private fun showPopup(title: String, message: String) {
-        AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            .show()
-    }
-
-    private fun resetUI() {
-        binding.submitButton.text = "Submit Answer"
-        binding.optionsGroup.clearCheck()
-    }
-
     private fun navigateToResults() {
-        val action = QuizQuestionFragmentDirections
-            .actionQuizQuestionFragmentToQuizResultFragment()
-        findNavController().navigate(action)
-    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.quizState.collectLatest { state ->
+                when (state) {
+                    is QuizState.Finished -> {
+                        // Calculate total batches based on total questions (10 questions per batch)
+                        val totalBatches = (state.totalQuestions + QUESTIONS_PER_BATCH - 1) / QUESTIONS_PER_BATCH
 
-    private fun setupNavigationButton() {
-        binding.previousButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+                        val action = QuizQuestionFragmentDirections
+                            .actionQuizQuestionFragmentToQuizResultFragment(
+                                args.chapterNumber,
+                                args.batchNumber,
+                                totalBatches
+                            )
+                        findNavController().navigate(action)
+                    }
+                    else -> {} // Handle other states if needed
+                }
+            }
         }
     }
 

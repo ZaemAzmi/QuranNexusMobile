@@ -1,10 +1,12 @@
 package com.example.qurannexus.features.recitation;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,19 +35,20 @@ public class SurahListFragment extends Fragment {
     SurahListAdapter surahListAdapter;
     SearchView searchView;
     int currentTab = 0;
-
     private QuranApi quranApi;
+    private View view;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_surah_list, container, false);
+        view = inflater.inflate(R.layout.fragment_surah_list, container, false);
 
         searchView = view.findViewById(R.id.searchSurahView);
 
         setupSearchView();
-//        setUpSurahListModels();
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
         fetchSurahs();
+
         return view;
     }
 
@@ -66,33 +69,38 @@ public class SurahListFragment extends Fragment {
     }
 
     private void filterSurahList(String query) {
-//        query = query.toLowerCase();
-//        filteredSurahModels.clear();
-//        ArrayList<SurahModel> currentList = new ArrayList<>();
-//
-//        if (currentTab == 0) {
-//            currentList = surahListResponse;
-//        } else if (currentTab == 2) {
-//            for (SurahModel surah : surahListResponse) {
-//                if (surah.isBookmarked()) {
-//                    currentList.add(surah);
-//                }
-//            }
-//        }
-//
-//        for (SurahModel surah : currentList) {
-//            if (surah.getName().toLowerCase().contains(query)) {
-//                filteredSurahModels.add(surah);
-//            }
-//        }
-//        updateUI(filteredSurahModels);
+        if (surahListResponse == null || surahListResponse.getData() == null) return;
+
+        query = query.toLowerCase();
+        filteredSurahModels.clear();
+
+        for (SurahModel surah : surahListResponse.getData()) {
+            if (surah.getName().toLowerCase().contains(query)) {
+                filteredSurahModels.add(surah);
+            }
+        }
+
+        updateUI(filteredSurahModels);
     }
 
     private void updateUI(ArrayList<SurahModel> filteredSurahs) {
-        RecyclerView surahRecyclerView = getView().findViewById(R.id.SurahRecyclerView);
-        surahListAdapter = new SurahListAdapter(requireActivity(), filteredSurahs, layoutType);
-        surahRecyclerView.setAdapter(surahListAdapter);
-        surahRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (!isAdded()) {
+            return;
+        }
+        RecyclerView surahRecyclerView = view.findViewById(R.id.SurahRecyclerView);
+        if (surahRecyclerView != null) {
+            Context context = getContext();
+            if(context!= null){
+                if (surahListAdapter == null) {
+                    surahListAdapter = new SurahListAdapter(requireActivity(), filteredSurahs, layoutType);
+                    surahRecyclerView.setAdapter(surahListAdapter);
+                    surahRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                } else {
+                    surahListAdapter.updateData(filteredSurahs);
+                    surahListAdapter.notifyDataSetChanged();
+                }
+            }
+        }
     }
 
     private void fetchSurahs() {
@@ -100,20 +108,15 @@ public class SurahListFragment extends Fragment {
         call.enqueue(new Callback<SurahListResponse>() {
             @Override
             public void onResponse(Call<SurahListResponse> call, Response<SurahListResponse> response) {
+                if (!isAdded()) {
+                    return;
+                }
                 if (response.isSuccessful() && response.body() != null) {
                     if (response.body().getData() != null) {
                         surahListResponse = response.body();
-                        // Check if adapter is already set
-                        if (surahListAdapter == null) {
-                            // Initialize the adapter for the first time
-                            RecyclerView surahRecyclerView = getView().findViewById(R.id.SurahRecyclerView);
-                            surahListAdapter = new SurahListAdapter(requireActivity(), surahListResponse.getData(), layoutType);
-                            surahRecyclerView.setAdapter(surahListAdapter);
-                            surahRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        } else {
-                            // Adapter exists, just update the data
-                            surahListAdapter.notifyDataSetChanged();
-                        }
+                        filteredSurahModels.clear();
+                        filteredSurahModels.addAll(surahListResponse.getData());
+                        updateUI(filteredSurahModels);
                     }
                 }
             }
@@ -121,8 +124,8 @@ public class SurahListFragment extends Fragment {
             @Override
             public void onFailure(Call<SurahListResponse> call, Throwable t) {
                 // Handle API call failure
+                Toast.makeText(getContext(), "Failed to fetch Surahs", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }

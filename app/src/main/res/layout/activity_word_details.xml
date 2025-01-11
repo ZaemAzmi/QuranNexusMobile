@@ -45,7 +45,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Word"
-                    android:textSize="24sp"
+                    android:textSize="42sp"
+                    android:textStyle="bold"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/textColorPrimary"
@@ -59,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:text="Translation"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/textColorSecondary"
+                    android:textColor="@color/black"
                     android:fontFamily="sans-serif" />
 
                 <!-- Transliteration -->
@@ -69,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:text="Transliteration"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/textColorSecondary"
+                    android:textColor="@color/black"
                     android:fontFamily="sans-serif" />
 
                 <!-- Surah Name -->
@@ -79,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:text="Surah Name"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/textColorSecondary"
+                    android:textColor="@color/black"
                     android:fontFamily="sans-serif" />
 
                 <!-- Ayah Key -->
@@ -89,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:text="Ayah Key"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/textColorSecondary"
+                    android:textColor="@color/black"
                     android:fontFamily="sans-serif" />
 
                 <!-- Surah Number -->
@@ -99,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:text="Surah Number"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/textColorSecondary"
+                    android:textColor="@color/black"
                     android:fontFamily="sans-serif" />
 
                 <!-- Line Number -->
@@ -109,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:text="Line Number"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/textColorSecondary"
+                    android:textColor="@color/black"
                     android:fontFamily="sans-serif" />
 
                 <!-- Word Number -->
@@ -119,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:text="Word Number"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/textColorSecondary"
+                    android:textColor="@color/black"
                     android:fontFamily="sans-serif" />
 
                 <!-- Page ID -->
@@ -129,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:text="Page ID"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/textColorSecondary"
+                    android:textColor="@color/black"
                     android:fontFamily="sans-serif" />
 
                 <!-- Play Audio Button -->
