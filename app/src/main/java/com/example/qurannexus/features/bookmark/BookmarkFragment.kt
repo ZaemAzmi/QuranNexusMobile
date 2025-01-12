@@ -31,7 +31,7 @@ class BookmarkFragment : Fragment() {
         val activity = requireActivity() as AppCompatActivity
         activity.supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.button_previous)
+            setHomeAsUpIndicator(R.drawable.ic_previous)
         }
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)

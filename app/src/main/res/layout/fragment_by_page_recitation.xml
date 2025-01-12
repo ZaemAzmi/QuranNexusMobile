@@ -22,4 +22,8 @@
         android:fontFamily="@font/uthmanic_scripts_hafs"
         android:padding="16dp"
         android:textSize="8sp" />
+
+    <include
+        android:id="@+id/audioPlayerLayout"
+        layout="@layout/layout_floating_audio_player" />
 </FrameLayout>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/expandedAudioPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:minWidth="280dp"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="6dp"
+        app:cardBackgroundColor="@color/white"
+        app:layout_behavior="com.example.qurannexus.features.recitation.audio.ui.AudioPlayerBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp">
+
+            <!-- Time display -->
+            <TextView
+                android:id="@+id/currentTimeText"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textColor="@color/black"
+                android:textSize="12sp"/>
+
+            <!-- SeekBar -->
+            <SeekBar
+                android:id="@+id/audioSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <!-- Duration -->
+            <TextView
+                android:id="@+id/durationText"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- Play/Pause Button -->
+            <ImageButton
+                android:id="@+id/playPauseButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_play_audio"/>
+
+            <!-- Speed Button -->
+            <ImageButton
+                android:id="@+id/speedMenuButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_speed_menu"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- FAB that will change between play and close -->
+    <com.example.qurannexus.features.recitation.audio.ui.DraggableFloatingActionButton
+        android:id="@+id/audioFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_margin="16dp"
+        android:contentDescription="Audio Player"
+        android:focusable="true"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_play_audio"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

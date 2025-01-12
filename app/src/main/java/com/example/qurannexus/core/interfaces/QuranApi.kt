@@ -5,6 +5,7 @@ import com.example.qurannexus.features.bookmark.models.BookmarkResponse
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse
 import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse
 import com.example.qurannexus.features.home.models.WordDetailsResponse
+import com.example.qurannexus.features.recitation.audio.models.AudioRecitationResponse
 import com.example.qurannexus.features.recitation.models.AyahRecitationModel
 import com.example.qurannexus.features.recitation.models.PageVerseResponse
 import com.example.qurannexus.features.recitation.models.SurahListResponse
@@ -52,4 +53,10 @@ interface QuranApi {
     fun getBookmarks(
         @Header("Authorization") token: String
     ): Call<BookmarksResponse>
+
+
+    @GET("api/v1/audio_recitations/{ayah_key}")
+    fun getAudioRecitation(@Path("ayah_key") ayahKey: String): Call<AudioRecitationResponse>
+
+
 }

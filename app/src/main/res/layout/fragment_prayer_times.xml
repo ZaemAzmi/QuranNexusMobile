@@ -111,14 +111,14 @@
          <ImageView
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:src="@drawable/button_previous"
+             android:src="@drawable/ic_previous"
              android:layout_margin="26dp"
              app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintTop_toTopOf="parent"/>
          <ImageView
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:src="@drawable/button_next"
+             android:src="@drawable/ic_next"
              android:layout_margin="26dp"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintTop_toTopOf="parent"

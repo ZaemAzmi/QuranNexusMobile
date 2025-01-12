@@ -13,4 +13,24 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:title="Audio Settings"
+        app:layout="@layout/custom_preference_category">
+
+        <ListPreference
+            app:key="selected_reciter"
+            app:title="Select Reciter"
+            app:summary="Choose your preferred Quran reciter"
+            app:entries="@array/reciter_names"
+            app:entryValues="@array/reciter_values"
+            app:defaultValue="1" />
+
+        <SwitchPreferenceCompat
+            app:key="audio_background_play"
+            app:title="Background Playback"
+            app:summary="Allow audio to continue playing when app is in background"
+            app:defaultValue="true" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

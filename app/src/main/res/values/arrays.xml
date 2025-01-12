@@ -10,6 +10,14 @@
         <item>reply_all</item>
     </string-array>
 
+    <string-array name="reciter_names">
+        <item>Misyari Alafasy</item>
+        <item>Abdul Baseet</item>
+    </string-array>
+    <string-array name="reciter_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
     <string-array name="surah_names">
         <item>Al-Fatihah</item>
         <item>Al-Baqarah</item>

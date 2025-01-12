@@ -91,11 +91,12 @@
                     app:srcCompat="@drawable/ic_bookmark" />
 
                 <ImageView
-                    android:id="@+id/ayatCardAudioRecitationIcon"
-                    android:layout_width="20dp"
+                    android:id="@+id/ayatCardPlayAudioIcon"
+                    android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="40dp"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_play_audio" />
 

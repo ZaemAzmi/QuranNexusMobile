@@ -33,7 +33,9 @@ import com.example.qurannexus.features.home.models.WordDetailsResponse;
 import com.example.qurannexus.core.network.ApiService;
 import com.example.qurannexus.core.utils.SurahDetails;
 import com.example.qurannexus.core.utils.QuranMetadata;
+import com.example.qurannexus.features.recitation.audio.AudioPlayerManager;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.card.MaterialCardView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,18 +44,21 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+@androidx.media3.common.util.UnstableApi
 public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahRecitationByAyatAdapter.MyViewHolder> {
     private QuranApi quranApi;
     Context context;
     ArrayList<ChapterAyah> ayahList;
     private String authToken;
+    private AudioPlayerManager audioPlayerManager;
+    private MaterialCardView expandedAudioPlayer;
     public SurahRecitationByAyatAdapter(Context context, ArrayList<ChapterAyah> ayahList){
         this.context = context;
         this.ayahList = ayahList;
         this.quranApi = ApiService.getQuranClient().create(QuranApi.class);
         this.authToken = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 .getString("token", null);
+        this.audioPlayerManager = new AudioPlayerManager(context, quranApi);
     }
     @NonNull
     @Override
@@ -96,6 +101,11 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
                     addBookmarkWithNotes(holder, ayah, "");
                 }
             }
+        });
+
+        holder.ayatCardPlayAudioIcon.setOnClickListener(v -> {
+            ChapterAyah chapterAyah = ayahList.get(position);
+            audioPlayerManager.playAyah(chapterAyah.getAyahKey());
         });
     }
 
@@ -304,7 +314,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         FlexboxLayout arabicWordsContainer;
         TextView englishTranslation, ayatNumber;
-        ImageView ayatCardBookmarkIcon, ayatCardAddNotesIcon;
+        ImageView ayatCardBookmarkIcon, ayatCardAddNotesIcon, ayatCardPlayAudioIcon;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -314,7 +324,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
             ayatNumber = itemView.findViewById(R.id.AyatNumberByAyatTV);
             ayatCardBookmarkIcon = itemView.findViewById((R.id.ayatCardBookmarkIcon));
             ayatCardAddNotesIcon = itemView.findViewById((R.id.ayatCardAddNotesIcon));
-
+            ayatCardPlayAudioIcon = itemView.findViewById(R.id.ayatCardPlayAudioIcon);
         }
     }
     private void showAddNotesDialog(MyViewHolder holder, ChapterAyah ayah) {

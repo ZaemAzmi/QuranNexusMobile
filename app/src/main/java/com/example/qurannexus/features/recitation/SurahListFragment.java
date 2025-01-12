@@ -37,7 +37,8 @@ public class SurahListFragment extends Fragment {
     int currentTab = 0;
     private QuranApi quranApi;
     private View view;
-
+    private View errorView;
+    private RecyclerView surahRecyclerView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class SurahListFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        RecyclerView surahRecyclerView = view.findViewById(R.id.SurahRecyclerView);
+        surahRecyclerView = view.findViewById(R.id.SurahRecyclerView);
         if (surahRecyclerView != null) {
             Context context = getContext();
             if(context!= null){
@@ -123,9 +124,48 @@ public class SurahListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<SurahListResponse> call, Throwable t) {
-                // Handle API call failure
-                Toast.makeText(getContext(), "Failed to fetch Surahs", Toast.LENGTH_SHORT).show();
+                // Check if fragment is still attached to activity
+                if (!isAdded()) {
+                    return;
+                }
+
+                // Get context safely
+                Context context = getContext();
+                if (context != null) {
+                    Toast.makeText(context, "Failed to fetch Surahs", Toast.LENGTH_SHORT).show();
+                }
+
+                // Optionally, update UI to show error state
+                showErrorState(t.getMessage());
             }
         });
+    }
+
+    private void showErrorState(String errorMessage) {
+        if (!isAdded()) {
+            return;
+        }
+
+        // Find your error view
+        errorView = view.findViewById(R.id.errorView); // Add this to your layout
+        if (errorView != null) {
+            errorView.setVisibility(View.VISIBLE);
+        }
+
+        // You might want to hide the RecyclerView
+        RecyclerView surahRecyclerView = view.findViewById(R.id.SurahRecyclerView);
+        if (surahRecyclerView != null) {
+            surahRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    public void retryFetch() {
+        if (errorView != null) {
+            errorView.setVisibility(View.GONE);
+        }
+        if (surahRecyclerView != null) {
+            surahRecyclerView.setVisibility(View.VISIBLE);
+        }
+        fetchSurahs();
     }
 }

@@ -8,16 +8,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.features.recitation.ByPageRecitationFragment;
 
+@UnstableApi
 public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewHolder> {
     private static final int TOTAL_PAGES = 604;
     private final ByPageRecitationFragment fragment;
     private final SparseArray<SpannableStringBuilder> pageContents = new SparseArray<>();
-
+    // Add new SparseArray to store page data
+    private final SparseArray<PageVerseResponse.PageData> pageDataCache = new SparseArray<>();
     public PageAdapter(ByPageRecitationFragment fragment) {
         this.fragment = fragment;
     }
@@ -36,11 +39,14 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
         if (content != null) {
             holder.setContent(content);
         } else {
-            holder.setContent(SpannableStringBuilder.valueOf("Loading..."));
+            holder.setContent(SpannableStringBuilder.valueOf("Fetching ayahs..."));
             fragment.fetchPageVerses(pageNumber, new PageContentCallback() {
                 @Override
                 public void onPageContentFetched(SpannableStringBuilder pageContent) {
                     pageContents.put(pageNumber, pageContent);
+                    if (fragment.getResponseData() != null) {
+                        pageDataCache.put(pageNumber, fragment.getResponseData());
+                    }
                     holder.setContent(pageContent);
                 }
 
@@ -55,6 +61,13 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
     @Override
     public int getItemCount() {
         return TOTAL_PAGES;
+    }
+    public void cachePageData(int pageNumber, PageVerseResponse.PageData data) {
+        pageDataCache.put(pageNumber, data);
+    }
+
+    public PageVerseResponse.PageData getCurrentPageData(int pageNumber) {
+        return pageDataCache.get(pageNumber);
     }
 
     static class QuranPageViewHolder extends RecyclerView.ViewHolder {
@@ -74,4 +87,6 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
         void onPageContentFetched(SpannableStringBuilder pageContent);
         void onPageContentFetchFailed(SpannableStringBuilder errorMessage);
     }
+
+
 }

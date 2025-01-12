@@ -14,9 +14,14 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,20 +31,25 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
+import com.example.qurannexus.features.recitation.audio.AudioPlayerManager;
+import com.example.qurannexus.features.recitation.audio.ui.DraggableFloatingActionButton;
 import com.example.qurannexus.features.recitation.models.PageAyah;
 import com.example.qurannexus.features.recitation.models.PageVerseResponse;
 import com.example.qurannexus.features.recitation.models.PageAdapter;
 import com.example.qurannexus.core.utils.UtilityService;
 import com.example.qurannexus.core.network.ApiService;
 import com.example.qurannexus.features.recitation.models.Word;
+import com.google.android.material.card.MaterialCardView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
+import dagger.hilt.android.UnstableApi;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+@androidx.media3.common.util.UnstableApi
 public class ByPageRecitationFragment extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
     private static final int TOTAL_PAGES = 604;
@@ -51,6 +61,11 @@ public class ByPageRecitationFragment extends Fragment {
     private PageAdapter pageAdapter;
     private TextView pageNumberTextView;
     private PageAdapter.PageContentCallback contentCallback;
+    private AudioPlayerManager audioPlayerManager;
+    private DraggableFloatingActionButton audioFab;
+    private MaterialCardView expandedAudioPlayer;
+    private boolean isPlayerExpanded = false;
+    private PageVerseResponse.PageData responseData;
     public static ByPageRecitationFragment newInstance(int pageNumber) {
         ByPageRecitationFragment fragment = new ByPageRecitationFragment();
         Bundle args = new Bundle();
@@ -81,9 +96,32 @@ public class ByPageRecitationFragment extends Fragment {
 
         setupViewPager();
 
+        // Initialize audio views
+        // Find the included layout first
+        View audioLayout = view.findViewById(R.id.audioPlayerLayout);
+
+        audioFab = audioLayout.findViewById(R.id.audioFab);
+        expandedAudioPlayer = audioLayout.findViewById(R.id.expandedAudioPlayer);
+        audioPlayerManager = new AudioPlayerManager(requireContext(), quranApi);
+
+        Log.d("AudioDebug", "audioFab: " + (audioFab != null));
+        Log.d("AudioDebug", "expandedPlayerCard: " + (expandedAudioPlayer != null));
+        isPlayerExpanded = false;
+        if (expandedAudioPlayer != null) {
+            expandedAudioPlayer.setVisibility(View.GONE);
+            expandedAudioPlayer.setAlpha(0f);
+            expandedAudioPlayer.setTranslationX(expandedAudioPlayer.getWidth());
+            Log.d("AudioDebug", "Initial player state reset");
+        }
+
+        setupAudioControls();
+
         return view;
     }
 
+    private void setupAudioForPage(List<PageAyah> pageAyahs){
+        audioPlayerManager.playPageAyahs(pageAyahs);
+    }
     private void setupViewPager() {
         pageAdapter = new PageAdapter(this);
         viewPager.setAdapter(pageAdapter);
@@ -116,7 +154,11 @@ public class ByPageRecitationFragment extends Fragment {
             @Override
             public void onResponse(Call<PageVerseResponse> call, Response<PageVerseResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<PageAyah> verseList = response.body().getData().getAyahs();
+                    // Store the response data
+                    responseData = response.body().getData();
+                    List<PageAyah> verseList = responseData.getAyahs();
+                    setupAudioForPage(verseList);
+//                    List<PageAyah> verseList = response.body().getData().getAyahs();
                     SpannableStringBuilder pageContent = new SpannableStringBuilder();
                     int previousSurahId = -1;
 
@@ -216,5 +258,218 @@ public class ByPageRecitationFragment extends Fragment {
         // Apply center alignment to the entire span containing both calligraphy images
         pageContent.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
                 startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    private void setupAudioControls() {
+        if (audioFab == null || expandedAudioPlayer == null) return;
+
+        // Initialize views
+        ImageButton playPauseButton = expandedAudioPlayer.findViewById(R.id.playPauseButton);
+        ImageButton speedMenuButton = expandedAudioPlayer.findViewById(R.id.speedMenuButton);
+
+        SeekBar seekBar = expandedAudioPlayer.findViewById(R.id.audioSeekBar);
+        TextView currentTimeText = expandedAudioPlayer.findViewById(R.id.currentTimeText);
+        TextView durationText = expandedAudioPlayer.findViewById(R.id.durationText);
+
+        // Observe loading state
+        audioPlayerManager.isLoadingDuration().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading) {
+                durationText.setText("-/-");
+                currentTimeText.setText("-/-");
+                seekBar.setEnabled(false);
+            } else {
+                seekBar.setEnabled(true);
+            }
+        });
+
+        // Set click listeners
+        audioFab.setOnClickListener(v -> togglePlayer());
+
+        playPauseButton.setOnClickListener(v -> {
+            if (Boolean.TRUE.equals(audioPlayerManager.isPlaying().getValue())) {
+                audioPlayerManager.togglePlayPause();
+            } else {
+                audioPlayerManager.startPlayback();
+            }
+        });
+
+        // Setup speed menu
+        speedMenuButton.setOnClickListener(v -> showSpeedMenu(speedMenuButton));
+
+        // Update UI based on playback state
+        audioPlayerManager.isPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
+            playPauseButton.setImageResource(
+                    isPlaying ? R.drawable.ic_pause : R.drawable.ic_play_audio_black
+            );
+        });
+
+        // Handle progress updates with null checks
+        audioPlayerManager.getCurrentPosition().observe(getViewLifecycleOwner(), position -> {
+            if (position != null) {
+                if (!seekBar.isPressed()) {
+                    seekBar.setProgress(position);
+                    currentTimeText.setText(formatTime(position));
+                }
+            }
+        });
+
+        audioPlayerManager.getDuration().observe(getViewLifecycleOwner(), duration -> {
+            if (duration != null) {
+                seekBar.setMax(duration);
+                if (audioPlayerManager.isLoadingDuration().getValue() != Boolean.TRUE) {
+                    durationText.setText(formatTime(duration));
+                }
+            }
+        });
+
+        // Observe current time text updates
+        audioPlayerManager.getCurrentTimeText().observe(getViewLifecycleOwner(), text -> {
+            if (text != null) {
+                currentTimeText.setText(text);
+            }
+        });
+        // Handle seek bar changes
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    currentTimeText.setText(formatTime(progress));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Optional: can pause updates while seeking
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Boolean isLoading = audioPlayerManager.isLoadingDuration().getValue();
+                if (isLoading != null && isLoading) {
+                    currentTimeText.setText("-/-");
+                    return;
+                }
+                audioPlayerManager.seekTo(seekBar.getProgress());
+            }
+        });
+
+        // Handle page changes
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                audioPlayerManager.stopPlayback();
+                if (isPlayerExpanded) {
+                    togglePlayer();
+                }
+            }
+        });
+    }
+
+    private void showSpeedMenu(View anchor) {
+        PopupMenu popup = new PopupMenu(requireContext(), anchor);
+        popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "0.5x");
+        popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "0.75x");
+        popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "1.0x");
+        popup.getMenu().add(Menu.NONE, 4, Menu.NONE, "1.5x");
+        popup.getMenu().add(Menu.NONE, 5, Menu.NONE, "2.0x");
+
+        popup.setOnMenuItemClickListener(item -> {
+            float speed = 1.0f;
+            switch (item.getItemId()) {
+                case 1: speed = 0.5f; break;
+                case 2: speed = 0.75f; break;
+                case 3: speed = 1.0f; break;
+                case 4: speed = 1.5f; break;
+                case 5: speed = 2.0f; break;
+            }
+            audioPlayerManager.setPlaybackSpeed(speed);
+            return true;
+        });
+
+        popup.show();
+    }
+
+    private String formatTime(int milliseconds) {
+        int seconds = (milliseconds / 1000) % 60;
+        int minutes = (milliseconds / (1000 * 60));
+        return String.format(Locale.getDefault(), "%d:%02d", minutes, seconds);
+    }
+    // In ByPageRecitationFragment
+    private void playCurrentPage() {
+        PageVerseResponse.PageData pageData = getCurrentPageData();
+        if (pageData != null && pageData.getAyahs() != null && !pageData.getAyahs().isEmpty()) {
+            PageAyah firstAyah = pageData.getAyahs().get(0);
+            audioPlayerManager.playPageAyahs(pageData.getAyahs());
+        }
+    }
+    private void togglePlayer() {
+        if (expandedAudioPlayer == null || audioFab == null) {
+            Log.e("AudioDebug", "expandedAudioPlayer or audioFab is null");
+            return;
+        }
+
+        if (isPlayerExpanded) {
+            hidePlayer();
+        } else {
+            showPlayer();
+        }
+    }
+    private void showPlayer() {
+        expandedAudioPlayer.setVisibility(View.VISIBLE);
+        expandedAudioPlayer.setAlpha(0f);
+
+        // Make sure the layout is measured before animating
+        expandedAudioPlayer.post(() -> {
+            // Calculate position to align with FAB
+            float fabCenterY = audioFab.getY() + (audioFab.getHeight() / 2);
+            float playerHeight = expandedAudioPlayer.getHeight();
+            float playerY = fabCenterY - (playerHeight / 2);
+
+            expandedAudioPlayer.setY(playerY);
+            expandedAudioPlayer.setTranslationX(expandedAudioPlayer.getWidth());
+
+            // Animate to final position
+            expandedAudioPlayer.animate()
+                    .alpha(1f)
+                    .translationX(0f)
+                    .setDuration(200)
+                    .withStartAction(() -> {
+                        isPlayerExpanded = true;
+                        audioFab.setImageResource(R.drawable.ic_close);
+                    })
+                    .start();
+        });
+    }
+
+    private void hidePlayer() {
+        expandedAudioPlayer.animate()
+                .alpha(0f)
+                .translationX(expandedAudioPlayer.getWidth())
+                .setDuration(200)
+                .withEndAction(() -> {
+                    expandedAudioPlayer.setVisibility(View.GONE);
+                    isPlayerExpanded = false;
+                    audioFab.setImageResource(R.drawable.ic_play_audio);
+                })
+                .start();
+    }
+    private PageVerseResponse.PageData getCurrentPageData() {
+        // This method should return the current page's data
+        if (pageAdapter != null) {
+            return pageAdapter.getCurrentPageData(currentPageNumber);
+        }
+        return null;
+    }
+    public PageVerseResponse.PageData getResponseData() {
+        return responseData;
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (audioPlayerManager != null) {
+            audioPlayerManager.stopAndHidePlayer();
+            audioPlayerManager.release();
+        }
     }
 }
