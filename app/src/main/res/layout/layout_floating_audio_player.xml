@@ -7,67 +7,69 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/expandedAudioPlayer"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:minWidth="280dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_gravity="center_vertical"
         android:visibility="gone"
-        app:cardCornerRadius="24dp"
+        app:cardCornerRadius="28dp"
         app:cardElevation="6dp"
         app:cardBackgroundColor="@color/white"
         app:layout_behavior="com.example.qurannexus.features.recitation.audio.ui.AudioPlayerBehavior">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:paddingHorizontal="16dp">
-
-            <!-- Time display -->
-            <TextView
-                android:id="@+id/currentTimeText"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:text="0:00"
-                android:textColor="@color/black"
-                android:textSize="12sp"/>
 
             <!-- SeekBar -->
             <SeekBar
                 android:id="@+id/audioSeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_marginEnd="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/playPauseButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/currentTimeText"
+                android:layout_marginBottom="2dp"/>
 
-            <!-- Duration -->
+            <!-- Time display -->
             <TextView
-                android:id="@+id/durationText"
-                android:layout_width="40dp"
+                android:id="@+id/currentTimeText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0:00"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginTop="2dp"
+                app:layout_constraintStart_toStartOf="@id/audioSeekBar"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <!-- Play/Pause Button -->
             <ImageButton
                 android:id="@+id/playPauseButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_play_audio"/>
+                android:src="@drawable/ic_play_audio"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@id/speedMenuButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <!-- Speed Button -->
             <ImageButton
                 android:id="@+id/speedMenuButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_speed_menu"/>
+                android:src="@drawable/ic_speed_menu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 

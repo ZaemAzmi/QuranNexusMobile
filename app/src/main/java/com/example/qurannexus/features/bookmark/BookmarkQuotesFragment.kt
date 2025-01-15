@@ -21,17 +21,17 @@ class BookmarkQuotesFragment : Fragment() {
     override fun onViewCreated(view : View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
-        bookmarkQuotesList = listOf(
-            BookmarkQuote(1, "Al-Fatiha", "The Opening"),
-            BookmarkQuote(2, "Al-Baqarah", "The Cow"),
-            BookmarkQuote(3, "Al-Imran", "The Family of Imran"),
-            // Add more chapters as needed
-        )
+//        bookmarkQuotesList = listOf(
+//            BookmarkQuote(1, "Al-Fatiha", "The Opening"),
+//            BookmarkQuote(2, "Al-Baqarah", "The Cow"),
+//            BookmarkQuote(3, "Al-Imran", "The Family of Imran"),
+//            // Add more chapters as needed
+//        )
         val recyclerView = view.findViewById<RecyclerView>(R.id.bookmarkQuotesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        val bookmarkQuotesAdapter = BookmarkQuotesAdapter(bookmarkQuotesList)
-        recyclerView.adapter = bookmarkQuotesAdapter
+//        val bookmarkQuotesAdapter = BookmarkQuotesAdapter(bookmarkQuotesList)
+//        recyclerView.adapter = bookmarkQuotesAdapter
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -31,7 +31,7 @@
                 android:id="@+id/nextPrayerTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Next Prayer: Dhuhr"
+                android:text="-"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -40,7 +40,7 @@
                 android:id="@+id/timerTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time Remaining: 15 min"
+                android:text="-"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -48,7 +48,7 @@
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date: 04-10-2024"
+                android:text="-"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </LinearLayout>

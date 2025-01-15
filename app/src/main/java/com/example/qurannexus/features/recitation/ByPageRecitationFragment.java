@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.AlignmentSpan;
 import android.text.style.DynamicDrawableSpan;
@@ -66,6 +67,7 @@ public class ByPageRecitationFragment extends Fragment {
     private MaterialCardView expandedAudioPlayer;
     private boolean isPlayerExpanded = false;
     private PageVerseResponse.PageData responseData;
+
     public static ByPageRecitationFragment newInstance(int pageNumber) {
         ByPageRecitationFragment fragment = new ByPageRecitationFragment();
         Bundle args = new Bundle();
@@ -91,42 +93,35 @@ public class ByPageRecitationFragment extends Fragment {
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
         viewPager = view.findViewById(R.id.fragmentByPageRecitationViewPager);
         pageNumberTextView = view.findViewById(R.id.pageNumber);
-
         utilityService = new UtilityService();
 
         setupViewPager();
 
         // Initialize audio views
-        // Find the included layout first
         View audioLayout = view.findViewById(R.id.audioPlayerLayout);
-
         audioFab = audioLayout.findViewById(R.id.audioFab);
         expandedAudioPlayer = audioLayout.findViewById(R.id.expandedAudioPlayer);
         audioPlayerManager = new AudioPlayerManager(requireContext(), quranApi);
 
-        Log.d("AudioDebug", "audioFab: " + (audioFab != null));
-        Log.d("AudioDebug", "expandedPlayerCard: " + (expandedAudioPlayer != null));
         isPlayerExpanded = false;
         if (expandedAudioPlayer != null) {
             expandedAudioPlayer.setVisibility(View.GONE);
             expandedAudioPlayer.setAlpha(0f);
             expandedAudioPlayer.setTranslationX(expandedAudioPlayer.getWidth());
-            Log.d("AudioDebug", "Initial player state reset");
         }
 
         setupAudioControls();
-
         return view;
     }
 
-    private void setupAudioForPage(List<PageAyah> pageAyahs){
+    private void setupAudioForPage(List<PageAyah> pageAyahs) {
         audioPlayerManager.playPageAyahs(pageAyahs);
     }
+
     private void setupViewPager() {
         pageAdapter = new PageAdapter(this);
         viewPager.setAdapter(pageAdapter);
 
-        // Set the initial page
         int initialPosition = TOTAL_PAGES - currentPageNumber;
         viewPager.setCurrentItem(initialPosition, false);
 
@@ -136,20 +131,109 @@ public class ByPageRecitationFragment extends Fragment {
                 super.onPageSelected(position);
                 currentPageNumber = TOTAL_PAGES - position;
                 updatePageNumber();
+                audioPlayerManager.handlePageChange(currentPageNumber);
             }
         });
 
         updatePageNumber();
     }
 
-    private void updatePageNumber() {
-        pageNumberTextView.setText("Page: " + currentPageNumber);
-    }
-    public void setPageContentCallback(PageAdapter.PageContentCallback callback) {
-        this.contentCallback = callback;
+    private void setupAudioControls() {
+        if (audioFab == null || expandedAudioPlayer == null) return;
+
+        ImageButton playPauseButton = expandedAudioPlayer.findViewById(R.id.playPauseButton);
+        ImageButton speedMenuButton = expandedAudioPlayer.findViewById(R.id.speedMenuButton);
+        SeekBar seekBar = expandedAudioPlayer.findViewById(R.id.audioSeekBar);
+        TextView currentTimeText = expandedAudioPlayer.findViewById(R.id.currentTimeText);
+//        TextView durationText = expandedAudioPlayer.findViewById(R.id.durationText);
+
+        // Observe loading state
+        audioPlayerManager.isLoadingDuration().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading) {
+//                durationText.setText("-/-");
+                currentTimeText.setText("-/-");
+                seekBar.setEnabled(false);
+            } else {
+                seekBar.setEnabled(true);
+            }
+        });
+
+        // Set click listeners
+        audioFab.setOnClickListener(v -> togglePlayer());
+
+        playPauseButton.setOnClickListener(v -> {
+            if (Boolean.TRUE.equals(audioPlayerManager.isPlaying().getValue())) {
+                audioPlayerManager.togglePlayPause();
+            } else {
+                audioPlayerManager.startPlayback();
+            }
+        });
+
+        // Setup speed menu
+        speedMenuButton.setOnClickListener(v -> showSpeedMenu(speedMenuButton));
+
+        // Update UI based on playback state
+        audioPlayerManager.isPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
+            playPauseButton.setImageResource(
+                    isPlaying ? R.drawable.ic_pause : R.drawable.ic_play_audio_black
+            );
+            audioFab.setImageResource(
+                    isPlaying ? R.drawable.ic_pause : R.drawable.ic_play_audio
+            );
+        });
+
+        // Handle progress updates
+        audioPlayerManager.getCurrentPosition().observe(getViewLifecycleOwner(), position -> {
+            if (position != null && !seekBar.isPressed()) {
+                seekBar.setProgress(position);
+            }
+        });
+
+        audioPlayerManager.getDuration().observe(getViewLifecycleOwner(), duration -> {
+            if (duration != null) {
+                seekBar.setMax(duration);
+            }
+        });
+
+        audioPlayerManager.getCurrentTimeText().observe(getViewLifecycleOwner(), text -> {
+            if (text != null) {
+                currentTimeText.setText(text);
+            }
+        });
+
+        // Handle seek bar changes
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    currentTimeText.setText(formatTime(progress));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Boolean isLoading = audioPlayerManager.isLoadingDuration().getValue();
+                if (isLoading != null && isLoading) {
+                    currentTimeText.setText("-/-");
+                    return;
+                }
+                audioPlayerManager.seekTo(seekBar.getProgress());
+            }
+        });
+
+        // Observe player visibility
+        audioPlayerManager.getShouldShowPlayer().observe(getViewLifecycleOwner(), shouldShow -> {
+            audioFab.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
+            if (!shouldShow && isPlayerExpanded) {
+                hidePlayer();
+            }
+        });
     }
     public void fetchPageVerses(int pageNumber, PageAdapter.PageContentCallback callback) {
-        Log.e("page num", String.valueOf(pageNumber));
+//        Log.e("page num", String.valueOf(pageNumber));
         quranApi.getPageVerses(pageNumber, true,true).enqueue(new Callback<PageVerseResponse>() {
             @Override
             public void onResponse(Call<PageVerseResponse> call, Response<PageVerseResponse> response) {
@@ -174,7 +258,12 @@ public class ByPageRecitationFragment extends Fragment {
 
                         // Insert Bismillah if present
                         if (ayah.getBismillah() != null && !ayah.getBismillah().isEmpty()) {
-                            pageContent.append(ayah.getBismillah()).append("\n");
+//                            pageContent.append(ayah.getBismillah()).append("\n");
+                            SpannableString bismillah = new SpannableString(ayah.getBismillah());
+                            bismillah.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                                    0, bismillah.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            pageContent.append(bismillah).append("\n\n");
+
                         }
 
                         // Append text from each word
@@ -259,113 +348,6 @@ public class ByPageRecitationFragment extends Fragment {
         pageContent.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
                 startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
-
-    private void setupAudioControls() {
-        if (audioFab == null || expandedAudioPlayer == null) return;
-
-        // Initialize views
-        ImageButton playPauseButton = expandedAudioPlayer.findViewById(R.id.playPauseButton);
-        ImageButton speedMenuButton = expandedAudioPlayer.findViewById(R.id.speedMenuButton);
-
-        SeekBar seekBar = expandedAudioPlayer.findViewById(R.id.audioSeekBar);
-        TextView currentTimeText = expandedAudioPlayer.findViewById(R.id.currentTimeText);
-        TextView durationText = expandedAudioPlayer.findViewById(R.id.durationText);
-
-        // Observe loading state
-        audioPlayerManager.isLoadingDuration().observe(getViewLifecycleOwner(), isLoading -> {
-            if (isLoading) {
-                durationText.setText("-/-");
-                currentTimeText.setText("-/-");
-                seekBar.setEnabled(false);
-            } else {
-                seekBar.setEnabled(true);
-            }
-        });
-
-        // Set click listeners
-        audioFab.setOnClickListener(v -> togglePlayer());
-
-        playPauseButton.setOnClickListener(v -> {
-            if (Boolean.TRUE.equals(audioPlayerManager.isPlaying().getValue())) {
-                audioPlayerManager.togglePlayPause();
-            } else {
-                audioPlayerManager.startPlayback();
-            }
-        });
-
-        // Setup speed menu
-        speedMenuButton.setOnClickListener(v -> showSpeedMenu(speedMenuButton));
-
-        // Update UI based on playback state
-        audioPlayerManager.isPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
-            playPauseButton.setImageResource(
-                    isPlaying ? R.drawable.ic_pause : R.drawable.ic_play_audio_black
-            );
-        });
-
-        // Handle progress updates with null checks
-        audioPlayerManager.getCurrentPosition().observe(getViewLifecycleOwner(), position -> {
-            if (position != null) {
-                if (!seekBar.isPressed()) {
-                    seekBar.setProgress(position);
-                    currentTimeText.setText(formatTime(position));
-                }
-            }
-        });
-
-        audioPlayerManager.getDuration().observe(getViewLifecycleOwner(), duration -> {
-            if (duration != null) {
-                seekBar.setMax(duration);
-                if (audioPlayerManager.isLoadingDuration().getValue() != Boolean.TRUE) {
-                    durationText.setText(formatTime(duration));
-                }
-            }
-        });
-
-        // Observe current time text updates
-        audioPlayerManager.getCurrentTimeText().observe(getViewLifecycleOwner(), text -> {
-            if (text != null) {
-                currentTimeText.setText(text);
-            }
-        });
-        // Handle seek bar changes
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    currentTimeText.setText(formatTime(progress));
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // Optional: can pause updates while seeking
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                Boolean isLoading = audioPlayerManager.isLoadingDuration().getValue();
-                if (isLoading != null && isLoading) {
-                    currentTimeText.setText("-/-");
-                    return;
-                }
-                audioPlayerManager.seekTo(seekBar.getProgress());
-            }
-        });
-
-        // Handle page changes
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                audioPlayerManager.stopPlayback();
-                if (isPlayerExpanded) {
-                    togglePlayer();
-                }
-            }
-        });
-    }
-
     private void showSpeedMenu(View anchor) {
         PopupMenu popup = new PopupMenu(requireContext(), anchor);
         popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "0.5x");
@@ -393,21 +375,11 @@ public class ByPageRecitationFragment extends Fragment {
     private String formatTime(int milliseconds) {
         int seconds = (milliseconds / 1000) % 60;
         int minutes = (milliseconds / (1000 * 60));
-        return String.format(Locale.getDefault(), "%d:%02d", minutes, seconds);
+        return String.format("%d:%02d", minutes, seconds);
     }
-    // In ByPageRecitationFragment
-    private void playCurrentPage() {
-        PageVerseResponse.PageData pageData = getCurrentPageData();
-        if (pageData != null && pageData.getAyahs() != null && !pageData.getAyahs().isEmpty()) {
-            PageAyah firstAyah = pageData.getAyahs().get(0);
-            audioPlayerManager.playPageAyahs(pageData.getAyahs());
-        }
-    }
+
     private void togglePlayer() {
-        if (expandedAudioPlayer == null || audioFab == null) {
-            Log.e("AudioDebug", "expandedAudioPlayer or audioFab is null");
-            return;
-        }
+        if (expandedAudioPlayer == null || audioFab == null) return;
 
         if (isPlayerExpanded) {
             hidePlayer();
@@ -415,13 +387,12 @@ public class ByPageRecitationFragment extends Fragment {
             showPlayer();
         }
     }
+
     private void showPlayer() {
         expandedAudioPlayer.setVisibility(View.VISIBLE);
         expandedAudioPlayer.setAlpha(0f);
 
-        // Make sure the layout is measured before animating
         expandedAudioPlayer.post(() -> {
-            // Calculate position to align with FAB
             float fabCenterY = audioFab.getY() + (audioFab.getHeight() / 2);
             float playerHeight = expandedAudioPlayer.getHeight();
             float playerY = fabCenterY - (playerHeight / 2);
@@ -429,7 +400,6 @@ public class ByPageRecitationFragment extends Fragment {
             expandedAudioPlayer.setY(playerY);
             expandedAudioPlayer.setTranslationX(expandedAudioPlayer.getWidth());
 
-            // Animate to final position
             expandedAudioPlayer.animate()
                     .alpha(1f)
                     .translationX(0f)
@@ -450,26 +420,31 @@ public class ByPageRecitationFragment extends Fragment {
                 .withEndAction(() -> {
                     expandedAudioPlayer.setVisibility(View.GONE);
                     isPlayerExpanded = false;
-                    audioFab.setImageResource(R.drawable.ic_play_audio);
+                    audioFab.setImageResource(
+                            Boolean.TRUE.equals(audioPlayerManager.isPlaying().getValue()) ?
+                                    R.drawable.ic_pause : R.drawable.ic_play_audio
+                    );
                 })
                 .start();
     }
-    private PageVerseResponse.PageData getCurrentPageData() {
-        // This method should return the current page's data
-        if (pageAdapter != null) {
-            return pageAdapter.getCurrentPageData(currentPageNumber);
-        }
-        return null;
-    }
-    public PageVerseResponse.PageData getResponseData() {
-        return responseData;
-    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (audioPlayerManager != null) {
-            audioPlayerManager.stopAndHidePlayer();
             audioPlayerManager.release();
         }
+    }
+
+    private void updatePageNumber() {
+        pageNumberTextView.setText(String.format("Page: %d", currentPageNumber));
+    }
+
+    public void setPageContentCallback(PageAdapter.PageContentCallback callback) {
+        this.contentCallback = callback;
+    }
+
+    public PageVerseResponse.PageData getResponseData() {
+        return responseData;
     }
 }

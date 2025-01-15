@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:gravity="center_vertical|end"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <!-- Bookmark Button -->
+    <ImageView
+        android:id="@+id/bookmarkButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_heart"
+        android:padding="4dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="Bookmark this word" />
+
+</LinearLayout>

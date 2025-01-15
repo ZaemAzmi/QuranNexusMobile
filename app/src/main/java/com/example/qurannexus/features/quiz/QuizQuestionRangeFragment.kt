@@ -1,10 +1,12 @@
 package com.example.qurannexus.features.quiz
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -64,7 +66,8 @@ class QuizQuestionRangeFragment : Fragment() {
                 when (state) {
                     is QuizState.SurahLoaded -> {
                         val totalBatches = (state.totalQuestions + QUESTIONS_PER_BATCH - 1) / QUESTIONS_PER_BATCH
-                        val batchList = generateBatchList(totalBatches, state.totalQuestions)
+                        val batchList = viewModel.generateBatchList(totalBatches, state.totalQuestions)
+                        Log.d("QuizRange", "Generating batch list with scores: $batchList")
                         batchAdapter.submitList(batchList)
 
                         binding.totalQuestionsText.text = "Total Questions: ${state.totalQuestions}"
@@ -72,6 +75,7 @@ class QuizQuestionRangeFragment : Fragment() {
                     }
                     is QuizState.Error -> {
                         // Handle error state
+                        Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
                     }
                     else -> {} // Handle other states if needed
                 }

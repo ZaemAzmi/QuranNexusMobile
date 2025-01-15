@@ -29,13 +29,13 @@
 
             <TextView
                 android:id="@+id/SurahMeaningTV"
-                android:layout_width="85dp"
+                android:layout_width="150dp"
                 android:layout_height="21dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/white"
                 android:text="The Opening"
-                android:textSize="35px"
+                android:textSize="28px"
                 app:layout_constraintStart_toEndOf="@+id/SurahNumberTV"
                 app:layout_constraintTop_toBottomOf="@+id/SurahNameTV" />
 

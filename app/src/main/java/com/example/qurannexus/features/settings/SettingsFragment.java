@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -23,9 +24,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // Retrieve the SharedPreferences
         SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
-        SwitchPreferenceCompat recitationLayoutSwitch = findPreference("recitation_layout_by_page");
 
-        // Set up change listener
+        // Recitation Layout Switch Logic
+        SwitchPreferenceCompat recitationLayoutSwitch = findPreference("recitation_layout_by_page");
         if (recitationLayoutSwitch != null) {
             recitationLayoutSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
                 boolean isByPage = (Boolean) newValue;
@@ -33,7 +34,35 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("recitation_layout_by_page", isByPage);
                 editor.apply();
-                Log.d("SettingsFragment", "Preference changed: " + isByPage);
+                Log.d("SettingsFragment", "Recitation layout preference changed: " + isByPage);
+                return true;
+            });
+        }
+
+        // Audio Background Playback Switch Logic
+        SwitchPreferenceCompat audioBackgroundSwitch = findPreference("audio_background_play");
+        if (audioBackgroundSwitch != null) {
+            audioBackgroundSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean allowBackgroundPlay = (Boolean) newValue;
+                // Save preference
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("audio_background_play", allowBackgroundPlay);
+                editor.apply();
+                Log.d("SettingsFragment", "Audio background playback preference changed: " + allowBackgroundPlay);
+                return true;
+            });
+        }
+
+        // Reciter Selection Logic
+        ListPreference reciterPreference = findPreference("selected_reciter");
+        if (reciterPreference != null) {
+            reciterPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                String selectedReciter = (String) newValue;
+                // Save preference
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("selected_reciter", selectedReciter);
+                editor.apply();
+                Log.d("SettingsFragment", "Selected reciter changed: " + selectedReciter);
                 return true;
             });
         }

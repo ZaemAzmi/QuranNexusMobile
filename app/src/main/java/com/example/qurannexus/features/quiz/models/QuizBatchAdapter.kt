@@ -1,6 +1,8 @@
 package com.example.qurannexus.features.quiz.models
 
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,9 +13,15 @@ data class QuizBatch(
     val batchNumber: Int,
     val startQuestion: Int,
     val endQuestion: Int,
-    val score: Int? = null
+    val score: Score? = null
 )
-
+data class Score(
+    val correctAnswers: Int,
+    val totalQuestions: Int
+) {
+    val percentage: Int
+        get() = ((correctAnswers.toFloat() / totalQuestions.toFloat()) * 100).toInt()
+}
 class QuizBatchAdapter(
     private val onBatchSelected: (Int) -> Unit
 ) : ListAdapter<QuizBatch, QuizBatchAdapter.BatchViewHolder>(BatchDiffCallback()) {
@@ -47,7 +55,23 @@ class QuizBatchAdapter(
         fun bind(batch: QuizBatch) {
             binding.apply {
                 questionRangeText.text = "Questions ${batch.startQuestion}-${batch.endQuestion}"
-                scoreText.text = batch.score?.let { "$it/10" } ?: "-/10"
+
+                batch.score?.let { score ->
+                    scoreText.text = "${score.correctAnswers}/${score.totalQuestions}"
+                    statusText.text = "${score.percentage}%"
+                    scoreContainer.visibility = View.VISIBLE
+
+                    // Set status text color based on score
+                    val color = when {
+                        score.percentage >= 90 -> Color.parseColor("#4CAF50") // Green
+                        score.percentage >= 70 -> Color.parseColor("#8BC34A") // Light Green
+                        score.percentage >= 50 -> Color.parseColor("#FFC107") // Yellow
+                        else -> Color.parseColor("#F44336") // Red
+                    }
+                    statusText.setTextColor(color)
+                } ?: run {
+                    scoreContainer.visibility = View.GONE
+                }
             }
         }
     }

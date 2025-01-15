@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.SharedPreferences
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -16,6 +17,7 @@ import com.example.qurannexus.features.recitation.models.PageAyah
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Collections
 
 class AudioPlayerManager(
     private val context: Context,
@@ -58,6 +60,26 @@ class AudioPlayerManager(
     private val _shouldShowPlayer = MutableLiveData<Boolean>().apply { value = false }
     val shouldShowPlayer: LiveData<Boolean> = _shouldShowPlayer
 
+    private var totalDuration = 0L
+    private var currentItemStartTime = 0L
+
+    private val sharedPrefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+    private val prefListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+        if (key == "selected_reciter") {
+            // If audio is playing, restart with new reciter
+            val wasPlaying = isPlaying.value == true
+            stopPlayback()
+            if (wasPlaying && currentPageAyahs != null) {
+                playPageAyahs(currentPageAyahs!!)
+                startPlayback()
+            }
+        }
+    }
+    private var currentPageAyahs: List<PageAyah>? = null
+    init {
+        bindService()
+        sharedPrefs.registerOnSharedPreferenceChangeListener(prefListener)
+    }
     private val progressHandler = Handler(Looper.getMainLooper())
     private val progressRunnable = object : Runnable {
         override fun run() {
@@ -66,31 +88,42 @@ class AudioPlayerManager(
         }
     }
 
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as AudioPlayerService.AudioPlayerBinder
-            audioService = binder.getService()
-            Log.d("AudioDebug", "Service connected")
-        }
+    private val serviceConnection by lazy {
+        object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                val binder = service as AudioPlayerService.AudioPlayerBinder
+                audioService = binder.getService()
+                Log.d("AudioDebug", "Service connected")
+            }
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-            audioService = null
-            Log.d("AudioDebug", "Service disconnected")
+            override fun onServiceDisconnected(name: ComponentName?) {
+                audioService = null
+                Log.d("AudioDebug", "Service disconnected")
+            }
         }
     }
 
     init {
-        bindService()
+        // Start and bind the service
+        val intent = Intent(context, AudioPlayerService::class.java)
+        context.startService(intent) // First start the service
+        bindService() // Then bind to it
     }
 
     private fun bindService() {
-        val intent = Intent(context, AudioPlayerService::class.java)
-        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-        Log.d("AudioDebug", "Binding service")
+        try {
+            val intent = Intent(context, AudioPlayerService::class.java)
+            val bound = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+            Log.d("AudioDebug", "Binding service, success: $bound")
+        } catch (e: Exception) {
+            Log.e("AudioDebug", "Error binding service", e)
+        }
     }
 
+
     fun playPageAyahs(ayahs: List<PageAyah>) {
-        Log.d("AudioDebug", "Starting playPageAyahs with ${ayahs.size} ayahs")
+//        Log.d("AudioDebug", "Starting playPageAyahs with ${ayahs.size} ayahs")
+        currentPageAyahs = ayahs
         stopPlayback()
         currentMode = PlaybackMode.PAGE_SEQUENCE
         _isLoadingDuration.postValue(true)
@@ -99,53 +132,82 @@ class AudioPlayerManager(
         audioQueue.clear()
         currentQueueIndex = 0
 
+        totalDuration = 0L
+        currentItemStartTime = 0L
+        val estimatedAyahDuration = 15000L
+        totalDuration = (ayahs.size * estimatedAyahDuration)
+        _duration.postValue(totalDuration.toInt())
+
         // Add Audhubillah and Bismillah if needed
         if (shouldAddBismillah(ayahs.firstOrNull())) {
             addPrefixAudios()
         }
 
+        // Create a synchronized map to store responses in order
+        val audioResponses = Collections.synchronizedMap(LinkedHashMap<String, QueuedAudio>())
+        val startingIndex = audioQueue.size // Account for prefix audios if added
         var completedCalls = 0
-        val totalCalls = ayahs.size
 
+        // First, create placeholders in the correct order
         ayahs.forEachIndexed { index, ayah ->
-            quranApi.getAudioRecitation(ayah.ayahKey).enqueue(object :
-                Callback<AudioRecitationResponse> {
+            audioResponses[ayah.ayahKey] = QueuedAudio(
+                index = startingIndex + index,
+                audioUrl = "", // Will be filled when API responds
+                ayahInfo = "Surah ${ayah.surahId}:${ayah.ayahIndex}",
+                isReady = false
+            )
+        }
+
+        // Now make API calls
+        ayahs.forEachIndexed { index, ayah ->
+            quranApi.getAudioRecitation(ayah.ayahKey).enqueue(object : Callback<AudioRecitationResponse> {
                 override fun onResponse(
                     call: Call<AudioRecitationResponse>,
                     response: Response<AudioRecitationResponse>
                 ) {
-                    if (response.isSuccessful && response.body() != null) {
-                        response.body()!!.data.find { it.audioInfoId == getSelectedReciterId() }?.let {
-                            val queueIndex = audioQueue.size
-                            audioQueue.add(QueuedAudio(
-                                index = queueIndex,
-                                audioUrl = it.audioUrl,
-                                ayahInfo = "Surah ${ayah.surahId}:${ayah.ayahIndex}",
-                                isReady = true
-                            ))
+                    synchronized(audioResponses) {
+                        if (response.isSuccessful && response.body() != null) {
+                            response.body()!!.data.find { it.audioInfoId == getSelectedReciterId() }?.let {
+                                // Update the placeholder with actual audio URL
+                                audioResponses[ayah.ayahKey] = QueuedAudio(
+                                    index = startingIndex + index,
+                                    audioUrl = it.audioUrl,
+                                    ayahInfo = "Surah ${ayah.surahId}:${ayah.ayahIndex}",
+                                    isReady = true
+                                )
+//                                Log.d("AudioDebug", "Received audio for ${ayah.ayahKey} at index $index")
+                            }
                         }
-                    }
 
-                    completedCalls++
-                    if (completedCalls == totalCalls) {
-                        _isLoadingDuration.postValue(false)
-                        audioQueue.sortBy { it.index }
-                        Log.d("AudioDebug", "Queue prepared with ${audioQueue.size} items")
+                        completedCalls++
+                        if (completedCalls == ayahs.size) {
+                            // Add to queue in original order
+                            ayahs.forEachIndexed { i, ayah ->
+                                audioResponses[ayah.ayahKey]?.let { audio ->
+                                    if (audio.isReady) {
+                                        audioQueue.add(audio)
+//                                        Log.d("AudioDebug", "Adding to queue: ${audio.ayahInfo} at position ${audioQueue.size - 1}")
+                                    }
+                                }
+                            }
+                            _isLoadingDuration.postValue(false)
+//                            Log.d("AudioDebug", "Queue prepared with ${audioQueue.size} items in sequence")
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<AudioRecitationResponse>, t: Throwable) {
-                    Log.e("AudioDebug", "Failed to fetch audio for ayah: ${ayah.ayahKey}", t)
-                    completedCalls++
-                    if (completedCalls == totalCalls) {
-                        _isLoadingDuration.postValue(false)
-                        audioQueue.sortBy { it.index }
+//                    Log.e("AudioDebug", "Failed to fetch audio for ayah: ${ayah.ayahKey}", t)
+                    synchronized(audioResponses) {
+                        completedCalls++
+                        if (completedCalls == ayahs.size) {
+                            _isLoadingDuration.postValue(false)
+                        }
                     }
                 }
             })
         }
     }
-
     fun playAyah(ayahKey: String) {
         stopPlayback()
         currentMode = PlaybackMode.SINGLE_AYAH
@@ -183,13 +245,14 @@ class AudioPlayerManager(
         }
 
         val currentAudio = audioQueue[currentQueueIndex]
-        Log.d("AudioDebug", "Playing queue item ${currentQueueIndex + 1}/${audioQueue.size}: ${currentAudio.audioUrl}")
+//        Log.d("AudioDebug", "Playing queue item ${currentQueueIndex + 1}/${audioQueue.size}: ${currentAudio.audioUrl} (${currentAudio.ayahInfo})")
 
         audioService?.apply {
             setOnCompletionListener {
-                Log.d("AudioDebug", "Completed playing index: $currentQueueIndex")
+//                Log.d("AudioDebug", "Completed playing: ${currentAudio.ayahInfo}")
                 if (shouldContinuePlayback) {
                     currentQueueIndex++
+                    currentItemStartTime += getDuration()
                     playCurrentInQueue()
                 }
             }
@@ -263,7 +326,30 @@ class AudioPlayerManager(
     }
 
     fun seekTo(position: Int) {
-        audioService?.seekTo(position.toLong())
+        // Calculate which item this position corresponds to
+        var accumulatedTime = 0L
+        var targetIndex = 0
+
+        for (i in 0 until audioQueue.size) {
+            val itemDuration = if (i == currentQueueIndex) {
+                audioService?.getDuration() ?: 15000L
+            } else {
+                15000L // estimated duration for other items
+            }
+
+            if (accumulatedTime + itemDuration > position) {
+                targetIndex = i
+                break
+            }
+            accumulatedTime += itemDuration
+        }
+
+        // Switch to target item and seek within it
+        currentQueueIndex = targetIndex
+        currentItemStartTime = accumulatedTime
+        val seekPositionInItem = position - accumulatedTime
+        audioService?.seekTo(seekPositionInItem)
+        playCurrentInQueue()
     }
 
     fun setPlaybackSpeed(speed: Float) {
@@ -272,17 +358,26 @@ class AudioPlayerManager(
 
     private fun updateProgress() {
         audioService?.let { service ->
-            val currentPos = service.getCurrentPosition()
-            _currentPosition.postValue(currentPos.toInt())
-            _currentTimeText.postValue(formatTime(currentPos))
+            val currentProgress = currentItemStartTime + service.getCurrentPosition()
+            _currentPosition.postValue(currentProgress.toInt())
+            _currentTimeText.postValue(formatTime(currentProgress))
 
-            val duration = service.getDuration()
-            if (duration > 0) {
-                _duration.postValue(duration.toInt())
+            // Update seekbar max if needed
+            if (service.getDuration() > 0 && currentQueueIndex == 0) {
+                val newEstimate = (audioQueue.size * 15000L) // Estimate total duration
+                if (newEstimate > totalDuration) {
+                    totalDuration = newEstimate
+                    _duration.postValue(totalDuration.toInt())
+                }
             }
         }
     }
-
+    private fun formatTime(millis: Long): String {
+        if (millis < 0) return "-/-"
+        val seconds = (millis / 1000) % 60
+        val minutes = (millis / (1000 * 60))
+        return String.format("%d:%02d", minutes, seconds)
+    }
     private fun startProgressUpdates() {
         progressHandler.removeCallbacks(progressRunnable)
         progressHandler.post(progressRunnable)
@@ -292,14 +387,14 @@ class AudioPlayerManager(
         progressHandler.removeCallbacks(progressRunnable)
     }
 
-    private fun formatTime(millis: Long): String {
-        if (millis < 0) return "-/-"
-        val seconds = (millis / 1000) % 60
-        val minutes = (millis / (1000 * 60))
-        return String.format("%d:%02d", minutes, seconds)
-    }
+
 
     private fun shouldAddBismillah(firstAyah: PageAyah?): Boolean {
+        // Special case for Al-Fatihah (Surah 1) - don't add Bismillah
+        if (firstAyah != null && firstAyah.surahId == "1") {
+            return false;
+        }
+        // For other surahs, add Bismillah if it's the first ayah
         return firstAyah?.ayahIndex == "1"
     }
 
@@ -319,11 +414,15 @@ class AudioPlayerManager(
 
     fun release() {
         stopProgressUpdates()
+        sharedPrefs.unregisterOnSharedPreferenceChangeListener(prefListener)
         try {
-            context.unbindService(serviceConnection)
+            // Check if service is bound before unbinding
+            if (audioService != null) {
+                context.unbindService(serviceConnection)
+                audioService = null
+            }
         } catch (e: Exception) {
             Log.e("AudioDebug", "Error unbinding service", e)
         }
-        audioService = null
     }
 }

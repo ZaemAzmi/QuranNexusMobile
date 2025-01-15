@@ -1,5 +1,6 @@
 package com.example.qurannexus.features.words
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.databinding.ItemWordAccordionSectionBinding
+import com.example.qurannexus.features.bookmark.models.BookmarkWord
+import com.example.qurannexus.features.home.WordDetailsActivity
 
-class AccordionAdapter : RecyclerView.Adapter<AccordionAdapter.AccordionViewHolder>() {
+class AccordionAdapter(
+    private val onWordClick: (BookmarkWord) -> Unit
+) : RecyclerView.Adapter<AccordionAdapter.AccordionViewHolder>() {
 
     private val sections = mutableListOf<AccordionSection>()
 
@@ -42,9 +47,23 @@ class AccordionAdapter : RecyclerView.Adapter<AccordionAdapter.AccordionViewHold
             binding.textViewSectionTitle.text = section.title
             binding.textViewItemCount.text = "(${section.words.size})"
 
-            // Setup child RecyclerView
-            val childAdapter = ChildItemAdapter()
+            // Setup child RecyclerView with BookmarkWord items
+            val childAdapter = BookmarkWordChildAdapter(
+                onItemClick = { bookmarkWord ->
+                    // Navigate to word details
+                    val intent = Intent(binding.root.context, WordDetailsActivity::class.java).apply {
+                        putExtra("WORD_ID", bookmarkWord.word_id)
+                        putExtra("WORD_TEXT", bookmarkWord.word_text)
+                        putExtra("TRANSLATION", bookmarkWord.translation)
+                        putExtra("TRANSLITERATION", bookmarkWord.transliteration)
+                        putExtra("SURAH_NAME", bookmarkWord.surah_name)
+                        putExtra("AYAH_KEY", bookmarkWord.ayah_key)
+                    }
+                    binding.root.context.startActivity(intent)
+                }
+            )
             childAdapter.submitList(section.words)
+
             binding.recyclerViewWordAccordionChildItems.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = childAdapter
@@ -62,5 +81,45 @@ class AccordionAdapter : RecyclerView.Adapter<AccordionAdapter.AccordionViewHold
                 )
             }
         }
+    }
+
+    // New child adapter for bookmark words
+    inner class BookmarkWordChildAdapter(
+        private val onItemClick: (BookmarkWord) -> Unit
+    ) : RecyclerView.Adapter<BookmarkWordChildAdapter.WordViewHolder>() {
+
+        private val words = mutableListOf<BookmarkWord>()
+
+        fun submitList(newWords: List<BookmarkWord>) {
+            words.clear()
+            words.addAll(newWords)
+            notifyDataSetChanged()
+        }
+
+        inner class WordViewHolder(private val itemView: View) : RecyclerView.ViewHolder(itemView) {
+            private val wordText by lazy { itemView.findViewById<TextView>(R.id.bookmarkWordArabicText) }
+            private val translationText by lazy { itemView.findViewById<TextView>(R.id.bookmarkWordEnglishText) }
+//            private val surahNameText by lazy { itemView.findViewById<TextView>(R.id.surahNameText) }
+
+            fun bind(bookmarkWord: BookmarkWord) {
+                wordText.text = bookmarkWord.word_text
+                translationText.text = bookmarkWord.translation
+//                surahNameText.text = bookmarkWord.surah_name
+
+                itemView.setOnClickListener { onItemClick(bookmarkWord) }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.card_item_bookmark_word, parent, false)
+            return WordViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
+            holder.bind(words[position])
+        }
+
+        override fun getItemCount() = words.size
     }
 }

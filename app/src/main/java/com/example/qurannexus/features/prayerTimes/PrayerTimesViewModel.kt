@@ -1,5 +1,8 @@
 package com.example.qurannexus.features.prayerTimes
 
+import android.os.CountDownTimer
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -7,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.qurannexus.features.prayerTimes.models.PrayerTime
 import com.example.qurannexus.features.prayerTimes.models.PrayerTimesResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
@@ -20,92 +24,138 @@ class PrayerTimesViewModel @Inject constructor(
     private val repository: PrayerTimesRepository
 ) : ViewModel() {
 
-    val prayerTimesLiveData = MutableLiveData<List<PrayerTime>>()
-    val nextPrayerLiveData = MutableLiveData<PrayerTime?>()
-    val dateLiveData = MutableLiveData<String>()
-    val weekdayLiveData = MutableLiveData<String>()
-    val timerLiveData = MutableLiveData<String>()
-    val errorLiveData = MutableLiveData<String>()
+    private val _weekdayLiveData = MutableLiveData<String>()
+    val weekdayLiveData: LiveData<String> = _weekdayLiveData
 
-    fun fetchPrayerTimes(date: String, location: String, countryCode: String) {
+    private val _dateLiveData = MutableLiveData<String>()
+    val dateLiveData: LiveData<String> = _dateLiveData
+
+    private val _nextPrayerLiveData = MutableLiveData<PrayerTime>()
+    val nextPrayerLiveData: LiveData<PrayerTime> = _nextPrayerLiveData
+
+    private val _timerLiveData = MutableLiveData<String>()
+    val timerLiveData: LiveData<String> = _timerLiveData
+
+    private val _prayerTimesLiveData = MutableLiveData<List<PrayerTime>>()
+    val prayerTimesLiveData: LiveData<List<PrayerTime>> = _prayerTimesLiveData
+
+    private val _errorLiveData = MutableLiveData<String>()
+    val errorLiveData: LiveData<String> = _errorLiveData
+
+    private var countDownTimer: CountDownTimer? = null
+    fun fetchPrayerTimes(date: String, city: String, country: String) {
         viewModelScope.launch {
             try {
-                // Use enqueue for asynchronous call
-                repository.getPrayerTimes(date, location, countryCode).enqueue(object : Callback<PrayerTimesResponse> {
+                Log.d("PrayerTimesViewModel", "Fetching prayer times for $city, $country on $date")
+                repository.getPrayerTimes(date, city, country).enqueue(object : Callback<PrayerTimesResponse> {
                     override fun onResponse(call: Call<PrayerTimesResponse>, response: Response<PrayerTimesResponse>) {
                         if (response.isSuccessful) {
-                            val body = response.body()
-                            val timings = body?.data?.timings
-                            val dateInfo = body?.data?.date
-
-                            if (timings != null) {
-                                val prayerTimesList = listOf(
-                                    PrayerTime("Fajr", timings.Fajr ?: ""),
-                                    PrayerTime("Sunrise", timings.Sunrise ?: ""),
-                                    PrayerTime("Dhuhr", timings.Dhuhr ?: ""),
-                                    PrayerTime("Asr", timings.Asr ?: ""),
-                                    PrayerTime("Maghrib", timings.Maghrib ?: ""),
-                                    PrayerTime("Isha", timings.Isha ?: ""),
-                                    PrayerTime("Imsak", timings.Imsak ?: "")
-                                )
-                                prayerTimesLiveData.postValue(prayerTimesList)
-
-                                dateLiveData.postValue(dateInfo?.readable)
-                                weekdayLiveData.postValue(dateInfo?.gregorian?.weekday?.en)
-                                calculateNextPrayer(prayerTimesList)
+                            Log.d("PrayerTimesViewModel", "API response successful")
+                            response.body()?.data?.let { data ->
+                                processApiResponse(data)
                             }
                         } else {
-                            errorLiveData.postValue("Error: ${response.message()}")
+                            Log.e("PrayerTimesViewModel", "API error: ${response.message()}")
+                            _errorLiveData.postValue("Error: ${response.message()}")
                         }
                     }
 
                     override fun onFailure(call: Call<PrayerTimesResponse>, t: Throwable) {
-                        errorLiveData.postValue("Failed to fetch prayer times: ${t.message}")
+                        Log.e("PrayerTimesViewModel", "API failure", t)
+                        _errorLiveData.postValue("Network error: ${t.message}")
                     }
                 })
             } catch (e: Exception) {
-                errorLiveData.postValue("Failed to fetch prayer times: ${e.message}")
+                Log.e("PrayerTimesViewModel", "Exception in fetchPrayerTimes", e)
+                _errorLiveData.postValue("Error: ${e.message}")
             }
         }
     }
 
-    private fun calculateNextPrayer(prayerTimes: List<PrayerTime>) {
-        val currentTime = getCurrentTimeIn24H()
-        val nextPrayer = prayerTimes.firstOrNull {
-            convertTimeToMinutes(it.time) > currentTime
+    private fun processApiResponse(data: PrayerTimesResponse.Data) {
+        try {
+            _dateLiveData.postValue(data.date?.readable)
+            _weekdayLiveData.postValue(data.date?.gregorian?.weekday?.en)
+            val prayerTimesList = listOf(
+                PrayerTime("Fajr", data.timings?.Fajr ?: "-"),
+                PrayerTime("Sunrise", data.timings?.Sunrise ?: "-"),
+                PrayerTime("Dhuhr", data.timings?.Dhuhr ?: "-"),
+                PrayerTime("Asr", data.timings?.Asr ?: "-"),
+                PrayerTime("Maghrib", data.timings?.Maghrib ?: "-"),
+                PrayerTime("Isha", data.timings?.Isha ?: "-")
+            )
+            _prayerTimesLiveData.postValue(prayerTimesList)
+
+            // Start countdown immediately after getting data
+            calculateNextPrayer()
+        } catch (e: Exception) {
+            Log.e("PrayerTimesViewModel", "Error processing API response", e)
+            _errorLiveData.postValue("Error processing data: ${e.message}")
         }
-        nextPrayerLiveData.postValue(nextPrayer)
+    }
+    fun calculateNextPrayer() {
+        val prayerTimes = prayerTimesLiveData.value
+        if (prayerTimes != null) {
+            val currentTime = getCurrentTimeIn24H()
+
+            val nextPrayer = prayerTimes.firstOrNull {
+                convertTimeToMinutes(it.time) > currentTime
+            } ?: prayerTimes.first()
+
+            _nextPrayerLiveData.postValue(nextPrayer)
+            updateCountdown(nextPrayer.time)
+        }
     }
 
     private fun convertTimeToMinutes(time: String): Int {
-        return time.split(":").let {
-            val hours = it[0].toInt()
-            val minutes = it[1].toInt()
+        return try {
+            val parts = time.split(":")
+            val hours = parts[0].toInt()
+            val minutes = parts[1].toInt()
             hours * 60 + minutes
+        } catch (e: Exception) {
+            0
         }
     }
 
     private fun getCurrentTimeIn24H(): Int {
-        val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-        return currentTime.split(":").let {
-            val hours = it[0].toInt()
-            val minutes = it[1].toInt()
-            hours * 60 + minutes
-        }
+        val calendar = Calendar.getInstance()
+        return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
     }
 
     fun updateCountdown(nextPrayerTime: String) {
+        countDownTimer?.cancel()
+
         val prayerTimeInMinutes = convertTimeToMinutes(nextPrayerTime)
         val currentTimeInMinutes = getCurrentTimeIn24H()
 
-        val timeLeft = if (prayerTimeInMinutes > currentTimeInMinutes) {
+        val timeLeftMinutes = if (prayerTimeInMinutes > currentTimeInMinutes) {
             prayerTimeInMinutes - currentTimeInMinutes
         } else {
-            prayerTimeInMinutes + (24 * 60) - currentTimeInMinutes
+            (24 * 60 - currentTimeInMinutes) + prayerTimeInMinutes
         }
 
-        val hours = timeLeft / 60
-        val minutes = timeLeft % 60
-        timerLiveData.postValue(String.format("%02d:%02d", hours, minutes))
+        // Convert to milliseconds and add current seconds
+        val timeLeftMillis = timeLeftMinutes * 60 * 1000L -
+                (Calendar.getInstance().get(Calendar.SECOND) * 1000)
+
+        countDownTimer = object : CountDownTimer(timeLeftMillis, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val hours = millisUntilFinished / (1000 * 60 * 60)
+                val minutes = (millisUntilFinished % (1000 * 60 * 60)) / (1000 * 60)
+                val seconds = (millisUntilFinished % (1000 * 60)) / 1000
+
+                _timerLiveData.postValue(String.format("%02d:%02d:%02d", hours, minutes, seconds))
+            }
+
+            override fun onFinish() {
+                calculateNextPrayer()
+            }
+        }.start()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        countDownTimer?.cancel()
     }
 }

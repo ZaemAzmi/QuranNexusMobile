@@ -9,6 +9,9 @@ import com.example.qurannexus.features.recitation.audio.models.AudioRecitationRe
 import com.example.qurannexus.features.recitation.models.AyahRecitationModel
 import com.example.qurannexus.features.recitation.models.PageVerseResponse
 import com.example.qurannexus.features.recitation.models.SurahListResponse
+import com.example.qurannexus.features.words.models.DailyQuoteResponse
+import com.example.qurannexus.features.words.models.DailyWordResponse
+import com.example.qurannexus.features.words.models.WordOccurrencesResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -32,10 +35,23 @@ interface QuranApi {
         @Query("ayahs") ayahs: Boolean = true,
         @Query("words") words: Boolean = true
     ): Call<PageVerseResponse?>?
+
+    //words
     @GET("api/v1/words/{word_key}")
     fun getWordDetails(@Path("word_key") wordKey: String?): Call<WordDetailsResponse?>?
 
-// bookmarks
+//    @GET("api/v1/words/{word_id}/occurrences")
+//    fun getWordOccurrences(
+//        @Path("word_id") wordId: String,
+//        @Query("juz") juzNumber: Int
+//    ): Call<WordOccurrencesResponse>
+//    @GET("api/v1/words/daily")
+//    fun getDailyWord(): Call<DailyWordResponse>
+
+    @GET("api/v1/quotes/daily")
+    fun getDailyQuote(): Call<DailyQuoteResponse>
+
+    // bookmarks
     @POST("api/v1/mobile/bookmarks")
     fun addBookmark(
     @Header("Authorization") token: String,
@@ -57,6 +73,5 @@ interface QuranApi {
 
     @GET("api/v1/audio_recitations/{ayah_key}")
     fun getAudioRecitation(@Path("ayah_key") ayahKey: String): Call<AudioRecitationResponse>
-
 
 }

@@ -36,7 +36,7 @@ class AuthService {
 
     init {
         // Reuse ApiService to create Retrofit instance for authentication
-//        val retrofit = ApiService.createRetrofit("http://192.168.1.10:8000/")
+//        val retrofit = ApiService.createRetrofit("http://192.168.26.35:8000")
         val retrofit = ApiService.createRetrofit("http://10.0.2.2:8000")
         authApi = retrofit.create(AuthApi::class.java)
     }
@@ -160,6 +160,38 @@ class AuthService {
                 // On network failure, still clear local data
                 clearUserData(context)
                 callback(false)
+            }
+        })
+    }
+
+    fun forgotPassword(context: Context, email: String, callback: ResetPasswordCallback) {
+        val request = ForgotPasswordRequest(email)
+
+        authApi.forgotPassword(request).enqueue(object : Callback<ForgotPasswordResponse> {
+            override fun onResponse(
+                call: Call<ForgotPasswordResponse>,
+                response: Response<ForgotPasswordResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    callback.onSuccess()
+                    Log.d("ForgotPassword", "Response: $response")
+
+                    // For testing only - show the temporary password
+                    response.body()?.temp_password?.let { tempPass ->
+                        Log.d("AuthService", "Temporary password: $tempPass")
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.d("ForgotPassword", "Response: $response")
+
+                    Log.e("AuthService", "Password reset failed: $errorBody")
+                    callback.onError("Password reset failed: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ForgotPasswordResponse>, t: Throwable) {
+                Log.e("AuthService", "Password reset error", t)
+                callback.onError("Network error: ${t.message}")
             }
         })
     }

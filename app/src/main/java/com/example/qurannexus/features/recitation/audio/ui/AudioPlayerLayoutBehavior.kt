@@ -15,6 +15,7 @@ class AudioPlayerBehavior(
     private var fabX = 0f
     private var fabWidth = 0
     private var playerWidth = 0
+    private val MARGIN = 16 // dp
 
     override fun layoutDependsOn(
         parent: CoordinatorLayout,
@@ -32,24 +33,28 @@ class AudioPlayerBehavior(
         if (dependency is FloatingActionButton) {
             if (fabWidth == 0) {
                 fabWidth = dependency.width
-                playerWidth = child.width
             }
 
             fabX = dependency.x
 
-            // Position the player next to the FAB
-            val targetX = if (fabX <= parent.width / 2) {
-                // FAB is on left side
-                fabX + fabWidth + 16 // Add spacing
-            } else {
-                // FAB is on right side
-                fabX - playerWidth - 16 // Add spacing
-            }
-
-            child.x = targetX
+            // Calculate the x position to avoid overlap
+            // We want the card to end before the FAB starts
+            val cardEndX = dependency.x - MARGIN.dpToPx(parent.context)
+            child.x = MARGIN.dpToPx(parent.context) // Start from left with margin
             child.y = dependency.y // Keep on same vertical line
+
+            // Set the width to fill the space up to the FAB
+            val newWidth = cardEndX - child.x
+            val params = child.layoutParams
+            params.width = newWidth.toInt()
+            child.layoutParams = params
+
             return true
         }
         return false
+    }
+
+    private fun Int.dpToPx(context: Context): Float {
+        return this * context.resources.displayMetrics.density
     }
 }

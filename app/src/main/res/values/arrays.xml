@@ -15,8 +15,8 @@
         <item>Abdul Baseet</item>
     </string-array>
     <string-array name="reciter_values">
-        <item>reply</item>
-        <item>reply_all</item>
+        <item>1</item> <!-- Value for Misyari Alafasy -->
+        <item>2</item> <!-- Value for Abdul Baseet -->
     </string-array>
     <string-array name="surah_names">
         <item>Al-Fatihah</item>

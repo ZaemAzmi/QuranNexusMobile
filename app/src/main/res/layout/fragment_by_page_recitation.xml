@@ -17,11 +17,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:lineSpacingExtra="4dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="45dp"
         android:textColor="@color/white"
         android:fontFamily="@font/uthmanic_scripts_hafs"
         android:padding="16dp"
-        android:textSize="8sp" />
+        android:textSize="20sp" />
 
     <include
         android:id="@+id/audioPlayerLayout"

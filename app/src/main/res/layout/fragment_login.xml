@@ -65,15 +65,15 @@
 
             <Button
                 android:id="@+id/loginButton"
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="156dp"
-                android:layout_marginEnd="184dp"
+                android:layout_marginStart="-30dp"
                 android:backgroundTint="#1F7810"
                 android:text="Login"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/loginPasswordInput" />
 
             <TextView
@@ -101,8 +101,8 @@
                 android:paddingTop="16dp"
                 android:text="Forgot Password?"
                 android:textAlignment="center"
-                android:textColor="#65A963"
-                android:textSize="14sp"
+                android:textColor="#223E21"
+                android:textSize="17sp"
                 android:textStyle="normal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/loginPasswordInput" />

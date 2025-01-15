@@ -188,9 +188,14 @@ class QuizQuestionFragment : Fragment() {
             viewModel.quizState.collectLatest { state ->
                 when (state) {
                     is QuizState.Finished -> {
-                        // Calculate total batches based on total questions (10 questions per batch)
-                        val totalBatches = (state.totalQuestions + QUESTIONS_PER_BATCH - 1) / QUESTIONS_PER_BATCH
 
+                        val totalQuestions = viewModel.getTotalQuestionsInSurah()
+                        val totalBatches = (totalQuestions + QuizViewModel.QUESTIONS_PER_BATCH - 1) / QuizViewModel.QUESTIONS_PER_BATCH
+
+
+                        Log.d("QuizQuestion", "Current batch: ${args.batchNumber}")
+                        Log.d("QuizQuestion", "Total batches: $totalBatches")
+                        Log.d("QuizQuestion", "Total questions: ${state.totalQuestions}")
                         val action = QuizQuestionFragmentDirections
                             .actionQuizQuestionFragmentToQuizResultFragment(
                                 args.chapterNumber,

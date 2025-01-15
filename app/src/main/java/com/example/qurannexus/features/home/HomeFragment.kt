@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -28,15 +30,22 @@ import com.example.qurannexus.features.prayerTimes.models.PrayerTimesResponse
 import com.example.qurannexus.features.home.models.DailyInspirationAdapter
 import com.example.qurannexus.features.home.models.HighlightsRecyclerAdapter
 import com.example.qurannexus.features.auth.AuthService
+import com.example.qurannexus.features.prayerTimes.PrayerTimesViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+@AndroidEntryPoint
 class HomeFragment : Fragment(), HighlightClickListener {
 
     private lateinit var prayerTrailerCard: View
     private lateinit var nextPrayerTextView: TextView
     private lateinit var timerTextView: TextView
     private lateinit var dateTextView: TextView
+
     private lateinit var greetingsText: TextView
     private lateinit var authService: AuthService
     private lateinit var viewPager: ViewPager2
@@ -44,6 +53,9 @@ class HomeFragment : Fragment(), HighlightClickListener {
 
     private lateinit var seeAllBadgeText : TextView
     private lateinit var llScrollableBadges : LinearLayout
+
+    private val viewModel: PrayerTimesViewModel by activityViewModels()
+
     private val quotes = listOf(
         "And those who strive for Us- We will surely guide them to Our ways.",
         "Indeed, Allah is with those who fear Him and those who are doers of good.",
@@ -81,6 +93,7 @@ class HomeFragment : Fragment(), HighlightClickListener {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         authService = AuthService()
         greetingsText = view.findViewById(R.id.homepageGreetingsText)
+
         prayerTrailerCard = view.findViewById(R.id.prayerTrailerCard)
         nextPrayerTextView = prayerTrailerCard.findViewById(R.id.nextPrayerTextView)
         timerTextView = prayerTrailerCard.findViewById(R.id.timerTextView)
@@ -93,8 +106,13 @@ class HomeFragment : Fragment(), HighlightClickListener {
         prayerTrailerCard.setOnClickListener {
            loadFragment(PrayerTimesFragment())
         }
-        fetchPrayerTimes()
+        // Set default values
+        nextPrayerTextView.text = "Next Prayer: -"
+        timerTextView.text = "-"
+        dateTextView.text = "-"
 
+        setupObservers()
+        loadInitialData()
 
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
@@ -169,54 +187,29 @@ class HomeFragment : Fragment(), HighlightClickListener {
             .addToBackStack(null)
             .commit()
     }
-    private fun fetchPrayerTimes() {
-//        val apiService = ApiService.getPrayerTimesClient().create(com.example.qurannexus.features.prayerTimes.di.PrayerTimesApi::class.java)
-//        val call = apiService.getPrayerTimes("04-10-2024","Kuala Lumpur", "MY")
-//
-//        call.enqueue(object : Callback<PrayerTimesResponse> {
-//            override fun onResponse(
-//                call: Call<PrayerTimesResponse>,
-//                response: Response<PrayerTimesResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val prayerTimesResponse = response.body()
-//                    prayerTimesResponse?.let { data ->
-//                        val timings = data.data?.timings
-//                        val date = data.data?.date
-//
-//                        // Set date and location
-//                        dateTextView.text = date?.readable
-//                        locationTextView.text = "Kuala Lumpur, Malaysia"
-//                        weekdayTextView.text = date?.gregorian?.weekday?.en
-//
-//                        // Set prayer times in RecyclerView
-//                        val prayerTimesList = listOf(
-//                            PrayerTime("Fajr", timings?.Fajr ?: ""),
-//                            PrayerTime("Sunrise", timings?.Sunrise ?: ""),
-//                            PrayerTime("Dhuhr", timings?.Dhuhr ?: ""),
-//                            PrayerTime("Asr", timings?.Asr ?: ""),
-//                            PrayerTime("Maghrib", timings?.Maghrib ?: ""),
-//                            PrayerTime("Isha", timings?.Isha ?: "")
-//                        )
-//
-//                        prayerTimesRecycler.layoutManager = LinearLayoutManager(context)
-//                        prayerTimesRecycler.adapter = PrayerTimesAdapter(prayerTimesList)
-//
-//                        // Calculate next prayer and start countdown timer
-//                        calculateNextPrayer(timings)
-//                        startCountdownTimer(timings)
-//                    }
-//                } else {
-//                    handleApiFailure("Failed to fetch prayer times")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<PrayerTimesResponse>, t: Throwable) {
-//                handleApiFailure("Network error: Unable to retrieve prayer times")
-//            }
-//        })
-    }
+    private fun setupObservers() {
+        viewModel.apply {
+            dateLiveData.observe(viewLifecycleOwner) { date ->
+                dateTextView.text = date ?: "-"
+            }
 
+            nextPrayerLiveData.observe(viewLifecycleOwner) { nextPrayer ->
+                nextPrayerTextView.text = "Next Prayer: ${nextPrayer?.name ?: "-"}"
+            }
+
+            timerLiveData.observe(viewLifecycleOwner) { timerText ->
+                if (timerText != null) {
+                    timerTextView.text = "Time Remaining: $timerText"
+                } else {
+                    timerTextView.text = "-"
+                }
+            }
+        }
+    }
+    private fun loadInitialData() {
+        val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
+        viewModel.fetchPrayerTimes(currentDate, "Kuala Lumpur", "MY")
+    }
     private fun handleApiFailure(message: String) {
         // Display a message to the user in case of failure
         timerTextView.text = message

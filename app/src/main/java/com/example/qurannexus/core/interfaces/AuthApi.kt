@@ -1,4 +1,6 @@
 package com.example.qurannexus.core.interfaces
+import com.example.qurannexus.features.auth.ForgotPasswordRequest
+import com.example.qurannexus.features.auth.ForgotPasswordResponse
 import com.example.qurannexus.features.auth.models.LoginRequest
 import com.example.qurannexus.features.auth.models.LoginResponse
 import com.example.qurannexus.features.auth.models.RegisterRequest
@@ -22,6 +24,7 @@ interface AuthApi {
     fun logout(@Header("Authorization") token: String): Call<Unit>?
     @GET("api/v1/profile")
     fun getUserProfile(@Header("Authorization") token: String): Call<UserResponse?>?
-
+    @POST("api/v1/forgot-password")
+    fun forgotPassword(@Body request: ForgotPasswordRequest): Call<ForgotPasswordResponse>
 
 }

@@ -4,13 +4,21 @@ import android.content.Context
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.features.words.JuzPieChartManager
+import com.example.qurannexus.features.words.models.WordDetails
+import com.example.qurannexus.features.words.models.WordDetailsViewModel
+import com.example.qurannexus.features.words.models.WordOccurrence
+import com.example.qurannexus.features.words.models.WordOccurrencesAdapter
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.charts.RadarChart
@@ -30,168 +38,259 @@ import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 
+@AndroidEntryPoint
 class WordDetailsActivity : AppCompatActivity() {
     private lateinit var barChart: BarChart
     private lateinit var pieChart: PieChart
-    private lateinit var chartManager: JuzPieChartManager
+    private lateinit var bookmarkButton: ImageView
+    private val viewModel: WordDetailsViewModel by viewModels()
+    private var isBookmarked = false
+    private var authToken: String? = null
+    private var currentWord: WordDetails? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_details)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(true)
-        val backButton = findViewById<ImageView>(R.id.backButton)
-        backButton.setOnClickListener {
+        Log.d("WordDetailsActivity", "onCreate called")
+        // Get auth token
+        authToken = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            .getString("token", null)
+
+        // Initialize views and setup UI
+        initializeViews()
+        setupBookmarkButton()
+        setupCharts()
+
+        // Load word data and update UI
+        loadWordData()
+    }
+
+    private fun initializeViews() {
+        Log.d("WordDetailsActivity", "initializeViews called")
+        barChart = findViewById(R.id.barChart)
+        pieChart = findViewById(R.id.pieChart)
+        bookmarkButton = findViewById(R.id.bookmarkButton)
+        // Back button
+        findViewById<ImageView>(R.id.backButton).setOnClickListener {
             onBackPressed()
         }
-        val wordTextView = findViewById<TextView>(R.id.wordText)
-        val translationTextView = findViewById<TextView>(R.id.translationText)
-        val transliterationTextView = findViewById<TextView>(R.id.transliterationText)
-        val surahNameTextView = findViewById<TextView>(R.id.surahNameText)
-        val ayahKeyTextView = findViewById<TextView>(R.id.ayahKeyText)
-        val surahNumberText = findViewById<TextView>(R.id.surahNumberText)
-        val lineNumberText = findViewById<TextView>(R.id.lineNumberText)
-        val wordNumberText = findViewById<TextView>(R.id.wordNumberText)
-        val pageIdText = findViewById<TextView>(R.id.pageIdText)
+
+        // Audio playback setup
         val playAudioButton = findViewById<Button>(R.id.playAudioButton)
-
-        // Retrieve data from the intent
-        val wordText = intent.getStringExtra("WORD_TEXT")
-        val translation = intent.getStringExtra("TRANSLATION")
-        val transliteration = intent.getStringExtra("TRANSLITERATION")
-        val surahNameArabic = intent.getStringExtra("SURAH_NAME_ARABIC")
-        val surahNameEnglish = intent.getStringExtra("SURAH_NAME_ENGLISH")
-        val ayahKey = intent.getStringExtra("AYAH_KEY")
         val audioUrl = intent.getStringExtra("AUDIO_URL")
-        val surahNumber = intent.getStringExtra("SURAH_NUMBER")
-        val lineNumber = intent.getIntExtra("LINE_NUMBER", -1)
-        val wordNumber = intent.getStringExtra("WORD_NUMBER")
-        val pageId = intent.getStringExtra("PAGE_ID")
-
-        // Set data to views
-        wordTextView.text = wordText
-        translationTextView.text = "Translation: $translation"
-        transliterationTextView.text = "Transliteration: $transliteration"
-        surahNameTextView.text = "Surah: $surahNameArabic ($surahNameEnglish)"
-        ayahKeyTextView.text = "Ayah Key: $ayahKey"
-        surahNumberText.text = "Surah Number: $surahNumber"
-        lineNumberText.text = "Line Number: $lineNumber"
-        wordNumberText.text = "Word Number: $wordNumber"
-        pageIdText.text = "Page ID: $pageId"
-
-        // Set up audio playback
         playAudioButton.setOnClickListener {
+            playAudio(audioUrl)
+        }
+    }
+    private fun setupBookmarkButton() {
+        Log.d("WordDetailsActivity", "setupBookmarkButton called")
+        bookmarkButton.setOnClickListener {
+            authToken?.let { token ->
+                currentWord?.let { word ->
+                    if (isBookmarked) {
+                        viewModel.removeWordBookmark(token)
+                    } else {
+                        viewModel.addWordBookmark(token, word)
+                    }
+                }
+            } ?: run {
+                Toast.makeText(this, "Please login to bookmark words", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.isBookmarked.observe(this) { bookmarked ->
+            isBookmarked = bookmarked
+            bookmarkButton.setImageResource(
+                if (bookmarked) R.drawable.ic_heart_bookmarked
+                else R.drawable.ic_heart
+            )
+        }
+    }
+    private fun loadWordData() {
+        // Get word details from intent
+        val wordId = intent.getStringExtra("WORD_ID") ?: return finish()
+
+        // Load from JSON and check bookmark status
+        authToken?.let { token ->
+            viewModel.loadWordDetails(wordId, token)
+        } ?: run {
+            viewModel.loadWordDetails(wordId, "") // Load just word details without bookmark check
+        }
+
+        // Update UI with intent data
+        updateWordInfoFromIntent()
+    }
+
+    private fun updateWordInfoFromIntent() {
+        findViewById<TextView>(R.id.wordText).text = intent.getStringExtra("WORD_TEXT")
+        findViewById<TextView>(R.id.translationText).text =
+            "Translation: ${intent.getStringExtra("TRANSLATION")}"
+        findViewById<TextView>(R.id.transliterationText).text =
+            "Transliteration: ${intent.getStringExtra("TRANSLITERATION")}"
+        findViewById<TextView>(R.id.surahNameText).text =
+            "Surah: ${intent.getStringExtra("SURAH_NAME_ARABIC")} (${intent.getStringExtra("SURAH_NAME_ENGLISH")})"
+        findViewById<TextView>(R.id.ayahKeyText).text =
+            "Ayah Key: ${intent.getStringExtra("AYAH_KEY")}"
+        findViewById<TextView>(R.id.surahNumberText).text =
+            "Surah Number: ${intent.getStringExtra("SURAH_NUMBER")}"
+        findViewById<TextView>(R.id.lineNumberText).text =
+            "Line Number: ${intent.getIntExtra("LINE_NUMBER", -1)}"
+        findViewById<TextView>(R.id.wordNumberText).text =
+            "Word Number: ${intent.getStringExtra("WORD_NUMBER")}"
+        findViewById<TextView>(R.id.pageIdText).text =
+            "Page ID: ${intent.getStringExtra("PAGE_ID")}"
+
+
+    }
+
+
+
+    private fun setupCharts() {
+        viewModel.wordDetails.observe(this) { word ->
+            currentWord = word
+            updateCharts(word.juz_distribution)
+        }
+
+        // Bar chart click listener
+        barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+                e?.let {
+                    val juzNumber = it.x.toInt()
+                    viewModel.getWordOccurrencesInJuz(juzNumber)
+                }
+            }
+            override fun onNothingSelected() {}
+        })
+
+        // Show occurrences when available
+        viewModel.occurrencesInJuz.observe(this) { occurrences ->
+            showOccurrencesBottomSheet(occurrences)
+        }
+    }
+
+    private fun updateCharts(juzDistribution: Map<String, Int>) {
+        setupBarChart(juzDistribution)
+        setupPieChart(juzDistribution)
+    }
+
+    private fun setupBarChart(juzDistribution: Map<String, Int>) {
+        val entries = juzDistribution.map { (juz, count) ->
+            BarEntry(juz.toFloat(), count.toFloat())
+        }
+
+        val dataSet = BarDataSet(entries, "")
+        dataSet.color = Color.BLUE
+        dataSet.valueTextSize = 8f
+        dataSet.valueTextColor = Color.TRANSPARENT
+
+        barChart.apply {
+            data = BarData(dataSet)
+            description.isEnabled = false
+            setFitBars(true)
+            animateY(1400)
+
+            // X-axis setup
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                textSize = 10f
+                granularity = 1f
+                valueFormatter = IndexAxisValueFormatter(
+                    (1..30).map { it.toString() } + listOf("Juz")
+                )
+                labelRotationAngle = 0f
+            }
+
+            // Y-axis setup
+            axisLeft.apply {
+                axisMinimum = 0f
+                axisMaximum = (juzDistribution.values.maxOrNull() ?: 100).toFloat()
+                labelCount = 5
+                setDrawGridLines(false)
+            }
+            axisRight.isEnabled = false
+
+            invalidate()
+        }
+
+        // Update statistics text
+        val total = juzDistribution.values.sum()
+        val maxEntry = juzDistribution.maxByOrNull { it.value }
+        val minEntry = juzDistribution.minByOrNull { it.value }
+
+        findViewById<TextView>(R.id.tvTotalOccurrences).text = "Total Occurrences: $total"
+        findViewById<TextView>(R.id.tvMostLeastOccurrences).text =
+            "Most: Juz ${maxEntry?.key} (${maxEntry?.value}), " +
+                    "Least: Juz ${minEntry?.key} (${minEntry?.value})"
+    }
+
+    private fun setupPieChart(juzDistribution: Map<String, Int>) {
+        // Filter out entries with count = 0
+        val entries = juzDistribution
+            .filter { (_, count) -> count > 0 }  // Only keep entries with count > 0
+            .map { (juz, count) ->
+                PieEntry(count.toFloat(), juz)
+            }
+
+        val dataSet = PieDataSet(entries, "").apply {
+            colors = ColorTemplate.COLORFUL_COLORS.toList()
+            sliceSpace = 2f
+            valueTextSize = 0f
+        }
+
+        pieChart.apply {
+            data = PieData(dataSet)
+            description.isEnabled = false
+            isRotationEnabled = true
+            setHoleColor(Color.WHITE)
+            setEntryLabelTextSize(10f)
+            setDrawEntryLabels(true)
+            animateY(1000)
+            invalidate()
+        }
+    }
+
+    private fun showOccurrencesBottomSheet(occurrences: List<WordOccurrence>) {
+        BottomSheetDialog(this).apply {
+            setContentView(R.layout.layout_word_occurrences_bottom_sheet)
+
+            findViewById<RecyclerView>(R.id.occurrencesRecyclerView)?.apply {
+                layoutManager = LinearLayoutManager(this@WordDetailsActivity)
+                adapter = WordOccurrencesAdapter(occurrences) { occurrence ->
+                    navigateToVerse(occurrence.chapter_id, occurrence.verse_number)
+                }
+            }
+
+            show()
+        }
+    }
+
+    private fun playAudio(audioUrl: String?) {
+        Log.d("playdio", "Audio URL: $audioUrl")
+        audioUrl?.let {
             val mediaPlayer = MediaPlayer()
             try {
-                mediaPlayer.setDataSource(audioUrl)
+                mediaPlayer.setDataSource(it)
                 mediaPlayer.prepare()
                 mediaPlayer.start()
             } catch (e: IOException) {
                 Toast.makeText(this, "Failed to play audio", Toast.LENGTH_SHORT).show()
             }
         }
-        pieChart = findViewById(R.id.pieChart)
-        barChart = findViewById(R.id.barChart)
-
-        setupBarChart()
-        setupPieChart()
-
     }
 
-    private fun setupBarChart() {
-        val entries = ArrayList<BarEntry>()
-
-        // Generate temporary data for all 30 Juz
-        val occurrences = (1..30).map { (10..100).random() }
-        for (i in occurrences.indices) {
-            entries.add(BarEntry((i + 1).toFloat(), occurrences[i].toFloat()))
-        }
-
-        val dataSet = BarDataSet(entries, "")
-        dataSet.color = Color.BLUE
-        dataSet.valueTextSize = 8f // Hide value texts
-        dataSet.valueTextColor = Color.TRANSPARENT
-
-        val data = BarData(dataSet)
-        data.barWidth = 0.8f
-
-        barChart.data = data
-        barChart.description.isEnabled = false
-        barChart.setFitBars(true)
-        barChart.animateY(1400)
-
-        // Customize x-axis
-        val xAxis = barChart.xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setDrawGridLines(false)
-        xAxis.textSize = 10f
-        xAxis.granularity = 1f
-        xAxis.valueFormatter = IndexAxisValueFormatter(
-            (1..30).map { it.toString() } + listOf("Juz") // Add "Juz" at the end
-        )
-        xAxis.labelRotationAngle = 0f // Keep labels horizontal
-
-        // Customize y-axis
-        barChart.axisLeft.axisMinimum = 0f
-        barChart.axisLeft.axisMaximum = 100f // Example range
-        barChart.axisLeft.labelCount = 5
-        barChart.axisRight.isEnabled = false // Hide right axis
-        barChart.axisLeft.setDrawGridLines(false)
-
-        // Add a MarkerView for long click
-        val marker = CustomMarkerView(this, R.layout.marker_view, occurrences)
-        barChart.marker = marker
-
-        barChart.invalidate()
-
-        // Update TextViews
-        val tvTotalOccurrences: TextView = findViewById(R.id.tvTotalOccurrences)
-        val tvMostLeastOccurrences: TextView = findViewById(R.id.tvMostLeastOccurrences)
-
-        val total = occurrences.sum()
-        val mostIndex = occurrences.indexOf(occurrences.maxOrNull() ?: 0)
-        val leastIndex = occurrences.indexOf(occurrences.minOrNull() ?: 0)
-
-        tvTotalOccurrences.text = "Total Occurrences: $total"
-        tvMostLeastOccurrences.text =
-            "Most: Juz ${mostIndex + 1} (${occurrences[mostIndex]}), " +
-                    "Least: Juz ${leastIndex + 1} (${occurrences[leastIndex]})"
+    private fun navigateToVerse(chapterId: String, verseNumber: String) {
+        // TODO: Implement navigation to verse using your existing logic
+        Toast.makeText(this, "Navigating to chapter $chapterId verse $verseNumber",
+            Toast.LENGTH_SHORT).show()
     }
-
-
-    private fun setupPieChart() {
-        val entries = ArrayList<PieEntry>()
-
-        // Generate temporary data for all 30 Juz
-        val occurrences = (1..30).map { (10..100).random() }
-        for (i in occurrences.indices) {
-            entries.add(PieEntry(occurrences[i].toFloat(), (i + 1).toString())) // Use index as label
-        }
-
-        val dataSet = PieDataSet(entries, "")
-        dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
-        dataSet.sliceSpace = 2f
-        dataSet.valueTextSize = 0f // Hide values on pie sections
-
-        val data = PieData(dataSet)
-        pieChart.data = data
-        pieChart.description.isEnabled = false
-        pieChart.isRotationEnabled = true
-        pieChart.setHoleColor(Color.WHITE)
-        pieChart.setEntryLabelTextSize(10f) // Keep only numbers (1-30)
-        pieChart.setDrawEntryLabels(true)
-
-        // Add MarkerView for long click
-        val markerPie = CustomMarkerViewPie(this, R.layout.marker_view, occurrences)
-        pieChart.marker = markerPie
-
-        pieChart.invalidate()
-    }
-
-
 }
 class CustomMarkerView(
     context: Context,

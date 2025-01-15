@@ -35,10 +35,10 @@ class AudioPlayerService : Service() {
         player = ExoPlayer.Builder(this).build().apply {
             addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
-                    Log.d("AudioDebug", "Playback state changed to: $state")
+//                    Log.d("AudioDebug", "Playback state changed to: $state")
                     when (state) {
                         Player.STATE_ENDED -> {
-                            Log.d("AudioDebug", "AudioService: Playback ended, triggering completion")
+//                            Log.d("AudioDebug", "AudioService: Playback ended, triggering completion")
                             completionListener?.invoke()
                         }
                     }
@@ -54,7 +54,7 @@ class AudioPlayerService : Service() {
 
     fun playAyah(audioUrl: String, ayahInfo: String) {
         val fullUrl = "${AWS_URL}/${audioUrl}"
-        Log.d("AudioDebug", "AudioService: Playing ayah from URL: $fullUrl")
+//        Log.d("AudioDebug", "AudioService: Playing ayah from URL: $fullUrl")
         currentAyahInfo = ayahInfo
 
         player?.apply {

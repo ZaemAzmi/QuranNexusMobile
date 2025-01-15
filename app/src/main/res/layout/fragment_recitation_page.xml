@@ -12,18 +12,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <ImageButton
-            android:id="@+id/previousSurahButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_previous"
-            android:contentDescription="@string/previous_surah_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintEnd_toStartOf="@id/textLayout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="20dp"/>
-
         <LinearLayout
             android:id="@+id/textLayout"
             android:layout_width="wrap_content"
@@ -54,18 +42,6 @@
                 android:text="@string/english_surah_name_placeholder" />
 
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/nextSurahButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_next"
-            android:contentDescription="@string/next_surah_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintStart_toEndOf="@id/textLayout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="20dp"/>
 
         <ImageView
             android:id="@+id/bookmarkIcon"

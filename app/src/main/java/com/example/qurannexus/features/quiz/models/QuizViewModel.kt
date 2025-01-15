@@ -26,7 +26,7 @@ class QuizViewModel @Inject constructor(
         private var lastQuizResult: QuizState.Finished? = null
         const val QUESTIONS_PER_BATCH = 10
     }
-
+    private var totalQuestionsInSurah: Int = 0
     private val _quizState = MutableStateFlow<QuizState>(QuizState.Initial)
     val quizState: StateFlow<QuizState> = _quizState
 
@@ -39,7 +39,7 @@ class QuizViewModel @Inject constructor(
     private var questionList: List<QuestionData> = emptyList()
     private val currentBatchAnswers = mutableListOf<BatchAnswer>()
     private var currentSurahId: String? = null
-
+    private val batchScores = mutableMapOf<Int, Score>()
     fun loadSurah(surahNumber: Int) {
         viewModelScope.launch {
             try {
@@ -66,7 +66,7 @@ class QuizViewModel @Inject constructor(
                                 )
                             }
                         }
-
+                        totalQuestionsInSurah = questionList.size
                         Log.d("QuizViewModel", "Loaded ${questionList.size} questions")
                         _quizState.value = QuizState.SurahLoaded(
                             chapterNumber = surahNumber,
@@ -80,7 +80,7 @@ class QuizViewModel @Inject constructor(
             }
         }
     }
-
+    fun getTotalQuestionsInSurah(): Int = totalQuestionsInSurah
     fun startBatch(batchNumber: Int) {
         viewModelScope.launch {
             try {
@@ -161,6 +161,13 @@ class QuizViewModel @Inject constructor(
                 )
 
                 if (batchAnswerResponse != null) {
+
+                    currentBatch.value?.let { batch ->
+                        batchScores[batch.batchNumber] = Score(
+                            correctAnswers = batchAnswerResponse.correct_answers,
+                            totalQuestions = batchAnswerResponse.total_questions
+                        )
+                    }
                     val finishResponse = quizRepository.finishQuiz(currentSurahId!!)
 
                     if (finishResponse != null) {
@@ -181,6 +188,18 @@ class QuizViewModel @Inject constructor(
                 Log.e("QuizViewModel", "Error in submitBatchAnswers", e)
                 _quizState.value = QuizState.Error("Error: ${e.message}")
             }
+        }
+    }
+    fun generateBatchList(totalBatches: Int, totalQuestions: Int): List<QuizBatch> {
+        return (1..totalBatches).map { batchNumber ->
+            val startQuestion = ((batchNumber - 1) * QUESTIONS_PER_BATCH) + 1
+            val endQuestion = minOf(batchNumber * QUESTIONS_PER_BATCH, totalQuestions)
+            QuizBatch(
+                batchNumber = batchNumber,
+                startQuestion = startQuestion,
+                endQuestion = endQuestion,
+                score = batchScores[batchNumber]
+            )
         }
     }
     fun loadLastResult() {

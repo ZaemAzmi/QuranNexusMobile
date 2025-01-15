@@ -1,7 +1,7 @@
 package com.example.qurannexus.features.bookmark.models
 
 data class BookmarkQuote(
-    val chapterNumber: Int,
-    val chapterTitle: String,
-    val chapterInfo: String
+    val quoteTitle: String,
+    val quoteDescription: String,
+    val quoteSource: String
 )

@@ -114,7 +114,15 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
                 "verse",
                 ayah.getId(),
                 ayah.getSurahId(),
-                notes  // This can be empty string
+                null,
+                null,  // This can be empty string
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
         );
 
         Call<BookmarkResponse> call = quranApi.addBookmark("Bearer " + authToken, request);
@@ -272,6 +280,8 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
 
                     // Prepare intent to navigate to WordDetailsActivity
                     Intent intent = new Intent(context, WordDetailsActivity.class);
+
+                    intent.putExtra("WORD_ID", wordDetails.getId());
                     intent.putExtra("WORD_TEXT", wordDetails.getText());
                     intent.putExtra("TRANSLATION", wordDetails.getTranslation()); // Replace if available
                     intent.putExtra("TRANSLITERATION", wordDetails.getTransliteration()); // Replace if available

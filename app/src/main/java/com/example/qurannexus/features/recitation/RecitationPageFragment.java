@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.OptIn;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.media3.common.util.UnstableApi;
 import androidx.preference.PreferenceManager;
 
 import android.text.SpannableStringBuilder;
@@ -110,9 +112,6 @@ public class RecitationPageFragment extends Fragment {
 //        surahNameTextView.setText(surahDetails.getEnglishName());
 //        surahNameEnglishTextView.setText(surahDetails.getTranslationName());
 
-        ImageButton previousSurahButton = rootView.findViewById(R.id.previousSurahButton);
-        ImageButton nextSurahButton = rootView.findViewById(R.id.nextSurahButton);
-
 //        previousSurahButton.setOnClickListener(v -> navigateToSurah(currentSurahIndex - 1));
 //        nextSurahButton.setOnClickListener(v -> navigateToSurah(currentSurahIndex + 1));
 
@@ -179,7 +178,16 @@ public class RecitationPageFragment extends Fragment {
                         "chapter",
                         surahNumber,  // Using the adjusted surah number
                         null,
-                        ""
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+
                 );
 
                 quranApi.addBookmark("Bearer " + authToken, request)
@@ -222,6 +230,8 @@ public class RecitationPageFragment extends Fragment {
             setPageContentCallback(startingPage);
         }
     }
+
+    @OptIn(markerClass = UnstableApi.class)
     private void setPageContentCallback(int pageNumber) {
         // Create callback for page content
         PageAdapter.PageContentCallback callback = new PageAdapter.PageContentCallback() {
@@ -268,6 +278,8 @@ public class RecitationPageFragment extends Fragment {
     public void onVerseChanged(int surahNumber) {
         updateSurahHeader(surahNumber);
     }
+
+    @OptIn(markerClass = UnstableApi.class)
     private void displayByAyatRecitationFragment(int surahNumber, int scrollToVerse) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         ByAyatRecitationFragment fragment = ByAyatRecitationFragment.newInstance(surahNumber, scrollToVerse);
@@ -275,6 +287,7 @@ public class RecitationPageFragment extends Fragment {
         transaction.commit();
     }
 
+    @OptIn(markerClass = UnstableApi.class)
     private void displayByPageRecitationFragment(int surahNumber) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         ByPageRecitationFragment fragment = ByPageRecitationFragment.newInstance(surahNumber);

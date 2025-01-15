@@ -1,5 +1,6 @@
 package com.example.qurannexus.features.auth
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -19,7 +20,9 @@ import com.example.qurannexus.core.interfaces.AuthCallback
 import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.databinding.FragmentLoginBinding
 import com.example.qurannexus.features.auth.models.LoginRequest
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -43,6 +46,7 @@ class LoginFragment : Fragment() {
         authService = AuthService()
         setupInputValidation()
         setupLoginButton()
+        setupForgotPasswordButton()
         checkExistingToken()
     }
 
@@ -191,7 +195,65 @@ class LoginFragment : Fragment() {
             Log.e("LoginFragment", "Error showing message", e)
         }
     }
+    private fun setupForgotPasswordButton() {
+        binding.forgotPasswordTextView.setOnClickListener {
+            if (!isFragmentActive) return@setOnClickListener
 
+            // Create and show dialog
+            val dialog = MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Forgot Password")
+                .setView(R.layout.dialog_forgot_password)
+                .setPositiveButton("Send", null) // Set to null initially
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+                .create()
+
+            dialog.show()
+
+            // Get dialog views
+            val emailInput = dialog.findViewById<TextInputEditText>(R.id.forgotPasswordEmailInput)
+
+            // Override positive button to prevent automatic dismiss
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val email = emailInput?.text?.toString() ?: ""
+
+                if (email.isEmpty()) {
+                    emailInput?.error = "Please enter your email address"
+                    return@setOnClickListener
+                }
+
+                setLoadingState(true)
+                dialog.dismiss()
+
+                try {
+                    authService.forgotPassword(requireContext(), email, object : ResetPasswordCallback {
+                        override fun onSuccess() {
+                            if (!isFragmentActive) return
+
+                            activity?.runOnUiThread {
+                                if (!isFragmentActive) return@runOnUiThread
+                                setLoadingState(false)
+                                showMessage("Password reset instructions have been sent to your email")
+                            }
+                        }
+
+                        override fun onError(error: String) {
+                            if (!isFragmentActive) return
+
+                            activity?.runOnUiThread {
+                                if (!isFragmentActive) return@runOnUiThread
+                                setLoadingState(false)
+                                showMessage(error)
+                            }
+                        }
+                    })
+                } catch (e: Exception) {
+                    Log.e("LoginFragment", "Error during password reset", e)
+                    setLoadingState(false)
+                    showMessage("An error occurred during password reset")
+                }
+            }
+        }
+    }
     private fun setupInputValidation() {
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -218,28 +280,28 @@ class LoginFragment : Fragment() {
         }
     }
 
-    // Commented Register Navigation Function
-    /*
-    private fun setupRegisterButton() {
-        binding.registerButton.setOnClickListener {
-            if (!isFragmentActive) return@setOnClickListener
-
-            try {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.authFragmentContainer, RegisterFragment())
-                    .addToBackStack(null)
-                    .commit()
-            } catch (e: Exception) {
-                Log.e("LoginFragment", "Error navigating to register", e)
-                showMessage("Unable to navigate to registration")
-            }
-        }
-    }
-    */
-
     override fun onDestroyView() {
         super.onDestroyView()
         isFragmentActive = false
         _binding = null
     }
 }
+
+
+// Callback interface (can be in a separate file)
+interface ResetPasswordCallback {
+    fun onSuccess()
+    fun onError(error: String)
+}
+
+// Create ForgotPasswordRequest.kt
+data class ForgotPasswordRequest(
+    val email: String
+)
+
+// Create ForgotPasswordResponse.kt
+data class ForgotPasswordResponse(
+    val message: String,
+    // Temporary for testing, remove in production
+    val temp_password: String? = null
+)
