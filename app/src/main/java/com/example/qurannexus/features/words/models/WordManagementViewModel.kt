@@ -102,7 +102,7 @@ class WordManagementViewModel @Inject constructor(
         }
     }
 
-    fun checkBookmarkStatus(token: String, wordId: String): LiveData<Boolean> {
+    fun checkBookmarkStatus(token: String, wordText: String): LiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
         viewModelScope.launch {
             try {
@@ -110,7 +110,7 @@ class WordManagementViewModel @Inject constructor(
                     override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
                         if (response.isSuccessful) {
                             val isBookmarked = response.body()?.bookmarks?.words?.any {
-                                it.word_id == wordId
+                                it.word_text == wordText
                             } ?: false
                             result.value = isBookmarked
                         }

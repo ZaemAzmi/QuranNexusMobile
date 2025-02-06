@@ -1,6 +1,7 @@
 package com.example.qurannexus.features.quiz.models
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 
 import androidx.lifecycle.ViewModel
@@ -40,6 +41,38 @@ class QuizViewModel @Inject constructor(
     private val currentBatchAnswers = mutableListOf<BatchAnswer>()
     private var currentSurahId: String? = null
     private val batchScores = mutableMapOf<Int, Score>()
+
+    private val _quizProgress = MutableStateFlow<List<QuizProgress>>(emptyList())
+    val quizProgress: StateFlow<List<QuizProgress>> = _quizProgress
+
+    init {
+        loadUserQuizProgress()
+    }
+
+    private fun loadUserQuizProgress() {
+        viewModelScope.launch {
+            try {
+                // Get token from SharedPreferences
+                val token = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                    .getString("token", null)
+
+                if (token != null) {
+                    val userProfile = quizRepository.getUserProfile("Bearer $token")
+                    userProfile?.quiz_progress?.let { progress ->
+                        _quizProgress.value = progress
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("QuizViewModel", "Error loading quiz progress", e)
+            }
+        }
+    }
+
+    fun getUserQuizProgress(): StateFlow<List<QuizProgress>> {
+        // Reload data when requested
+        loadUserQuizProgress()
+        return _quizProgress
+    }
     fun loadSurah(surahNumber: Int) {
         viewModelScope.launch {
             try {

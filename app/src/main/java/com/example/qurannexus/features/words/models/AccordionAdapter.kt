@@ -1,17 +1,16 @@
-package com.example.qurannexus.features.words
+package com.example.qurannexus.features.words.models
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.databinding.ItemWordAccordionSectionBinding
 import com.example.qurannexus.features.bookmark.models.BookmarkWord
-import com.example.qurannexus.features.home.WordDetailsActivity
+import com.example.qurannexus.features.words.WordDetailsActivity
 
 class AccordionAdapter(
     private val onWordClick: (BookmarkWord) -> Unit
@@ -50,14 +49,20 @@ class AccordionAdapter(
             // Setup child RecyclerView with BookmarkWord items
             val childAdapter = BookmarkWordChildAdapter(
                 onItemClick = { bookmarkWord ->
-                    // Navigate to word details
                     val intent = Intent(binding.root.context, WordDetailsActivity::class.java).apply {
-                        putExtra("WORD_ID", bookmarkWord.word_id)
                         putExtra("WORD_TEXT", bookmarkWord.word_text)
                         putExtra("TRANSLATION", bookmarkWord.translation)
                         putExtra("TRANSLITERATION", bookmarkWord.transliteration)
-                        putExtra("SURAH_NAME", bookmarkWord.surah_name)
-                        putExtra("AYAH_KEY", bookmarkWord.ayah_key)
+                        putExtra("TOTAL_OCCURRENCES", bookmarkWord.total_occurrences)
+
+                        // First occurrence details
+                        putExtra("CHAPTER_ID", bookmarkWord.first_occurrence.chapter_id)
+                        putExtra("VERSE_NUMBER", bookmarkWord.first_occurrence.verse_number)
+                        putExtra("SURAH_NAME", bookmarkWord.first_occurrence.surah_name)
+                        putExtra("PAGE_ID", bookmarkWord.first_occurrence.page_id)
+                        putExtra("JUZ_NUMBER", bookmarkWord.first_occurrence.juz_id)
+                        putExtra("VERSE_TEXT", bookmarkWord.first_occurrence.verse_text)
+                        putExtra("AUDIO_URL", bookmarkWord.first_occurrence.audio_url)
                     }
                     binding.root.context.startActivity(intent)
                 }

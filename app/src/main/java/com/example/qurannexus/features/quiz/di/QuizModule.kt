@@ -1,5 +1,6 @@
 package com.example.qurannexus.features.quiz.di
 
+import com.example.qurannexus.core.interfaces.AuthApi
 import com.example.qurannexus.core.interfaces.QuizApi
 import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.features.quiz.repository.QuizRepository
@@ -20,7 +21,13 @@ object QuizModule {
     }
 
     @Provides
-    fun provideQuizRepository(api: QuizApi): QuizRepository {
-        return QuizRepository(api)
+    fun provideAuthApi(): AuthApi {
+        val client = ApiService.getQuranClient()
+        return client.create(AuthApi::class.java)
+    }
+
+    @Provides
+    fun provideQuizRepository(api: QuizApi, authApi: AuthApi): QuizRepository {
+        return QuizRepository(api, authApi)
     }
 }

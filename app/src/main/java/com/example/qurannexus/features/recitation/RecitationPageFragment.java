@@ -274,10 +274,6 @@ public class RecitationPageFragment extends Fragment {
         updateSurahHeader(surahNumber);
     }
 
-    // Add method to be called from ByAyatRecitationFragment when verse changes
-    public void onVerseChanged(int surahNumber) {
-        updateSurahHeader(surahNumber);
-    }
 
     @OptIn(markerClass = UnstableApi.class)
     private void displayByAyatRecitationFragment(int surahNumber, int scrollToVerse) {

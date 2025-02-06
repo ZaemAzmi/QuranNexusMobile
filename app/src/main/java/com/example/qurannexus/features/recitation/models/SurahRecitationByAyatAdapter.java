@@ -26,7 +26,7 @@ import com.example.qurannexus.features.auth.AuthActivity;
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest;
 import com.example.qurannexus.features.bookmark.models.BookmarkResponse;
 import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse;
-import com.example.qurannexus.features.home.WordDetailsActivity;
+import com.example.qurannexus.features.words.WordDetailsActivity;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.features.home.models.WordDetails;
 import com.example.qurannexus.features.home.models.WordDetailsResponse;

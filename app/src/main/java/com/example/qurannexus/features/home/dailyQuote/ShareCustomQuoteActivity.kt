@@ -45,7 +45,6 @@ class ShareCustomQuoteActivity : AppCompatActivity() {
         alignmentRadioGroup = findViewById(R.id.alignmentRadioGroup)
         fontRadioGroup = findViewById(R.id.fontRadioGroup)
         backButton = findViewById(R.id.customQuotePreviousButton)
-
         backButton.setOnClickListener {
             finish() // Closes the current activity and returns to the previous one
         }
@@ -57,15 +56,9 @@ class ShareCustomQuoteActivity : AppCompatActivity() {
         setupTextAlignment()
         setupFontSelection()
     }
-
     private fun shareQuote() {
-        // Capture the view
         val bitmap = getBitmapFromView(quoteContainer)
-
-        // Save the image to a file
         val file = saveBitmapToFile(bitmap)
-
-        // Share the image
         if (file != null) {
             shareImageAndText(file, dailyQuoteText.text.toString())
         }
@@ -133,8 +126,6 @@ class ShareCustomQuoteActivity : AppCompatActivity() {
             }
         }
     }
-
-
     private fun setupTextAlignment() {
         alignmentRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -159,8 +150,6 @@ class ShareCustomQuoteActivity : AppCompatActivity() {
             }
         }
     }
-
-
 
     private fun setupFontSelection() {
         fontRadioGroup.setOnCheckedChangeListener { _, checkedId ->

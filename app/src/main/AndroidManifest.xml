@@ -42,7 +42,7 @@
             android:name=".features.home.BadgesActivity"
             android:exported="false" />
         <activity
-            android:name=".features.home.WordDetailsActivity"
+            android:name=".features.words.WordDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".features.home.dailyQuote.ShareCustomQuoteActivity"

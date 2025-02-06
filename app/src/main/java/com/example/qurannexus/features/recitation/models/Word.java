@@ -114,11 +114,19 @@ public class Word {
 //    }
 
     public String getText() {
-        return TextUtils.cleanArabicText(Text);
+        try {
+            return TextUtils.cleanArabicText(Text);
+        } catch (Exception e) {
+            return "";  // Return empty string if text is invalid
+        }
     }
 
     public String getTranslation() {
-        return TextUtils.cleanArabicText(Translation);
+        try {
+            return TextUtils.cleanArabicText(Translation);
+        } catch (Exception e) {
+            return "";  // Return empty string if translation is invalid
+        }
     }
     public void setText(String text) {
         Text = text;

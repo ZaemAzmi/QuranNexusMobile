@@ -28,10 +28,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
+import com.example.qurannexus.features.home.HomeFragment;
+import com.example.qurannexus.features.home.achievement.AchievementService;
+import com.example.qurannexus.features.home.achievement.StreakCheckCallback;
 import com.example.qurannexus.features.recitation.audio.AudioPlayerManager;
 import com.example.qurannexus.features.recitation.audio.ui.DraggableFloatingActionButton;
 import com.example.qurannexus.features.recitation.models.PageAyah;
@@ -67,7 +71,7 @@ public class ByPageRecitationFragment extends Fragment {
     private MaterialCardView expandedAudioPlayer;
     private boolean isPlayerExpanded = false;
     private PageVerseResponse.PageData responseData;
-
+    private AchievementService achievementService;
     public static ByPageRecitationFragment newInstance(int pageNumber) {
         ByPageRecitationFragment fragment = new ByPageRecitationFragment();
         Bundle args = new Bundle();
@@ -94,7 +98,7 @@ public class ByPageRecitationFragment extends Fragment {
         viewPager = view.findViewById(R.id.fragmentByPageRecitationViewPager);
         pageNumberTextView = view.findViewById(R.id.pageNumber);
         utilityService = new UtilityService();
-
+        achievementService = new AchievementService(requireContext());
         setupViewPager();
 
         // Initialize audio views
@@ -242,6 +246,12 @@ public class ByPageRecitationFragment extends Fragment {
                     responseData = response.body().getData();
                     List<PageAyah> verseList = responseData.getAyahs();
                     setupAudioForPage(verseList);
+
+                    if (!verseList.isEmpty()) {
+                        PageAyah firstVerse = verseList.get(0);
+                        trackChapterRead(firstVerse.getSurahId());
+                    }
+
 //                    List<PageAyah> verseList = response.body().getData().getAyahs();
                     SpannableStringBuilder pageContent = new SpannableStringBuilder();
                     int previousSurahId = -1;
@@ -308,7 +318,48 @@ public class ByPageRecitationFragment extends Fragment {
             }
         });
     }
+    private void trackChapterRead(String surahId) {
+        if (surahId.equals("2")) { // Al-Baqarah
+            achievementService.unlockAchievement("longest_chapter", success -> {
+                if (success) {
+                    refreshHomeFragment();
+                }
+                return null; // Required for Java lambda
+            });
+        } else if (surahId.equals("108")) { // Al-Kawthar
+            achievementService.unlockAchievement("shortest_chapter", success -> {
+                if (success) {
+                    refreshHomeFragment();
+                }
+                return null;
+            });
+        }
 
+        // Check streak achievement
+        achievementService.checkStreakEligibility(new StreakCheckCallback() {
+            @Override
+            public void onStreakChecked(boolean isEligible, int currentStreak) {
+                if (isEligible) {
+                    achievementService.unlockAchievement("weekly_streak", success -> {
+                        if (success) {
+                            refreshHomeFragment();
+                        }
+                        return null;
+                    });
+                }
+            }
+        });
+    }
+    private void refreshHomeFragment() {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            for (Fragment fragment : activity.getSupportFragmentManager().getFragments()) {
+                if (fragment instanceof HomeFragment) {
+                    ((HomeFragment) fragment).setupAchievements(AchievementService.PREDEFINED_BADGES);
+                }
+            }
+        }
+    }
     private void appendCalligraphyToContent(SpannableStringBuilder pageContent, String fileName) {
         Drawable calligraphyDrawable = getSurahCalligraphyDrawable(fileName);
         if (calligraphyDrawable != null) {
@@ -411,6 +462,7 @@ public class ByPageRecitationFragment extends Fragment {
                     .start();
         });
     }
+
 
     private void hidePlayer() {
         expandedAudioPlayer.animate()

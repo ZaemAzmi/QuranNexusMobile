@@ -8,12 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,9 @@ import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.features.bookmark.models.BookmarkVerse;
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
+import com.example.qurannexus.features.home.HomeFragment;
+import com.example.qurannexus.features.home.achievement.AchievementService;
+import com.example.qurannexus.features.home.achievement.StreakCheckCallback;
 import com.example.qurannexus.features.recitation.models.AyahRecitationModel;
 import com.example.qurannexus.features.recitation.models.ChapterAyah;
 import com.example.qurannexus.features.recitation.models.SurahRecitationByAyatAdapter;
@@ -49,7 +54,8 @@ public class ByAyatRecitationFragment extends Fragment {
     private String authToken;
     private static final String ARG_SCROLL_TO_VERSE = "scroll_to_verse";
     private int scrollToVerse = -1;
-
+    private AchievementService achievementService;
+    private ProgressBar loadingProgressBar;
     public ByAyatRecitationFragment() {}
 
     public static ByAyatRecitationFragment newInstance(int surahNumber, int scrollToVerse) {
@@ -69,6 +75,7 @@ public class ByAyatRecitationFragment extends Fragment {
             scrollToVerse = getArguments().getInt(ARG_SCROLL_TO_VERSE, -1);
         }
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
+        achievementService = new AchievementService(requireContext());
         authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 .getString("token", null);
     }
@@ -76,10 +83,10 @@ public class ByAyatRecitationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_by_ayat_recitation, container, false);
-
+        achievementService = new AchievementService(requireContext());
         byAyatRecyclerView = view.findViewById(R.id.byAyatRecyclerView);
         byAyatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
         byAyatAdapter = new SurahRecitationByAyatAdapter(getContext(), ayatModels);
         byAyatRecyclerView.setAdapter(byAyatAdapter);
 
@@ -122,6 +129,8 @@ public class ByAyatRecitationFragment extends Fragment {
     }
 
     private void fetchVersesByAyat(int surahIndex) {
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        byAyatRecyclerView.setVisibility(View.GONE);
         quranApi.getVersesBySurah(surahIndex).enqueue(new Callback<AyahRecitationModel>() {
             @Override
             public void onResponse(Call<AyahRecitationModel> call, Response<AyahRecitationModel> response) {
@@ -129,20 +138,20 @@ public class ByAyatRecitationFragment extends Fragment {
                     if (response.isSuccessful() && response.body() != null) {
                         List<ChapterAyah> ayahs = response.body().getData();
                         ayatModels.clear();
-
+                        if (!ayahs.isEmpty()) {
+                            ChapterAyah firstAyah = ayahs.get(0);
+                            trackChapterRead(firstAyah.getSurahId());
+                        }
                         for (ChapterAyah ayah : ayahs) {
                             try {
-                                // Clean any problematic text in the ayah
                                 if (ayah.getWords() != null) {
                                     for (Word word : ayah.getWords()) {
                                         if (word != null) {
-                                            // getText() and getTranslation() now use the cleaning utility
                                             word.getText();
                                             word.getTranslation();
                                         }
                                     }
                                 }
-
                                 ayah.setBookmarked(bookmarkedAyahIds.contains(ayah.getId()));
                                 ayatModels.add(ayah);
                             } catch (Exception e) {
@@ -152,9 +161,9 @@ public class ByAyatRecitationFragment extends Fragment {
                                 continue;
                             }
                         }
-
                         byAyatAdapter.notifyDataSetChanged();
-
+                        loadingProgressBar.setVisibility(View.GONE);
+                        byAyatRecyclerView.setVisibility(View.VISIBLE);
                         // Scroll handling
                         if (scrollToVerse > 0 && byAyatRecyclerView != null) {
                             for (int i = 0; i < ayatModels.size(); i++) {
@@ -184,14 +193,59 @@ public class ByAyatRecitationFragment extends Fragment {
                             "Error processing verse data", e);
                     showError("Error loading verses. Please try again.");
                 }
+                loadingProgressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<AyahRecitationModel> call, Throwable t) {
                 Log.e("ByAyatRecitationFragment", "Failed to fetch verses", t);
                 showError("Network error. Please check your connection.");
+                loadingProgressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void trackChapterRead(String surahId) {
+        if (surahId.equals("2")) { // Al-Baqarah
+            achievementService.unlockAchievement("longest_chapter", success -> {
+                if (success) {
+                    refreshHomeFragment();
+                }
+                return null; // Required for Java lambda
+            });
+        } else if (surahId.equals("108")) { // Al-Kawthar
+            achievementService.unlockAchievement("shortest_chapter", success -> {
+                if (success) {
+                    refreshHomeFragment();
+                }
+                return null;
+            });
+        }
+
+        // Check streak achievement
+        achievementService.checkStreakEligibility(new StreakCheckCallback() {
+            @Override
+            public void onStreakChecked(boolean isEligible, int currentStreak) {
+                if (isEligible) {
+                    achievementService.unlockAchievement("weekly_streak", success -> {
+                        if (success) {
+                            refreshHomeFragment();
+                        }
+                        return null;
+                    });
+                }
+            }
+        });
+    }
+    private void refreshHomeFragment() {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            for (Fragment fragment : activity.getSupportFragmentManager().getFragments()) {
+                if (fragment instanceof HomeFragment) {
+                    ((HomeFragment) fragment).setupAchievements(AchievementService.PREDEFINED_BADGES);
+                }
+            }
+        }
     }
     private void showError(String message) {
         if (getContext() != null) {

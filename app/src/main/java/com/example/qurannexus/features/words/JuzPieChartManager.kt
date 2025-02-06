@@ -95,7 +95,7 @@ class JuzPieChartManager(private val pieChart: PieChart) {
         pieChart.data = data
 
         // Custom marker view
-        val markerView = CustomMarkerView(
+        val markerView = aCustomMarkerView(
             pieChart.context,
             R.layout.marker_view,
             occurrences
@@ -109,38 +109,38 @@ class JuzPieChartManager(private val pieChart: PieChart) {
 }
 
 // Enhanced MarkerView
-class CustomMarkerView(
+class aCustomMarkerView(
     context: Context,
     layoutResource: Int,
     private val occurrences: List<Int>
 ) : MarkerView(context, layoutResource) {
+//
+//    private val tvContent: TextView = findViewById(R.id.tvContent)
+//    private val cardView: CardView = findViewById(R.id.markerCardView)
+//
+//    init {
+//        // Style the marker card
+//        cardView.apply {
+//            radius = 12f
+//            cardElevation = 8f
+//            setCardBackgroundColor(Color.WHITE)
+//        }
+//    }
 
-    private val tvContent: TextView = findViewById(R.id.tvContent)
-    private val cardView: CardView = findViewById(R.id.markerCardView)
-
-    init {
-        // Style the marker card
-        cardView.apply {
-            radius = 12f
-            cardElevation = 8f
-            setCardBackgroundColor(Color.WHITE)
-        }
-    }
-
-    override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        if (e is PieEntry) {
-            val juzNumber = e.label.replace("Juz ", "").toInt()
-            val occurrence = occurrences[juzNumber - 1]
-
-            tvContent.text = buildString {
-                append("Juz $juzNumber\n")
-                append("Occurrences: $occurrence")
-            }
-        }
-        super.refreshContent(e, highlight)
-    }
-
-    override fun getOffset(): MPPointF {
-        return MPPointF(-(width / 2f), -height.toFloat() - 10) // Offset above the selected slice
-    }
+//    override fun refreshContent(e: Entry?, highlight: Highlight?) {
+//        if (e is PieEntry) {
+//            val juzNumber = e.label.replace("Juz ", "").toInt()
+//            val occurrence = occurrences[juzNumber - 1]
+//
+//            tvContent.text = buildString {
+//                append("Juz $juzNumber\n")
+//                append("Occurrences: $occurrence")
+//            }
+//        }
+//        super.refreshContent(e, highlight)
+//    }
+//
+//    override fun getOffset(): MPPointF {
+//        return MPPointF(-(width / 2f), -height.toFloat() - 10) // Offset above the selected slice
+//    }
 }

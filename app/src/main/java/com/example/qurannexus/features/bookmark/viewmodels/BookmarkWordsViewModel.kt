@@ -1,10 +1,5 @@
 package com.example.qurannexus.features.bookmark.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.qurannexus.features.words.AccordionSection
-
 //class BookmarkWordsViewModel : ViewModel() {
 //
 //    // List of English and Arabic alphabets

@@ -6,7 +6,7 @@ data class BookmarkResponse(
 )
 data class BookmarkRequest(
     val type: String,         // "chapter", "verse", "word", or "quote"
-    val item_id: String,      // ID of the item to bookmark
+//    val item_id: String,      // ID of the item to bookmark
     // Optional fields based on type
     val chapter_id: String? = null,    // For verse bookmarks
     val notes: String? = null,         // For verse bookmarks
@@ -14,8 +14,9 @@ data class BookmarkRequest(
     val word_text: String? = null,
     val translation: String? = null,
     val transliteration: String? = null,
-    val surah_name: String? = null,
-    val ayah_key: String? = null,
+    val first_occurrence: FirstOccurrence? = null,
+    val total_occurrences: Int? = null,
+    val bookmark_date: String? = null,
     // Quote-specific fields
     val title: String? = null,
     val description: String? = null,
@@ -39,4 +40,13 @@ data class BookmarkList(
     val words: List<BookmarkWord>,
     val quotes: List<BookmarkQuote>
 )
-
+data class FirstOccurrence(
+    val word_key: String,      // format: surah:ayah:word_position
+    val chapter_id: String,
+    val verse_number: String,
+    val surah_name: String,
+    val page_id: String,
+    val juz_id: String,
+    val verse_text: String,
+    val audio_url: String?
+)

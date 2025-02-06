@@ -16,20 +16,20 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface QuizApi {
-    @POST("api/v1/quiz/start")
+    @POST("/quiz/start")
     fun startQuiz(
         @Header("Authorization") auth: String,
-        @Body request: StartQuizRequest  // Changed to use proper request object
+        @Body request: StartQuizRequest
     ): Call<QuizResponse>
 
-    @POST("api/v1/quiz/submit-batch")
+    @POST("/quiz/submit-batch")
     fun submitBatchAnswers(
         @Header("Authorization") auth: String,
         @Query("surah_id") surahId: String,
         @Body request: SubmitBatchRequest
     ): Call<BatchAnswerResponse>
 
-    @POST("api/v1/quiz/finish")
+    @POST("/quiz/finish")
     fun finishQuiz(
         @Header("Authorization") auth: String,
         @Query("surah_id") surahId: String

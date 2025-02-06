@@ -1,8 +1,10 @@
 package com.example.qurannexus.features.quiz.repository
 
 import android.util.Log
+import com.example.qurannexus.core.interfaces.AuthApi
 import com.example.qurannexus.core.interfaces.QuizApi
 import com.example.qurannexus.core.network.ApiService
+import com.example.qurannexus.features.home.models.User
 import com.example.qurannexus.features.quiz.models.AnswerResponse
 import com.example.qurannexus.features.quiz.models.BatchAnswer
 import com.example.qurannexus.features.quiz.models.BatchAnswerResponse
@@ -16,13 +18,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class QuizRepository @Inject constructor(private val api: QuizApi) {
-
+class QuizRepository @Inject constructor(private val api: QuizApi, private val authApi: AuthApi) {
     private fun getAuthHeader(): String {
         val token = ApiService.getAuthToken()
         return "Bearer $token"
     }
-
+    suspend fun getUserProfile(token: String): User? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = authApi.getUserProfile(token)?.execute()
+                if (response?.isSuccessful == true) {
+                    response?.body()?.data
+                } else {
+                    if (response != null) {
+                        Log.e("QuizRepository", "Error: ${response.errorBody()?.string()}")
+                    }
+                    null
+                }
+            } catch (e: Exception) {
+                Log.e("QuizRepository", "Error getting user profile", e)
+                null
+            }
+        }
+    }
     suspend fun startQuiz(request: StartQuizRequest): QuizResponse? {
         return withContext(Dispatchers.IO) {
             try {

@@ -7,23 +7,34 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.qurannexus.R
 import com.example.qurannexus.databinding.FragmentQuizCategoryBinding
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest
-import com.example.qurannexus.features.home.WordDetailsActivity
-import com.example.qurannexus.features.quiz.models.NotesHighlightItem
+import com.example.qurannexus.features.words.WordDetailsActivity
 import com.example.qurannexus.features.quiz.models.QuestionCategoryAdapter
+import com.example.qurannexus.features.quiz.models.QuizProgress
 import com.example.qurannexus.features.quiz.models.QuizViewModel
-import com.example.qurannexus.features.words.models.DailyWord
 import com.example.qurannexus.features.words.models.WordDetails
 import com.example.qurannexus.features.words.models.WordManagementViewModel
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
+import kotlin.math.abs
 
 @AndroidEntryPoint
 class QuizCategoryFragment : Fragment() {
@@ -34,6 +45,10 @@ class QuizCategoryFragment : Fragment() {
     private val wordViewModel: WordManagementViewModel by viewModels()
     private var currentDailyWord: WordDetails? = null
     private var isWordBookmarked = false
+
+    private var dailyActivityChart: LineChart? = null
+    private var surahPerformanceChart: BarChart? = null
+    private var chartsAdapter: ChartsAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,8 +65,9 @@ class QuizCategoryFragment : Fragment() {
             val action = QuizCategoryFragmentDirections.actionQuizCategoryFragmentToQuizChapterOptionsFragment()
             findNavController().navigate(action)
         }
-
-        highlightSectionSetup(view)
+        updateChartData()
+        setupCharts()
+//        highlightSectionSetup(view)
         setupDailyWord()
         setupBookmarkButton()
         // Handle navigation when the quiz button is clicked
@@ -77,12 +93,12 @@ class QuizCategoryFragment : Fragment() {
             isBookmarked = !isBookmarked
         }
 
-        binding.seeAllQuizzesText.setOnClickListener{
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.quizFragmentContainer, QuizCategoryFragment())
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+//        binding.seeAllQuizzesText.setOnClickListener{
+//            val transaction = parentFragmentManager.beginTransaction()
+//            transaction.replace(R.id.quizFragmentContainer, QuizCategoryFragment())
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+//        }
     }
     private fun setupDailyWord() {
         // Get userId from SharedPreferences
@@ -97,7 +113,7 @@ class QuizCategoryFragment : Fragment() {
                 wordExplanation.text = "${word.translation} (${word.transliteration})"
             }
 
-            checkBookmarkStatus(word.word_id)
+            checkBookmarkStatus(word.word_text)
         }
     }
     private fun setupBookmarkButton() {
@@ -127,17 +143,17 @@ class QuizCategoryFragment : Fragment() {
             return
         }
 
-        val request = BookmarkRequest(
-            type = "word",
-            item_id = word.word_id,
-            word_text = word.word_text,
-            translation = word.translation,
-            transliteration = word.transliteration,
-            surah_name = word.first_occurrence.surah_name,
-            ayah_key = word.first_occurrence.ayah_key
-        )
+//        val request = BookmarkRequest(
+//            type = "word",
+//            item_id = word.word_id,
+//            word_text = word.word_text,
+//            translation = word.translation,
+//            transliteration = word.transliteration,
+//            surah_name = word.first_occurrence.surah_name,
+//            ayah_key = word.first_occurrence.ayah_key
+//        )
 
-        wordViewModel.addBookmark("Bearer $token", request)
+//        wordViewModel.addBookmark("Bearer $token", request)
         wordViewModel.bookmarkStatus.observe(viewLifecycleOwner) { response ->
             if (response.status == "success") {
                 isWordBookmarked = true
@@ -169,12 +185,12 @@ class QuizCategoryFragment : Fragment() {
         }
     }
 
-    private fun checkBookmarkStatus(wordId: String) {
+    private fun checkBookmarkStatus(wordText: String) {
         val token = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
             .getString("token", null)
 
         if (token != null) {
-            wordViewModel.checkBookmarkStatus(token, wordId).observe(viewLifecycleOwner) { bookmarked ->
+            wordViewModel.checkBookmarkStatus("Bearer $token", wordText).observe(viewLifecycleOwner) { bookmarked ->
                 isWordBookmarked = bookmarked
                 binding.dailyWordSection.bookmarkButton.setImageResource(
                     if (bookmarked) R.drawable.ic_heart_bookmarked
@@ -197,50 +213,106 @@ class QuizCategoryFragment : Fragment() {
     }
 
 
+
     override fun onDestroyView() {
         super.onDestroyView()
+        dailyActivityChart = null
+        surahPerformanceChart = null
+        chartsAdapter = null
         _binding = null
-    }
-
-    private fun highlightSectionSetup(rootView: View) {
-        val llScrollableHighlights: LinearLayout = rootView.findViewById(R.id.llScrollableNotes)
-
-        // Create the list of highlights manually (no loop needed here)
-        val highlightsList = listOf(
-            NotesHighlightItem("Tajweed", R.drawable.badge_note),
-            NotesHighlightItem("Arabic", R.drawable.badge_note1),
-            NotesHighlightItem("I'rab", R.drawable.badge_note),
-            NotesHighlightItem("Hifz", R.drawable.badge_note1)
-        )
-
-        // Iterate through the list and dynamically create cards
-        highlightsList.forEach { highlight ->
-            // Inflate the card layout
-            val highlightView = LayoutInflater.from(context).inflate(R.layout.card_item_squared_notes_highlights, llScrollableHighlights, false)
-
-            // Find views inside the card
-            val highlightImage: ImageView = highlightView.findViewById(R.id.highlightImage)
-            val highlightTitle: TextView = highlightView.findViewById(R.id.highlightText)
-
-            // Set image and title
-            highlightImage.setImageResource(highlight.imageResId)
-            highlightTitle.text = highlight.title
-
-            // Make the card clickable
-            highlightView.isClickable = true
-            highlightView.isFocusable = true
-            highlightView.setOnClickListener {
-                onHighlightClick(highlightsList.indexOf(highlight)) // Trigger action based on the index
-            }
-
-            // Add the card to the container
-            llScrollableHighlights.addView(highlightView)
-        }
     }
 
     private fun onHighlightClick(position: Int) {
         // Handle fragment navigation or other actions based on position
 
     }
+    private fun setupCharts() {
+        chartsAdapter = ChartsAdapter(requireContext()) { lineChart, barChart ->
+            dailyActivityChart = lineChart
+            surahPerformanceChart = barChart
+            // Now that charts are initialized, start observing data
+            observeChartData()
+        }
 
+        binding.chartsViewPager.adapter = chartsAdapter
+
+        // Set up dots indicator
+        TabLayoutMediator(binding.dotsIndicator, binding.chartsViewPager) { _, _ -> }.attach()
+
+        binding.chartsViewPager.setPageTransformer { page, position ->
+            page.alpha = 1 - 0.25f * abs(position)
+            page.scaleY = 0.85f + 0.15f * (1 - abs(position))
+        }
+    }
+    private fun observeChartData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getUserQuizProgress().collect { quizProgress ->
+                dailyActivityChart?.let { updateDailyActivityChart(it, quizProgress) }
+                surahPerformanceChart?.let { updateSurahPerformanceChart(it, quizProgress) }
+            }
+        }
+    }
+    private fun updateChartData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getUserQuizProgress().collect { quizProgress ->
+                dailyActivityChart?.let { chart ->
+                    updateDailyActivityChart(chart, quizProgress)
+                }
+                surahPerformanceChart?.let { chart ->
+                    updateSurahPerformanceChart(chart, quizProgress)
+                }
+            }
+        }
+    }
+
+    private fun updateDailyActivityChart(chart: LineChart, quizProgress: List<QuizProgress>) {
+        val dailyActivity = quizProgress
+            .filter { !it.start_time.isNullOrEmpty() }
+            .groupBy { it.start_time!!.substringBefore(" ") }
+            .mapValues { entry ->
+                entry.value.sumOf { it.correct_answers + it.wrong_answers }
+            }
+            .toSortedMap()
+        val entries = dailyActivity.map { (date, count) ->
+            Entry(date.toMillis(), count.toFloat())
+        }
+
+        val dataSet = LineDataSet(entries, "Questions Answered").apply {
+            color = ContextCompat.getColor(requireContext(), R.color.primaryColor)
+            setCircleColor(ContextCompat.getColor(requireContext(), R.color.primaryColor))
+            lineWidth = 2f
+            circleRadius = 4f
+            setDrawValues(false)
+        }
+        chart.setData(LineData(dataSet))
+        chart.invalidate()
+    }
+    private fun updateSurahPerformanceChart(chart: BarChart, quizProgress: List<QuizProgress>) {
+        val surahPerformance = quizProgress
+            .filter { it.status == "completed" && it.surah_id != null }
+            .map { progress ->
+                val total = progress.correct_answers + progress.wrong_answers
+                val correctPercentage = if (total > 0) {
+                    (progress.correct_answers * 100f) / total
+                } else 0f
+                BarEntry(progress.surah_id!!.toFloat(), correctPercentage)
+            }
+            .sortedBy { it.x }
+
+        val dataSet = BarDataSet(surahPerformance, "Accuracy %").apply {
+            color = ContextCompat.getColor(requireContext(), R.color.primaryColor)
+            valueTextSize = 10f
+        }
+
+        chart.setData(BarData(dataSet))
+        chart.invalidate()
+    }
+
+
+
+
+    private fun String.toMillis(): Float {
+        return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            .parse(this)?.time?.toFloat() ?: 0f
+    }
 }

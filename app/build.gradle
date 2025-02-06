@@ -68,7 +68,7 @@ dependencies {
 
     //graph dependencies
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
+    implementation libs.rajawali
     //audio dependencies
     implementation 'com.amazonaws:aws-android-sdk-s3:2.72.0'
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.72.0'

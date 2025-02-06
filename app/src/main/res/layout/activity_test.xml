@@ -6,17 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".core.activities.TestActivity">
 
-
-        <TextView
-            android:id="@+id/jokeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="84dp"
-            android:layout_marginTop="80dp"
-            android:text="TextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+        <com.example.qurannexus.features.graphs.GraphSurfaceView
+            android:id="@+id/graph_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
 </RelativeLayout>

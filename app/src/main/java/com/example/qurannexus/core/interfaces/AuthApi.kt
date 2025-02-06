@@ -15,16 +15,15 @@ import retrofit2.http.POST
 
 
 interface AuthApi {
-    @POST("api/v1/register")
+    @POST("/register")
     fun register(@Body request: RegisterRequest?): Call<RegisterResponse?>?
-
-    @POST("api/v1/login")
+    @POST("/login")
     fun login(@Body request: LoginRequest?): Call<LoginResponse?>?
-    @POST("api/v1/logout")
+    @POST("/logout")
     fun logout(@Header("Authorization") token: String): Call<Unit>?
-    @GET("api/v1/profile")
+    @GET("/profile")
     fun getUserProfile(@Header("Authorization") token: String): Call<UserResponse?>?
-    @POST("api/v1/forgot-password")
+    @POST("/forgot-password")
     fun forgotPassword(@Body request: ForgotPasswordRequest): Call<ForgotPasswordResponse>
 
 }

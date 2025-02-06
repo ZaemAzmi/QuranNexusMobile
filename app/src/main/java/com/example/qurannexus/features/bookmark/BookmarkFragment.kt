@@ -17,11 +17,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class BookmarkFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,8 +42,7 @@ class BookmarkFragment : Fragment() {
                 0 -> "Chapters"
                 1 -> "Verses"
                 2 -> "Daily Quotes"
-                3 -> "Words"
-                4 -> "History"
+                3 -> "Vocabulary"
                 else -> "Chapters"
             }
             tab.view.background = ContextCompat.getDrawable(requireContext(), R.drawable.tab_background_selector)
@@ -57,7 +51,6 @@ class BookmarkFragment : Fragment() {
         setupSearchBar(view)
         return view
     }
-
     private fun setupSearchBar(view : View){
         val searchView = view.findViewById<SearchView>(R.id.searchView)
         searchView.setOnSearchClickListener {

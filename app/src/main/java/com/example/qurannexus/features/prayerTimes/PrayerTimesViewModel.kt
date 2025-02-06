@@ -117,12 +117,10 @@ class PrayerTimesViewModel @Inject constructor(
             0
         }
     }
-
     private fun getCurrentTimeIn24H(): Int {
         val calendar = Calendar.getInstance()
         return calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
     }
-
     fun updateCountdown(nextPrayerTime: String) {
         countDownTimer?.cancel()
 

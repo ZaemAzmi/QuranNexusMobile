@@ -41,7 +41,7 @@
                 android:id="@+id/ivBadgeIcon"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
-                android:src="@drawable/badge_1"
+                android:src="@drawable/badge_12"
                 android:contentDescription="Badge Icon" />
 
 

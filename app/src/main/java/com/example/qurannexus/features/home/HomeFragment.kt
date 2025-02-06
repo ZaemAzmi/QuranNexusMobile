@@ -30,6 +30,7 @@ import com.example.qurannexus.features.prayerTimes.models.PrayerTimesResponse
 import com.example.qurannexus.features.home.models.DailyInspirationAdapter
 import com.example.qurannexus.features.home.models.HighlightsRecyclerAdapter
 import com.example.qurannexus.features.auth.AuthService
+import com.example.qurannexus.features.home.achievement.AchievementService
 import com.example.qurannexus.features.prayerTimes.PrayerTimesViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -54,6 +55,8 @@ class HomeFragment : Fragment(), HighlightClickListener {
     private lateinit var seeAllBadgeText : TextView
     private lateinit var llScrollableBadges : LinearLayout
 
+    private lateinit var achievementService: AchievementService
+
     private val viewModel: PrayerTimesViewModel by activityViewModels()
 
     private val quotes = listOf(
@@ -62,28 +65,6 @@ class HomeFragment : Fragment(), HighlightClickListener {
         "So remember Me; I will remember you."
     )
 
-    private val topBadges = listOf(
-        Badge(
-            title = "Early Riser",
-            description = "Awarded for checking the app during Fajr time for 7 consecutive days.",
-            iconRes = R.drawable.badge_1
-        ),
-        Badge(
-            title = "Quran Explorer",
-            description = "Granted for reading verses from 10 different surahs.",
-            iconRes = R.drawable.badge_2
-        ),
-        Badge(
-            title = "Daily Devotion",
-            description = "Earned for completing at least one verse every day for a month.",
-            iconRes = R.drawable.badge_3
-        ),
-        Badge(
-            title = "Consistency King",
-            description = "Unlocked for using the app daily for 100 days in a row.",
-            iconRes = R.drawable.badge_2
-        )
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -101,6 +82,12 @@ class HomeFragment : Fragment(), HighlightClickListener {
 
         seeAllBadgeText = view.findViewById(R.id.seeAllBadgeText)
         llScrollableBadges = view.findViewById(R.id.llScrollableBadges)
+
+
+        achievementService = AchievementService(requireContext())
+        setupAchievements(AchievementService.PREDEFINED_BADGES)
+
+        loadAchievements()
 
         loadUserGreeting()
         prayerTrailerCard.setOnClickListener {
@@ -123,7 +110,6 @@ class HomeFragment : Fragment(), HighlightClickListener {
             // Optionally, you can customize the tab, but this will show dots by default
         }.attach()
         highlightSectionSetup(view)
-        setupAchievements()
         setupNavigation()
         seeAllBadgeText.setOnClickListener {
             val intent = Intent(context, BadgesActivity::class.java)
@@ -216,40 +202,6 @@ class HomeFragment : Fragment(), HighlightClickListener {
         nextPrayerTextView.text = ""
     }
 
-    private fun calculateNextPrayer(timings: PrayerTimesResponse.Timings?) {
-//        val currentTime = getCurrentTimeIn24H()
-//
-//        // Convert prayer times to minutes and find the next prayer
-//        val prayerTimesList = listOf(
-//            timings?.Fajr,
-//            timings?.Sunrise,
-//            timings?.Dhuhr,
-//            timings?.Asr,
-//            timings?.Maghrib,
-//            timings?.Isha
-//        ).mapIndexed { index, time ->
-//            Pair(index, convertTimeToMinutes(time))
-//        }
-//
-//        // Get the next prayer time
-//        val nextPrayer = prayerTimesList.find { currentTime < it.second }
-//            ?: prayerTimesList.first() // Wrap to the first prayer if all times have passed
-//
-//        currentPrayerIndex = nextPrayer.first
-//        nextPrayerTextView.text = "Next Prayer: ${getPrayerName(currentPrayerIndex)}"
-    }
-
-    private fun startCountdownTimer(timings: PrayerTimesResponse.Timings?) {
-        var currentTimer: CountDownTimer? = null
-
-        // Prepare the schedule and start timer for the next prayer
-//        val prayers = getPrayerSchedule(timings)
-//        val nextPrayer = findNextPrayer(prayers)
-//
-//        nextPrayer?.let {
-//            startNewTimer(it)
-//        }
-    }
     private fun loadUserGreeting() {
         val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         var username = sharedPreferences.getString("username", null)
@@ -281,18 +233,37 @@ class HomeFragment : Fragment(), HighlightClickListener {
             }
         }
     }
-    private fun setupAchievements() {
-        topBadges.forEach { badge ->
+
+    private fun loadAchievements() {
+        achievementService.getAchievementStatus { statusMap ->
+            if (statusMap != null) {
+                // Convert predefined badges with status
+                val updatedBadges = AchievementService.PREDEFINED_BADGES.map { badge ->
+                    val status = statusMap[badge.id]
+                    badge.copy(
+                        status = status?.status ?: "Not Achieved"
+                    )
+                }
+                setupAchievements(updatedBadges)
+            } else {
+                // If failed to get status, show predefined badges with default status
+                setupAchievements(AchievementService.PREDEFINED_BADGES)
+            }
+        }
+    }
+
+    fun setupAchievements(badges: List<Badge>) {
+        llScrollableBadges.removeAllViews() // Clear existing badges
+
+        badges.forEach { badge ->
             val badgeView = LayoutInflater.from(context).inflate(R.layout.card_badge_achievement, llScrollableBadges, false)
             val badgeIcon: ImageView = badgeView.findViewById(R.id.ivBadgeIcon)
             val badgeTitle: TextView = badgeView.findViewById(R.id.tvBadgeTitle)
 
             badgeIcon.setImageResource(badge.iconRes)
             badgeTitle.text = badge.title
-//            badgeView.isClickable = true
-//            badgeView.isFocusable = true
+
             badgeView.setOnClickListener {
-                Log.d("BadgeClick", "Clicked on: ${badge.title}")
                 showBadgePopup(badge)
             }
 

@@ -11,7 +11,7 @@ data class DailyWord(
     val translation: String,
     val transliteration: String,
     val explanation: String,
-    val first_occurrence: FirstOccurrence
+    val first_occurrence: FirstWordOccurrence
 )
 
 data class DailyQuoteResponse(

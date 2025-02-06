@@ -8,12 +8,12 @@
             android:title="@string/nav_home" />
     <item
         android:id="@+id/nav_bookmark"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/ic_bookmarked_black"
         android:title="@string/nav_bookmark" />
         <item
-            android:id="@+id/nav_tajweed"
-            android:icon="@drawable/ic_home"
-            android:title="@string/nav_tajweed" />
+            android:id="@+id/nav_prayer_times"
+            android:icon="@drawable/ic_mosque"
+            android:title="Prayer TImes" />
 
         <item
             android:id="@+id/nav_irab"
@@ -22,14 +22,19 @@
 
 
     <item
-        android:id="@+id/nav_faqs"
-        android:icon="@drawable/ic_home"
-        android:title="@string/nav_faqs" />
+        android:id="@+id/nav_quiz"
+        android:icon="@drawable/ic_note"
+        android:title="Quizzes" />
 
     <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/nav_settings" />
+
+    <item
+        android:id="@+id/nav_test"
+        android:icon="@drawable/ic_settings"
+        android:title="Test Page" />
 
     <item
         android:id="@+id/nav_logout"

@@ -44,23 +44,23 @@ class WordJsonService @Inject constructor(
         }
     }
 
-    fun getWordOccurrencesInJuz(wordId: String, juzNumber: Int): List<WordOccurrence> {
-        if (wordOccurrences == null) {
-            val jsonString = loadJsonFromAssets("word_occurrences.json")
-            val type = object : TypeToken<Map<String, Map<String, Map<Int, List<WordOccurrence>>>>>() {}.type
-            val response = Gson().fromJson<Map<String, Map<String, Map<String, List<WordOccurrence>>>>>(jsonString, type)
-            wordOccurrences = response["occurrences"]
-        }
-
-        // Format the wordId to match JSON structure
-        val formattedWordId = if (!wordId.startsWith("word_")) "word_$wordId" else wordId
-
-        return wordOccurrences?.get(formattedWordId)?.get(juzNumber.toString())?.map { occurrence ->
-            occurrence.copy(
-                surah_name = QuranMetadata.getInstance().getSurahDetails(occurrence.chapter_id.toInt())?.englishName ?: ""
-            )
-        } ?: emptyList()
-    }
+//    fun getWordOccurrencesInJuz(wordId: String, juzNumber: Int): List<WordOccurrence> {
+//        if (wordOccurrences == null) {
+//            val jsonString = loadJsonFromAssets("word_occurrences.json")
+//            val type = object : TypeToken<Map<String, Map<String, Map<Int, List<WordOccurrence>>>>>() {}.type
+//            val response = Gson().fromJson<Map<String, Map<String, Map<String, List<WordOccurrence>>>>>(jsonString, type)
+//            wordOccurrences = response["occurrences"]
+//        }
+//
+//        // Format the wordId to match JSON structure
+//        val formattedWordId = if (!wordId.startsWith("word_")) "word_$wordId" else wordId
+//
+//        return wordOccurrences?.get(formattedWordId)?.get(juzNumber.toString())?.map { occurrence ->
+//            occurrence.copy(
+//                chapter_name = QuranMetadata.getInstance().getSurahDetails(occurrence.chapter_id.toInt())?.englishName ?: ""
+//            )
+//        } ?: emptyList()
+//    }
 
 
     fun getDailyWord(userId: String): WordDetails? {

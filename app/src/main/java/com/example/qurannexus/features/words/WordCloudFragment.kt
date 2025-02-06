@@ -11,7 +11,6 @@ import com.example.qurannexus.R
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse
-import com.example.qurannexus.features.home.WordDetailsActivity
 import android.content.Intent
 import com.example.qurannexus.features.words.views.WordCloudView
 import retrofit2.Call
@@ -43,19 +42,28 @@ class WordCloudFragment : Fragment() {
 
         // Set up word click listener
         wordCloudView.onWordClickListener = { word ->
-            // Navigate to WordDetailsActivity
             val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
-                putExtra("WORD_ID", word.word_id)
+                // Basic word info
                 putExtra("WORD_TEXT", word.word_text)
                 putExtra("TRANSLATION", word.translation)
                 putExtra("TRANSLITERATION", word.transliteration)
-                putExtra("SURAH_NAME", word.surah_name)
-                putExtra("AYAH_KEY", word.ayah_key)
+                putExtra("TOTAL_OCCURRENCES", word.total_occurrences)
+
+                // First occurrence details
+                putExtra("CHAPTER_ID", word.first_occurrence.chapter_id)
+                putExtra("VERSE_NUMBER", word.first_occurrence.verse_number)
+                putExtra("SURAH_NAME", word.first_occurrence.surah_name)
+                putExtra("PAGE_ID", word.first_occurrence.page_id)
+                putExtra("JUZ_NUMBER", word.first_occurrence.juz_id)
+                putExtra("VERSE_TEXT", word.first_occurrence.verse_text)
+                putExtra("AUDIO_URL", word.first_occurrence.audio_url)
             }
             startActivity(intent)
         }
 
         fetchBookmarkedWords()
+
+
     }
 
     private fun fetchBookmarkedWords() {

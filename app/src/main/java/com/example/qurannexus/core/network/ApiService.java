@@ -27,8 +27,8 @@ public class ApiService {
 
     private static Retrofit quranRetrofit = null;
     private static Retrofit prayerTimesRetrofit = null;
-    private static final String LOCAL_API_URL = "http://10.0.2.2:8000";
-//    private static final String LOCAL_API_URL = "http://192.168.26.35:8000";
+    private static final String LOCAL_API_URL = "http://10.0.2.2:8000/api/v1/mobile/";
+//    private static final String LOCAL_API_URL = "http://192.168.0.27:8000";
     private static final String PRAYER_TIMES_API_URL = "https://api.aladhan.com/";
     private static String authToken = null;
 

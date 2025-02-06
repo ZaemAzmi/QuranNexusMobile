@@ -10,11 +10,10 @@ class AutoFitTextView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
-    private var minTextSize = 8f
-    private var maxTextSize = 16f
+    private var minTextSize = 12.5f
+    private var maxTextSize = 24f
 
     init {
-        // Set the initial text size to the max size
         setTextSize(TypedValue.COMPLEX_UNIT_SP, maxTextSize)
     }
 
@@ -23,42 +22,24 @@ class AutoFitTextView @JvmOverloads constructor(
         adjustTextSize()
     }
 
-    override fun onTextChanged(
-        text: CharSequence?,
-        start: Int,
-        lengthBefore: Int,
-        lengthAfter: Int
-    ) {
+    override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
         adjustTextSize()
     }
 
     private fun adjustTextSize() {
-        val availableWidth = width - paddingLeft - paddingRight
-        val availableHeight = height - paddingTop - paddingBottom
+        val text = text?.toString() ?: return
 
-        // Start from the maximum text size
-        var textSize = maxTextSize
-
-        // Reduce text size until it fits within the view
-        while (textSize > minTextSize) {
-            paint.textSize = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP,
-                textSize,
-                resources.displayMetrics
-            )
-
-            val textBounds = android.graphics.Rect()
-            paint.getTextBounds(text.toString(), 0, text.length, textBounds)
-
-            if (textBounds.width() <= availableWidth && textBounds.height() <= availableHeight) {
-                break
-            }
-
-            textSize -= 1f
+        // Calculate text size based on digit count
+        val textSize = when (text.length) {
+            1 -> maxTextSize
+            2 -> maxTextSize * 0.75f
+            else -> maxTextSize * 0.5f
         }
 
-        // Set the calculated text size
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
+        // Ensure text size is not smaller than minimum
+        val finalTextSize = textSize.coerceAtLeast(minTextSize)
+
+        setTextSize(TypedValue.COMPLEX_UNIT_SP, finalTextSize)
     }
 }

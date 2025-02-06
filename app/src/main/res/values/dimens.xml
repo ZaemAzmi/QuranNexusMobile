@@ -7,4 +7,22 @@
     <dimen name="preference_margin_top_16dp">50dp</dimen>
     <dimen name="fab_edge_padding">16dp</dimen>
 
+    <!-- MeowBottomNavigation default height plus some padding -->
+    <dimen name="meow_bottom_nav_height">65dp</dimen>
+
+    <!-- Margins -->
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+
+    <!-- Card -->
+    <dimen name="card_corner_radius">15dp</dimen>
+    <dimen name="card_elevation">5dp</dimen>
+
+    <!-- Elevation -->
+    <dimen name="elevation_small">4dp</dimen>
 </resources>

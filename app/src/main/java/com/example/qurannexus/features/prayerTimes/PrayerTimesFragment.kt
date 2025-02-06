@@ -162,13 +162,6 @@ class PrayerTimesFragment : Fragment() {
         viewModel.dateLiveData.observe(viewLifecycleOwner) { date ->
             dateTextView.text = date ?: "-"
         }
-
-//        viewModel.weekdayLiveData.observe(viewLifecycleOwner) { weekday ->
-//            // Get current weekday
-//            val calendar = Calendar.getInstance()
-//            val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
-//            weekdayTextView.text = dayFormat.format(calendar.time)
- //        }
         viewModel.weekdayLiveData.observe(viewLifecycleOwner) { weekday ->
             weekdayTextView.text = weekday ?: "-"
         }
@@ -192,8 +185,6 @@ class PrayerTimesFragment : Fragment() {
         val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
         viewModel.fetchPrayerTimes(currentDate, "Kuala Lumpur", "MY")
     }
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         // Clean up handlers and timers

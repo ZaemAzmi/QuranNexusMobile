@@ -22,7 +22,7 @@
 
             <ImageView
                 android:id="@+id/categoryImage"
-                android:src="@drawable/badge_1"
+                android:src="@drawable/badge_12"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_margin="10dp"

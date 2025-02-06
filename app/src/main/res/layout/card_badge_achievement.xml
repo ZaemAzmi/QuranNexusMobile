@@ -8,8 +8,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardBadge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+      android:layout_height="180dp"
         android:layout_margin="8dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
@@ -31,7 +31,7 @@
                 android:id="@+id/ivBadgeIcon"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
-                android:src="@drawable/badge_1"
+                android:src="@drawable/badge_12"
                 android:contentDescription="Badge Icon" />
 
             <!-- Badge Title -->

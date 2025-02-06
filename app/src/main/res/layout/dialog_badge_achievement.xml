@@ -20,7 +20,7 @@
             android:id="@+id/ivPopupBadgeIcon"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@drawable/badge_1"
+            android:src="@drawable/badge_12"
             android:contentDescription="Badge Icon" />
 
         <TextView

@@ -79,6 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="@color/green_blue_100"
                 android:padding="16dp">
 
                 <TextView
@@ -131,6 +132,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:backgroundTint="#05B5A5"
+                android:textColor="@color/black"
                 android:text="Next Batch" />
 
             <Button
@@ -138,6 +141,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:backgroundTint="#05B5A5"
+                android:textColor="@color/black"
                 android:text="Previous Batch" />
 
             <Button

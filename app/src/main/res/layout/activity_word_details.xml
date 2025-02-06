@@ -12,6 +12,12 @@
         android:background="@drawable/bg_gradient_daily_word"
         android:padding="16dp">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
         <!-- Back Button -->
         <ImageView
             android:id="@+id/backButton"

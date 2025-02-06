@@ -171,18 +171,6 @@ class QuizQuestionFragment : Fragment() {
         }
     }
 
-    private fun handleAnswerResponse(isCorrect: Boolean, hasNextQuestion: Boolean) {
-        if (isCorrect) {
-            Toast.makeText(context, "Correct!", Toast.LENGTH_SHORT).show()
-        } else {
-            binding.translationText.visibility = View.VISIBLE
-        }
-
-        if (!hasNextQuestion) {
-            navigateToResults()
-        }
-    }
-
     private fun navigateToResults() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.quizState.collectLatest { state ->

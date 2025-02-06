@@ -36,8 +36,8 @@ class AuthService {
 
     init {
         // Reuse ApiService to create Retrofit instance for authentication
-//        val retrofit = ApiService.createRetrofit("http://192.168.26.35:8000")
-        val retrofit = ApiService.createRetrofit("http://10.0.2.2:8000")
+//        val retrofit = ApiService.createRetrofit("http://192.168.0.27:8000")
+        val retrofit = ApiService.createRetrofit("http://10.0.2.2:8000/api/v1/mobile/")
         authApi = retrofit.create(AuthApi::class.java)
     }
 
@@ -85,7 +85,7 @@ class AuthService {
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("AuthService", "Login failed: $errorBody")
-                    callback.onError("Login failed: ${response.message()}")
+                    callback.onError("Login failed: Please try again")
                 }
             }
 
