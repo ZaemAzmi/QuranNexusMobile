@@ -39,7 +39,9 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -110,19 +112,14 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
     }
 
     private void addBookmarkWithNotes(MyViewHolder holder, ChapterAyah ayah, String notes) {
+        Map<String, Object> verseProperties = new HashMap<>();
+        verseProperties.put("verse_id", String.valueOf(ayah.getId()));
+        verseProperties.put("chapter_id", ayah.getSurahId());
+
         BookmarkRequest request = new BookmarkRequest(
                 "verse",
-                ayah.getId(),
-                ayah.getSurahId(),
-                null,
-                null,  // This can be empty string
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
+                verseProperties,
+                notes
         );
 
         Call<BookmarkResponse> call = quranApi.addBookmark("Bearer " + authToken, request);
@@ -213,6 +210,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
 
         // Iterate in reverse order to ensure correct RTL wrapping
         for (int i = words.size() - 1; i >= 0; i--) {
+            //TODO : Add checking for waqaf, dont use directly from the model class, use utility method to properly render waqaf
             Word word = words.get(i);
             TextView wordView = new TextView(context);
             wordView.setText(word.getText());

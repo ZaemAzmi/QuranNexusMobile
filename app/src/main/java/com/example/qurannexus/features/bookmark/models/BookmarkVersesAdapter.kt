@@ -47,9 +47,9 @@ class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
         val context = holder.itemView.context
 
         // Get chapter details from QuranMetadata
-        val chapterDetails = QuranMetadata.getInstance().getSurahDetails(verse.chapter_id.toInt())
+        val surahDetails = QuranMetadata.getInstance().getSurahDetails(verse.itemProperties.chapterId.toInt())
 
-        chapterDetails?.let { details ->
+        surahDetails?.let { details ->
             // Set the verse title
             holder.verseTitle.text = "Verse of ${details.englishName}"
 
@@ -64,7 +64,7 @@ class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
             }
 
             // Set chapter and verse number
-            holder.verseChapterAndVerseNumber.text = "Chapter ${verse.chapter_id}, Verse ${verse.ayah_id}"
+            holder.verseChapterAndVerseNumber.text = "Chapter ${verse.itemProperties.chapterId}, Verse ${verse.itemProperties.verseId}"
 
             // Setup menu button
             holder.menuButton.setOnClickListener { view ->
@@ -72,7 +72,7 @@ class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
             }
 
             holder.cardView.setOnClickListener {
-                navigateToVerse(context, verse.chapter_id.toInt(), verse.ayah_id.toInt())
+                navigateToVerse(context, verse.itemProperties.chapterId.toInt(), verse.itemProperties.verseId.toInt())
             }
         }
     }
@@ -147,7 +147,7 @@ class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
         }
 
         val quranApi = ApiService.getQuranClient().create(QuranApi::class.java)
-        quranApi.removeBookmark("Bearer $token", "verse", verse.ayah_id)
+        quranApi.removeBookmark("Bearer $token", "verse", verse.itemProperties.verseId)
             .enqueue(object : Callback<RemoveBookmarkResponse> {
                 override fun onResponse(
                     call: Call<RemoveBookmarkResponse>,

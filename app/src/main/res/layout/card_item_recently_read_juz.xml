@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/recentlyReadJuzCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="15dp"
+        app:cardBackgroundColor="@color/surah_card_dark_green_300"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp">
+
+            <FrameLayout
+                android:id="@+id/recentlyReadJuzNumberFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/surah_number_frame" />
+
+                <com.example.qurannexus.core.customViews.AutoFitTextView
+                    android:id="@+id/recentlyReadJuzNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="3"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:gravity="center" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/recentlyReadJuzTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:text="Juz 3"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/recentlyReadJuzRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:text="Al-Baqarah 253 - Al-Imran 92"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
+                app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzTitle" />
+
+            <TextView
+                android:id="@+id/recentlyReadJuzDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:text="13 Feb 2025 / 15 Rajab 1446"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
+                app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzRange" />
+
+            <TextView
+                android:id="@+id/recentlyReadJuzTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:text="10:30 PM"
+                android:textColor="#FFFFFF"
+                android:textSize="8sp"
+                app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
+                app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzDate" />
+
+            <ImageView
+                android:id="@+id/recentlyReadJuzMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_vertical_dots_menu"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/recentlyReadJuzPageInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="Pages 42-65"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="16dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,19 +44,19 @@ class WordCloudFragment : Fragment() {
         wordCloudView.onWordClickListener = { word ->
             val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
                 // Basic word info
-                putExtra("WORD_TEXT", word.word_text)
-                putExtra("TRANSLATION", word.translation)
-                putExtra("TRANSLITERATION", word.transliteration)
-                putExtra("TOTAL_OCCURRENCES", word.total_occurrences)
+                putExtra("WORD_TEXT", word.itemProperties.wordText)
+                putExtra("TRANSLATION", word.itemProperties.translation)
+                putExtra("TRANSLITERATION", word.itemProperties.transliteration)
+                putExtra("TOTAL_OCCURRENCES", word.itemProperties.totalOccurrences)
 
                 // First occurrence details
-                putExtra("CHAPTER_ID", word.first_occurrence.chapter_id)
-                putExtra("VERSE_NUMBER", word.first_occurrence.verse_number)
-                putExtra("SURAH_NAME", word.first_occurrence.surah_name)
-                putExtra("PAGE_ID", word.first_occurrence.page_id)
-                putExtra("JUZ_NUMBER", word.first_occurrence.juz_id)
-                putExtra("VERSE_TEXT", word.first_occurrence.verse_text)
-                putExtra("AUDIO_URL", word.first_occurrence.audio_url)
+                putExtra("CHAPTER_ID", word.itemProperties.firstOccurrence.chapterId)
+                putExtra("VERSE_NUMBER", word.itemProperties.firstOccurrence.verseNumber)
+                putExtra("SURAH_NAME", word.itemProperties.firstOccurrence.surahName)
+                putExtra("PAGE_ID", word.itemProperties.firstOccurrence.pageId)
+                putExtra("JUZ_NUMBER", word.itemProperties.firstOccurrence.juzId)
+                putExtra("VERSE_TEXT", word.itemProperties.firstOccurrence.verseText)
+                putExtra("AUDIO_URL", word.itemProperties.firstOccurrence.audioUrl)
             }
             startActivity(intent)
         }

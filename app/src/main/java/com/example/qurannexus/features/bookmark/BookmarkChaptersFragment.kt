@@ -7,18 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.core.utils.QuranMetadata
-import com.example.qurannexus.features.bookmark.interfaces.BookmarkService
 import com.example.qurannexus.features.bookmark.models.BookmarkChapter
 import com.example.qurannexus.features.bookmark.models.BookmarkChaptersAdapter
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,30 +62,35 @@ class BookmarkChaptersFragment : Fragment() {
                 if (response.isSuccessful && response.body() != null) {
                     val bookmarksResponse = response.body()!!
                     if (bookmarksResponse.status == "success") {
-                        val chapterIds = bookmarksResponse.bookmarks.chapters
-
-                        val bookmarkChapters = chapterIds.mapNotNull { chapterId ->
+                        val chapters = bookmarksResponse.bookmarks.chapters
+                        if(chapters.isEmpty()){
+                            Toast.makeText(context, "No bookmarked chapters found", Toast.LENGTH_SHORT).show()
+                            return
+                        }
+                        // Map the chapters with QuranMetadata
+                        val bookmarkChapters = chapters.mapNotNull { chapter ->
                             try {
-                                val chapterNumber = chapterId.toInt()
+                                val chapterNumber = chapter.itemProperties.chapterId.toInt()
                                 val surahDetails = QuranMetadata.getInstance().getSurahDetails(chapterNumber)
 
                                 surahDetails?.let {
                                     BookmarkChapter(
-                                        chapterNumber = it.surahIndex,
-                                        chapterTitle = it.englishName,
-                                        chapterInfo = it.revelationPlace,
-                                        arabicTitle = it.arabicName,
-                                        verseCount = it.numberOfVerses,
-                                        translationName = it.translationName
+                                        itemProperties = BookmarkChapter.ChapterProperties(
+                                            chapterId = chapter.itemProperties.chapterId,
+                                            chapterNumber = it.surahIndex,
+                                            chapterTitle = it.englishName,
+                                            chapterInfo = it.revelationPlace,
+                                            arabicTitle = it.arabicName,
+                                            verseCount = it.numberOfVerses,
+                                            translationName = it.translationName
+                                        ),
+                                        notes = chapter.notes,
+                                        createdAt = chapter.createdAt
                                     )
                                 }
                             } catch (e: NumberFormatException) {
                                 null
                             }
-                        }
-
-                        if (bookmarkChapters.isEmpty()) {
-                            Toast.makeText(context, "No bookmarked chapters found", Toast.LENGTH_SHORT).show()
                         }
 
                         if (isAdded) {  // Check again before updating UI

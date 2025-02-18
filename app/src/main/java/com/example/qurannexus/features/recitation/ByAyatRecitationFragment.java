@@ -113,7 +113,7 @@ public class ByAyatRecitationFragment extends Fragment {
                         bookmarkedAyahIds.clear();
                         List<BookmarkVerse> verses = bookmarksResponse.getBookmarks().getVerses();
                         for (BookmarkVerse verse : verses) {
-                            bookmarkedAyahIds.add(verse.getAyah_id());
+                            bookmarkedAyahIds.add(verse.getItemProperties().getVerseId());
                         }
                     }
                 }

@@ -60,14 +60,16 @@ class BookmarkVersesFragment : Fragment() {
                         val verses = bookmarksResponse.bookmarks.verses.map { verseBookmark ->
                             try {
                                 // Get chapter details from QuranMetadata
-                                val chapterNumber = verseBookmark.chapter_id.toInt()
+                                val chapterNumber = verseBookmark.itemProperties.chapterId.toInt()
                                 val surahDetails = QuranMetadata.getInstance().getSurahDetails(chapterNumber)
 
                                 BookmarkVerse(
-                                    ayah_id = verseBookmark.ayah_id,
-                                    chapter_id = verseBookmark.chapter_id,
-                                    notes = verseBookmark.notes ?: "",
-                                    created_at = verseBookmark.created_at
+                                    itemProperties = BookmarkVerse.VerseProperties(
+                                        verseId = verseBookmark.itemProperties.verseId,
+                                        chapterId = verseBookmark.itemProperties.chapterId
+                                    ),
+                                    notes = verseBookmark.notes,
+                                    createdAt = verseBookmark.createdAt
                                 )
                             } catch (e: NumberFormatException) {
                                 null
@@ -77,7 +79,6 @@ class BookmarkVersesFragment : Fragment() {
                         if (verses.isEmpty()) {
                             Toast.makeText(context, "No bookmarked verses found", Toast.LENGTH_SHORT).show()
                         }
-
                         bookmarkVersesAdapter.updateData(verses)
                     } else {
                         Toast.makeText(context, "Failed to load bookmarks", Toast.LENGTH_SHORT).show()

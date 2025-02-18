@@ -110,7 +110,7 @@ class WordManagementViewModel @Inject constructor(
                     override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
                         if (response.isSuccessful) {
                             val isBookmarked = response.body()?.bookmarks?.words?.any {
-                                it.word_text == wordText
+                                it.itemProperties.wordText == wordText
                             } ?: false
                             result.value = isBookmarked
                         }

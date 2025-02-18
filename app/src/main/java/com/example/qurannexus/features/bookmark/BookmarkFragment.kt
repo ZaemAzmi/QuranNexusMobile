@@ -41,8 +41,10 @@ class BookmarkFragment : Fragment() {
             tab.text = when (position) {
                 0 -> "Chapters"
                 1 -> "Verses"
-                2 -> "Daily Quotes"
-                3 -> "Vocabulary"
+                2 -> "Pages" //
+                3 -> "Daily Quotes"
+                4 -> "Vocabulary"
+                5 -> "Recently Read"
                 else -> "Chapters"
             }
             tab.view.background = ContextCompat.getDrawable(requireContext(), R.drawable.tab_background_selector)

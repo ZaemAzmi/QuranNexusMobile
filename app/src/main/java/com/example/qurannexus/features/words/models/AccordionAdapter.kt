@@ -50,19 +50,19 @@ class AccordionAdapter(
             val childAdapter = BookmarkWordChildAdapter(
                 onItemClick = { bookmarkWord ->
                     val intent = Intent(binding.root.context, WordDetailsActivity::class.java).apply {
-                        putExtra("WORD_TEXT", bookmarkWord.word_text)
-                        putExtra("TRANSLATION", bookmarkWord.translation)
-                        putExtra("TRANSLITERATION", bookmarkWord.transliteration)
-                        putExtra("TOTAL_OCCURRENCES", bookmarkWord.total_occurrences)
+                        putExtra("WORD_TEXT", bookmarkWord.itemProperties.wordText)
+                        putExtra("TRANSLATION", bookmarkWord.itemProperties.translation)
+                        putExtra("TRANSLITERATION", bookmarkWord.itemProperties.transliteration)
+                        putExtra("TOTAL_OCCURRENCES", bookmarkWord.itemProperties.totalOccurrences)
 
                         // First occurrence details
-                        putExtra("CHAPTER_ID", bookmarkWord.first_occurrence.chapter_id)
-                        putExtra("VERSE_NUMBER", bookmarkWord.first_occurrence.verse_number)
-                        putExtra("SURAH_NAME", bookmarkWord.first_occurrence.surah_name)
-                        putExtra("PAGE_ID", bookmarkWord.first_occurrence.page_id)
-                        putExtra("JUZ_NUMBER", bookmarkWord.first_occurrence.juz_id)
-                        putExtra("VERSE_TEXT", bookmarkWord.first_occurrence.verse_text)
-                        putExtra("AUDIO_URL", bookmarkWord.first_occurrence.audio_url)
+                        putExtra("CHAPTER_ID", bookmarkWord.itemProperties.firstOccurrence.chapterId)
+                        putExtra("VERSE_NUMBER", bookmarkWord.itemProperties.firstOccurrence.verseNumber)
+                        putExtra("SURAH_NAME", bookmarkWord.itemProperties.firstOccurrence.surahName)
+                        putExtra("PAGE_ID", bookmarkWord.itemProperties.firstOccurrence.pageId)
+                        putExtra("JUZ_NUMBER", bookmarkWord.itemProperties.firstOccurrence.juzId)
+                        putExtra("VERSE_TEXT", bookmarkWord.itemProperties.firstOccurrence.verseText)
+                        putExtra("AUDIO_URL", bookmarkWord.itemProperties.firstOccurrence.audioUrl)
                     }
                     binding.root.context.startActivity(intent)
                 }
@@ -107,8 +107,8 @@ class AccordionAdapter(
 //            private val surahNameText by lazy { itemView.findViewById<TextView>(R.id.surahNameText) }
 
             fun bind(bookmarkWord: BookmarkWord) {
-                wordText.text = bookmarkWord.word_text
-                translationText.text = bookmarkWord.translation
+                wordText.text = bookmarkWord.itemProperties.wordText
+                translationText.text = bookmarkWord.itemProperties.translation
 //                surahNameText.text = bookmarkWord.surah_name
 
                 itemView.setOnClickListener { onItemClick(bookmarkWord) }

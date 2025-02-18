@@ -86,14 +86,14 @@ class WordCloudView @JvmOverloads constructor(
     private fun calculateSizesAndColors() {
         if (words.isEmpty()) return
 
-        val occurrences = words.map { wordOccurrences[it.word_text] ?: 1 }
+        val occurrences = words.map { wordOccurrences[it.itemProperties.wordText] ?: 1 }
         val maxOccurrence = occurrences.maxOrNull() ?: 1
         val minOccurrence = occurrences.minOrNull() ?: 1
 
         Log.d("WordCloudView", "Max occurrence: $maxOccurrence, Min occurrence: $minOccurrence")
 
         words.forEach { word ->
-            val occurrence = wordOccurrences[word.word_text] ?: 1
+            val occurrence = wordOccurrences[word.itemProperties.wordText] ?: 1
 
             // Use logarithmic scaling for more dramatic size differences
             val logMax = log10(maxOccurrence.toFloat() + 1)
@@ -115,7 +115,7 @@ class WordCloudView @JvmOverloads constructor(
             wordColors[word] = colors[colorIndex.coerceIn(0, colors.size - 1)]
 
             Log.d("WordCloudView", """
-                Word: ${word.word_text}
+                Word: ${word.itemProperties.wordText}
                 Occurrence: $occurrence
                 Size: $size
                 Ratio: $ratio
@@ -172,7 +172,7 @@ class WordCloudView @JvmOverloads constructor(
     }
 
     fun setWords(newWords: List<BookmarkWord>) {
-        words = newWords.sortedByDescending { wordOccurrences[it.word_text] ?: 0 }
+        words = newWords.sortedByDescending { wordOccurrences[it.itemProperties.wordText] ?: 0 }
         calculateSizesAndColors()
         requestLayout()
         invalidate()
@@ -279,7 +279,7 @@ class WordCloudView @JvmOverloads constructor(
                 textSize = size
                 this.color = color
             }
-            canvas.drawText(word.word_text, 0f, 0f, arabicTextPaint)
+            canvas.drawText(word.itemProperties.wordText, 0f, 0f, arabicTextPaint)
 
             canvas.restore()
         }

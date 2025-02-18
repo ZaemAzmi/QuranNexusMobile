@@ -1,6 +1,8 @@
 package com.example.qurannexus.features.recitation;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -23,16 +25,27 @@ import android.widget.Toast;
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.core.network.ApiService;
+import com.example.qurannexus.core.utils.ReadingTracker;
 import com.example.qurannexus.core.utils.SurahDetails;
+import com.example.qurannexus.features.bookmark.enums.RecentlyReadType;
+import com.example.qurannexus.features.bookmark.interfaces.BookmarkApi;
+import com.example.qurannexus.features.bookmark.models.AddRecentlyReadRequest;
+import com.example.qurannexus.features.bookmark.models.BookmarkChapter;
+import com.example.qurannexus.features.bookmark.models.BookmarkPage;
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest;
 import com.example.qurannexus.features.bookmark.models.BookmarkResponse;
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
 import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse;
+import com.example.qurannexus.features.bookmark.models.SimpleResponse;
 import com.example.qurannexus.features.recitation.models.PageAdapter;
 import com.example.qurannexus.features.recitation.models.SurahModel;
 import com.example.qurannexus.core.utils.QuranMetadata;
+import com.example.qurannexus.features.statistics.interfaces.StatisticsApi;
+import com.example.qurannexus.features.statistics.models.UpdateRecitationTimesRequest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,12 +53,19 @@ import retrofit2.Response;
 
 public class RecitationPageFragment extends Fragment {
     SurahModel surahModel;
+     int startPosition;
+     String mode;
     String layoutType = "verseByVerse";
+    private int scrollToVerse = -1;  // Add this line
+    private boolean isPageBookmarked = false;
+    private ImageView pageBookmarkIcon;
+    private int currentPageNumber = 1;
     private static final String KEY_LAYOUT_TYPE = "recitation_layout_by_page";
     private int currentSurahIndex;
-    private int currentPageNumber;
     private View rootView;
     private QuranApi quranApi;
+    private BookmarkApi bookmarkApi;
+    private StatisticsApi statisticsApi;
     private boolean isChapterBookmarked = false;
     private ImageView bookmarkIcon;
     private String authToken;
@@ -53,15 +73,29 @@ public class RecitationPageFragment extends Fragment {
     private TextView surahNameTextView;
     private TextView surahNameEnglishTextView;
     private QuranMetadata quranMetadata;
+    private long readingStartTime;
     public RecitationPageFragment() {
     }
 
     public static RecitationPageFragment newInstance(SurahModel surahModel, String fragmentType, int currentSurahIndex) {
         RecitationPageFragment fragment = new RecitationPageFragment();
         Bundle args = new Bundle();
-        args.putParcelable("surahModel", surahModel);
-        args.putString("fragmentType", fragmentType);
-        args.putInt("currentSurahIndex", currentSurahIndex);
+        if (surahModel != null) {
+            args.putParcelable("surah_model", surahModel);
+        }
+//        args.putString("mode", mode);
+//        args.putInt("start_position", startPosition);
+        args.putString("fragment_type", fragmentType);
+        args.putInt("current_surah_index", currentSurahIndex);
+
+        Activity activity = fragment.getActivity();
+        if (activity != null) {
+            Intent intent = activity.getIntent();
+            if (intent != null && intent.hasExtra("SCROLL_TO_VERSE")) {
+                args.putInt("scroll_to_verse", intent.getIntExtra("SCROLL_TO_VERSE", -1));
+            }
+        }
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,13 +103,29 @@ public class RecitationPageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        readingStartTime = System.currentTimeMillis();
         if (getArguments() != null) {
-            surahModel = getArguments().getParcelable("surahModel");
-            layoutType = getArguments().getString("fragmentType");
-            currentSurahIndex = getArguments().getInt("currentSurahIndex");
-        }
+            surahModel = getArguments().getParcelable("surah_model");
+            startPosition = getArguments().getInt("start_position");
+            mode = getArguments().getString("mode");
+            layoutType = getArguments().getString("fragment_type");
+            currentSurahIndex = getArguments().getInt("current_surah_index");
 
+            // Get scroll to verse if available
+            if (getArguments().containsKey("scroll_to_verse")) {
+                scrollToVerse = getArguments().getInt("scroll_to_verse", -1);
+            }
+        }
+        // Get layout type from preferences if not specified
+        if (layoutType == null) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            layoutType = prefs.getBoolean("recitation_layout_by_page", false) ?
+                    "pageByPage" : "verseByVerse";
+        }
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
+        bookmarkApi = ApiService.getQuranClient().create(BookmarkApi.class);
+        statisticsApi = ApiService.getQuranClient().create(StatisticsApi.class);
+
         authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 .getString("token", null);
     }
@@ -93,7 +143,74 @@ public class RecitationPageFragment extends Fragment {
         checkBookmarkStatus();
         return rootView;
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        long durationInSeconds = (System.currentTimeMillis() - readingStartTime) / 1000;
+        // Check if reading duration is valid
+        if (ReadingTracker.INSTANCE.isValidReadingDuration(durationInSeconds)) {
+            // First, record the primary reading type (chapter or page)
+            String primaryItemId;
+            RecentlyReadType primaryType;
 
+            if ("verseByVerse".equals(layoutType)) {
+                primaryType = RecentlyReadType.CHAPTER;
+                primaryItemId = surahModel.getSurahNumber();
+            } else if ("pageByPage".equals(layoutType)) {
+                primaryType = RecentlyReadType.PAGE;
+                primaryItemId = String.valueOf(currentPageNumber);
+            } else {
+                return; // Exit if mode is invalid
+            }
+            // Record primary reading type
+            recordRecentlyRead(primaryType, primaryItemId, durationInSeconds);
+            recordRecitationTimes(durationInSeconds);
+            // Now record the Juz
+            int pageNumber = "pageByPage".equals(layoutType)
+                    ? currentPageNumber
+                    : QuranMetadata.Companion.getInstance().getStartingPage(Integer.parseInt(surahModel.getSurahNumber()));
+
+            int juzNumber = QuranMetadata.Companion.getInstance().getJuzForPage(pageNumber);
+            recordRecentlyRead(RecentlyReadType.JUZ, String.valueOf(juzNumber), durationInSeconds);
+
+        }
+    }
+    private void recordRecentlyRead(RecentlyReadType type, String itemId, long durationSeconds) {
+        AddRecentlyReadRequest request = new AddRecentlyReadRequest(
+                type.toApiString(),
+                itemId,
+                durationSeconds
+        );
+
+        bookmarkApi.addRecentlyRead("Bearer " + authToken, request)
+                .enqueue(new Callback<SimpleResponse>() {
+                    @Override
+                    public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                        Log.d("RecitationPage", "Recorded " + type + ": " + itemId);
+                    }
+
+                    @Override
+                    public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                        Log.e("RecitationPage", "Failed to record " + type + ": " + t.getMessage());
+                    }
+                });
+    }
+    private void recordRecitationTimes(long durationInSeconds){
+        UpdateRecitationTimesRequest timesRequest = new UpdateRecitationTimesRequest(durationInSeconds);
+
+        statisticsApi.updateRecitationTimes("Bearer " + authToken, timesRequest)
+                .enqueue(new Callback<SimpleResponse>() {
+                    @Override
+                    public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                        Log.d("RecitationPage", "Recitation times updated");
+                    }
+
+                    @Override
+                    public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                        Log.e("RecitationPage", "Failed to update recitation times: " + t.getMessage());
+                    }
+                });
+    }
     private void setupUI() {
         // Retrieve the user's layout preference
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -118,6 +235,12 @@ public class RecitationPageFragment extends Fragment {
         // Setup bookmark functionality
         bookmarkIcon = rootView.findViewById(R.id.bookmarkIcon);
         bookmarkIcon.setOnClickListener(v -> toggleBookmarkStatus());
+
+        pageBookmarkIcon = rootView.findViewById(R.id.pageBookmarkIcon);
+        pageBookmarkIcon.setOnClickListener(v -> togglePageBookmarkStatus());
+
+        // Show/hide page bookmark based on layout type
+        pageBookmarkIcon.setVisibility("pageByPage".equals(layoutType) ? View.VISIBLE : View.GONE);
     }
 
         private void checkBookmarkStatus() {
@@ -131,9 +254,26 @@ public class RecitationPageFragment extends Fragment {
                 public void onResponse(Call<BookmarksResponse> call, Response<BookmarksResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         BookmarksResponse bookmarksResponse = response.body();
-                        List<String> chapterBookmarks = bookmarksResponse.getBookmarks().getChapters();
-                        isChapterBookmarked = chapterBookmarks.contains(String.valueOf(currentSurahIndex + 1));
-                        updateBookmarkIcon();
+                        // Check chapter bookmarks
+                        List<BookmarkChapter> chapterBookmarks = bookmarksResponse.getBookmarks().getChapters();
+                        isChapterBookmarked = false;
+                        for (BookmarkChapter chapter : chapterBookmarks) {
+                            if (String.valueOf(currentSurahIndex + 1).equals(chapter.getItemProperties().getChapterId())) {
+                                isChapterBookmarked = true;
+                                break;
+                            }
+                        }
+
+                        // Check page bookmarks
+                        List<BookmarkPage> pageBookmarks = bookmarksResponse.getBookmarks().getPages();
+                        isPageBookmarked = false;
+                        for (BookmarkPage page : pageBookmarks) {
+                            if (page.getItemProperties().getPageNumber() == currentPageNumber) {
+                                isPageBookmarked = true;
+                                break;
+                            }
+                        }
+                        updateBookmarkIcons();
                     }
                 }
 
@@ -143,7 +283,66 @@ public class RecitationPageFragment extends Fragment {
                 }
             });
          }
-        private void toggleBookmarkStatus() {
+
+    private void togglePageBookmarkStatus() {
+        if (authToken == null) {
+            Toast.makeText(getContext(), "Please login to bookmark", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (isPageBookmarked) {
+            // Remove page bookmark
+            quranApi.removeBookmark("Bearer " + authToken, "page", String.valueOf(currentPageNumber))
+                    .enqueue(new Callback<RemoveBookmarkResponse>() {
+                        @Override
+                        public void onResponse(Call<RemoveBookmarkResponse> call, Response<RemoveBookmarkResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                isPageBookmarked = false;
+                                updateBookmarkIcons();
+                                Toast.makeText(getContext(), "Page bookmark removed", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Failed to remove page bookmark", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RemoveBookmarkResponse> call, Throwable t) {
+                            Toast.makeText(getContext(), "Error removing page bookmark", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            // Add page bookmark
+            Map<String, Object> itemProperties = new HashMap<>();
+            itemProperties.put("page_id", String.valueOf(currentPageNumber));
+            itemProperties.put("page_number", currentPageNumber);
+
+            BookmarkRequest request = new BookmarkRequest(
+                    "page",
+                    itemProperties,
+                    ""  // notes
+            );
+            quranApi.addBookmark("Bearer " + authToken, request)
+                    .enqueue(new Callback<BookmarkResponse>() {
+                        @Override
+                        public void onResponse(Call<BookmarkResponse> call, Response<BookmarkResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                isPageBookmarked = true;
+                                updateBookmarkIcons();
+                                Toast.makeText(getContext(), "Page bookmark added", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Failed to add page bookmark", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<BookmarkResponse> call, Throwable t) {
+                            Toast.makeText(getContext(), "Error adding page bookmark", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void toggleBookmarkStatus() {
 
             if (authToken == null) {
                 Toast.makeText(getContext(), "Please login to bookmark", Toast.LENGTH_SHORT).show();
@@ -160,7 +359,7 @@ public class RecitationPageFragment extends Fragment {
                             public void onResponse(Call<RemoveBookmarkResponse> call, Response<RemoveBookmarkResponse> response) {
                                 if (response.isSuccessful() && response.body() != null) {
                                     isChapterBookmarked = false;
-                                    updateBookmarkIcon();
+                                    updateBookmarkIcons();
                                     Toast.makeText(getContext(), "Bookmark removed", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(getContext(), "Failed to remove bookmark", Toast.LENGTH_SHORT).show();
@@ -174,20 +373,14 @@ public class RecitationPageFragment extends Fragment {
                         });
             } else {
                 // Add bookmark - use the adjusted surah number
-                BookmarkRequest request = new BookmarkRequest(
-                        "chapter",
-                        surahNumber,  // Using the adjusted surah number
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
+                // For Chapter Bookmark
+                Map<String, Object> itemProperties = new HashMap<>();
+                itemProperties.put("chapter_id", String.valueOf(currentSurahIndex + 1));
 
+                BookmarkRequest request = new BookmarkRequest(
+                        "chapter",  // type
+                        itemProperties,  // itemProperties
+                        ""  // notes (empty string as default)
                 );
 
                 quranApi.addBookmark("Bearer " + authToken, request)
@@ -196,7 +389,7 @@ public class RecitationPageFragment extends Fragment {
                     public void onResponse(Call<BookmarkResponse> call, Response<BookmarkResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
                         isChapterBookmarked = true;
-                        updateBookmarkIcon();
+                        updateBookmarkIcons();
                         Toast.makeText(getContext(), "Bookmark added", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "Failed to add bookmark", Toast.LENGTH_SHORT).show();
@@ -211,23 +404,42 @@ public class RecitationPageFragment extends Fragment {
         }
     }
 
-    private void updateBookmarkIcon() {
+    private void updateBookmarkIcons() {
         if (bookmarkIcon != null) {
             bookmarkIcon.setImageResource(isChapterBookmarked ?
                     R.drawable.ic_bookmarked : R.drawable.ic_bookmark);
         }
+        if (pageBookmarkIcon != null) {
+            pageBookmarkIcon.setImageResource(isPageBookmarked ?
+                    R.drawable.ic_bookmarked : R.drawable.ic_bookmark);
+        }
     }
     private void fetchVerses() {
-        int surahNumber = Integer.parseInt(surahModel.getSurahNumber());
-        final int scrollToVerse = getArguments() != null ? getArguments().getInt("scrollToVerse", -1) : -1;
+        if (surahModel == null) {
+            int surahNumber = currentSurahIndex + 1; // Since index is 0-based
+            int scrollToVerse = getArguments() != null ? getArguments().getInt("scroll_to_verse", -1) : -1;
 
-        if ("verseByVerse".equals(layoutType)) {
-            displayByAyatRecitationFragment(surahNumber, scrollToVerse);
-            updateSurahHeader(surahNumber);
-        } else if ("pageByPage".equals(layoutType)) {
-            int startingPage = QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
-            displayByPageRecitationFragment(startingPage);
-            setPageContentCallback(startingPage);
+            if ("verseByVerse".equals(layoutType)) {
+                displayByAyatRecitationFragment(surahNumber, scrollToVerse);
+                updateSurahHeader(surahNumber);
+            } else if ("pageByPage".equals(layoutType)) {
+                int startingPage = QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
+                displayByPageRecitationFragment(startingPage);
+                setPageContentCallback(startingPage);
+            }
+        } else {
+            // Use surahModel if available
+            int surahNumber = Integer.parseInt(surahModel.getSurahNumber());
+            final int scrollToVerse = getArguments() != null ? getArguments().getInt("scrollToVerse", -1) : -1;
+
+            if ("verseByVerse".equals(layoutType)) {
+                displayByAyatRecitationFragment(surahNumber, scrollToVerse);
+                updateSurahHeader(surahNumber);
+            } else if ("pageByPage".equals(layoutType)) {
+                int startingPage = QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
+                displayByPageRecitationFragment(startingPage);
+                setPageContentCallback(startingPage);
+            }
         }
     }
 
@@ -267,13 +479,13 @@ public class RecitationPageFragment extends Fragment {
         }
     }
 
-    // Add method to be called from ByPageRecitationFragment when page changes
+    // Update the existing onPageChanged method
     public void onPageChanged(int newPage) {
         currentPageNumber = newPage;
         int surahNumber = quranMetadata.getSurahNumberForPage(newPage);
         updateSurahHeader(surahNumber);
+        checkBookmarkStatus(); // Check bookmark status when page changes
     }
-
 
     @OptIn(markerClass = UnstableApi.class)
     private void displayByAyatRecitationFragment(int surahNumber, int scrollToVerse) {
@@ -290,13 +502,26 @@ public class RecitationPageFragment extends Fragment {
         transaction.replace(R.id.recitationFragmentContainerView, fragment);
         transaction.commit();
     }
-
-    private void navigateToSurah(int newIndex) {
-        if (newIndex >= 0 && newIndex <= 114) {
-            currentSurahIndex = newIndex;
-
-
-        }
-    }
+//
+//    private void navigateToSurah(int newIndex) {
+//        if (newIndex >= 0 && newIndex < 114) {
+//            currentSurahIndex = newIndex;
+//
+//            // Create a new fragment with the updated index
+//            FragmentTransaction transaction = requireActivity()
+//                    .getSupportFragmentManager()
+//                    .beginTransaction();
+//
+//            RecitationPageFragment newFragment = RecitationPageFragment.newInstance(
+//                    null,  // We don't need surahModel for navigation
+//                    layoutType,
+//                    newIndex
+//            );
+//
+//            transaction.replace(R.id.mainFragmentContainer, newFragment);
+//            transaction.addToBackStack(null);
+//            transaction.commit();
+//        }
+//    }
 
 }

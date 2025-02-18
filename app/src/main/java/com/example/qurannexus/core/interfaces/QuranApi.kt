@@ -31,12 +31,12 @@ import retrofit2.http.Query
 
 
 interface QuranApi {
-    @GET("/surahs")
+    @GET("surahs")
     fun getAllSurahs(): Call<SurahListResponse?>?
-    @GET("/chapters/{surahId}/verses")
+    @GET("chapters/{surahId}/verses")
     fun getVersesBySurah(@Path("surahId") surahId: Int?): Call<AyahRecitationModel?>?
 
-    @GET("/pages/{page_id}")
+    @GET("pages/{page_id}")
     fun getPageVerses(
         @Path("page_id") pageId: Int,
         @Query("ayahs") ayahs: Boolean = true,
@@ -44,10 +44,10 @@ interface QuranApi {
     ): Call<PageVerseResponse?>?
 
     //words
-    @GET("/words/{word_key}")
+    @GET("words/{word_key}")
     fun getWordDetails(@Path("word_key") wordKey: String?): Call<WordDetailsResponse?>?
 
-    @GET("/quotes/daily")
+    @GET("quotes/daily")
     fun getDailyQuote(): Call<DailyQuoteResponse>
 
     // bookmarks
@@ -67,7 +67,7 @@ interface QuranApi {
     fun getBookmarks(
         @Header("Authorization") token: String
     ): Call<BookmarksResponse>
-    @GET("/audio_recitations/{ayah_key}")
+    @GET("audio_recitations/{ayah_key}")
     fun getAudioRecitation(@Path("ayah_key") ayahKey: String): Call<AudioRecitationResponse>
 
     // For searching words (used in search feature)
@@ -96,18 +96,18 @@ interface QuranApi {
     fun getWordsChaptersDistribution(
         @Query("words[]") words: List<String>
     ): Call<WordsChaptersDistributionResponse>
-    @GET("/achievements/status")
+    @GET("achievements/status")
     fun getAchievementStatus(
         @Header("Authorization") token: String
     ): Call<AchievementStatusResponse>
 
-    @POST("/achievements/unlock")
+    @POST("achievements/unlock")
     fun unlockAchievement(
         @Header("Authorization") token: String,
         @Body request: UnlockAchievementRequest
     ): Call<BaseResponse>
 
-    @GET("/achievements/check-streak")
+    @GET("achievements/check-streak")
     fun checkStreakAchievement(
         @Header("Authorization") token: String
     ): Call<StreakResponse>

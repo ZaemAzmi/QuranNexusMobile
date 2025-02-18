@@ -26,8 +26,11 @@ import com.example.qurannexus.features.words.models.WordDetailsViewModel
 import com.example.qurannexus.features.words.models.WordOccurrence
 import com.example.qurannexus.features.words.models.WordOccurrenceResponse
 import com.example.qurannexus.features.words.models.WordOccurrencesBottomSheetAdapter
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -38,6 +41,8 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
@@ -76,7 +81,10 @@ class WordDetailsActivity : AppCompatActivity() {
         initializeViews()
         setupBookmarkButton()
         setupCharts()
-
+        // Initialize adapter early
+        occurrencesAdapter = WordOccurrencesBottomSheetAdapter { occurrence ->
+            navigateToVerse(occurrence.chapter_id, occurrence.verse_number)
+        }
         // Get word text from intent
         val wordText = intent.getStringExtra("WORD_TEXT") ?: return finish()
 
@@ -96,7 +104,16 @@ class WordDetailsActivity : AppCompatActivity() {
         viewModel.error.observe(this) { error ->
             showError(error)
         }
+        // Add observation of new ViewModel states
+        viewModel.isLoadingMore.observe(this) { isLoading ->
+            occurrencesAdapter.setLoading(isLoading && viewModel.hasMorePages.value == true)
+        }
 
+        viewModel.hasMorePages.observe(this) { hasMore ->
+            if (hasMore && currentPage > 1) {
+                currentPage++
+            }
+        }
         viewModel.loadWordData(wordText)
         updateWordInfoFromIntent() // Keep this to update UI with intent data
 
@@ -129,6 +146,7 @@ class WordDetailsActivity : AppCompatActivity() {
             playAudio(audioUrl)
         }
     }
+
     private fun setupBookmarkButton() {
         Log.d("WordDetailsActivity", "setupBookmarkButton called")
         bookmarkButton.setOnClickListener {
@@ -139,14 +157,15 @@ class WordDetailsActivity : AppCompatActivity() {
                 } else {
                     // Get current word occurrence from intent extras
                     val currentOccurrence = WordOccurrence(
-                        word_id = intent.getStringExtra("WORD_ID") ?: "", //#
+//                        word_id = intent.getStringExtra("WORD_ID") ?: "", //#
+                        word_id = wordText ?: "",
                         word_text = wordText ?: "",
                         translation = intent.getStringExtra("TRANSLATION") ?: "",
                         transliteration = intent.getStringExtra("TRANSLITERATION"),
                         chapter_id = intent.getStringExtra("CHAPTER_ID") ?: "",
                         verse_number = intent.getStringExtra("VERSE_NUMBER") ?: "",
                         verse_text = intent.getStringExtra("VERSE_TEXT"),
-                        ayah_key = intent.getStringExtra("AYAH_KEY") ?: "", //#
+                        ayah_key = "${intent.getStringExtra("CHAPTER_ID")}:${intent.getStringExtra("VERSE_NUMBER")}",
                         juz_number = intent.getStringExtra("JUZ_NUMBER") ?: "",
                         position = intent.getIntExtra("POSITION", 0),
                         audio_url = intent.getStringExtra("AUDIO_URL")
@@ -180,31 +199,64 @@ class WordDetailsActivity : AppCompatActivity() {
             "Surah: ${intent.getStringExtra("SURAH_NAME_ARABIC")} (${intent.getStringExtra("SURAH_NAME_ENGLISH")})"
         findViewById<TextView>(R.id.ayahKeyText).text =
             "Ayah Key: ${intent.getStringExtra("AYAH_KEY")}"
-        findViewById<TextView>(R.id.surahNumberText).text =
-            "Surah Number: ${intent.getStringExtra("SURAH_NUMBER")}"
-        findViewById<TextView>(R.id.lineNumberText).text =
-            "Line Number: ${intent.getIntExtra("LINE_NUMBER", -1)}"
-        findViewById<TextView>(R.id.wordNumberText).text =
-            "Word Number: ${intent.getStringExtra("WORD_NUMBER")}"
+//        findViewById<TextView>(R.id.surahNumberText).text =
+//            "Surah Number: ${intent.getStringExtra("SURAH_NUMBER")}"
+//        findViewById<TextView>(R.id.lineNumberText).text =
+//            "Line Number: ${intent.getIntExtra("LINE_NUMBER", -1)}"
+//        findViewById<TextView>(R.id.wordNumberText).text =
+//            "Word Number: ${intent.getStringExtra("WORD_NUMBER")}"
+        findViewById<TextView>(R.id.verseText).text =
+            "Full Verse: ${intent.getStringExtra("VERSE_TEXT")}"
         findViewById<TextView>(R.id.pageIdText).text =
             "Page ID: ${intent.getStringExtra("PAGE_ID")}"
 
 
     }
+
     private fun setupCharts() {
         // Bar chart click listener
         barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onValueSelected(e: Entry?, h: Highlight?) {
                 e?.let {
-//                    val juzNumber = it.x.toInt()
-//                    viewModel.getWordOccurrencesInJuz(juzNumber)
                     currentJuzNumber = it.x.toInt()
-                    currentPage = 1 // Reset pagination when selecting new juz
-                    showOccurrencesBottomSheet(emptyList()) // Show empty bottom sheet first
-                    loadOccurrences(currentJuzNumber) // Load first page
+                    currentPage = 1
+                    loadOccurrences(currentJuzNumber)
+                    showOccurrencesBottomSheet(emptyList())
                 }
             }
+
             override fun onNothingSelected() {}
+        })
+
+        // Pie chart click listener
+        pieChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+                Log.d("PieChart", "Value selected: ${e?.toString()}")
+                if (e is PieEntry) {
+                    // Extract juz number by removing "Juz " prefix and parsing remaining number
+                    val juzStr = e.label?.replace("Juz ", "")?.trim()
+                    Log.d("PieChart", "Extracted juz string: $juzStr")
+                    // Extract juz number from label
+                    try {
+                        val juzNumber = juzStr?.toInt()
+                        if (juzNumber != null) {
+                            Log.d("PieChart", "Successfully parsed juz number: $juzNumber")
+                            currentJuzNumber = juzNumber
+                            currentPage = 1
+                            loadOccurrences(juzNumber)
+                            showOccurrencesBottomSheet(emptyList())
+                        } else {
+                            Log.e("PieChart", "Juz number was null after parsing")
+                        }
+                    } catch (ex: NumberFormatException) {
+                        Log.e("PieChart", "Error parsing juz number from: $juzStr", ex)
+                    }
+                }
+            }
+
+            override fun onNothingSelected() {
+                Log.d("PieChart", "Nothing selected")
+            }
         })
 
         // Show occurrences when available
@@ -217,7 +269,9 @@ class WordDetailsActivity : AppCompatActivity() {
         setupBarChart(juzDistribution)
         setupPieChart(juzDistribution)
     }
-    private fun showLoading(isLoading: Boolean) {
+
+    private fun
+            showLoading(isLoading: Boolean) {
         // Implement loading UI - you might want to show/hide a ProgressBar
         findViewById<ProgressBar>(R.id.progressBar)?.visibility =
             if (isLoading) View.VISIBLE else View.GONE
@@ -226,6 +280,7 @@ class WordDetailsActivity : AppCompatActivity() {
     private fun showError(error: String) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
     }
+
     private fun setupBarChart(juzDistribution: Map<String, Int>) {
         val entries = juzDistribution.map { (juz, count) ->
             BarEntry(juz.toFloat(), count.toFloat())
@@ -277,91 +332,217 @@ class WordDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupPieChart(juzDistribution: Map<String, Int>) {
-        // Filter out entries with count = 0
-        val entries = juzDistribution
-            .filter { (_, count) -> count > 0 }  // Only keep entries with count > 0
-            .map { (juz, count) ->
-                PieEntry(count.toFloat(), juz)
-            }
+        try {
+            val total = juzDistribution.values.sum().toFloat()
 
-        val dataSet = PieDataSet(entries, "").apply {
-            colors = ColorTemplate.COLORFUL_COLORS.toList()
-            sliceSpace = 2f
-            valueTextSize = 0f
-        }
-
-        pieChart.apply {
-            data = PieData(dataSet)
-            description.isEnabled = false
-            isRotationEnabled = true
-            setHoleColor(Color.WHITE)
-            setEntryLabelTextSize(10f)
-            setDrawEntryLabels(true)
-            animateY(1000)
-            invalidate()
-        }
-    }
-    private fun loadOccurrences(juzNumber: Int) {
-        if (isLoadingMore) return
-        isLoadingMore = true
-        val wordText = intent.getStringExtra("WORD_TEXT") ?: return
-
-        quranApi.getWordOccurrences(
-            wordText = wordText,  // Using the word text as the search query
-            juzNumber = juzNumber,
-            page = currentPage,
-            perPage = 20
-        ).enqueue(object : Callback<WordOccurrenceResponse> {
-            override fun onResponse(
-                call: Call<WordOccurrenceResponse>,
-                response: Response<WordOccurrenceResponse>
-            ) {
-                Log.d("WordDetails", "Response: ${response.isSuccessful}, Code: ${response.code()}")
-                Log.d("WordDetails", "Error body: ${response.errorBody()?.string()}")
-
-                if (response.isSuccessful && response.body() != null) {
-                    val data = response.body()!!.data
-                    val hasMorePages = data.pagination.current_page < data.pagination.total_pages
-
-                    if (currentPage == 1) {
-                        occurrencesAdapter.submitList(data.words)
-                    } else {
-                        occurrencesAdapter.addItems(data.words)
-                    }
-                    occurrencesAdapter.setLoading(hasMorePages)
-
-                    if (hasMorePages) currentPage++
-                } else {
-                    Toast.makeText(
-                        this@WordDetailsActivity,
-                        "Failed to load occurrences: ${response.errorBody()?.string()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            // Create entries
+            val entries = juzDistribution
+                .filter { (_, count) -> count > 0 }
+                .map { (juz, count) ->
+                    val percentage = (count.toFloat() / total) * 100f
+                    PieEntry(count.toFloat(), "Juz $juz", percentage)
                 }
-                isLoadingMore = false
+                .sortedByDescending { it.value }
+
+            // Set up colors and data
+            val dataSet = PieDataSet(entries, "").apply {
+                colors = mutableListOf<Int>().apply {
+                    entries.forEach { entry ->
+                        val percentage = entry.data as Float
+                        add(
+                            when {
+                                percentage > 10f -> Color.parseColor("#4CAF50")  // Green
+                                percentage > 5f -> Color.parseColor("#FFC107")   // Yellow
+                                percentage > 2f -> Color.parseColor("#F44336")   // Red
+                                else -> Color.parseColor("#9C27B0")             // Purple
+                            }
+                        )
+                    }
+                }
+
+                setValueTextColors(listOf(Color.BLACK))
+                valueTextSize = 11f
+                valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        val percentage = (value / total) * 100f
+                        return if (percentage >= 1f) String.format("%.1f%%", percentage) else ""
+                    }
+                }
+
+                yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+                valueLinePart1Length = 0.6f
+                valueLinePart2Length = 0.3f
+                valueLineWidth = 1.5f
+                valueLineColor = Color.GRAY
+                sliceSpace = 2f
             }
 
-            override fun onFailure(call: Call<WordOccurrenceResponse>, t: Throwable) {
-                Log.e("WordDetails", "Network error", t)
-                Toast.makeText(
-                    this@WordDetailsActivity,
-                    "Error: ${t.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-                isLoadingMore = false
+            // Configure pie chart
+            pieChart.apply {
+                setExtraOffsets(
+                    30f,
+                    30f,
+                    30f,
+                    100f
+                )  // Important: Give extra space at bottom for legend
+                data = PieData(dataSet)
+                description.isEnabled = false
+                isRotationEnabled = true
+
+                // Center settings
+                isDrawHoleEnabled = true
+                setHoleColor(Color.WHITE)
+                setTransparentCircleColor(Color.WHITE)
+                setTransparentCircleAlpha(110)
+                holeRadius = 35f
+                transparentCircleRadius = 40f
+
+                // Configure legend - THIS IS THE KEY PART
+                legend.apply {
+                    isEnabled = true
+                    verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+                    horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                    orientation = Legend.LegendOrientation.VERTICAL
+                    setDrawInside(false)
+                    yOffset = 10f
+                    xOffset = 10f
+                    yEntrySpace = 10f
+                    textSize = 12f
+                    formSize = 12f
+                    form = Legend.LegendForm.CIRCLE
+                    textColor = Color.BLACK
+
+                    // Create custom legend entries
+                    val customEntries = arrayOf(
+                        LegendEntry(
+                            "Frequent (>10%)",
+                            Legend.LegendForm.CIRCLE,
+                            Float.NaN,
+                            Float.NaN,
+                            null,
+                            Color.parseColor("#4CAF50")
+                        ),
+                        LegendEntry(
+                            "Common (5-10%)",
+                            Legend.LegendForm.CIRCLE,
+                            Float.NaN,
+                            Float.NaN,
+                            null,
+                            Color.parseColor("#FFC107")
+                        ),
+                        LegendEntry(
+                            "Occasional (2-5%)",
+                            Legend.LegendForm.CIRCLE,
+                            Float.NaN,
+                            Float.NaN,
+                            null,
+                            Color.parseColor("#F44336")
+                        ),
+                        LegendEntry(
+                            "Rare (<2%)",
+                            Legend.LegendForm.CIRCLE,
+                            Float.NaN,
+                            Float.NaN,
+                            null,
+                            Color.parseColor("#9C27B0")
+                        )
+                    )
+                    setCustom(customEntries)
+                }
+
+                // Center text and animation
+                centerText = "Total\n${total.toInt()}"
+                setCenterTextSize(14f)
+
+                // Important: Set minimum height to ensure legend fits
+                minimumHeight = 600
+
+                // Animate
+                animateY(800, Easing.EaseInOutQuad)
+                invalidate()
             }
-        })
+
+        } catch (e: Exception) {
+            Log.e("PieChart", "Error setting up pie chart", e)
+        }
     }
+
+    private fun setupPieChartLegend(pieChart: PieChart) {
+        pieChart.legend.apply {
+            isEnabled = true
+            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+            orientation = Legend.LegendOrientation.VERTICAL
+            setDrawInside(false)
+            direction = Legend.LegendDirection.LEFT_TO_RIGHT
+            textSize = 12f
+            formSize = 12f
+            xEntrySpace = 10f
+            yEntrySpace = 10f
+            setWordWrapEnabled(true)
+            maxSizePercent = 0.95f  // Allow legend to take up more space
+            textColor = Color.BLACK
+            form = Legend.LegendForm.CIRCLE
+
+            // Create legend entries manually
+            setCustom(
+                arrayOf(
+                    LegendEntry(
+                        "Frequent (>10%)", Legend.LegendForm.CIRCLE,
+                        12f, 2f, null, Color.parseColor("#4CAF50")
+                    ),
+                    LegendEntry(
+                        "Common (5-10%)", Legend.LegendForm.CIRCLE,
+                        12f, 2f, null, Color.parseColor("#FFC107")
+                    ),
+                    LegendEntry(
+                        "Occasional (2-5%)", Legend.LegendForm.CIRCLE,
+                        12f, 2f, null, Color.parseColor("#F44336")
+                    ),
+                    LegendEntry(
+                        "Rare (<2%)", Legend.LegendForm.CIRCLE,
+                        12f, 2f, null, Color.parseColor("#9C27B0")
+                    )
+                )
+            )
+        }
+
+        // Add extra bottom offset to accommodate legend
+        pieChart.setExtraOffsets(20f, 20f, 20f, 140f)  // Increased bottom offset
+    }
+
+    private fun updateStatisticsText(juzDistribution: Map<String, Int>, total: Float) {
+        val maxEntry = juzDistribution.maxByOrNull { it.value }
+        val minEntry = juzDistribution.filterValues { it > 0 }.minByOrNull { it.value }
+
+        findViewById<TextView>(R.id.tvTotalOccurrences).text =
+            "Total Occurrences: ${total.toInt()}"
+
+        findViewById<TextView>(R.id.tvMostLeastOccurrences).text = buildString {
+            append("Most: Juz ${maxEntry?.key} (")
+            append("%.1f%%".format((maxEntry?.value?.toFloat() ?: 0f) / total * 100))
+            append(")\nLeast: Juz ${minEntry?.key} (")
+            append("%.1f%%".format((minEntry?.value?.toFloat() ?: 0f) / total * 100))
+            append(")")
+        }
+    }
+
+    private fun loadOccurrences(juzNumber: Int) {
+        viewModel.loadOccurrencesForJuz(juzNumber, currentPage)
+    }
+
 
     private fun showOccurrencesBottomSheet(occurrences: List<WordOccurrence>) {
+        if(isFinishing)return
+
         if (bottomSheetDialog == null) {
             bottomSheetDialog = BottomSheetDialog(this).apply {
                 setContentView(R.layout.layout_word_occurrences_bottom_sheet)
 
-                // Initialize the adapter
-                occurrencesAdapter = WordOccurrencesBottomSheetAdapter { occurrence ->
-                    navigateToVerse(occurrence.chapter_id, occurrence.verse_number)
-                }
+//                // Initialize the adapter
+//                occurrencesAdapter = WordOccurrencesBottomSheetAdapter { occurrence ->
+//                    navigateToVerse(occurrence.chapter_id, occurrence.verse_number)
+//                }
 
                 findViewById<RecyclerView>(R.id.occurrencesRecyclerView)?.apply {
                     layoutManager = LinearLayoutManager(this@WordDetailsActivity)
@@ -373,9 +554,11 @@ class WordDetailsActivity : AppCompatActivity() {
                             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                             val visibleItemCount = layoutManager.childCount
                             val totalItemCount = layoutManager.itemCount
-                            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                            val firstVisibleItemPosition =
+                                layoutManager.findFirstVisibleItemPosition()
 
-                            if (!isLoadingMore &&
+                            if (!viewModel.isLoadingMore.value!! &&
+                                viewModel.hasMorePages.value == true &&
                                 (visibleItemCount + firstVisibleItemPosition) >= totalItemCount &&
                                 firstVisibleItemPosition >= 0
                             ) {
@@ -409,6 +592,7 @@ class WordDetailsActivity : AppCompatActivity() {
     }
 
     private fun navigateToVerse(chapterId: String, verseNumber: String) {
+        bottomSheetDialog?.dismiss()
         // Get user's layout preference
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val isByPage = sharedPreferences.getBoolean("recitation_layout_by_page", false)
@@ -420,9 +604,15 @@ class WordDetailsActivity : AppCompatActivity() {
             putExtra("CHAPTER_ID", chapterId)
             putExtra("VERSE_NUMBER", verseNumber)
             putExtra("IS_BY_PAGE", isByPage)
+
+            if(isByPage){
+                putExtra("CURRENT_SURAH_INDEX", chapterId.toInt() - 1)
+                putExtra("SCROLL_TO_VERSE", verseNumber.toInt())
+            }
         }
 
         startActivity(intent)
+        finish()
     }
 }
 class CustomMarkerView(

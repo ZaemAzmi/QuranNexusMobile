@@ -27,7 +27,7 @@ public class SurahModel implements Parcelable {
     String surahNumber;
     @SerializedName("Name Meaning")
     String surahMeaning;
-    @SerializedName("Number of ayahs")
+    @SerializedName("Number of Ayahs")
     String ayatNumber;
     private boolean isBookmarked;
     public String getName() {

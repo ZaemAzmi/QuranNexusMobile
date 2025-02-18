@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/bookmarkPageCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="15dp"
-        app:cardBackgroundColor="@color/surah_card_dark_green_300"
-        >
+        app:cardBackgroundColor="@color/surah_card_dark_green_300">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="110dp">
+            android:layout_height="wrap_content">
 
             <FrameLayout
-                android:id="@+id/bookmarkHistoryNumberFrameLayout"
+                android:id="@+id/bookmarkPageNumberFrameLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="19dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/bookmarkHistoryNumberFrame"
+                    android:id="@+id/bookmarkPageNumberFrame"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/surah_number_frame" />
 
                 <com.example.qurannexus.core.customViews.AutoFitTextView
-                    android:id="@+id/bookmarkHistoryChapterNumber"
+                    android:id="@+id/bookmarkPageNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -46,71 +48,80 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/bookmarkHistoryChapterTitle"
+                android:id="@+id/bookmarkPageTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="15dp"
-                android:text="الفاتحه (Al - Fatihah)"
+                android:text="Page"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/bookmarkHistoryNumberFrameLayout"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@id/bookmarkPageNumberFrameLayout"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/bookmarkHistoryDateRead"
+                android:id="@+id/bookmarkPageSurahInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:text="11 Oct 2024 / 08 Rabi Al Akhir"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="3dp"
+                android:text="From Surah Al-Fatihah"
                 android:textColor="@color/white"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@id/bookmarkHistoryNumberFrameLayout"
-                app:layout_constraintTop_toBottomOf="@id/bookmarkHistoryChapterTitle" />
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@id/bookmarkPageNumberFrameLayout"
+                app:layout_constraintTop_toBottomOf="@id/bookmarkPageTitle" />
 
             <TextView
-                android:id="@+id/bookmarkHistoryTimeRead"
+                android:id="@+id/bookmarkPageNotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:text="10.32 p.m."
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="3dp"
+                android:paddingBottom="8dp"
+                android:text="Notes"
                 android:textColor="@color/white"
-                android:textSize="8sp"
-                app:layout_constraintStart_toEndOf="@id/bookmarkHistoryNumberFrameLayout"
-                app:layout_constraintTop_toBottomOf="@id/bookmarkHistoryDateRead" />
-
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@id/bookmarkPageNumberFrameLayout"
+                app:layout_constraintTop_toBottomOf="@id/bookmarkPageSurahInfo" />
 
             <ImageView
-                android:id="@+id/bookmarkHistoryChapterMenu"
+                android:id="@+id/bookmarkPageMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_vertical_dots_menu"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/bookmarkHistoryChapterAndVerseNumber"
+                android:id="@+id/bookmarkPageJuzInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="16dp"
-                android:text="Chapter 1, Verse 6"
+                android:text="Juz 1"
                 android:textColor="@color/white"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/bookmarkHistoryChapterMenu"
-             />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/bookmarkPageMenu"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/bookmarkPageDateAdded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:text="Added on Jan 1, 2024"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toStartOf="@id/bookmarkPageMenu"
+                app:layout_constraintTop_toBottomOf="@id/bookmarkPageJuzInfo" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </androidx.cardview.widget.CardView>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,8 @@ import com.example.qurannexus.core.utils.QuranMetadata
 import com.example.qurannexus.features.recitation.RecitationPageFragment
 import com.example.qurannexus.features.recitation.models.SurahModel
 
-class BookmarkChaptersAdapter(private var chaptersList: List<BookmarkChapter>) : RecyclerView.Adapter<BookmarkChaptersAdapter.BookmarkChapterViewHolder>() {
+class BookmarkChaptersAdapter(private var chaptersList: List<BookmarkChapter>) :
+    RecyclerView.Adapter<BookmarkChaptersAdapter.BookmarkChapterViewHolder>() {
 
     class BookmarkChapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val chapterNumberTextView: TextView = itemView.findViewById(R.id.bookmarkChapterNumber)
@@ -32,12 +33,12 @@ class BookmarkChaptersAdapter(private var chaptersList: List<BookmarkChapter>) :
         val chapter = chaptersList[position]
         val context = holder.itemView.context
 
-        holder.chapterNumberTextView.text = "${chapter.chapterNumber}"
-        holder.chapterTitleTextView.text = chapter.chapterTitle
-        holder.chapterInfoTextView.text = chapter.chapterInfo
+        holder.chapterNumberTextView.text = "${chapter.itemProperties.chapterNumber}"
+        holder.chapterTitleTextView.text = chapter.itemProperties.chapterTitle
+        holder.chapterInfoTextView.text = chapter.itemProperties.chapterInfo
 
         holder.cardView.setOnClickListener {
-            navigateToChapter(context, chapter.chapterNumber.toInt())
+            navigateToChapter(context, chapter.itemProperties.chapterNumber.toInt())
         }
     }
     private fun navigateToChapter(context: Context, chapterNumber: Int) {

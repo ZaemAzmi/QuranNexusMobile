@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-    </data>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,38 +11,51 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:visibility="gone" />
-        <!-- Back Button -->
-        <ImageView
-            android:id="@+id/backButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_arrow_left"
-            android:background="@drawable/bg_circle_white"
-            android:contentDescription="Back"
-            android:clickable="true"
-            android:focusable="true"
-            app:tint="@color/textColorPrimary" />
 
-        <ImageView
-            android:id="@+id/bookmarkButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_alignParentEnd="true"
-            android:padding="12dp"
-            android:src="@drawable/ic_heart"
-           />
+        <!-- Top Bar with Title -->
+        <LinearLayout
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow_left"
+                android:background="@drawable/bg_circle_white"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Word Analysis"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/textColorPrimary"/>
+
+            <ImageView
+                android:id="@+id/bookmarkButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_heart"
+                android:background="@drawable/bg_circle_white"/>
+        </LinearLayout>
+
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/backButton">
+            android:layout_below="@id/topBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,151 +63,177 @@
                 android:orientation="vertical"
                 android:paddingTop="16dp">
 
-                <!-- Word Text -->
-                <TextView
-                    android:id="@+id/wordText"
+                <!-- Word Text Card -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Word"
-                    android:textSize="42sp"
-                    android:textStyle="bold"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:textColor="@color/textColorPrimary"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center" />
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
 
-                <!-- Translation -->
-                <TextView
-                    android:id="@+id/translationText"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/wordText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Word"
+                            android:textSize="42sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:textColor="@color/textColorPrimary"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#E0E0E0"
+                            android:layout_marginVertical="12dp"/>
+
+                        <TextView
+                            android:id="@+id/translationText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textColor="@color/textColorPrimary"/>
+
+                        <TextView
+                            android:id="@+id/transliterationText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="italic"
+                            android:layout_marginTop="4dp"
+                            android:textColor="@color/textColorSecondary"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Details Card -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Translation"
-                    android:paddingVertical="4dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="sans-serif" />
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
 
-                <!-- Transliteration -->
-                <TextView
-                    android:id="@+id/transliterationText"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="First Occurrence Details"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorPrimary"
+                            android:layout_marginBottom="12dp"/>
+
+                        <TextView
+                            android:id="@+id/surahNameText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:id="@+id/verseText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:id="@+id/ayahKeyText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:id="@+id/pageIdText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
+
+                        <Button
+                            android:id="@+id/playAudioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Listen to Verse"
+                            android:visibility="gone"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="@color/black"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Distribution Analysis Card -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Transliteration"
-                    android:paddingVertical="4dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="sans-serif" />
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
 
-                <!-- Surah Name -->
-                <TextView
-                    android:id="@+id/surahNameText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Surah Name"
-                    android:paddingVertical="4dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="sans-serif" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                <!-- Ayah Key -->
-                <TextView
-                    android:id="@+id/ayahKeyText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Ayah Key"
-                    android:paddingVertical="4dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="sans-serif" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Distribution Analysis"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorPrimary"
+                            android:layout_marginBottom="12dp"/>
 
-                <!-- Surah Number -->
-                <TextView
-                    android:id="@+id/surahNumberText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Surah Number"
-                    android:paddingVertical="4dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="sans-serif" />
+                        <TextView
+                            android:id="@+id/tvTotalOccurrences"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@color/textColorPrimary"
+                            android:layout_marginBottom="8dp"/>
 
-                <!-- Line Number -->
-                <TextView
-                    android:id="@+id/lineNumberText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Line Number"
-                    android:paddingVertical="4dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="sans-serif" />
+                        <TextView
+                            android:id="@+id/tvMostLeastOccurrences"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textColor="@color/textColorPrimary"
+                            android:layout_marginBottom="16dp"/>
 
-                <!-- Word Number -->
-                <TextView
-                    android:id="@+id/wordNumberText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Word Number"
-                    android:paddingVertical="4dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="sans-serif" />
+                        <!-- Changed to FrameLayout for PieChart -->
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="600dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="16dp">
 
-                <!-- Page ID -->
-                <TextView
-                    android:id="@+id/pageIdText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Page ID"
-                    android:paddingVertical="4dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="sans-serif" />
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/pieChart"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:minHeight="600dp"/>
 
-                <!-- Play Audio Button -->
-                <Button
-                    android:id="@+id/playAudioButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:backgroundTint="@color/black"
-                    android:text="Play Audio"
-                    android:textColor="@android:color/white" />
+                        </FrameLayout>
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pieChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_margin="16dp" />
-
-
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/barChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_margin="16dp" />
-                <TextView
-                    android:id="@+id/tvTotalOccurrences"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:text="Total Occurrences: 0" />
-
-                <TextView
-                    android:id="@+id/tvMostLeastOccurrences"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:layout_marginStart="16dp"
-                    android:textColor="@android:color/black"
-                    android:text="Most: Juz X, Least: Juz Y" />
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/barChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            android:visibility="gone"
+                            android:layout_margin="16dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
-
         </ScrollView>
-
-
     </RelativeLayout>
 </layout>

@@ -31,9 +31,9 @@ class BookmarkQuotesAdapter(
     override fun onBindViewHolder(holder: QuoteViewHolder, position: Int) {
         val quote = quotes[position]
 
-        holder.title.text = quote.quoteTitle
-        holder.description.text = quote.quoteTitle
-        holder.source.text = quote.quoteSource
+        holder.title.text = quote.itemProperties.quoteTitle
+        holder.description.text = quote.itemProperties.quoteDescription
+        holder.source.text = quote.itemProperties.quoteSource
 
         // Handle click events
         holder.container.setOnClickListener { onQuoteClick(quote) }

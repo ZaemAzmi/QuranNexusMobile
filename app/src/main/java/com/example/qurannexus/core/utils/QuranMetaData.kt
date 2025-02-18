@@ -120,7 +120,53 @@ class QuranMetadata private constructor() {
         surahMap[113] = SurahDetails(113, "الفلق", "Al-Falaq", "The Daybreak", 604, "Makkah", 5)
         surahMap[114] = SurahDetails(114, "الناس", "An-Naas", "Mankind", 604, "Makkah", 6)
     }
+    private val juzMap: Map<Int, JuzDetails> = mapOf(
+        1 to JuzDetails(1, 1),
+        2 to JuzDetails(2, 22),
+        3 to JuzDetails(3, 42),
+        4 to JuzDetails(4, 62),
+        5 to JuzDetails(5, 82),
+        6 to JuzDetails(6, 102),
+        7 to JuzDetails(7, 121),
+        8 to JuzDetails(8, 142),
+        9 to JuzDetails(9, 162),
+        10 to JuzDetails(10, 182),
+        11 to JuzDetails(11, 201),
+        12 to JuzDetails(12, 222),
+        13 to JuzDetails(13, 242),
+        14 to JuzDetails(14, 262),
+        15 to JuzDetails(15, 282),
+        16 to JuzDetails(16, 302),
+        17 to JuzDetails(17, 322),
+        18 to JuzDetails(18, 342),
+        19 to JuzDetails(19, 362),
+        20 to JuzDetails(20, 382),
+        21 to JuzDetails(21, 402),
+        22 to JuzDetails(22, 422),
+        23 to JuzDetails(23, 442),
+        24 to JuzDetails(24, 462),
+        25 to JuzDetails(25, 482),
+        26 to JuzDetails(26, 502),
+        27 to JuzDetails(27, 522),
+        28 to JuzDetails(28, 542),
+        29 to JuzDetails(29, 562),
+        30 to JuzDetails(30, 582)
+    )
 
+    fun getJuzStartPage(juzNumber: Int): Int {
+        return juzMap[juzNumber]?.startPage ?: 1
+    }
+
+    fun getJuzForPage(pageNumber: Int): Int {
+        return juzMap.entries.findLast { it.value.startPage <= pageNumber }?.key ?: 1
+    }
+
+    fun getJuzPageRange(juzNumber: Int): String {
+        val startPage = juzMap[juzNumber]?.startPage ?: return ""
+        val endPage = juzMap[juzNumber + 1]?.startPage?.minus(1)
+            ?: if (juzNumber == 30) 604 else return ""
+        return "$startPage-$endPage"
+    }
     companion object {
         @Volatile
         private var instance: QuranMetadata? = null
@@ -167,4 +213,8 @@ data class SurahDetails(
     val startingPage: Int,
     val revelationPlace: String,
     val numberOfVerses: Int
+)
+data class JuzDetails(
+    val juzNumber: Int,
+    val startPage: Int
 )

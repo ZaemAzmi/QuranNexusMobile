@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.media3.common.util.UnstableApi
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ClickListener
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ReselectListener
@@ -24,6 +26,7 @@ import com.example.qurannexus.features.home.HomeFragment
 import com.example.qurannexus.features.irab.IrabFragment
 import com.example.qurannexus.features.prayerTimes.PrayerTimesFragment
 import com.example.qurannexus.features.quiz.QuizActivity
+import com.example.qurannexus.features.recitation.ByAyatRecitationFragment
 import com.example.qurannexus.features.recitation.RecitationPageFragment
 import com.example.qurannexus.features.recitation.SurahListFragment
 import com.example.qurannexus.features.recitation.models.SurahModel
@@ -54,37 +57,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun handleRecitationNavigation(intent: Intent) {
         val chapterId = intent.getStringExtra("CHAPTER_ID") ?: return
         val verseNumber = intent.getStringExtra("VERSE_NUMBER") ?: return
         val isByPage = intent.getBooleanExtra("IS_BY_PAGE", false)
 
-        // Create SurahModel from QuranMetadata
-        val quranMetadata = QuranMetadata.getInstance()
-        val surahDetails = quranMetadata.getSurahDetails(chapterId.toInt())
+        if (isByPage) {
+            // Handle page-based navigation (your existing code)
+            val quranMetadata = QuranMetadata.getInstance()
+            val surahDetails = quranMetadata.getSurahDetails(chapterId.toInt())
 
-        val surahModel = SurahModel(
-            surahDetails?.translationName ?: " ",
-            surahDetails?.arabicName,
-            chapterId,                    // surahNumber
-            surahDetails?.englishName,     // surahMeaning
-            verseNumber,                  // numberOfAyahs
-            false                         // isBookmarked - default to false
-        )
+            val surahModel = SurahModel(
+                surahDetails?.translationName ?: " ",
+                surahDetails?.arabicName,
+                chapterId,
+                surahDetails?.englishName,
+                verseNumber,
+                false
+            )
 
-        // Create and show RecitationPageFragment
-        val fragment = RecitationPageFragment.newInstance(
-            surahModel,
-            if (isByPage) "pageByPage" else "verseByVerse",
-            chapterId.toInt() - 1
-        ).apply {
-            arguments = Bundle().apply {
-                putParcelable("surahModel", surahModel)
-                putInt("scrollToVerse", verseNumber.toInt())
+            // Create and show RecitationPageFragment
+            val fragment = RecitationPageFragment.newInstance(
+                surahModel,
+                "pageByPage",
+                chapterId.toInt() - 1
+            ).apply {
+                arguments = Bundle().apply {
+                    putParcelable("surahModel", surahModel)
+                    putInt("scrollToVerse", verseNumber.toInt())
+                }
             }
+            loadFragment(fragment)
+        } else {
+            // Handle verse-based navigation
+            val fragment = ByAyatRecitationFragment.newInstance(
+                chapterId.toInt(),
+                verseNumber.toInt()
+            )
+            loadFragment(fragment)
         }
-
-        loadFragment(fragment)
     }
 
     private fun setupNavigationDrawer() {

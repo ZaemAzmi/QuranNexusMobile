@@ -6,8 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.qurannexus.core.interfaces.QuranApi
+import com.example.qurannexus.core.utils.QuranMetadata
+import com.example.qurannexus.core.utils.SurahDetails
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest
 import com.example.qurannexus.features.bookmark.models.BookmarkResponse
+import com.example.qurannexus.features.bookmark.models.BookmarkWord
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse
 import com.example.qurannexus.features.bookmark.models.FirstOccurrence
 import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse
@@ -40,6 +43,12 @@ class WordDetailsViewModel @Inject constructor(
     private val _isBookmarked = MutableLiveData<Boolean>()
     val isBookmarked: LiveData<Boolean> = _isBookmarked
 
+    private val _isLoadingMore = MutableLiveData<Boolean>()
+    val isLoadingMore: LiveData<Boolean> = _isLoadingMore
+
+    private val _hasMorePages = MutableLiveData<Boolean>()
+    val hasMorePages: LiveData<Boolean> = _hasMorePages
+
     private var currentWordText: String? = null
 
     fun loadWordData(wordText: String) {
@@ -70,28 +79,36 @@ class WordDetailsViewModel @Inject constructor(
 
     fun loadOccurrencesForJuz(juzNumber: Int, page: Int = 1) {
         currentWordText?.let { wordText ->
-            _isLoading.value = true
+            _isLoadingMore.value = true
 
             quranApi.getWordOccurrences(
                 wordText = wordText,
                 juzNumber = juzNumber,
-                page = page
+                page = page,
+                perPage = 20
             ).enqueue(object : Callback<WordOccurrenceResponse> {
                 override fun onResponse(
                     call: Call<WordOccurrenceResponse>,
                     response: Response<WordOccurrenceResponse>
                 ) {
                     if (response.isSuccessful && response.body() != null) {
-                        _occurrences.value = response.body()!!.data.words
+                        val data = response.body()!!.data
+                        _hasMorePages.value = data.pagination.current_page < data.pagination.total_pages
+                        _occurrences.value = if (page == 1) {
+                            data.words
+                        } else {
+                            // Combine existing and new occurrences for pagination
+                            _occurrences.value?.plus(data.words) ?: data.words
+                        }
                     } else {
                         _error.value = "Failed to load occurrences"
                     }
-                    _isLoading.value = false
+                    _isLoadingMore.value = false
                 }
 
                 override fun onFailure(call: Call<WordOccurrenceResponse>, t: Throwable) {
                     _error.value = t.message ?: "Unknown error occurred"
-                    _isLoading.value = false
+                    _isLoadingMore.value = false
                 }
             })
         }
@@ -103,7 +120,7 @@ class WordDetailsViewModel @Inject constructor(
                 override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
                     if (response.isSuccessful) {
                         _isBookmarked.value = response.body()?.bookmarks?.words?.any {
-                            it.word_text == wordText
+                            it.itemProperties.wordText == wordText
                         } ?: false
                     }
                 }
@@ -118,22 +135,32 @@ class WordDetailsViewModel @Inject constructor(
     fun addWordBookmark(token: String, wordOccurrence: WordOccurrence, totalOccurrences: Int) {
         viewModelScope.launch {
             try {
+                val surahDetails = QuranMetadata.getInstance().getSurahDetails(Integer.valueOf(wordOccurrence.chapter_id))
+                // First create the first_occurrence map with non-null values
+                val firstOccurrence = mapOf(
+                    "word_key" to "${wordOccurrence.chapter_id}:${wordOccurrence.verse_number}:${wordOccurrence.position}",
+                    "chapter_id" to wordOccurrence.chapter_id,
+                    "verse_number" to wordOccurrence.verse_number,
+                    "surah_name" to (surahDetails?.englishName ?: ""), // Provide default empty string
+                    "page_id" to (surahDetails?.startingPage ?: "1"),
+                    "juz_id" to wordOccurrence.juz_number,
+                    "verse_text" to (wordOccurrence.verse_text ?: ""),
+                    "audio_url" to (wordOccurrence.audio_url ?: "")
+                )
+
+                // Then create the main properties map
+                val itemProperties = hashMapOf<String, Any>(
+                    "word_text" to (wordOccurrence.word_text ?: ""),
+                    "translation" to (wordOccurrence.translation ?: ""),
+                    "transliteration" to (wordOccurrence.transliteration ?: ""),
+                    "total_occurrences" to totalOccurrences,
+                    "first_occurrence" to firstOccurrence
+                )
+
                 val request = BookmarkRequest(
                     type = "word",
-                    word_text = wordOccurrence.word_text,
-                    translation = wordOccurrence.translation,
-                    transliteration = wordOccurrence.transliteration,
-                    total_occurrences = totalOccurrences,
-                    first_occurrence = FirstOccurrence(
-                        word_key = "${wordOccurrence.chapter_id}:${wordOccurrence.verse_number}:${wordOccurrence.position}",
-                        chapter_id = wordOccurrence.chapter_id,
-                        verse_number = wordOccurrence.verse_number,
-                        surah_name = "", // Need to get this from your metadata
-                        page_id = "1", // Need to get this from occurrence
-                        juz_id = wordOccurrence.juz_number,
-                        verse_text = wordOccurrence.verse_text ?: "",
-                        audio_url = wordOccurrence.audio_url
-                    )
+                    itemProperties = itemProperties,
+                    notes = ""
                 )
 
                 quranApi.addBookmark("Bearer $token", request).enqueue(object : Callback<BookmarkResponse> {
