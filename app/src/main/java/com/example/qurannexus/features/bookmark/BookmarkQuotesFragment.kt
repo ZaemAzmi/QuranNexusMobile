@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.features.bookmark.models.BookmarkQuote
 import com.example.qurannexus.features.bookmark.models.BookmarkQuotesAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BookmarkQuotesFragment : Fragment() {
 
     private lateinit var bookmarkQuotesList: List<BookmarkQuote>

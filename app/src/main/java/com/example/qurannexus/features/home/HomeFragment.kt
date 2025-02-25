@@ -32,6 +32,9 @@ import com.example.qurannexus.features.home.models.HighlightsRecyclerAdapter
 import com.example.qurannexus.features.auth.AuthService
 import com.example.qurannexus.features.home.achievement.AchievementService
 import com.example.qurannexus.features.prayerTimes.PrayerTimesViewModel
+import com.example.qurannexus.features.statistics.HomepageStatisticsFragment
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.LineChart
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +59,12 @@ class HomeFragment : Fragment(), HighlightClickListener {
     private lateinit var llScrollableBadges : LinearLayout
 
     private lateinit var achievementService: AchievementService
+
+    private lateinit var recitationChart: LineChart
+    private lateinit var weeklyRecitationChart: BarChart
+    private lateinit var currentStreakValue: TextView
+    private lateinit var longestStreakValue: TextView
+    private lateinit var consistencyScoreValue: TextView
 
     private val viewModel: PrayerTimesViewModel by activityViewModels()
 
@@ -114,6 +123,11 @@ class HomeFragment : Fragment(), HighlightClickListener {
         seeAllBadgeText.setOnClickListener {
             val intent = Intent(context, BadgesActivity::class.java)
             startActivity(intent)
+        }
+        if (savedInstanceState == null) {
+            childFragmentManager.beginTransaction()
+                .replace(R.id.statisticsContainer, HomepageStatisticsFragment())
+                .commit()
         }
 
         return view

@@ -12,5 +12,5 @@ data class RecitationTimesResponse(
 
 data class UpdateRecitationTimesRequest(
     @SerializedName("duration_seconds")
-    val durationSeconds: Long
+    val durationSeconds: Int
 )

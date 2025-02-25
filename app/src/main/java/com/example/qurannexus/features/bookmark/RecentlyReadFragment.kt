@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
@@ -23,21 +25,22 @@ import com.example.qurannexus.features.bookmark.models.RecentlyReadAdapter
 import com.example.qurannexus.features.bookmark.models.RecentlyReadList
 import com.example.qurannexus.features.bookmark.models.RecentlyReadResponse
 import com.example.qurannexus.features.bookmark.models.SimpleResponse
+import com.example.qurannexus.features.bookmark.viewmodels.RecentlyReadViewModel
 import com.example.qurannexus.features.recitation.RecitationPageFragment
 import com.example.qurannexus.features.recitation.models.SurahModel
 import com.google.android.material.chip.Chip
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@AndroidEntryPoint
 class RecentlyReadFragment : Fragment() {
     private var _binding: FragmentRecentlyReadBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: RecentlyReadViewModel by viewModels()
     private lateinit var recentlyReadAdapter: RecentlyReadAdapter
-    private lateinit var bookmarkApi: BookmarkApi
-    private var authToken: String? = null
-    private var currentType = RecentlyReadType.CHAPTER
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,30 +53,29 @@ class RecentlyReadFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupApi()
         setupViews()
-        fetchRecentlyRead()
+        observeViewModel()
     }
 
-    private fun setupApi() {
-        bookmarkApi = ApiService.getQuranClient().create(BookmarkApi::class.java)
-        authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .getString("token", null)
-    }
     private fun setupViews() {
-        // Setup RecyclerView
+        setupRecyclerView()
+        setupFilterChips()
+    }
+
+    private fun setupRecyclerView() {
         recentlyReadAdapter = RecentlyReadAdapter(
             currentType = RecentlyReadType.CHAPTER,
-            onItemClick = { item, type -> handleItemClick(item, type) },
-            onDeleteClick = { item, type -> handleDeleteClick(item, type) }
+            onItemClick = { item, type -> viewModel.handleItemClick(item, type) },
+            onDeleteClick = { item, type -> showDeleteConfirmationDialog(item, type) }
         )
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recentlyReadAdapter
         }
+    }
 
-        // Setup ChipGroup for filtering
+    private fun setupFilterChips() {
         binding.filterChipGroup.apply {
             addView(createFilterChip("Chapters"))
             addView(createFilterChip("Pages"))
@@ -82,9 +84,9 @@ class RecentlyReadFragment : Fragment() {
             setOnCheckedStateChangeListener { group, checkedIds ->
                 if (checkedIds.isNotEmpty()) {
                     when (group.findViewById<Chip>(checkedIds.first())?.text) {
-                        "Chapters" -> updateType(RecentlyReadType.CHAPTER)
-                        "Pages" -> updateType(RecentlyReadType.PAGE)
-                        "Juz" -> updateType(RecentlyReadType.JUZ)
+                        "Chapters" -> viewModel.updateType(RecentlyReadType.CHAPTER)
+                        "Pages" -> viewModel.updateType(RecentlyReadType.PAGE)
+                        "Juz" -> viewModel.updateType(RecentlyReadType.JUZ)
                     }
                 }
             }
@@ -94,112 +96,55 @@ class RecentlyReadFragment : Fragment() {
         }
     }
 
-    private fun createFilterChip(text: String): Chip {
-        return Chip(requireContext()).apply {
-            this.text = text
-            isCheckable = true
-            chipBackgroundColor = ColorStateList.valueOf(resources.getColor(R.color.white, null))
+    private fun observeViewModel() {
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is RecentlyReadViewModel.UiState.Loading -> showLoading(true)
+                is RecentlyReadViewModel.UiState.Empty -> showEmptyState()
+                is RecentlyReadViewModel.UiState.Content -> showContent(state.items)
+                is RecentlyReadViewModel.UiState.Error -> showError(state.message)
+            }
+        }
+
+        viewModel.navigationEvent.observe(viewLifecycleOwner) { event ->
+            handleNavigation(event)
+        }
+
+        viewModel.currentType.observe(viewLifecycleOwner) { type ->
+            recentlyReadAdapter.updateCurrentType(type)
         }
     }
 
-    private fun updateType(type: RecentlyReadType) {
-        currentType = type
-        fetchRecentlyRead()
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.isVisible = isLoading
+        binding.recyclerView.isVisible = !isLoading
+        binding.emptyView.isVisible = false
     }
 
-    private fun fetchRecentlyRead() {
-        if (authToken == null) {
-            Toast.makeText(context, "Please login to view recently read", Toast.LENGTH_SHORT).show()
-            return
+    private fun showEmptyState() {
+        binding.progressBar.isVisible = false
+        binding.recyclerView.isVisible = false
+        binding.emptyView.isVisible = true
+    }
+
+    private fun showContent(items: List<RecentlyRead>) {
+        binding.progressBar.isVisible = false
+        binding.recyclerView.isVisible = true
+        binding.emptyView.isVisible = false
+        recentlyReadAdapter.updateData(items, viewModel.currentType.value!!)
+    }
+
+    private fun showError(message: String) {
+        binding.progressBar.isVisible = false
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleNavigation(event: RecentlyReadViewModel.NavigationEvent) {
+        when (event) {
+            is RecentlyReadViewModel.NavigationEvent.ToChapter -> navigateToChapter(event.chapterNumber)
+            is RecentlyReadViewModel.NavigationEvent.ToPage -> navigateToPage(event.pageNumber)
+            is RecentlyReadViewModel.NavigationEvent.ToJuz -> navigateToJuz(event.juzNumber)
         }
-
-        showLoading(true)
-
-        bookmarkApi.getRecentlyRead("Bearer $authToken").enqueue(object :
-            Callback<RecentlyReadResponse> {
-            override fun onResponse(
-                call: Call<RecentlyReadResponse>,
-                response: Response<RecentlyReadResponse>
-            ) {
-                showLoading(false)
-                if (response.isSuccessful && response.body() != null) {
-                    val recentlyReadResponse = response.body()!!
-                    if (recentlyReadResponse.status == "success") {
-                        updateRecentlyReadList(recentlyReadResponse.recentlyRead)
-                    } else {
-                        showError("Failed to load recently read items")
-                    }
-                } else {
-                    showError("Error: ${response.message()}")
-                }
-            }
-
-            override fun onFailure(call: Call<RecentlyReadResponse>, t: Throwable) {
-                showLoading(false)
-                showError("Error: ${t.message}")
-            }
-        })
-    }
-
-    private fun updateRecentlyReadList(recentlyRead: RecentlyReadList) {
-        val items = when (currentType) {
-            RecentlyReadType.CHAPTER -> recentlyRead.chapters
-            RecentlyReadType.PAGE -> recentlyRead.pages
-            RecentlyReadType.JUZ -> recentlyRead.juzs
-        }
-
-        if (items.isEmpty()) {
-            binding.emptyView.visibility = View.VISIBLE
-            binding.recyclerView.visibility = View.GONE
-        } else {
-            binding.emptyView.visibility = View.GONE
-            binding.recyclerView.visibility = View.VISIBLE
-            recentlyReadAdapter.updateData(items, currentType)
-        }
-    }
-
-    private fun handleItemClick(item: RecentlyRead, type: RecentlyReadType) {
-        when (type) {
-            RecentlyReadType.CHAPTER -> navigateToChapter(item.itemId.toInt())
-            RecentlyReadType.PAGE -> navigateToPage(item.itemId.toInt())
-            RecentlyReadType.JUZ -> navigateToJuz(item.itemId.toInt())
-        }
-    }
-
-    private fun handleDeleteClick(item: RecentlyRead, type: RecentlyReadType) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Delete Recently Read")
-            .setMessage("Remove this item from recently read?")
-            .setPositiveButton("Delete") { dialog, _ ->
-                deleteRecentlyRead(item, type)
-                dialog.dismiss()
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
-    }
-
-    private fun deleteRecentlyRead(item: RecentlyRead, type: RecentlyReadType) {
-        bookmarkApi.removeRecentlyRead(
-            "Bearer $authToken",
-            type.toApiString(),
-            item.itemId
-        ).enqueue(object : Callback<SimpleResponse> {
-            override fun onResponse(call: Call<SimpleResponse>, response: Response<SimpleResponse>) {
-                if (response.isSuccessful && response.body()?.status == "success") {
-                    fetchRecentlyRead() // Refresh list
-                    Toast.makeText(context, "Item removed from recently read", Toast.LENGTH_SHORT).show()
-                } else {
-                    showError("Failed to remove item")
-                }
-            }
-
-            override fun onFailure(call: Call<SimpleResponse>, t: Throwable) {
-                showError("Error: ${t.message}")
-            }
-        })
     }
 
     private fun navigateToChapter(chapterNumber: Int) {
@@ -226,11 +171,8 @@ class RecentlyReadFragment : Fragment() {
     }
 
     private fun navigateToPage(pageNumber: Int) {
-        // We need to get the surah that starts on this page
         val surahNumber = QuranMetadata.getInstance().getSurahNumberForPage(pageNumber)
         val surahDetails = QuranMetadata.getInstance().getSurahDetails(surahNumber)
-        Log.d("RecentlyReadFragment", "Navigating to Page: $pageNumber, Surah: $surahNumber, Details: $surahDetails")
-
         val surahModel = SurahModel(
             surahDetails?.englishName ?: "",
             surahDetails?.arabicName ?: "",
@@ -253,20 +195,32 @@ class RecentlyReadFragment : Fragment() {
     }
 
     private fun navigateToJuz(juzNumber: Int) {
-        // Navigate to the first page of the juz
         val firstPage = QuranMetadata.getInstance().getJuzStartPage(juzNumber)
         navigateToPage(firstPage)
     }
-    private fun showLoading(isLoading: Boolean) {
-        // Check if binding is available
-        _binding?.let {
-            it.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
+
+    private fun showDeleteConfirmationDialog(item: RecentlyRead, type: RecentlyReadType) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Recently Read")
+            .setMessage("Remove this item from recently read?")
+            .setPositiveButton("Delete") { dialog, _ ->
+                viewModel.deleteRecentlyRead(item, type)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
-    private fun showError(message: String) {
-        _binding?.let{
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    private fun createFilterChip(text: String): Chip {
+        return Chip(requireContext()).apply {
+            this.text = text
+            isCheckable = true
+            chipBackgroundColor = ColorStateList.valueOf(
+                resources.getColor(R.color.white, null)
+            )
         }
     }
 

@@ -50,10 +50,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import dagger.hilt.android.UnstableApi;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+@AndroidEntryPoint
 @androidx.media3.common.util.UnstableApi
 public class ByPageRecitationFragment extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";

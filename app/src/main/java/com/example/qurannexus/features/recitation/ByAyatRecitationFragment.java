@@ -38,10 +38,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+@AndroidEntryPoint
 @UnstableApi
 public class ByAyatRecitationFragment extends Fragment {
     private static final String ARG_SURAH_NUMBER = "surah_number";

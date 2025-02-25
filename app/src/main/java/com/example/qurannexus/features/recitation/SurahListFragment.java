@@ -30,10 +30,11 @@ import com.example.qurannexus.core.network.ApiService;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+@AndroidEntryPoint
 public class SurahListFragment extends Fragment {
 
     SurahListResponse surahListResponse;

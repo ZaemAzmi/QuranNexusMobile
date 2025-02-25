@@ -16,10 +16,11 @@ import com.example.qurannexus.core.utils.QuranMetadata
 import com.example.qurannexus.features.bookmark.models.BookmarkChapter
 import com.example.qurannexus.features.bookmark.models.BookmarkChaptersAdapter
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+@AndroidEntryPoint
 class BookmarkChaptersFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView

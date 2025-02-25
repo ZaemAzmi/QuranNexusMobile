@@ -17,23 +17,22 @@ import retrofit2.http.Query
 
 interface BookmarkApi {
     @GET("recently-read")
-    fun getRecentlyRead(
-        @Header("Authorization") token: String,
-        @Query("type") type: String? = null
-    ): Call<RecentlyReadResponse>
+    suspend fun getRecentlyRead(
+        @Header("Authorization") token: String
+    ): RecentlyReadResponse
 
     @POST("recently-read")
-    fun addRecentlyRead(
+    suspend fun addRecentlyRead(
         @Header("Authorization") token: String,
         @Body request: AddRecentlyReadRequest
-    ): Call<SimpleResponse>
+    ): SimpleResponse
 
     @DELETE("recently-read/{type}/{itemId}")
-    fun removeRecentlyRead(
+    suspend fun removeRecentlyRead(
         @Header("Authorization") token: String,
         @Path("type") type: String,
         @Path("itemId") itemId: String
-    ): Call<SimpleResponse>
+    ): SimpleResponse
 
     @GET("chapters/word-counts")
     fun getChapterWordCounts(): Call<ChapterWordCountsResponse>

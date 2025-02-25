@@ -7,7 +7,7 @@ import com.example.qurannexus.features.words.models.WordDetails
 import com.example.qurannexus.features.words.models.WordOccurrence
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import jakarta.inject.Inject
+import javax.inject.Inject
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.abs

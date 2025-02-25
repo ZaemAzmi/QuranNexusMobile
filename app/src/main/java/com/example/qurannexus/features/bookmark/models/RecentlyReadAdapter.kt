@@ -161,7 +161,10 @@ class RecentlyReadAdapter(
             }
             popup.show()
         }
-
+        fun updateCurrentType(type: RecentlyReadType) {
+            currentType = type
+            notifyDataSetChanged()  // Or use more specific notify methods if needed
+        }
         fun updateData(newItems: List<RecentlyRead>, type: RecentlyReadType) {
             currentType = type
             items = newItems

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.media3.common.util.UnstableApi;
 import androidx.preference.PreferenceManager;
-
+import androidx.lifecycle.LifecycleKt;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,8 +25,11 @@ import android.widget.Toast;
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.core.network.ApiService;
+import com.example.qurannexus.core.utils.CoroutinesHelper;
 import com.example.qurannexus.core.utils.ReadingTracker;
+import com.example.qurannexus.core.utils.Result;
 import com.example.qurannexus.core.utils.SurahDetails;
+import com.example.qurannexus.core.utils.TokenManager;
 import com.example.qurannexus.features.bookmark.enums.RecentlyReadType;
 import com.example.qurannexus.features.bookmark.interfaces.BookmarkApi;
 import com.example.qurannexus.features.bookmark.models.AddRecentlyReadRequest;
@@ -37,6 +40,7 @@ import com.example.qurannexus.features.bookmark.models.BookmarkResponse;
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
 import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse;
 import com.example.qurannexus.features.bookmark.models.SimpleResponse;
+import com.example.qurannexus.features.bookmark.repositories.RecentlyReadRepository;
 import com.example.qurannexus.features.recitation.models.PageAdapter;
 import com.example.qurannexus.features.recitation.models.SurahModel;
 import com.example.qurannexus.core.utils.QuranMetadata;
@@ -47,10 +51,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
+import kotlinx.coroutines.CoroutineScope;
+import kotlinx.coroutines.Dispatchers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@AndroidEntryPoint
 public class RecitationPageFragment extends Fragment {
     SurahModel surahModel;
      int startPosition;
@@ -74,6 +85,9 @@ public class RecitationPageFragment extends Fragment {
     private TextView surahNameEnglishTextView;
     private QuranMetadata quranMetadata;
     private long readingStartTime;
+    @Inject
+    RecentlyReadRepository recentlyReadRepository;
+    private CoroutineScope coroutineScope;
     public RecitationPageFragment() {
     }
 
@@ -83,8 +97,7 @@ public class RecitationPageFragment extends Fragment {
         if (surahModel != null) {
             args.putParcelable("surah_model", surahModel);
         }
-//        args.putString("mode", mode);
-//        args.putInt("start_position", startPosition);
+
         args.putString("fragment_type", fragmentType);
         args.putInt("current_surah_index", currentSurahIndex);
 
@@ -126,6 +139,14 @@ public class RecitationPageFragment extends Fragment {
         bookmarkApi = ApiService.getQuranClient().create(BookmarkApi.class);
         statisticsApi = ApiService.getQuranClient().create(StatisticsApi.class);
 
+//        coroutineScope = LifecycleKt.getLifecycleScope(this);
+
+        // Initialize repository with dependencies
+//        recentlyReadRepository = new RecentlyReadRepository(
+//                ApiService.getQuranClient().create(BookmarkApi.class),
+//                new TokenManager(requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)),
+//                Dispatchers.getIO()
+//        );
         authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 .getString("token", null);
     }
@@ -176,27 +197,25 @@ public class RecitationPageFragment extends Fragment {
         }
     }
     private void recordRecentlyRead(RecentlyReadType type, String itemId, long durationSeconds) {
-        AddRecentlyReadRequest request = new AddRecentlyReadRequest(
-                type.toApiString(),
+        CoroutinesHelper.addRecentlyRead(
+                recentlyReadRepository,
+                type,
                 itemId,
-                durationSeconds
+                durationSeconds,
+                () -> {
+                    // On Success
+                    Log.d("RecitationPage", "Recorded " + type + ": " + itemId);
+                    return null;
+                },
+                error -> {
+                    // On Error
+                    Log.e("RecitationPage", "Failed to record " + type + ": " + error);
+                    return null;
+                }
         );
-
-        bookmarkApi.addRecentlyRead("Bearer " + authToken, request)
-                .enqueue(new Callback<SimpleResponse>() {
-                    @Override
-                    public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                        Log.d("RecitationPage", "Recorded " + type + ": " + itemId);
-                    }
-
-                    @Override
-                    public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                        Log.e("RecitationPage", "Failed to record " + type + ": " + t.getMessage());
-                    }
-                });
     }
     private void recordRecitationTimes(long durationInSeconds){
-        UpdateRecitationTimesRequest timesRequest = new UpdateRecitationTimesRequest(durationInSeconds);
+        UpdateRecitationTimesRequest timesRequest = new UpdateRecitationTimesRequest((int)durationInSeconds);
 
         statisticsApi.updateRecitationTimes("Bearer " + authToken, timesRequest)
                 .enqueue(new Callback<SimpleResponse>() {

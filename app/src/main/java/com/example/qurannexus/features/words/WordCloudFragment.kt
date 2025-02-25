@@ -13,10 +13,12 @@ import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse
 import android.content.Intent
 import com.example.qurannexus.features.words.views.WordCloudView
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@AndroidEntryPoint
 class WordCloudFragment : Fragment() {
 
     private lateinit var wordCloudView: WordCloudView

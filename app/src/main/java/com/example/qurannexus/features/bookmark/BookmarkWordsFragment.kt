@@ -44,10 +44,12 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.material.chip.Chip
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@AndroidEntryPoint
 class BookmarkWordsFragment : Fragment() {
 
     private var _binding: FragmentBookmarkWordsBinding? = null

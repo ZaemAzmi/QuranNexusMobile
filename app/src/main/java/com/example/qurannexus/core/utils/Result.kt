@@ -11,4 +11,9 @@ sealed class Result<out T> {
         is Success -> data
         is Error -> null
     }
+
+    companion object {
+        fun <T> success(data: T): Result<T> = Success(data)
+        fun error(exception: Exception): Result<Nothing> = Error(exception)
+    }
 }

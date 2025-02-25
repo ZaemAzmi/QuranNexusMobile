@@ -14,7 +14,9 @@ import com.example.qurannexus.R
 import com.example.qurannexus.features.bookmark.models.BookmarkPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BookmarkFragment : Fragment() {
 
     override fun onCreateView(

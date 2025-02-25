@@ -1,7 +1,7 @@
 package com.example.qurannexus.core.utils
 
 import android.content.SharedPreferences
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class TokenManager @Inject constructor(
     private val sharedPreferences: SharedPreferences
