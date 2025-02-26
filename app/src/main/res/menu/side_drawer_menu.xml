@@ -2,23 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home"
-            android:title="@string/nav_home" />
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_home" />
+
     <item
         android:id="@+id/nav_bookmark"
         android:icon="@drawable/ic_bookmarked_black"
         android:title="@string/nav_bookmark" />
-        <item
-            android:id="@+id/nav_prayer_times"
-            android:icon="@drawable/ic_mosque"
-            android:title="Prayer TImes" />
-
-        <item
-            android:id="@+id/nav_irab"
-            android:icon="@drawable/ic_home"
-            android:title="@string/nav_irab" />
+    <item
+        android:id="@+id/nav_prayer_times"
+        android:icon="@drawable/ic_mosque"
+        android:title="Prayer TImes" />
+    <item
+        android:id="@+id/nav_analysis"
+        android:icon="@drawable/ic_analysis"
+        android:title="Quran Analysis" />
+    <item
+        android:id="@+id/nav_irab"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_irab" />
 
 
     <item

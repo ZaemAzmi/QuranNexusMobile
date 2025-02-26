@@ -19,6 +19,7 @@ import com.example.qurannexus.R
 import com.example.qurannexus.core.enums.BottomMenuItemId
 import com.example.qurannexus.core.enums.BottomMenuItemId.Companion.fromId
 import com.example.qurannexus.core.utils.QuranMetadata
+import com.example.qurannexus.features.analysis.QuranAnalysisFragment
 import com.example.qurannexus.features.auth.AuthActivity
 import com.example.qurannexus.features.auth.AuthService
 import com.example.qurannexus.features.bookmark.BookmarkFragment
@@ -117,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         val selectedFragment: Fragment? =
             when (menuItem.itemId) {
             R.id.nav_home -> HomeFragment()
+            R.id.nav_analysis -> QuranAnalysisFragment()
             R.id.nav_settings -> SettingsFragment()
             R.id.nav_irab -> IrabFragment()
             R.id.nav_test -> {
@@ -140,6 +142,7 @@ class MainActivity : AppCompatActivity() {
         with(meowBottomNavigation) {
             add(MeowBottomNavigation.Model(BottomMenuItemId.HOME.id, R.drawable.ic_home))
             add(MeowBottomNavigation.Model(BottomMenuItemId.SURAHLIST.id, R.drawable.ic_quran))
+            add(MeowBottomNavigation.Model(BottomMenuItemId.ANALYSIS.id, R.drawable.ic_analysis))
             add(MeowBottomNavigation.Model(BottomMenuItemId.BOOKMARK.id, R.drawable.ic_bookmark))
             add(MeowBottomNavigation.Model(BottomMenuItemId.QUIZ.id, R.drawable.ic_note))
 
@@ -147,6 +150,7 @@ class MainActivity : AppCompatActivity() {
                 when (BottomMenuItemId.fromId(model.id)) {
                     BottomMenuItemId.HOME -> loadFragment(HomeFragment())
                     BottomMenuItemId.SURAHLIST -> loadFragment(SurahListFragment())
+                    BottomMenuItemId.ANALYSIS -> loadFragment(QuranAnalysisFragment())
                     BottomMenuItemId.BOOKMARK -> loadFragment(BookmarkFragment())
                     BottomMenuItemId.QUIZ -> {
                         startActivity(Intent(this@MainActivity, QuizActivity::class.java))
@@ -158,7 +162,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             setOnShowListener { }
-
             setOnReselectListener { }
         }
     }
@@ -173,6 +176,7 @@ class MainActivity : AppCompatActivity() {
         when (fragment) {
             is HomeFragment -> meowBottomNavigation.show(BottomMenuItemId.HOME.id, true)
             is SurahListFragment -> meowBottomNavigation.show(BottomMenuItemId.SURAHLIST.id, true)
+            is QuranAnalysisFragment -> meowBottomNavigation.show(BottomMenuItemId.ANALYSIS.id, true)
             is BookmarkFragment -> meowBottomNavigation.show(BottomMenuItemId.BOOKMARK.id, true)
             is PrayerTimesFragment -> meowBottomNavigation.show(BottomMenuItemId.QUIZ.id, true)
         }
