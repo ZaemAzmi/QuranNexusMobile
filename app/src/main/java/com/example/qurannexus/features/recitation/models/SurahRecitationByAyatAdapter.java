@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.example.qurannexus.features.auth.AuthActivity;
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest;
 import com.example.qurannexus.features.bookmark.models.BookmarkResponse;
 import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse;
+import com.example.qurannexus.features.recitation.extensions.TextUtils;
 import com.example.qurannexus.features.words.WordDetailsActivity;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.features.home.models.WordDetails;
@@ -34,6 +36,7 @@ import com.example.qurannexus.core.network.ApiService;
 import com.example.qurannexus.core.utils.SurahDetails;
 import com.example.qurannexus.core.utils.QuranMetadata;
 import com.example.qurannexus.features.recitation.audio.AudioPlayerManager;
+import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.card.MaterialCardView;
 
@@ -204,33 +207,81 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
     }
     private void setupWordClickListeners(MyViewHolder holder, ChapterAyah ayah) {
         holder.arabicWordsContainer.removeAllViews();
-
-        // Create a new list to avoid modifying the original
         List<Word> words = new ArrayList<>(ayah.getWords());
 
-        // Iterate in reverse order to ensure correct RTL wrapping
-        for (int i = words.size() - 1; i >= 0; i--) {
-            //TODO : Add checking for waqaf, dont use directly from the model class, use utility method to properly render waqaf
-            Word word = words.get(i);
-            TextView wordView = new TextView(context);
-            wordView.setText(word.getText());
-            wordView.setTextColor(ContextCompat.getColor(context, R.color.white));
-            wordView.setTextSize(20f);
-            wordView.setPadding(8, 8, 8, 8);
-            wordView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
-            wordView.setTextDirection(View.TEXT_DIRECTION_RTL);
-
-            // Long click: Highlight and show popup
-            wordView.setOnLongClickListener(v -> {
-                animateWord(v);
-                highlightWord(wordView);
-                showPopupHint(wordView, "Tap for word analysis");
-                fetchWordDetails(word.getWordKey());
-                return true;
-            });
-
-            holder.arabicWordsContainer.addView(wordView);
+        // Extract the waqaf sign but don't add it yet
+        String waqafSign = "";
+        if (!words.isEmpty()) {
+            Word lastWord = words.get(words.size() - 1);
+            // Check if it's likely a waqaf sign
+            if (lastWord.getText() != null &&
+                    (lastWord.getText().length() <= 2 ||
+                            lastWord.getWordIndex().equals(String.valueOf(words.size())))) {
+                waqafSign = lastWord.getText();
+                // Remove from the words list
+                words.remove(words.size() - 1);
+            }
         }
+
+        // Create container for RTL layout with proper order
+        FlexboxLayout container = holder.arabicWordsContainer;
+        container.setFlexDirection(FlexDirection.ROW_REVERSE);  // Ensure RTL ordering
+
+        // Add all the words except the waqaf sign
+        for (int i = 0; i < words.size(); i++) {
+            Word word = words.get(i);
+            addWordTextView(holder, word);
+        }
+
+        // Add the waqaf sign and ayah number as the leftmost element (appears at end for RTL)
+        // This ensures it appears AFTER all the words in RTL display
+        if (!waqafSign.isEmpty()) {
+            TextView waqafView = new TextView(context);
+
+            // Get ayah number in Arabic
+            String ayahNumber = ayah.getAyahIndex();
+            int ayahNum = 0;
+            try {
+                ayahNum = Integer.parseInt(ayahNumber);
+            } catch (NumberFormatException e) {
+                Log.e("SurahAdapter", "Error parsing ayah number: " + ayahNumber);
+            }
+
+            // Use utility service to convert to Arabic numerals
+            String arabicNumber = new com.example.qurannexus.core.utils.UtilityService().convertToArabicNumber(ayahNum);
+
+            // Set the waqaf sign and number
+            waqafView.setText(arabicNumber);
+            waqafView.setTextColor(ContextCompat.getColor(context, R.color.white));
+            waqafView.setTextSize(20f);
+            waqafView.setPadding(8, 8, 8, 8);
+            waqafView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
+            waqafView.setTextDirection(View.TEXT_DIRECTION_RTL);
+
+            // Add it to the LEFT of the FlexboxLayout in the visual RTL layout
+            // This makes it appear at the END of the text
+            container.addView(waqafView);
+        }
+    }
+    private void addWordTextView(MyViewHolder holder, Word word) {
+        TextView wordView = new TextView(context);
+        wordView.setText(word.getText());
+        wordView.setTextColor(ContextCompat.getColor(context, R.color.white));
+        wordView.setTextSize(20f);
+        wordView.setPadding(8, 8, 8, 8);
+        wordView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
+        wordView.setTextDirection(View.TEXT_DIRECTION_RTL);
+
+        // Long click: Highlight and show popup
+        wordView.setOnLongClickListener(v -> {
+            animateWord(v);
+            highlightWord(wordView);
+            showPopupHint(wordView, "Tap for word analysis");
+            fetchWordDetails(word.getWordKey());
+            return true;
+        });
+
+        holder.arabicWordsContainer.addView(wordView);
     }
     private void highlightWord(TextView wordView) {
         wordView.setBackgroundColor(ContextCompat.getColor(context, R.color.light_gray));

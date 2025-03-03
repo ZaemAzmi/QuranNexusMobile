@@ -30,6 +30,7 @@ import com.example.qurannexus.core.utils.ReadingTracker;
 import com.example.qurannexus.core.utils.Result;
 import com.example.qurannexus.core.utils.SurahDetails;
 import com.example.qurannexus.core.utils.TokenManager;
+import com.example.qurannexus.core.utils.UtilityService;
 import com.example.qurannexus.features.bookmark.enums.RecentlyReadType;
 import com.example.qurannexus.features.bookmark.interfaces.BookmarkApi;
 import com.example.qurannexus.features.bookmark.models.AddRecentlyReadRequest;
@@ -124,6 +125,10 @@ public class RecitationPageFragment extends Fragment {
             layoutType = getArguments().getString("fragment_type");
             currentSurahIndex = getArguments().getInt("current_surah_index");
 
+            // Get initial page if available
+            if (getArguments().containsKey("initial_page")) {
+                currentPageNumber = getArguments().getInt("initial_page");
+            }
             // Get scroll to verse if available
             if (getArguments().containsKey("scroll_to_verse")) {
                 scrollToVerse = getArguments().getInt("scroll_to_verse", -1);
@@ -168,32 +173,59 @@ public class RecitationPageFragment extends Fragment {
     public void onPause() {
         super.onPause();
         long durationInSeconds = (System.currentTimeMillis() - readingStartTime) / 1000;
+
         // Check if reading duration is valid
         if (ReadingTracker.INSTANCE.isValidReadingDuration(durationInSeconds)) {
-            // First, record the primary reading type (chapter or page)
-            String primaryItemId;
-            RecentlyReadType primaryType;
+            try {
+                // First, record the primary reading type (chapter or page)
+                String primaryItemId;
+                RecentlyReadType primaryType;
 
-            if ("verseByVerse".equals(layoutType)) {
-                primaryType = RecentlyReadType.CHAPTER;
-                primaryItemId = surahModel.getSurahNumber();
-            } else if ("pageByPage".equals(layoutType)) {
-                primaryType = RecentlyReadType.PAGE;
-                primaryItemId = String.valueOf(currentPageNumber);
-            } else {
-                return; // Exit if mode is invalid
+                if ("verseByVerse".equals(layoutType)) {
+                    primaryType = RecentlyReadType.CHAPTER;
+                    // Handle potential null surahModel
+                    if (surahModel != null) {
+                        primaryItemId = surahModel.getSurahNumber();
+                    } else if (currentSurahIndex >= 0) {
+                        // Use currentSurahIndex + 1 as fallback
+                        // (adding 1 because indices are 0-based but Surah numbers are 1-based)
+                        primaryItemId = String.valueOf(currentSurahIndex + 1);
+                    } else {
+                        // Can't determine chapter, skip recording
+                        Log.w("RecitationPage", "Cannot determine chapter ID, skipping recording");
+                        return;
+                    }
+                } else if ("pageByPage".equals(layoutType)) {
+                    primaryType = RecentlyReadType.PAGE;
+                    primaryItemId = String.valueOf(currentPageNumber);
+                } else {
+                    Log.w("RecitationPage", "Invalid layout type: " + layoutType);
+                    return; // Exit if mode is invalid
+                }
+
+                // Record primary reading type
+                recordRecentlyRead(primaryType, primaryItemId, durationInSeconds);
+                recordRecitationTimes(durationInSeconds);
+
+                // Now record the Juz
+                int pageNumber;
+                if ("pageByPage".equals(layoutType)) {
+                    pageNumber = currentPageNumber;
+                } else {
+                    int surahNumber;
+                    if (surahModel != null) {
+                        surahNumber = Integer.parseInt(surahModel.getSurahNumber());
+                    } else {
+                        surahNumber = currentSurahIndex + 1; // Fallback
+                    }
+                    pageNumber = QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
+                }
+
+                int juzNumber = QuranMetadata.Companion.getInstance().getJuzForPage(pageNumber);
+                recordRecentlyRead(RecentlyReadType.JUZ, String.valueOf(juzNumber), durationInSeconds);
+            } catch (Exception e) {
+                Log.e("RecitationPage", "Error recording recently read: " + e.getMessage());
             }
-            // Record primary reading type
-            recordRecentlyRead(primaryType, primaryItemId, durationInSeconds);
-            recordRecitationTimes(durationInSeconds);
-            // Now record the Juz
-            int pageNumber = "pageByPage".equals(layoutType)
-                    ? currentPageNumber
-                    : QuranMetadata.Companion.getInstance().getStartingPage(Integer.parseInt(surahModel.getSurahNumber()));
-
-            int juzNumber = QuranMetadata.Companion.getInstance().getJuzForPage(pageNumber);
-            recordRecentlyRead(RecentlyReadType.JUZ, String.valueOf(juzNumber), durationInSeconds);
-
         }
     }
     private void recordRecentlyRead(RecentlyReadType type, String itemId, long durationSeconds) {
@@ -334,7 +366,7 @@ public class RecitationPageFragment extends Fragment {
             Map<String, Object> itemProperties = new HashMap<>();
             itemProperties.put("page_id", String.valueOf(currentPageNumber));
             itemProperties.put("page_number", currentPageNumber);
-
+            Log.e("page number", String.valueOf(currentPageNumber));
             BookmarkRequest request = new BookmarkRequest(
                     "page",
                     itemProperties,
@@ -442,9 +474,13 @@ public class RecitationPageFragment extends Fragment {
                 displayByAyatRecitationFragment(surahNumber, scrollToVerse);
                 updateSurahHeader(surahNumber);
             } else if ("pageByPage".equals(layoutType)) {
-                int startingPage = QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
-                displayByPageRecitationFragment(startingPage);
-                setPageContentCallback(startingPage);
+                // Use initial_page if specified, otherwise use starting page of surah
+                int pageToShow = getArguments() != null && getArguments().containsKey("initial_page")
+                        ? getArguments().getInt("initial_page")
+                        : QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
+
+                displayByPageRecitationFragment(pageToShow);  // Passing the page number
+                setPageContentCallback(pageToShow);
             }
         } else {
             // Use surahModel if available
@@ -455,9 +491,13 @@ public class RecitationPageFragment extends Fragment {
                 displayByAyatRecitationFragment(surahNumber, scrollToVerse);
                 updateSurahHeader(surahNumber);
             } else if ("pageByPage".equals(layoutType)) {
-                int startingPage = QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
-                displayByPageRecitationFragment(startingPage);
-                setPageContentCallback(startingPage);
+                // Use initial_page if specified, otherwise use starting page of surah
+                int pageToShow = getArguments() != null && getArguments().containsKey("initial_page")
+                        ? getArguments().getInt("initial_page")
+                        : QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
+
+                displayByPageRecitationFragment(pageToShow);  // Passing the page number
+                setPageContentCallback(pageToShow);
             }
         }
     }
@@ -514,12 +554,32 @@ public class RecitationPageFragment extends Fragment {
         transaction.commit();
     }
 
+    // In RecitationPageFragment.java
     @OptIn(markerClass = UnstableApi.class)
-    private void displayByPageRecitationFragment(int surahNumber) {
+    private void displayByPageRecitationFragment(int pageNumber) {
+        Log.d("RecitationPageFragment", "Displaying page: " + pageNumber);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        ByPageRecitationFragment fragment = ByPageRecitationFragment.newInstance(surahNumber);
+        ByPageRecitationFragment fragment = ByPageRecitationFragment.newInstance(pageNumber);
         transaction.replace(R.id.recitationFragmentContainerView, fragment);
         transaction.commit();
+    }
+    // Add this method to RecitationPageFragment.java
+    public void navigateToSpecificPage(int pageNumber) {
+        Log.d("RecitationPageFragment", "Navigating to specific page: " + pageNumber);
+        // Update the current page number
+        currentPageNumber = pageNumber;
+
+        // Ensure we're using the pageByPage layout
+        layoutType = "pageByPage";
+
+        // Display the page
+        displayByPageRecitationFragment(pageNumber);
+
+        // Update the page content callback
+        setPageContentCallback(pageNumber);
+
+        // Update bookmark status for the new page
+        checkBookmarkStatus();
     }
 //
 //    private void navigateToSurah(int newIndex) {

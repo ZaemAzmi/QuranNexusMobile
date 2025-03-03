@@ -2,6 +2,9 @@ package com.example.qurannexus.features.bookmark.models
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.ContextWrapper
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +20,8 @@ import com.example.qurannexus.core.customViews.AutoFitTextView
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.core.utils.QuranMetadata
+import com.example.qurannexus.features.recitation.RecitationPageFragment
+import com.example.qurannexus.features.recitation.models.SurahModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -75,22 +80,82 @@ class BookmarkPagesAdapter(private var pagesList: List<BookmarkPage>) :
 
         // Navigate to page on click
         holder.cardView.setOnClickListener {
+            Log.d("BookmarkPagesAdapter", "Item clicked: Page ${page.itemProperties.pageNumber}")
             navigateToPage(context, page.itemProperties.pageNumber)
         }
     }
 
     private fun calculateJuzForPage(pageNumber: Int): Int {
-        // Implementation depends on your QuranMetadata structure
-        // Return the juz number for the given page
-        return 1 // Placeholder
+        // Use the QuranMetadata utility to get the juz number for this page
+        return QuranMetadata.getInstance().getJuzForPage(pageNumber)
+    }
+    private fun navigateToPage(context: Context, pageNumber: Int) {
+        Log.d("BookmarkPagesAdapter", "Navigating to page: $pageNumber")
+
+        // Get the correct Activity context
+        var activityContext = context
+        while (activityContext !is FragmentActivity && activityContext is ContextWrapper) {
+            activityContext = activityContext.baseContext
+        }
+
+        val activity = activityContext as? FragmentActivity
+        if (activity == null) {
+            Log.e("BookmarkPagesAdapter", "Could not find FragmentActivity context")
+
+            // Try to get activity through alternative method
+            if (context is View) {
+                val foundActivity = context.context as? FragmentActivity
+                if (foundActivity != null) {
+                    navigateWithActivity(foundActivity, pageNumber)
+                    return
+                }
+            }
+
+            Toast.makeText(context, "Unable to navigate to page", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        navigateWithActivity(activity, pageNumber)
     }
 
-    private fun navigateToPage(context: Context, pageNumber: Int) {
-        val activity = context as? FragmentActivity ?: return
+    private fun navigateWithActivity(activity: FragmentActivity, pageNumber: Int) {
+        try {
+            // Get the surah that starts on this page
+            val surahNumber = QuranMetadata.getInstance().getSurahNumberForPage(pageNumber)
+            val surahDetails = QuranMetadata.getInstance().getSurahDetails(surahNumber)
 
-        // Navigate to the specific page in your Quran view
-        // Similar to your verse navigation but for pages
-        // Implementation depends on your navigation setup
+            // Create a SurahModel for the fragment
+            val surahModel = SurahModel(
+                surahDetails?.englishName ?: "",
+                surahDetails?.arabicName ?: "",
+                surahNumber.toString(),
+                surahDetails?.translationName ?: "",
+                surahDetails?.numberOfVerses.toString(),
+                false
+            )
+
+            // Create RecitationPageFragment with pageByPage layout
+            val fragment = RecitationPageFragment.newInstance(
+                surahModel,
+                "pageByPage",
+                surahNumber - 1
+            )
+
+            // Add the page number as an argument
+            val args = fragment.arguments ?: Bundle()
+            args.putInt("initial_page", pageNumber)
+            fragment.arguments = args
+
+            // Perform the fragment transaction
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.mainFragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit()
+
+            Log.d("BookmarkPagesAdapter", "Fragment transaction committed")
+        } catch (e: Exception) {
+            Log.e("BookmarkPagesAdapter", "Error during navigation", e)
+        }
     }
 
     private fun showPopupMenu(view: View, page: BookmarkPage, context: Context) {

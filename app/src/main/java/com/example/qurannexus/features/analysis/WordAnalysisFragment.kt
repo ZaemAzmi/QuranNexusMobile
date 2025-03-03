@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.core.interfaces.QuranApi
+import com.example.qurannexus.core.utils.UtilityService
 import com.example.qurannexus.features.analysis.adapters.FrequentWordsAdapter
 import com.example.qurannexus.features.words.WordDetailsActivity
 import com.example.qurannexus.features.words.models.WordOccurrenceResponse

@@ -5,13 +5,12 @@ public class TextUtils {
         if (input == null) return "";
 
         try {
-            // Remove or replace problematic Unicode characters
-            return input.replaceAll("[\\p{Cf}\\p{Cn}\\p{Co}\\p{Cs}]", "") // Remove format and special characters
-                    .replaceAll("\\\\u[0-9a-fA-F]{4}", "") // Remove escaped Unicode
-                    .replaceAll("[^\\p{L}\\p{N}\\p{P}\\s]", "") // Only keep letters, numbers, punctuation and spaces
+            // IMPORTANT: DO NOT filter out any Arabic characters or diacritics
+            // Only remove invisible control characters that might break display
+            return input.replaceAll("[\\p{Cc}]", "")  // Remove only control characters
                     .trim();
         } catch (Exception e) {
-            return "";  // Return empty string if cleaning fails
+            return input;  // Return original input if cleaning fails
         }
     }
 }

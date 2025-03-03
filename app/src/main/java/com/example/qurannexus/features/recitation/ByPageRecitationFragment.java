@@ -103,6 +103,8 @@ public class ByPageRecitationFragment extends Fragment {
         achievementService = new AchievementService(requireContext());
         setupViewPager();
 
+        UtilityService utilityService = new UtilityService();
+        utilityService.setupBottomNavPadding(this, viewPager);
         // Initialize audio views
         View audioLayout = view.findViewById(R.id.audioPlayerLayout);
         audioFab = audioLayout.findViewById(R.id.audioFab);
@@ -138,6 +140,11 @@ public class ByPageRecitationFragment extends Fragment {
                 currentPageNumber = TOTAL_PAGES - position;
                 updatePageNumber();
                 audioPlayerManager.handlePageChange(currentPageNumber);
+
+                // Notify parent fragment about page change
+                if (getParentFragment() instanceof RecitationPageFragment) {
+                    ((RecitationPageFragment) getParentFragment()).onPageChanged(currentPageNumber);
+                }
             }
         });
 
@@ -264,6 +271,7 @@ public class ByPageRecitationFragment extends Fragment {
 
                         // Insert calligraphy at the start of a new surah
                         if (currentAyahNumber == 1) {
+                            pageContent.append("\n");
                             appendAndCenterCalligraphy(pageContent, "surah_0", "surah_" + currentSurahId);
                             pageContent.append("\n");
                         }
@@ -300,6 +308,7 @@ public class ByPageRecitationFragment extends Fragment {
 
                         previousSurahId = currentSurahId;
                     }
+                    pageContent.append("\n\n");
                     if (getParentFragment() instanceof RecitationPageFragment) {
                         ((RecitationPageFragment) getParentFragment()).onPageChanged(pageNumber);
                     }

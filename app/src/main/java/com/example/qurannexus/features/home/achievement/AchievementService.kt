@@ -11,9 +11,11 @@ import retrofit2.Response
 
 class AchievementService(private val context: Context) {
     private val quranApi = ApiService.getQuranClient().create(QuranApi::class.java)
-    private val authToken = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        .getString("token", null)
-
+    // Use lazy initialization to defer SharedPreferences access
+    private val authToken by lazy {
+        context.applicationContext.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            .getString("token", null)
+    }
     companion object {
         // Predefined achievements
         @JvmField
@@ -43,7 +45,8 @@ class AchievementService(private val context: Context) {
     }
 
     fun getAchievementStatus(callback: (Map<String, AchievementStatus>?) -> Unit) {
-        authToken?.let { token ->
+        val token = authToken
+        if (token != null) {
             quranApi.getAchievementStatus("Bearer $token").enqueue(object : Callback<AchievementStatusResponse> {
                 override fun onResponse(
                     call: Call<AchievementStatusResponse>,
@@ -60,7 +63,7 @@ class AchievementService(private val context: Context) {
                     callback(null)
                 }
             })
-        } ?: callback(null)
+        }
     }
 
     fun unlockAchievement(achievementId: String, callback: (Boolean) -> Unit) {

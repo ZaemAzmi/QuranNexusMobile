@@ -8,7 +8,7 @@ data class User(
     val email: String,
     val role: String,
     val settings: Map<String, Any?>,
-    val recitationTimes: List<String>? = null,
+    val recitationTimes: Map<String, Int>? = null,  // Changed from List<String> to Map<String, Int>
     val recitationStreak: Int? = null,
     val lastRecitationDate: String? = null,
     val recitationGoal: String? = null,

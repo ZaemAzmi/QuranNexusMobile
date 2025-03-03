@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
+import com.example.qurannexus.core.utils.UtilityService;
 import com.example.qurannexus.features.bookmark.models.BookmarkVerse;
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
 import com.example.qurannexus.features.home.HomeFragment;
@@ -90,6 +91,8 @@ public class ByAyatRecitationFragment extends Fragment {
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
         byAyatAdapter = new SurahRecitationByAyatAdapter(getContext(), ayatModels);
         byAyatRecyclerView.setAdapter(byAyatAdapter);
+        UtilityService utilityService = new UtilityService();
+        utilityService.setupBottomNavPadding(this, byAyatRecyclerView);
 
         if (surahNumber != 0) {
             fetchBookmarksAndVerses(surahNumber);

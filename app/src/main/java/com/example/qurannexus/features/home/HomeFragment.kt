@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,9 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -82,56 +86,64 @@ class HomeFragment : Fragment(), HighlightClickListener {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         authService = AuthService()
-        greetingsText = view.findViewById(R.id.homepageGreetingsText)
 
+        // Initialize UI views
+        greetingsText = view.findViewById(R.id.homepageGreetingsText)
         prayerTrailerCard = view.findViewById(R.id.prayerTrailerCard)
         nextPrayerTextView = prayerTrailerCard.findViewById(R.id.nextPrayerTextView)
         timerTextView = prayerTrailerCard.findViewById(R.id.timerTextView)
         dateTextView = prayerTrailerCard.findViewById(R.id.dateTextView)
-
         seeAllBadgeText = view.findViewById(R.id.seeAllBadgeText)
         llScrollableBadges = view.findViewById(R.id.llScrollableBadges)
 
-
-        achievementService = AchievementService(requireContext())
-        setupAchievements(AchievementService.PREDEFINED_BADGES)
-
-        loadAchievements()
-
-        loadUserGreeting()
-        prayerTrailerCard.setOnClickListener {
-           loadFragment(PrayerTimesFragment())
-        }
-        // Set default values
+        // Set default values immediately
         nextPrayerTextView.text = "Next Prayer: -"
         timerTextView.text = "-"
         dateTextView.text = "-"
+        greetingsText.text = "Salaam"
 
+        // Initialize services (but defer loading achievements)
+        achievementService = AchievementService(requireContext())
+
+        // Setup basic UI elements
         setupObservers()
-        loadInitialData()
+        prayerTrailerCard.setOnClickListener {
+            loadFragment(PrayerTimesFragment())
+        }
 
+        // Set up ViewPager and TabLayout
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
         val adapter = DailyInspirationAdapter(quotes, requireContext())
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            // Optionally, you can customize the tab, but this will show dots by default
+            // Optionally customize tabs
         }.attach()
+
+        // Setup UI that doesn't involve heavy disk operations
         highlightSectionSetup(view)
         setupNavigation()
-        seeAllBadgeText.setOnClickListener {
-            val intent = Intent(context, BadgesActivity::class.java)
-            startActivity(intent)
-        }
-        if (savedInstanceState == null) {
-            childFragmentManager.beginTransaction()
-                .replace(R.id.statisticsContainer, HomepageStatisticsFragment())
-                .commit()
+
+        // Setup default badges first
+        setupAchievements(AchievementService.PREDEFINED_BADGES)
+
+        // Defer heavy operations to after the view is created
+        view.post {
+            loadInitialData()
+            loadUserGreeting()
+            loadAchievements()
+
+            if (savedInstanceState == null) {
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.statisticsContainer, HomepageStatisticsFragment())
+                    .commit()
+            }
         }
 
         return view
     }
+
 
     fun highlightSectionSetup(rootView : View){
         val highlightsRecyclerView: RecyclerView = rootView.findViewById(R.id.highlightsRecyclerView)
@@ -217,33 +229,32 @@ class HomeFragment : Fragment(), HighlightClickListener {
     }
 
     private fun loadUserGreeting() {
-        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        var username = sharedPreferences.getString("username", null)
-        val token = sharedPreferences.getString("token", null) // Get the stored token
-        if (username != null) {
-            // If username is available, display it
-            greetingsText.text = "Salaam, $username"
-        } else {
-            // If no username, try to fetch it using the token
-            if (token != null) {
-                // If token is available, make the network request
-                authService.getUserProfile(token) { user ->
+        // Set default greeting immediately so UI is responsive
+        greetingsText.text = "Salaam, User"
 
-                    if (user != null) {
-                        Log.d("AuthDebugHme", "User fetched: ${user.name}")
-                    } else {
-                        Log.e("AuthDebugHome", "Failed to fetch user profile.")
-                    }
-                    if (user?.name != null) {
-                        // Save the username in SharedPreferences
-                        sharedPreferences.edit().putString("username", user.name).apply()
-                        greetingsText.text = "Salaam, ${user.name}"
-                    } else {
-                        greetingsText.text = "Salaam, User"
+        // Use a coroutine for disk I/O
+        lifecycleScope.launch(Dispatchers.IO) {
+            val sharedPreferences = requireContext().applicationContext
+                .getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val username = sharedPreferences.getString("username", null)
+            val token = sharedPreferences.getString("token", null)
+
+            withContext(Dispatchers.Main) {
+                if (username != null) {
+                    // Update UI with username from preferences
+                    greetingsText.text = "Salaam, $username"
+                } else if (token != null) {
+                    // If token exists but no username, try API call (which is already async)
+                    authService.getUserProfile(token) { user ->
+                        if (user?.name != null) {
+                            // Save the username for future reference
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                sharedPreferences.edit().putString("username", user.name).apply()
+                            }
+                            greetingsText.text = "Salaam, ${user.name}"
+                        }
                     }
                 }
-            } else {
-                greetingsText.text = "Salaam, User"
             }
         }
     }

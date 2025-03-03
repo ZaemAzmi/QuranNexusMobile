@@ -36,26 +36,24 @@ public class ApiService {
         @Override
         public String deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
+            if (json.isJsonNull()) return null;
+
             try {
-                if (json.isJsonNull()) return null;
-                return cleanArabicText(json.getAsString());
+                String text = json.getAsString();
+                // Don't filter out ANY Arabic characters or diacritics
+                // Only remove truly problematic control characters that break rendering
+                return text;
             } catch (Exception e) {
                 return "";
             }
-        }
-
-        private String cleanArabicText(String input) {
-            if (input == null) return "";
-            return input.replaceAll("[\\p{Cf}\\p{Cn}\\p{Co}\\p{Cs}]", "")
-                    .replaceAll("\\\\u[0-9a-fA-F]{4}", "")
-                    .trim();
         }
     }
 
     // Create custom Gson instance
     private static Gson createGson() {
         return new GsonBuilder()
-                .registerTypeAdapter(String.class, new SafeStringDeserializer())
+                // Don't register the custom SafeStringDeserializer for now - it might be filtering diacritics
+                //.registerTypeAdapter(String.class, new SafeStringDeserializer())
                 .setLenient()
                 .create();
     }

@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
+import com.example.qurannexus.core.utils.UtilityService
 import com.example.qurannexus.features.analysis.adapters.QuranStat
 import com.example.qurannexus.features.analysis.adapters.QuranStatsAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,6 +51,8 @@ class QuranAnalysisFragment : Fragment() {
         setupClickListeners()
         setupStatsRecyclerView()
         displayRandomFact()
+        UtilityService().setupBottomNavPadding(this,view)
+
     }
 
     private fun initViews(view: View) {
