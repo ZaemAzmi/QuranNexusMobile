@@ -30,7 +30,9 @@ data class RecitationStreakData(
     @SerializedName("consistency_score")
     val consistencyScore: Int,
     @SerializedName("recitation_times")
-    val recitationTimes: Map<String, Int>?  // Make nullable since it might be null from API
+    val recitationTimes: Map<String, Int>?,  // Make nullable since it might be null from API
+    @SerializedName("consistency_metrics")
+    val consistencyMetrics: Map<String, Any>? = null  // New field for the improved metrics
 )
 
 data class StreakHistoryEntry(

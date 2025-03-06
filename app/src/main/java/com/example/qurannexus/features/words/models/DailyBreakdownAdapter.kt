@@ -1,10 +1,12 @@
 package com.example.qurannexus.features.words.models
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.features.statistics.models.DailyRecitation
@@ -31,13 +33,36 @@ class DailyBreakdownAdapter(
         val item = dailyRecitations[position]
         val dateFormat = SimpleDateFormat("EEE, MMM dd", Locale.getDefault())
 
+        // Find the maximum minutes for better progress bar scaling
+        val maxMinutes = dailyRecitations.maxOfOrNull { it.minutes }?.coerceAtLeast(30) ?: 30
+
         holder.apply {
             tvDate.text = dateFormat.format(item.date)
             tvMinutes.text = "${item.minutes} mins"
 
-            // Calculate progress percentage (assuming max is around 120 minutes)
-            val progress = (item.minutes.toFloat() / 120 * 100).toInt().coerceAtMost(100)
+            // Calculate progress percentage based on max value among all days
+            val progress = if (maxMinutes > 0) {
+                (item.minutes.toFloat() / maxMinutes * 100).toInt().coerceAtMost(100)
+            } else {
+                0
+            }
+
+            progressBar.max = 100
             progressBar.progress = progress
+
+            // Set colors based on whether there was recitation that day
+            val context = itemView.context
+            if (item.minutes > 0) {
+                progressBar.progressTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.primaryColor)
+                )
+                tvMinutes.setTextColor(ContextCompat.getColor(context, R.color.primaryColor))
+            } else {
+                progressBar.progressTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.light_gray)
+                )
+                tvMinutes.setTextColor(ContextCompat.getColor(context, R.color.gray))
+            }
         }
     }
 

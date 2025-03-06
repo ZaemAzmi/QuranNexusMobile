@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Trophy cup -->
+    <path
+        android:fillColor="#FFC107"
+        android:pathData="M18,5h-2V3H8v2H6C4.9,5 4,5.9 4,7v2c0,2.97 2.16,5.43 5,5.91V19H8v2h8v-2h-1v-4.09c2.84,-0.48 5,-2.94 5,-5.91V7C20,5.9 19.1,5 18,5zM6,9V7h2v5.97C6.96,12.39 6,10.84 6,9zM18,9c0,1.84 -0.96,3.39 -2,3.97V7h2V9z" />
+
+    <!-- Trophy shine -->
+    <path
+        android:fillColor="#FFECB3"
+        android:pathData="M8,5V4h8v1h1v2c0,0.74 -0.16,1.44 -0.43,2.09c-0.55,1.26 -1.56,2.23 -2.77,2.68c-0.24,0.09 -0.5,0.16 -0.76,0.21C12.08,10.98 12.04,11 12,11c-0.04,0 -0.08,-0.02 -0.12,-0.02c-0.26,-0.05 -0.52,-0.12 -0.77,-0.21c-1.21,-0.45 -2.22,-1.42 -2.77,-2.68C8.16,7.44 8,6.74 8,6V5z" />
+</vector>

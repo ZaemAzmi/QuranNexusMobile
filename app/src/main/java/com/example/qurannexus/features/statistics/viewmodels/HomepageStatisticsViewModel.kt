@@ -52,41 +52,103 @@ class HomepageStatisticsViewModel @Inject constructor() : ViewModel() {
     val consistencyScore : LiveData<Int> = _consistencyScore
 
     fun getWeekDateRange(weekNumber: Int): Pair<Date, Date> {
-        // Calculate week's start and end dates
+        // Create calendar for the specified week
         val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.set(Calendar.YEAR, 2025)  // Fixed year for consistency
         calendar.set(Calendar.WEEK_OF_YEAR, weekNumber)
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+
+        // Get the start date (Monday of the week)
         val startDate = calendar.time
 
+        // Add 6 days to get to Sunday (end of the week)
         calendar.add(Calendar.DAY_OF_YEAR, 6)
         val endDate = calendar.time
+
+        // Log the calculated dates
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        Log.d("WeekRange", "Week $weekNumber: ${dateFormatter.format(startDate)} to ${dateFormatter.format(endDate)}")
 
         return Pair(startDate, endDate)
     }
     fun getWeekDetails(weekNumber: Int): WeekDetails {
         val dateRange = getWeekDateRange(weekNumber)
-        val startDateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(dateRange.first)
-        val endDateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(dateRange.second)
+        val startDate = dateRange.first
+        val endDate = dateRange.second
 
-        val dailyRecitations = recitationTimes
-            .filter { entry ->
-                val date = entry.key
-                date >= startDateStr && date <= endDateStr
+        // Format dates to match database format
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val startDateStr = dateFormat.format(startDate)
+        val endDateStr = dateFormat.format(endDate)
+
+        // Log the week range
+        Log.d("WeekDetails", "Getting details for week $weekNumber: $startDateStr to $endDateStr")
+
+        // Create a calendar to iterate through all days in the week
+        val calendar = Calendar.getInstance().apply {
+            time = startDate
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        val endCalendar = Calendar.getInstance().apply {
+            time = endDate
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+        }
+
+        // Create a map to hold all days in the week with their minutes
+        val daysMap = mutableMapOf<String, Int>()
+
+        // Initialize all days in the range with 0 minutes
+        while (!calendar.after(endCalendar)) {
+            val currentDateStr = dateFormat.format(calendar.time)
+            daysMap[currentDateStr] = 0
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        // Log all initialized days
+        Log.d("WeekDetails", "Initialized days: ${daysMap.keys.joinToString()}")
+
+        // Add actual recitation times for days within this exact range
+        var totalMinutes = 0
+        recitationTimes.forEach { (dateStr, minutes) ->
+            // Use strict date comparison
+            if (dateStr >= startDateStr && dateStr <= endDateStr) {
+                daysMap[dateStr] = minutes
+                totalMinutes += minutes
+                Log.d("WeekDetails", "Adding $minutes minutes from $dateStr to total")
             }
-            .map { entry ->
-                val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(entry.key)!!
-                DailyRecitation(date, entry.value)
-            }
-            .sortedBy { it.date }
+        }
+
+        Log.d("WeekDetails", "Total minutes calculated: $totalMinutes")
+
+        // Convert to DailyRecitation objects
+        val dailyRecitations = daysMap.map { (dateStr, minutes) ->
+            val date = dateFormat.parse(dateStr)!!
+            DailyRecitation(date, minutes)
+        }.sortedBy { it.date }
+
+        // Calculate statistics
+        val daysWithRecitation = dailyRecitations.count { it.minutes > 0 }
+
+        // Calculate average minutes (only for days with recitation)
+        val averageMinutes = if (daysWithRecitation > 0) {
+            totalMinutes.toDouble() / daysWithRecitation
+        } else {
+            0.0
+        }
 
         return WeekDetails(
-            startDate = dateRange.first,
-            endDate = dateRange.second,
-            totalMinutes = dailyRecitations.sumOf { it.minutes },
-            averageMinutes = if (dailyRecitations.isNotEmpty())
-                dailyRecitations.map { it.minutes }.average()
-            else 0.0,
-            daysRecited = dailyRecitations.size,
+            startDate = startDate,
+            endDate = endDate,
+            totalMinutes = totalMinutes,
+            averageMinutes = averageMinutes,
+            daysRecited = daysWithRecitation,
             dailyRecitations = dailyRecitations
         )
     }
@@ -129,28 +191,72 @@ class HomepageStatisticsViewModel @Inject constructor() : ViewModel() {
     }
 
     fun processRecitationData(streakData: RecitationStreakData) {
+        // Update recitation times
         val recitationTimes = streakData.recitationTimes ?: emptyMap()
-
-        // Update stored recitation times
         updateRecitationTimes(recitationTimes)
 
         // Process daily data
         val dailyData = recitationTimes.toList()
             .sortedBy { it.first }
             .takeLast(30) // Last 30 days
-        _dailyRecitationData.value = dailyData
+        _dailyRecitationData.postValue(dailyData)
 
-        // Process weekly data
-        val weeklyData = recitationTimes.entries
-            .groupBy {
-                getWeekNumber(it.key)
+        // Process weekly data with strict week boundaries
+        processWeeklyRecitationData(recitationTimes)
+    }
+    fun processWeeklyRecitationData(recitationTimes: Map<String, Int>) {
+        val weeklyData = mutableMapOf<Int, Int>()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        // First, determine all weeks in the data
+        val calendar = Calendar.getInstance()
+        val weeks = mutableSetOf<Int>()
+
+        recitationTimes.keys.forEach { dateStr ->
+            try {
+                val date = dateFormat.parse(dateStr)
+                if (date != null) {
+                    calendar.time = date
+                    weeks.add(calendar.get(Calendar.WEEK_OF_YEAR))
+                }
+            } catch (e: Exception) {
+                Log.e("HomepageStatisticsViewModel", "Error parsing date: $dateStr", e)
             }
-            .mapValues { entry ->
-                entry.value.sumOf { it.value }
+        }
+
+        // For each week, calculate the date range and sum minutes
+        weeks.forEach { weekNumber ->
+            val weekRange = getWeekDateRange(weekNumber)
+            val startDate = weekRange.first
+            val endDate = weekRange.second
+
+            val startDateStr = dateFormat.format(startDate)
+            val endDateStr = dateFormat.format(endDate)
+
+            // Log the date range we're searching for
+            Log.d("WeeklyDataCalc", "Processing week $weekNumber: $startDateStr to $endDateStr")
+
+            // Calculate total for this week by filtering and summing
+            var weekTotal = 0
+            recitationTimes.forEach { (dateStr, minutes) ->
+                if (dateStr >= startDateStr && dateStr <= endDateStr) {
+                    weekTotal += minutes
+                    Log.d("WeeklyDataCalc", "  Adding $minutes minutes from $dateStr to week $weekNumber")
+                }
             }
-            .toList()
-            .sortedBy { it.first }
-        _weeklyRecitationData.value = weeklyData
+
+            // Store the total
+            weeklyData[weekNumber] = weekTotal
+            Log.d("WeeklyDataCalc", "Week $weekNumber total: $weekTotal minutes")
+        }
+
+        // Convert to sorted list for the chart
+        val chartData = weeklyData.map { (week, total) ->
+            Pair(week, total)
+        }.sortedBy { it.first }
+
+        // Update LiveData
+        _weeklyRecitationData.postValue(chartData)
     }
 
     private fun getWeekNumber(dateStr: String): Int {
@@ -164,4 +270,5 @@ class HomepageStatisticsViewModel @Inject constructor() : ViewModel() {
             0
         }
     }
+
 }

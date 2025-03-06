@@ -31,6 +31,8 @@
     <color name="editTextBorderColor">#C8E6C9</color> <!-- Light green border -->
 
     <color name="primaryColor">#7FFB84</color>
+    <color name="primaryColorDark">#2AA58B</color>
+    <color name="primaryColorLight">#85F2D8</color>
     <color name="background_color">#FAFAFA</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#757575</color>
