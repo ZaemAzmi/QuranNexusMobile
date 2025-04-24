@@ -50,13 +50,24 @@ class WelcomeFragment : Fragment() {
     private fun startMainActivity() {
         val intent = Intent(context, MainActivity::class.java)
         startActivity(intent)
-        activity?.finish()
+        view?.post{
+            activity?.finishAfterTransition()
+        }
     }
 
     private fun navigateToFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.authFragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
+        // Use post to avoid blocking the UI thread during the transaction
+        view?.post {
+            parentFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right,  // You'll need to add these animation resources
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+                )
+                .replace(R.id.authFragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }

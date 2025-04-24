@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/bookmark_chapter"
+        android:title="Chapter"
+        android:icon="@drawable/ic_bookmark" />
+    <item android:id="@+id/bookmark_page"
+        android:title="Page"
+        android:icon="@drawable/ic_bookmark" />
+</menu>

@@ -4,7 +4,7 @@
     android:id="@+id/resultCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginBottom="@dimen/margin_semi_medium"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,31 +28,31 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/uthmanic_scripts_hafs"
                 android:textColor="@color/primaryColor"
-                android:textSize="24sp" />
+                android:textSize="@dimen/text_size_title" />
 
             <TextView
                 android:id="@+id/translationTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="@dimen/margin_semi_medium"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_size_medium" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/surahTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_intermediate"
             android:textColor="@color/gray"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_small"
             android:textStyle="italic" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="@dimen/margin_intermediate"
+            android:layout_marginBottom="@dimen/margin_intermediate"
             android:background="#E0E0E0" />
 
         <TextView
@@ -62,6 +62,6 @@
             android:fontFamily="@font/uthmanic_scripts_hafs"
             android:gravity="right"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="@dimen/text_size_large" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
+
     <androidx.cardview.widget.CardView
         android:id="@+id/bookmarkChapterCard"
         android:layout_width="match_parent"
@@ -24,8 +25,8 @@
                 android:id="@+id/bookmarkChapterNumberFrameLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="19dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/bookmark_chapter_card_margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -51,12 +52,12 @@
                 android:id="@+id/bookmarkChapterTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="Al-Fatihah"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,11 +65,11 @@
                 android:id="@+id/bookmarkChapterEnglishTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_tiny"
                 android:text="The Opener"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkChapterTitle" />
 
@@ -77,12 +78,12 @@
                 android:id="@+id/bookmarkChapterRevelationPlace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="3dp"
-                android:paddingBottom="3dp"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:paddingBottom="@dimen/padding_tiny"
                 android:text="Meccan"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkChapterEnglishTitle" />
 
@@ -91,8 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_vertical_dots_menu"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
@@ -102,11 +103,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="الفاتحه"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_xlarge"
                 app:layout_constraintEnd_toStartOf="@id/bookmarkChapterMenu"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,11 +115,11 @@
                 android:id="@+id/bookmarkChapterNumberOfVerses"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="7 Verses"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintEnd_toStartOf="@id/bookmarkChapterMenu"
                 app:layout_constraintTop_toBottomOf="@+id/bookmarkChapterArabicTitle" />
         </androidx.constraintlayout.widget.ConstraintLayout>

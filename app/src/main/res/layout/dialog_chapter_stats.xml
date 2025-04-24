@@ -4,20 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/margin_medium">
 
     <TextView
         android:id="@+id/tvChapterName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_size_large"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="@dimen/margin_intermediate"/>
 
     <TextView
         android:id="@+id/tvBookmarkedWords"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"/>
+        android:textSize="@dimen/text_size_medium"/>
 
 </LinearLayout>

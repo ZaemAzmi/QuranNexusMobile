@@ -135,7 +135,41 @@ class MainActivity : AppCompatActivity() {
         selectedFragment?.let { loadFragment(it) }
     }
 
+// Add these methods to MainActivity.kt
 
+    fun setBottomNavigationVisibility(isVisible: Boolean) {
+        if (::meowBottomNavigation.isInitialized) {
+            if (isVisible) {
+                showBottomNavigation()
+            } else {
+                hideBottomNavigation()
+            }
+        }
+    }
+
+    private fun hideBottomNavigation() {
+        if (meowBottomNavigation.visibility == View.VISIBLE) {
+            meowBottomNavigation.animate()
+                .translationY(meowBottomNavigation.height.toFloat())
+                .alpha(0f)
+                .setDuration(300)
+                .withEndAction { meowBottomNavigation.visibility = View.GONE }
+                .start()
+        }
+    }
+
+    private fun showBottomNavigation() {
+        if (meowBottomNavigation.visibility != View.VISIBLE) {
+            meowBottomNavigation.visibility = View.VISIBLE
+            meowBottomNavigation.translationY = meowBottomNavigation.height.toFloat()
+            meowBottomNavigation.alpha = 0f
+            meowBottomNavigation.animate()
+                .translationY(0f)
+                .alpha(1f)
+                .setDuration(300)
+                .start()
+        }
+    }
     private fun setupMeowNavigationBar() {
         meowBottomNavigation = findViewById(R.id.meowBottomNav)
 

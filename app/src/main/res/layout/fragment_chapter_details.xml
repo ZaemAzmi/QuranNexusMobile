@@ -16,8 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -25,8 +25,8 @@
 
                 <ImageView
                     android:id="@+id/backButton"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/width_medium"
+                    android:layout_height="@dimen/height_medium"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_arrow_left"
                     app:tint="@color/black" />
@@ -36,11 +36,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="@dimen/margin_xlarge"
                     android:layout_toEndOf="@+id/backButton"
                     android:text="Chapter Title"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/padding_medium">
 
             <!-- Chapter Information -->
             <androidx.cardview.widget.CardView
@@ -69,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:id="@+id/chapterSubtitleTextView"
@@ -77,17 +77,17 @@
                         android:layout_height="wrap_content"
                         android:text="Chapter Subtitle"
                         android:textColor="@color/primaryColor"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_size_medium"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/chapterInfoTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/margin_intermediate"
                         android:text="Chapter information and description will be displayed here."
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_small" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -95,11 +95,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_intermediate"
                 android:text="Word Categories Distribution"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
@@ -112,20 +112,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Distribution of word types in this chapter"
                         android:textColor="@color/gray"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_small" />
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/pieChart"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:layout_marginTop="16dp" />
+                        android:layout_height="@dimen/chapter_graph_height"
+                        android:layout_marginTop="@dimen/margin_medium" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -133,11 +133,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_intermediate"
                 android:text="Notable Words"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
@@ -150,20 +150,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Significant words that are unique or frequently appear in this chapter"
                         android:textColor="@color/gray"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_small" />
 
                     <!-- Sample Notable Word Item -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/margin_medium"
                         android:orientation="horizontal">
 
                         <TextView
@@ -172,12 +172,12 @@
                             android:fontFamily="@font/uthmanic_scripts_hafs"
                             android:text="الله"
                             android:textColor="@color/primaryColor"
-                            android:textSize="24sp" />
+                            android:textSize="@dimen/arabic_text_size" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="@dimen/margin_medium"
                             android:orientation="vertical">
 
                             <TextView
@@ -185,7 +185,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Allah"
                                 android:textColor="@color/black"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -193,7 +193,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Appears 2 times (7% of chapter words)"
                                 android:textColor="@color/gray"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_size_small" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -201,7 +201,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/margin_semi_medium"
                         android:orientation="horizontal">
 
                         <TextView
@@ -210,12 +210,12 @@
                             android:fontFamily="@font/uthmanic_scripts_hafs"
                             android:text="رحمن"
                             android:textColor="@color/primaryColor"
-                            android:textSize="24sp" />
+                            android:textSize="@dimen/arabic_text_size" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="@dimen/margin_medium"
                             android:orientation="vertical">
 
                             <TextView
@@ -223,7 +223,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Ar-Rahman (The Most Merciful)"
                                 android:textColor="@color/black"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -231,7 +231,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Appears 1 time (3% of chapter words)"
                                 android:textColor="@color/gray"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_size_small" />
                         </LinearLayout>
                     </LinearLayout>
 

@@ -129,34 +129,45 @@ class LoginFragment : Fragment() {
     }
 
     private fun checkExistingToken() {
-        try {
-            context?.let { ctx ->
-                val token = authService.getStoredToken(ctx)
-                if (!token.isNullOrEmpty()) {
-                    ApiService.setAuthToken(token)
+        // Run this on a background thread
+        Thread {
+            try {
+                context?.let { ctx ->
+                    val token = authService.getStoredToken(ctx)
+                    if (!token.isNullOrEmpty()) {
+                        // Set token in API service
+                        ApiService.setAuthToken(token)
 
-                    // Verify token validity before proceeding
-                    authService.getUserProfile(token) { user ->
-                        if (!isFragmentActive) return@getUserProfile
+                        // Verify token validity on background thread
+                        authService.getUserProfile(token) { user ->
+                            if (!isFragmentActive) return@getUserProfile
 
-                        activity?.runOnUiThread {
-                            if (!isFragmentActive) return@runOnUiThread
+                            activity?.runOnUiThread {
+                                if (!isFragmentActive) return@runOnUiThread
 
-                            if (user != null) {
-                                context?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                                    ?.edit()
-                                    ?.putString("username", user.name)
-                                    ?.apply()
-                                startMainActivity()
+                                if (user != null) {
+                                    // Run SharedPreferences operations on background thread
+                                    Thread {
+                                        context?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                                            ?.edit()
+                                            ?.putString("username", user.name)
+                                            ?.apply()
+
+                                        // Then start main activity on UI thread
+                                        activity?.runOnUiThread {
+                                            if (!isFragmentActive) return@runOnUiThread
+                                            startMainActivity()
+                                        }
+                                    }.start()
+                                }
                             }
-                            // If user is null, token might be invalid, let user login again
                         }
                     }
                 }
+            } catch (e: Exception) {
+                Log.e("LoginFragment", "Error checking existing token", e)
             }
-        } catch (e: Exception) {
-            Log.e("LoginFragment", "Error checking existing token", e)
-        }
+        }.start()
     }
 
     private fun startMainActivity() {
@@ -164,11 +175,20 @@ class LoginFragment : Fragment() {
 
         try {
             context?.let { ctx ->
+                // Create the intent without launching immediately
                 val intent = Intent(ctx, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
-                startActivity(intent)
-                activity?.finish()
+
+                // Delay the activity start slightly to allow UI to finish any operations
+                view?.post {
+                    if (!isFragmentActive) return@post
+                    startActivity(intent)
+                    // Finish activity after a short delay to prevent ANR during transition
+                    view?.postDelayed({
+                        activity?.finish()
+                    }, 100)
+                }
             }
         } catch (e: Exception) {
             Log.e("LoginFragment", "Error starting MainActivity", e)

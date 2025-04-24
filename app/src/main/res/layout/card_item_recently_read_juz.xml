@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/recentlyReadJuzCard"
@@ -18,14 +18,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="110dp">
+            android:layout_height="wrap_content">
 
             <FrameLayout
                 android:id="@+id/recentlyReadJuzNumberFrame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -42,7 +42,7 @@
                     android:text="3"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_medium"
                     android:gravity="center" />
             </FrameLayout>
 
@@ -50,12 +50,12 @@
                 android:id="@+id/recentlyReadJuzTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="Juz 3"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,12 +63,12 @@
                 android:id="@+id/recentlyReadJuzRange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_small"
                 android:visibility="gone"
                 android:text="Al-Baqarah 253 - Al-Imran 92"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzTitle" />
 
@@ -76,11 +76,11 @@
                 android:id="@+id/recentlyReadJuzDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_small"
                 android:text="13 Feb 2025 / 15 Rajab 1446"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp"
+                android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzRange" />
 
@@ -88,11 +88,11 @@
                 android:id="@+id/recentlyReadJuzTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_small"
                 android:text="10:30 PM"
                 android:textColor="#FFFFFF"
-                android:textSize="8sp"
+                android:textSize="@dimen/text_size_extra_tiny"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzDate" />
 
@@ -101,8 +101,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_vertical_dots_menu"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,13 +110,13 @@
                 android:id="@+id/recentlyReadJuzPageInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="Pages 42-65"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="@dimen/margin_medium" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

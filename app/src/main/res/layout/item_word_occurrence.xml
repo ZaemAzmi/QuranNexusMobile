@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
+    android:layout_marginHorizontal="@dimen/margin_intermediate"
+    android:layout_marginVertical="@dimen/margin_tiny"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp">
 
@@ -13,16 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
         <TextView
             android:id="@+id/positionText"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/width_xxlarge"
+            android:layout_height="@dimen/width_xxlarge"
             android:background="@drawable/bg_circle_primary"
             android:gravity="center"
             android:textColor="@android:color/white"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_small"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:layout_marginStart="@dimen/margin_medium">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                     android:id="@+id/surahName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
 
@@ -49,36 +49,36 @@
                     android:id="@+id/arabicSurahName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/margin_intermediate"
                     android:fontFamily="@font/uthmanic_scripts_hafs"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_size_medium"/>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/verseNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="14sp"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:textSize="@dimen/text_size_small"
                 android:textColor="@android:color/darker_gray"/>
 
             <TextView
                 android:id="@+id/verseText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_small"
                 android:fontFamily="@font/uthmanic_scripts_hafs"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_large"
                 android:maxLines="1"
                 android:ellipsize="end"/>
 
         </LinearLayout>
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/width_medium"
+            android:layout_height="@dimen/height_medium"
             android:src="@drawable/ic_next"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/margin_small"
             app:tint="@android:color/darker_gray" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

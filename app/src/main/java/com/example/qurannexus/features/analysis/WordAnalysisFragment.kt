@@ -1,7 +1,9 @@
 package com.example.qurannexus.features.analysis
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +19,7 @@ import com.example.qurannexus.R
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.utils.UtilityService
 import com.example.qurannexus.features.analysis.adapters.FrequentWordsAdapter
+import com.example.qurannexus.features.analysis.models.WordDetailsResponse
 import com.example.qurannexus.features.words.WordDetailsActivity
 import com.example.qurannexus.features.words.models.WordOccurrenceResponse
 import dagger.hilt.android.AndroidEntryPoint
@@ -174,11 +177,60 @@ class WordAnalysisFragment : Fragment() {
     }
 
     private fun navigateToWordDetails(word: FrequentWord) {
-        val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
-            putExtra("WORD_TEXT", word.text)
-            putExtra("TRANSLATION", word.translation)
+        // Show loading indicator
+        val loadingDialog = ProgressDialog(requireContext()).apply {
+            setMessage("Loading word details...")
+            setCancelable(false)
+            show()
         }
-        startActivity(intent)
+
+        // Call API to get complete word details
+        quranApi.getWordDetailsAnalysis(word.text).enqueue(object : Callback<WordDetailsResponse> {
+            override fun onResponse(call: Call<WordDetailsResponse>, response: Response<WordDetailsResponse>) {
+                loadingDialog.dismiss()
+
+                if (response.isSuccessful && response.body() != null) {
+                    val wordData = response.body()!!.data
+
+                    // Navigate to word details with complete information
+                    val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
+                        putExtra("WORD_TEXT", wordData.word_text)
+                        putExtra("TRANSLATION", wordData.translation)
+                        putExtra("TRANSLITERATION", wordData.transliteration)
+                        putExtra("TOTAL_OCCURRENCES", wordData.total_occurrences)
+
+                        // First occurrence details
+                        putExtra("CHAPTER_ID", wordData.first_occurrence.chapter_id)
+                        putExtra("VERSE_NUMBER", wordData.first_occurrence.verse_number)
+                        putExtra("SURAH_NAME", wordData.first_occurrence.surah_name)
+                        putExtra("SURAH_NAME_ENGLISH", wordData.first_occurrence.surah_name_english)
+                        putExtra("AYAH_KEY", wordData.first_occurrence.ayah_key)
+                        putExtra("PAGE_ID", wordData.first_occurrence.page_id)
+                        putExtra("JUZ_NUMBER", wordData.first_occurrence.juz_id)
+                        putExtra("VERSE_TEXT", wordData.first_occurrence.verse_text)
+                        putExtra("AUDIO_URL", wordData.first_occurrence.audio_url)
+                    }
+                    startActivity(intent)
+                } else {
+                    // Show error message
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to load word details",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<WordDetailsResponse>, t: Throwable) {
+                loadingDialog.dismiss()
+                Toast.makeText(
+                    requireContext(),
+                    "Network error: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.e("WordAnalysisFragment", "Network error: ${t.message}")
+            }
+        })
     }
 
     private fun navigateToWordCategory(category: String) {

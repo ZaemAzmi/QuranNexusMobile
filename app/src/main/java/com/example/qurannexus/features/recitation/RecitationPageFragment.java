@@ -6,26 +6,42 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
+import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.media3.common.util.UnstableApi;
 import androidx.preference.PreferenceManager;
 import androidx.lifecycle.LifecycleKt;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
+import android.os.Handler;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.qurannexus.R;
+import com.example.qurannexus.core.activities.MainActivity;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.core.network.ApiService;
 import com.example.qurannexus.core.utils.CoroutinesHelper;
+import com.example.qurannexus.core.utils.IconPopupMenu;
 import com.example.qurannexus.core.utils.ReadingTracker;
 import com.example.qurannexus.core.utils.Result;
 import com.example.qurannexus.core.utils.SurahDetails;
@@ -89,6 +105,11 @@ public class RecitationPageFragment extends Fragment {
     @Inject
     RecentlyReadRepository recentlyReadRepository;
     private CoroutineScope coroutineScope;
+    private ImageView bookmarkMenuIcon;
+    private CardView bookmarkDropdownMenu;
+    private LinearLayout chapterBookmarkLayout;
+    private LinearLayout pageBookmarkLayout;
+    private boolean isBookmarkMenuOpen = false;
     public RecitationPageFragment() {
     }
 
@@ -155,6 +176,11 @@ public class RecitationPageFragment extends Fragment {
         authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 .getString("token", null);
     }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupScrollListeners();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -167,11 +193,19 @@ public class RecitationPageFragment extends Fragment {
 
         setupUI();
         checkBookmarkStatus();
+        setupBookmarkMenu();
+
+        UtilityService utilityService = new UtilityService();
+        utilityService.setupBottomNavPadding(this, rootView);
         return rootView;
     }
     @Override
     public void onPause() {
         super.onPause();
+        if (isBookmarkMenuOpen && bookmarkDropdownMenu != null) {
+            bookmarkDropdownMenu.setVisibility(View.GONE);
+            isBookmarkMenuOpen = false;
+        }
         long durationInSeconds = (System.currentTimeMillis() - readingStartTime) / 1000;
 
         // Check if reading duration is valid
@@ -228,6 +262,141 @@ public class RecitationPageFragment extends Fragment {
             }
         }
     }
+
+    @OptIn(markerClass = UnstableApi.class)
+    private void setupScrollListeners() {
+        // When switching to a fragment, we need to attach scroll listeners
+        if ("verseByVerse".equals(layoutType)) {
+            Fragment fragment = getChildFragmentManager().findFragmentById(R.id.recitationFragmentContainerView);
+            if (fragment instanceof ByAyatRecitationFragment) {
+                attachScrollListenerToVerseFragment((ByAyatRecitationFragment) fragment);
+            }
+        } else if ("pageByPage".equals(layoutType)) {
+            Fragment fragment = getChildFragmentManager().findFragmentById(R.id.recitationFragmentContainerView);
+            if (fragment instanceof ByPageRecitationFragment) {
+                attachScrollListenerToPageFragment((ByPageRecitationFragment) fragment);
+            }
+        }
+    }
+
+    @OptIn(markerClass = UnstableApi.class)
+    private void attachScrollListenerToVerseFragment(ByAyatRecitationFragment fragment) {
+        // Assuming fragment.versesPager is accessible or has a getter
+        if (fragment.versesPager != null) {
+            // We need to wait for the ViewPager to fully initialize
+            fragment.versesPager.post(() -> {
+                // Get the current page fragment
+                int currentItem = fragment.versesPager.getCurrentItem();
+                // Find the RecyclerView inside the current page fragment
+                View pagerChildAt = fragment.versesPager.getChildAt(0);
+                if (pagerChildAt instanceof RecyclerView) {
+                    RecyclerView recyclerView = (RecyclerView) pagerChildAt;
+                    attachScrollListenerToRecyclerView(recyclerView);
+                }
+
+                // Also register a callback to handle page changes
+                fragment.versesPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        // Find the RecyclerView in the newly selected page
+                        new Handler().postDelayed(() -> {
+                            for (int i = 0; i < fragment.versesPager.getChildCount(); i++) {
+                                View child = fragment.versesPager.getChildAt(i);
+                                if (child instanceof RecyclerView) {
+                                    RecyclerView recyclerView = (RecyclerView) child;
+                                    attachScrollListenerToRecyclerView(recyclerView);
+                                    break;
+                                }
+                            }
+                        }, 100);
+                    }
+                });
+            });
+        }
+    }
+
+    @OptIn(markerClass = UnstableApi.class)
+    private void attachScrollListenerToPageFragment(ByPageRecitationFragment fragment) {
+        // Similar logic for the page fragment's ViewPager
+        if (fragment.viewPager != null) {
+            fragment.viewPager.post(() -> {
+                // Find the TextView or ScrollView in the ViewPager
+                View contentView = fragment.viewPager.getChildAt(0);
+                if (contentView != null) {
+                    // If it's a ScrollView or NestedScrollView, attach listener
+                    if (contentView instanceof NestedScrollView) {
+                        NestedScrollView scrollView = (NestedScrollView) contentView;
+                        attachScrollListenerToScrollView(scrollView);
+                    }
+                }
+            });
+        }
+    }
+
+    private void attachScrollListenerToRecyclerView(RecyclerView recyclerView) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private int scrollThreshold = 10;
+            private int scrolledDistance = 0;
+            private boolean isScrollingUp = false;
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (Math.abs(dy) > 0) {
+                    if (dy > 0) { // Scrolling down
+                        if (!isScrollingUp) {
+                            scrolledDistance += dy;
+                            if (scrolledDistance > scrollThreshold) {
+                                hideBottomNavigation();
+                                scrolledDistance = 0;
+                            }
+                        } else {
+                            isScrollingUp = false;
+                            scrolledDistance = 0;
+                        }
+                    } else { // Scrolling up
+                        if (isScrollingUp) {
+                            scrolledDistance += Math.abs(dy);
+                            if (scrolledDistance > scrollThreshold) {
+                                showBottomNavigation();
+                                scrolledDistance = 0;
+                            }
+                        } else {
+                            isScrollingUp = true;
+                            scrolledDistance = 0;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void attachScrollListenerToScrollView(NestedScrollView scrollView) {
+        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
+                (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                    int dy = scrollY - oldScrollY;
+                    if (dy > 10) { // Scrolling down
+                        hideBottomNavigation();
+                    } else if (dy < -10) { // Scrolling up
+                        showBottomNavigation();
+                    }
+                }
+        );
+    }
+
+    private void hideBottomNavigation() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setBottomNavigationVisibility(false);
+        }
+    }
+
+    private void showBottomNavigation() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setBottomNavigationVisibility(true);
+        }
+    }
     private void recordRecentlyRead(RecentlyReadType type, String itemId, long durationSeconds) {
         CoroutinesHelper.addRecentlyRead(
                 recentlyReadRepository,
@@ -268,72 +437,131 @@ public class RecitationPageFragment extends Fragment {
         boolean isByPage = sharedPreferences.getBoolean(KEY_LAYOUT_TYPE, false);
         layoutType = isByPage ? "pageByPage" : "verseByVerse";
         fetchVerses();
-//        displayFragment(layoutType);
-//        if (QuranMetadata.Companion.getInstance() == null) {
-//            Log.e("RecitationPageFragment", "QuranMetadata is not initialized!");
-//        }
-//        SurahDetails surahDetails = QuranMetadata.Companion.getInstance().getSurahDetails(currentSurahIndex+1);
-//
-//        TextView surahNameTextView = rootView.findViewById(R.id.surahNameTextView);
-//        TextView surahNameEnglishTextView = rootView.findViewById(R.id.englishSurahNameTextView);
-//
-//        surahNameTextView.setText(surahDetails.getEnglishName());
-//        surahNameEnglishTextView.setText(surahDetails.getTranslationName());
-
-//        previousSurahButton.setOnClickListener(v -> navigateToSurah(currentSurahIndex - 1));
-//        nextSurahButton.setOnClickListener(v -> navigateToSurah(currentSurahIndex + 1));
-
-        // Setup bookmark functionality
-        bookmarkIcon = rootView.findViewById(R.id.bookmarkIcon);
-        bookmarkIcon.setOnClickListener(v -> toggleBookmarkStatus());
-
-        pageBookmarkIcon = rootView.findViewById(R.id.pageBookmarkIcon);
-        pageBookmarkIcon.setOnClickListener(v -> togglePageBookmarkStatus());
-
-        // Show/hide page bookmark based on layout type
-        pageBookmarkIcon.setVisibility("pageByPage".equals(layoutType) ? View.VISIBLE : View.GONE);
+        // Always show both bookmark options since we have pagination in both modes now
+        if (pageBookmarkLayout != null) {
+            pageBookmarkLayout.setVisibility(View.VISIBLE);
+        }
     }
 
-        private void checkBookmarkStatus() {
-            if (authToken == null) {
-                Log.e("RecitationPageFragment", "No auth token available");
-                return;
+    // New method for bookmark menu functionality
+    private void setupBookmarkMenu() {
+        // Initialize the menu icon
+        bookmarkMenuIcon = rootView.findViewById(R.id.bookmarkMenuIcon);
+
+        // Set click listener to show popup menu
+        bookmarkMenuIcon.setOnClickListener(v -> showBookmarkMenu(v));
+
+        // We still need references to these variables for bookmark status updates
+        bookmarkIcon = null; // We'll set this dynamically in the menu
+        pageBookmarkIcon = null; // We'll set this dynamically in the menu
+    }
+
+// Replace your showBookmarkMenu method with this one
+
+    private void showBookmarkMenu(View anchor) {
+        IconPopupMenu popup = new IconPopupMenu(requireContext(), anchor);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.bookmark_menu, popup.getMenu());
+
+        // Try to show icons - this works on most devices
+        popup.showIcons();
+
+        // Update menu items based on bookmark status
+        MenuItem chapterItem = popup.getMenu().findItem(R.id.bookmark_chapter);
+        MenuItem pageItem = popup.getMenu().findItem(R.id.bookmark_page);
+
+        if (isChapterBookmarked) {
+            chapterItem.setTitle("Remove Chapter Bookmark");
+            popup.updateMenuIcon(R.id.bookmark_chapter, R.drawable.ic_bookmarked);
+        } else {
+            chapterItem.setTitle("Bookmark Chapter");
+            popup.updateMenuIcon(R.id.bookmark_chapter, R.drawable.ic_bookmark);
+        }
+
+        if (isPageBookmarked) {
+            pageItem.setTitle("Remove Page Bookmark");
+            popup.updateMenuIcon(R.id.bookmark_page, R.drawable.ic_bookmarked);
+        } else {
+            pageItem.setTitle("Bookmark Page");
+            popup.updateMenuIcon(R.id.bookmark_page, R.drawable.ic_bookmark);
+        }
+
+        // Show page bookmark option in all modes since we now have pagination in both
+        pageItem.setVisible(true);
+
+        // Set click listener for menu items
+        popup.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.bookmark_chapter) {
+                toggleBookmarkStatus();
+                return true;
+            } else if (itemId == R.id.bookmark_page) {
+                togglePageBookmarkStatus();
+                return true;
+            }
+            return false;
+        });
+
+        // Show the popup menu
+        popup.show();
+    }
+    private void toggleBookmarkMenu() {
+        if (isBookmarkMenuOpen) {
+            // Close the menu with animation
+            Animation fadeOut = AnimationUtils.loadAnimation(requireContext(), android.R.anim.fade_out);
+            fadeOut.setDuration(200);
+            bookmarkDropdownMenu.startAnimation(fadeOut);
+            bookmarkDropdownMenu.setVisibility(View.GONE);
+            isBookmarkMenuOpen = false;
+        } else {
+            // Open the menu with animation
+            bookmarkDropdownMenu.setVisibility(View.VISIBLE);
+            Animation fadeIn = AnimationUtils.loadAnimation(requireContext(), android.R.anim.fade_in);
+            fadeIn.setDuration(200);
+            bookmarkDropdownMenu.startAnimation(fadeIn);
+            isBookmarkMenuOpen = true;
+        }
+    }
+    private void checkBookmarkStatus() {
+        if (authToken == null) {
+            Log.e("RecitationPageFragment", "No auth token available");
+            return;
+        }
+
+        quranApi.getBookmarks("Bearer " + authToken).enqueue(new Callback<BookmarksResponse>() {
+            @Override
+            public void onResponse(Call<BookmarksResponse> call, Response<BookmarksResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    BookmarksResponse bookmarksResponse = response.body();
+                    // Check chapter bookmarks
+                    List<BookmarkChapter> chapterBookmarks = bookmarksResponse.getBookmarks().getChapters();
+                    isChapterBookmarked = false;
+                    for (BookmarkChapter chapter : chapterBookmarks) {
+                        if (String.valueOf(currentSurahIndex + 1).equals(chapter.getItemProperties().getChapterId())) {
+                            isChapterBookmarked = true;
+                            break;
+                        }
+                    }
+
+                    // Check page bookmarks
+                    List<BookmarkPage> pageBookmarks = bookmarksResponse.getBookmarks().getPages();
+                    isPageBookmarked = false;
+                    for (BookmarkPage page : pageBookmarks) {
+                        if (page.getItemProperties().getPageNumber() == currentPageNumber) {
+                            isPageBookmarked = true;
+                            break;
+                        }
+                    }
+                    updateBookmarkIcons();
+                }
             }
 
-            quranApi.getBookmarks("Bearer " + authToken).enqueue(new Callback<BookmarksResponse>() {
-                @Override
-                public void onResponse(Call<BookmarksResponse> call, Response<BookmarksResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        BookmarksResponse bookmarksResponse = response.body();
-                        // Check chapter bookmarks
-                        List<BookmarkChapter> chapterBookmarks = bookmarksResponse.getBookmarks().getChapters();
-                        isChapterBookmarked = false;
-                        for (BookmarkChapter chapter : chapterBookmarks) {
-                            if (String.valueOf(currentSurahIndex + 1).equals(chapter.getItemProperties().getChapterId())) {
-                                isChapterBookmarked = true;
-                                break;
-                            }
-                        }
-
-                        // Check page bookmarks
-                        List<BookmarkPage> pageBookmarks = bookmarksResponse.getBookmarks().getPages();
-                        isPageBookmarked = false;
-                        for (BookmarkPage page : pageBookmarks) {
-                            if (page.getItemProperties().getPageNumber() == currentPageNumber) {
-                                isPageBookmarked = true;
-                                break;
-                            }
-                        }
-                        updateBookmarkIcons();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<BookmarksResponse> call, Throwable t) {
-                    Log.e("RecitationPageFragment", "Failed to check bookmark status", t);
-                }
-            });
-         }
+            @Override
+            public void onFailure(Call<BookmarksResponse> call, Throwable t) {
+                Log.e("RecitationPageFragment", "Failed to check bookmark status", t);
+            }
+        });
+     }
 
     private void togglePageBookmarkStatus() {
         if (authToken == null) {
@@ -456,13 +684,16 @@ public class RecitationPageFragment extends Fragment {
     }
 
     private void updateBookmarkIcons() {
-        if (bookmarkIcon != null) {
-            bookmarkIcon.setImageResource(isChapterBookmarked ?
-                    R.drawable.ic_bookmarked : R.drawable.ic_bookmark);
-        }
-        if (pageBookmarkIcon != null) {
-            pageBookmarkIcon.setImageResource(isPageBookmarked ?
-                    R.drawable.ic_bookmarked : R.drawable.ic_bookmark);
+        // Update the menu icon - show filled bookmark if anything is bookmarked
+        if (bookmarkMenuIcon != null) {
+            boolean anyBookmarkActive = isChapterBookmarked || isPageBookmarked;
+            if (anyBookmarkActive) {
+                // If something is bookmarked, change the menu icon to show this
+                // You could optionally use a different icon to indicate active bookmarks
+                bookmarkMenuIcon.setImageResource(R.drawable.ic_vertical_dots_menu);
+            } else {
+                bookmarkMenuIcon.setImageResource(R.drawable.ic_vertical_dots_menu);
+            }
         }
     }
     private void fetchVerses() {
@@ -539,11 +770,20 @@ public class RecitationPageFragment extends Fragment {
     }
 
     // Update the existing onPageChanged method
+    @OptIn(markerClass = UnstableApi.class)
     public void onPageChanged(int newPage) {
         currentPageNumber = newPage;
         int surahNumber = quranMetadata.getSurahNumberForPage(newPage);
         updateSurahHeader(surahNumber);
         checkBookmarkStatus(); // Check bookmark status when page changes
+
+        if ("verseByVerse".equals(layoutType)) {
+            Fragment fragment = getChildFragmentManager().findFragmentById(R.id.recitationFragmentContainerView);
+            if (fragment instanceof ByAyatRecitationFragment) {
+                ByAyatRecitationFragment ayatFragment = (ByAyatRecitationFragment) fragment;
+                // The ByAyatRecitationFragment should handle showing the right page of verses
+            }
+        }
     }
 
     @OptIn(markerClass = UnstableApi.class)

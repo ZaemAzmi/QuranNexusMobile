@@ -16,16 +16,16 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Quran Analysis"
-                android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textColor="#0F103E"
+                android:textSize="@dimen/text_size_title"
                 android:textStyle="bold" />
 
         </androidx.appcompat.widget.Toolbar>
@@ -40,30 +40,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="16dp">
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_medium">
 
             <!-- Introduction Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                android:layout_marginTop="@dimen/margin_medium"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/gradient_primary"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Explore Quran Analytics"
                         android:textColor="@color/white"
-                        android:textSize="20sp"
+                        android:textSize="@dimen/text_size_xlarge"
                         android:textStyle="bold" />
 
                     <TextView
@@ -72,7 +72,7 @@
                         android:layout_marginTop="8dp"
                         android:text="Discover fascinating insights and patterns within the Quran through interactive visualizations and detailed analysis."
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_medium" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                         android:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
                         android:textAlignment="center"
                         android:textColor="@color/white"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/arabic_text_size"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -91,11 +91,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:text="Quran at a Glance"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -104,26 +104,26 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
-                android:paddingVertical="8dp"
+                android:paddingVertical="@dimen/padding_small"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <!-- Analysis Categories -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:text="Analysis Categories"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
             <!-- Word Analysis Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/wordAnalysisCard"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="@dimen/word_analysis_card_height"
+                android:layout_marginTop="@dimen/margin_small"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
@@ -136,9 +136,9 @@
 
                     <ImageView
                         android:id="@+id/wordAnalysisImage"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="16dp"
+                        android:layout_width="@dimen/word_analysis_image_card_height"
+                        android:layout_height="@dimen/word_analysis_image_card_height"
+                        android:layout_marginStart="@dimen/margin_medium"
                         android:src="@drawable/ic_word_analysis"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -153,7 +153,7 @@
                         android:layout_marginEnd="16dp"
                         android:text="Word Analysis"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/wordAnalysisDesc"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -165,12 +165,12 @@
                         android:id="@+id/wordAnalysisDesc"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="@dimen/margin_medium"
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        android:layout_marginEnd="@dimen/margin_medium"
                         android:text="Explore word frequency, distribution, and patterns throughout the Quran"
                         android:textColor="@color/gray"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_size_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/wordAnalysisImage"
@@ -183,8 +183,8 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/chapterAnalysisCard"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="@dimen/word_analysis_card_height"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
@@ -197,9 +197,9 @@
 
                     <ImageView
                         android:id="@+id/chapterAnalysisImage"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="16dp"
+                        android:layout_width="@dimen/word_analysis_image_card_height"
+                        android:layout_height="@dimen/word_analysis_image_card_height"
+                        android:layout_marginStart="@dimen/margin_medium"
                         android:src="@drawable/ic_chapter_analysis"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -211,11 +211,11 @@
                         android:id="@+id/chapterAnalysisTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="@dimen/margin_medium"
+                        android:layout_marginEnd="@dimen/margin_medium"
                         android:text="Chapter Analysis"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/chapterAnalysisDesc"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -227,12 +227,12 @@
                         android:id="@+id/chapterAnalysisDesc"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="@dimen/margin_medium"
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        android:layout_marginEnd="@dimen/margin_medium"
                         android:text="Discover unique characteristics and statistical insights for each chapter"
                         android:textColor="@color/gray"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_size_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/chapterAnalysisImage"
@@ -245,7 +245,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/margin_large"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 
@@ -253,33 +253,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Did You Know?"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvFunFact"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:text="The word 'Allah' (الله) appears 2,699 times in the Quran, making it one of the most frequently mentioned words."
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_small" />
 
                     <Button
                         android:id="@+id/btnNextFact"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:background="?attr/selectableItemBackground"
                         android:text="Next Fact"
+                        android:textSize="@dimen/text_size_large"
                         android:textAllCaps="false"
                         android:textColor="#3F51B5" />
                 </LinearLayout>

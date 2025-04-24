@@ -6,15 +6,15 @@
     android:orientation="vertical"
     android:background="#5CBD97"
     app:cardCornerRadius="8dp"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Notes"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_size_large"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="@dimen/margin_intermediate" />
 
 
     <EditText
@@ -26,13 +26,13 @@
         android:minLines="3"
         android:background="@drawable/card_edit_text_dialog"
         android:gravity="top"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="@dimen/margin_intermediate" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/margin_intermediate"
         android:layout_gravity="end">
 
         <Button
@@ -43,7 +43,7 @@
             android:text="Cancel" />
 
         <Button
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/margin_intermediate"
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

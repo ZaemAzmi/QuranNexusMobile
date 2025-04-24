@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:padding="@dimen/padding_small"
     android:background="@drawable/bg_word_hint_popup">
 
     <TextView
@@ -11,5 +11,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="@dimen/text_size_small" />
 </LinearLayout>

@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
 
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search city..."
-        android:layout_marginBottom="16dp"/>
+        android:textSize="@dimen/text_size_medium"
+        android:layout_marginBottom="@dimen/margin_medium"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/locationsRecyclerView"

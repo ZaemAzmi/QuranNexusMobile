@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bookmarkVerseCard"
@@ -24,12 +24,12 @@
                 android:id="@+id/bookmarkVerseTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="@dimen/bookmark_verse_card_margin"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="Verse of "
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="17sp"
+                android:textSize="@dimen/text_size_large"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,11 +37,11 @@
                 android:id="@+id/bookmarkVerseChapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="@dimen/bookmark_verse_card_margin"
+                android:layout_marginTop="@dimen/margin_tiny"
                 android:text="الفاتحه (Al - Fatihah)"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_large"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkVerseTitle" />
 
@@ -49,23 +49,22 @@
                 android:id="@+id/bookmarkVerseDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:maxEms="35"
+                android:layout_marginStart="@dimen/bookmark_verse_card_margin"
+                android:layout_marginTop="@dimen/margin_tiny"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non facilisis nisl. Phasellus ligula leo, egestas et ullamcorper at, hendrerit vitae nibh"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkVerseChapter" />
-
+<!--            android:maxEms="35"-->
 
             <ImageView
                 android:id="@+id/bookmarkVerseMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_vertical_dots_menu"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
@@ -74,12 +73,12 @@
                 android:id="@+id/bookmarkVerseChapterAndVerseNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_intermediate"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="Chapter 1, Verse 6"
                 android:textColor="@color/white"
-                android:textSize="14sp"
-                android:paddingBottom="5dp"
+                android:textSize="@dimen/text_size_small"
+                android:paddingBottom="@dimen/padding_tiny"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkVerseDescription"
                 />

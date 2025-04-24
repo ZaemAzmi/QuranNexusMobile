@@ -64,7 +64,7 @@ public class ByPageRecitationFragment extends Fragment {
     private int currentPageNumber;
     private QuranApi quranApi;
     private UtilityService utilityService;
-    private ViewPager2 viewPager;
+    public ViewPager2 viewPager;
     private PageAdapter pageAdapter;
     private TextView pageNumberTextView;
     private PageAdapter.PageContentCallback contentCallback;
@@ -374,8 +374,26 @@ public class ByPageRecitationFragment extends Fragment {
     private void appendCalligraphyToContent(SpannableStringBuilder pageContent, String fileName) {
         Drawable calligraphyDrawable = getSurahCalligraphyDrawable(fileName);
         if (calligraphyDrawable != null) {
-            calligraphyDrawable.setBounds(0, 0, calligraphyDrawable.getIntrinsicWidth(), calligraphyDrawable.getIntrinsicHeight());
+            // Get the intrinsic width and height
+            int intrinsicWidth = calligraphyDrawable.getIntrinsicWidth();
+            int intrinsicHeight = calligraphyDrawable.getIntrinsicHeight();
+
+            // Scale factor - increase this number to make the calligraphy larger
+            float scaleFactor;
+            if (getResources().getDisplayMetrics().widthPixels >=
+                    getResources().getDisplayMetrics().density * 600) {
+                scaleFactor = 2.5f; // For tablets
+            } else {
+                scaleFactor = 1.5f; // For phones
+            }
+            // Apply the scale factor to the width and height
+            int scaledWidth = (int)(intrinsicWidth * scaleFactor);
+            int scaledHeight = (int)(intrinsicHeight * scaleFactor);
+
+            // Set the bounds with scaled dimensions
+            calligraphyDrawable.setBounds(0, 0, scaledWidth, scaledHeight);
             calligraphyDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+
             // Create an ImageSpan with centered alignment
             ImageSpan calligraphySpan = new ImageSpan(calligraphyDrawable, DynamicDrawableSpan.ALIGN_BASELINE);
 

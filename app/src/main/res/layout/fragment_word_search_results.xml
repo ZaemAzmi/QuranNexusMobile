@@ -16,8 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -25,8 +25,8 @@
 
                 <ImageView
                     android:id="@+id/backButton"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/width_medium"
+                    android:layout_height="@dimen/height_medium"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_arrow_left"
                     app:tint="@color/black" />
@@ -36,11 +36,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="@dimen/margin_xlarge"
                     android:layout_toEndOf="@+id/backButton"
                     android:text="Search Results"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:padding="16dp"
+            android:padding="@dimen/padding_medium"
             android:visibility="gone" />
 
         <TextView
@@ -66,10 +66,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:padding="32dp"
+            android:padding="@dimen/padding_xlarge"
             android:text="No words found matching your search"
             android:textColor="@color/gray"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_medium"
             android:visibility="gone" />
 
         <ProgressBar

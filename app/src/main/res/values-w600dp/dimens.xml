@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--inside values-w600dp folder (For tablets ~7" and larger):-->
+<resources>
+    <dimen name="text_size_skip">22sp</dimen>
+    <dimen name="text_size_salam">44sp</dimen>
+    <!-- MeowBottomNavigation default height plus some padding -->
+    <dimen name="meow_bottom_nav_height">90dp</dimen>
+    <dimen name="nav_header_logo_height">120dp</dimen>
+    <dimen name="nav_header_logo_width">120dp</dimen>
+
+    <dimen name="daily_recitation_indicator_size">72dp</dimen>
+
+    <dimen name="margin_tiny">8dp</dimen>
+    <dimen name="margin_small">12dp</dimen>
+    <dimen name="margin_intermediate">16dp</dimen>
+    <dimen name="margin_semi_medium">20dp</dimen>
+    <dimen name="margin_medium">24dp</dimen>
+    <dimen name="margin_large">32dp</dimen>
+    <dimen name="margin_xlarge">48dp</dimen>
+    <dimen name="margin_xxlarge">64dp</dimen>
+    <dimen name="margin_xxxlarge">80dp</dimen>
+
+    <dimen name="quiz_result_margin">540dp</dimen>
+    <dimen name="register_margin">105dp</dimen>
+    <dimen name="prayer_times_margin">90dp</dimen>
+
+    <dimen name="padding_tiny">8dp</dimen>
+    <dimen name="padding_small">12dp</dimen>
+    <dimen name="padding_intermediate">18dp</dimen>
+    <dimen name="padding_medium">24dp</dimen>
+    <dimen name="padding_large">36dp</dimen>
+    <dimen name="padding_xlarge">48dp</dimen>
+
+    <!-- width & height -->
+    <dimen name="daily_recitation_date_width">150dp</dimen>
+    <dimen name="daily_recitation_minutes_width">105dp</dimen>
+
+    <dimen name="loading_progress_bar_width">48dp</dimen>
+    <dimen name="loading_progress_bar_height">48dp</dimen>
+
+    <dimen name="width_tiny">24dp</dimen>
+    <dimen name="width_small">36dp</dimen>
+    <dimen name="width_medium">48dp</dimen>
+    <dimen name="width_large">60dp</dimen>
+    <dimen name="width_xlarge">72dp</dimen>
+    <dimen name="width_xxlarge">84dp</dimen>
+    <dimen name="width_xxxlarge">96dp</dimen>
+
+    <dimen name="height_extra_tiny">12dp</dimen>
+    <dimen name="height_tiny">24dp</dimen>
+    <dimen name="height_small">36dp</dimen>
+    <dimen name="height_medium">48dp</dimen>
+    <dimen name="height_xlarge">72dp</dimen>
+    <dimen name="height_xxxlarge">96dp</dimen>
+
+    <dimen name="popup_badge_width">102dp</dimen>
+    <dimen name="popup_badge_height">102dp</dimen>
+
+    <dimen name="card_item_chapter_number_width">135dp</dimen>
+    <dimen name="card_item_chapter_number_height">135dp</dimen>
+
+    <dimen name="item_highlights_width">75dp</dimen>
+    <dimen name="item_highlights_height">75dp</dimen>
+
+    <dimen name="quiz_category_dots_height">15dp</dimen>
+    <dimen name="answer_quiz_width">450dp</dimen>
+    <dimen name="answer_quiz_height">150dp</dimen>
+    <dimen name="quiz_question_card_height">240dp</dimen>
+
+    <dimen name="text_size_word_analysis">84sp</dimen>
+    <dimen name="text_size_nav_header_title">60sp</dimen>
+
+    <dimen name="text_size_title">48sp</dimen>
+    <dimen name="text_size_xxlarge">44sp</dimen>
+    <dimen name="text_size_xlarge">40sp</dimen>
+    <dimen name="text_size_large">32sp</dimen>
+    <dimen name="text_size_medium">26sp</dimen>
+    <dimen name="text_size_small">20sp</dimen>
+    <dimen name="text_size_tiny">16sp</dimen>
+
+    <dimen name="header_height_ratio">0.18</dimen>
+    <dimen name="daily_quote_min_height">220dp</dimen>
+
+    <!-- Card -->
+    <dimen name="card_corner_radius">15dp</dimen>
+    <dimen name="card_elevation">5dp</dimen>
+    <dimen name="bookmark_verse_card_margin">30dp</dimen>
+
+    <!--    quran analysis card-->
+    <dimen name="word_analysis_card_height">180dp</dimen>
+    <dimen name="word_analysis_image_card_height_small">72dp</dimen>
+    <dimen name="word_analysis_image_card_height">90dp</dimen>
+
+    <dimen name="quran_stat_card_width">180dp</dimen>
+    <dimen name="quran_stat_card_height">150dp</dimen>
+    <dimen name="frequent_word_card_width">210dp</dimen>
+    <dimen name="frequent_word_card_height">240dp</dimen>
+
+    <dimen name="chapter_graph_height">450dp</dimen>
+    <dimen name="text_size_score">48sp</dimen>
+
+    <!-- Larger screen specific recitation dimensions -->
+    <dimen name="recitation_text_size">40sp</dimen>
+    <dimen name="arabic_text_size">46sp</dimen>
+    <dimen name="recitation_text_size_small">22sp</dimen>
+    <dimen name="recitation_header_height">160dp</dimen>
+    <dimen name="recitation_pagination_height">72dp</dimen>
+    <dimen name="pagination_button_width">160dp</dimen>
+    <dimen name="pagination_button_height">56dp</dimen>
+
+    <dimen name="item_chapter_width">60dp</dimen>
+    <dimen name="item_chapter_height">60dp</dimen>
+    <dimen name="bookmark_tabs_height">45dp</dimen>
+
+    <!-- Calligraphy specific dimensions for tablets -->
+    <item name="calligraphy_scale_factor" format="float" type="dimen">2.5</item>
+    <!-- Icon dimensions for larger screens -->
+    <dimen name="button_icon_size">48dp</dimen>
+    <dimen name="icon_touchable_area">64dp</dimen>
+    <dimen name="icon_spacing">48dp</dimen>
+
+    <dimen name="side_menu_icon_width">60dp</dimen>
+    <dimen name="side_menu_icon_height">60dp</dimen>
+    <dimen name="side_menu_icon_margin_start">39dp</dimen>
+    <dimen name="side_menu_icon_margin_top">45dp</dimen>
+
+
+    <!-- Arabic word container size -->
+    <dimen name="arabic_word_padding">10dp</dimen>
+    <dimen name="arabic_word_margin">8dp</dimen>
+
+    <!--    bookmark dimens-->
+    <dimen name="chip_group_min_height">30dp</dimen>
+</resources>

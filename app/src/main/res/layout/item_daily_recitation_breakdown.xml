@@ -3,29 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp"
+    android:padding="@dimen/padding_small"
     android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/tvDate"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/daily_recitation_date_width"
         android:layout_height="wrap_content"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/text_size_small"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="0dp"
-        android:layout_height="8dp"
+        android:layout_height="@dimen/height_extra_tiny"
         android:layout_weight="1"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="@dimen/margin_intermediate"
         android:progressTint="@color/primaryColor"/>
 
     <TextView
         android:id="@+id/tvMinutes"
-        android:layout_width="70dp"
+        android:layout_width="@dimen/daily_recitation_minutes_width"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_small"
         android:textAlignment="textEnd"/>
 
 </LinearLayout>

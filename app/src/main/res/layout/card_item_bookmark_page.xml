@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bookmarkPageCard"
@@ -24,8 +24,8 @@
                 android:id="@+id/bookmarkPageNumberFrameLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="19dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -51,12 +51,12 @@
                 android:id="@+id/bookmarkPageTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="Page"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="@id/bookmarkPageNumberFrameLayout"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,11 +64,11 @@
                 android:id="@+id/bookmarkPageSurahInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_tiny"
                 android:text="From Surah Al-Fatihah"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintStart_toStartOf="@id/bookmarkPageNumberFrameLayout"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkPageTitle" />
 
@@ -76,12 +76,12 @@
                 android:id="@+id/bookmarkPageNotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="3dp"
-                android:paddingBottom="8dp"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:paddingBottom="@dimen/padding_small"
                 android:text="Notes"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintStart_toStartOf="@id/bookmarkPageNumberFrameLayout"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkPageSurahInfo" />
 
@@ -90,8 +90,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_vertical_dots_menu"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -99,11 +99,11 @@
                 android:id="@+id/bookmarkPageJuzInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="Juz 1"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/bookmarkPageMenu"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -112,11 +112,11 @@
                 android:id="@+id/bookmarkPageDateAdded"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="Added on Jan 1, 2024"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintEnd_toStartOf="@id/bookmarkPageMenu"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkPageJuzInfo" />
 

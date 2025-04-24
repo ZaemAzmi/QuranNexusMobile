@@ -8,16 +8,16 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="@dimen/padding_small">
 
         <TextView
             android:id="@+id/chapterNumberText"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="@dimen/card_item_chapter_number_width"
+            android:layout_height="@dimen/card_item_chapter_number_height"
             android:gravity="center"
             android:background="@drawable/quiz_chapter"
             android:textColor="@android:color/black"
-            android:textSize="30sp"
+            android:textSize="@dimen/recitation_text_size"
             android:textStyle="bold" />
     </FrameLayout>
 </layout>

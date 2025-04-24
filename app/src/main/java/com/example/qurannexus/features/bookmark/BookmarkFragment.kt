@@ -48,7 +48,9 @@ class BookmarkFragment : Fragment() {
                 4 -> "Vocabulary"
                 5 -> "Recently Read"
                 else -> "Chapters"
+
             }
+
             tab.view.background = ContextCompat.getDrawable(requireContext(), R.drawable.tab_background_selector)
         }.attach()
 

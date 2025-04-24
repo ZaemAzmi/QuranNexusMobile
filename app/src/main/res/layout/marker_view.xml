@@ -4,12 +4,12 @@
     android:layout_height="wrap_content"
     android:background="@color/selected_item_circle_color"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="@dimen/padding_small">
 
     <TextView
         android:id="@+id/tvContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_size_tiny"
         android:textColor="@android:color/black" />
 </LinearLayout>

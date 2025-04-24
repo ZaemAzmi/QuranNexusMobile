@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="16dp"
+    android:padding="@dimen/padding_medium"
     android:background="@color/light_green_side_nav">
 
     <ImageView
         android:id="@+id/nav_header_logo"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/nav_header_logo_width"
+        android:layout_height="@dimen/nav_header_logo_height"
         android:src="@drawable/quran_nexus_logo" />
 
     <TextView
@@ -20,7 +20,7 @@
         android:fontFamily="sans-serif-thin"
         android:text="@string/app_name"
         android:textColor="@android:color/black"
-        android:textSize="40sp"
+        android:textSize="@dimen/text_size_nav_header_title"
         android:textStyle="bold" />
 
 </LinearLayout>

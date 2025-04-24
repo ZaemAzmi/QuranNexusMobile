@@ -1,6 +1,7 @@
 package com.example.qurannexus.features.home.achievement
 
 import android.content.Context
+import android.util.Log
 import com.example.qurannexus.R
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.network.ApiService
@@ -8,14 +9,36 @@ import com.example.qurannexus.features.home.models.Badge
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.atomic.AtomicReference
 
 class AchievementService(private val context: Context) {
     private val quranApi = ApiService.getQuranClient().create(QuranApi::class.java)
+    private val tokenCache = AtomicReference<String?>(null)
     // Use lazy initialization to defer SharedPreferences access
-    private val authToken by lazy {
-        context.applicationContext.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .getString("token", null)
+    init {
+        // Load token on a background thread during initialization
+        Thread {
+            try {
+                val token = context.applicationContext.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                    .getString("token", null)
+                tokenCache.set(token)
+                Log.d("AchievementService", "Token loaded in background")
+            } catch (e: Exception) {
+                Log.e("AchievementService", "Error loading token", e)
+            }
+        }.start()
     }
+    // Safe method to get token
+    private fun getAuthToken(): String? {
+        return tokenCache.get() ?: run {
+            // If not cached yet, load it (should be rare after initialization)
+            val token = context.applicationContext.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                .getString("token", null)
+            tokenCache.set(token)
+            token
+        }
+    }
+
     companion object {
         // Predefined achievements
         @JvmField
@@ -45,7 +68,7 @@ class AchievementService(private val context: Context) {
     }
 
     fun getAchievementStatus(callback: (Map<String, AchievementStatus>?) -> Unit) {
-        val token = authToken
+        val token = getAuthToken()
         if (token != null) {
             quranApi.getAchievementStatus("Bearer $token").enqueue(object : Callback<AchievementStatusResponse> {
                 override fun onResponse(
@@ -67,23 +90,27 @@ class AchievementService(private val context: Context) {
     }
 
     fun unlockAchievement(achievementId: String, callback: (Boolean) -> Unit) {
-        authToken?.let { token ->
+        val token = getAuthToken()
+        if(token != null){
             val request = UnlockAchievementRequest(achievementId)
             quranApi.unlockAchievement("Bearer $token", request).enqueue(object : Callback<BaseResponse> {
                 override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
                     callback(response.isSuccessful && response.body()?.status == "success")
                 }
-
                 override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
                     callback(false)
                 }
             })
-        } ?: callback(false)
+        } else{
+            callback(false)
+        }
     }
-
     @JvmOverloads
     fun checkStreakEligibility(callback: StreakCheckCallback) {
-        authToken?.let { token ->
+        // Get token on current thread from cache (fast)
+        val token = getAuthToken()
+
+        if (token != null) {
             quranApi.checkStreakAchievement("Bearer $token").enqueue(object : Callback<StreakResponse> {
                 override fun onResponse(call: Call<StreakResponse>, response: Response<StreakResponse>) {
                     if (response.isSuccessful && response.body()?.status == "success") {
@@ -99,7 +126,9 @@ class AchievementService(private val context: Context) {
                     callback.onStreakChecked(false, 0)
                 }
             })
-        } ?: callback.onStreakChecked(false, 0)
+        } else {
+            callback.onStreakChecked(false, 0)
+        }
     }
 
 }

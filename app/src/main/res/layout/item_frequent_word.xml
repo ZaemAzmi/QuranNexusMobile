@@ -2,9 +2,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/wordCard"
-    android:layout_width="140dp"
-    android:layout_height="160dp"
-    android:layout_margin="4dp"
+    android:layout_width="@dimen/frequent_word_card_width"
+    android:layout_height="@dimen/frequent_word_card_height"
+    android:layout_margin="@dimen/margin_tiny"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="@dimen/padding_intermediate">
 
         <TextView
             android:id="@+id/arabicTextView"
@@ -25,25 +25,25 @@
             android:fontFamily="@font/uthmanic_scripts_hafs"
             android:gravity="center"
             android:textColor="@color/primaryColor"
-            android:textSize="28sp" />
+            android:textSize="@dimen/recitation_text_size" />
 
         <TextView
             android:id="@+id/translationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_intermediate"
             android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_size_medium" />
 
         <TextView
             android:id="@+id/occurrencesTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_intermediate"
             android:gravity="center"
             android:textColor="@color/gray"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_size_small" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

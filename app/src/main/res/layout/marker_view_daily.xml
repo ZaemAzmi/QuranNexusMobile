@@ -6,7 +6,7 @@
     app:cardCornerRadius="6dp"
     app:cardElevation="4dp"
     app:cardBackgroundColor="@color/white"
-    app:contentPadding="8dp">
+    app:contentPadding="@dimen/padding_small">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,7 +17,7 @@
             android:id="@+id/tvMarkerDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_small"
             android:textColor="@color/textColorSecondary"
             android:text="Jan 01" />
 
@@ -25,7 +25,7 @@
             android:id="@+id/tvMarkerValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_small"
             android:textStyle="bold"
             android:textColor="@color/primaryColor"
             android:text="45 mins" />

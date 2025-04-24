@@ -28,7 +28,7 @@ class AuthService {
         private const val KEY_USER_ID = "user_id"
         private const val KEY_USERNAME = "username"
     }
-
+    private var cachedToken: String? = null
     private val authApi: AuthApi
 //    private val gson = GsonBuilder()
 //        .setLenient()
@@ -68,20 +68,31 @@ class AuthService {
                 if (response.isSuccessful && response.body() != null) {
                     val token = response.body()!!.token
                     Log.d("AuthService", "Received token format: $token")
-                    Log.d("AuthService", "Token parts: ${token.split('|')}")
-                    // Save token to SharedPreferences
-                    context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                        .edit()
-                        .putString("token", token)
-                        .apply()
 
-                    // Set token in ApiService
-                    ApiService.setAuthToken(token)
+                    // Cache token immediately
+                    cachedToken = token
 
-                    Log.d("AuthService", "Login successful, token received")
-                    Log.d("AuthService", "Login successful,${token.toString()}")
+                    // Save token in background thread
+                    Thread {
+                        try {
+                            // Save token to SharedPreferences
+                            context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                                .edit()
+                                .putString("token", token)
+                                .apply()
 
+                            // Set token in ApiService
+                            ApiService.setAuthToken(token)
+
+                            Log.d("AuthService", "Login successful, token saved")
+                        } catch (e: Exception) {
+                            Log.e("AuthService", "Error saving token", e)
+                        }
+                    }.start()
+
+                    // Callback immediately without waiting for SharedPreferences
                     callback.onSuccess(token)
+
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("AuthService", "Login failed: $errorBody")
@@ -95,6 +106,7 @@ class AuthService {
             }
         })
     }
+
 
     fun getUserProfile(token: String, callback: (User?) -> Unit) {
         Log.d("AuthService", "Fetching user profile with token: $token")
@@ -197,14 +209,24 @@ class AuthService {
     }
 
     private fun clearUserData(context: Context) {
-        // Clear SharedPreferences
-        context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .edit()
-            .clear()
-            .apply()
+        // Clear cache
+        cachedToken = null
 
-        // Clear API service token
+        // Clear API service token immediately
         ApiService.clearInstance()
+
+        // Clear SharedPreferences in background
+        Thread {
+            try {
+                // Clear SharedPreferences
+                context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .apply()
+            } catch (e: Exception) {
+                Log.e("AuthService", "Error clearing user data", e)
+            }
+        }.start()
     }
 
     private fun saveAuthToken(context: Context, token: String) {
@@ -215,7 +237,18 @@ class AuthService {
     }
 
     fun getStoredToken(context: Context): String? {
-        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        // Return cached token if available
+        if (cachedToken != null) {
+            return cachedToken
+        }
+
+        // Otherwise read from SharedPreferences
+        val token = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             .getString(KEY_TOKEN, null)
+
+        // Cache for future use
+        cachedToken = token
+
+        return token
     }
 }

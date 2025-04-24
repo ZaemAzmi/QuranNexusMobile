@@ -16,13 +16,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:lineSpacingExtra="4dp"
-        android:layout_marginBottom="45dp"
+        android:lineSpacingExtra="@dimen/margin_tiny"
+        android:layout_marginBottom="@dimen/meow_bottom_nav_height"
         android:textColor="@color/white"
-        android:fontFamily="@font/uthmanic_scripts_hafs"
-        android:padding="16dp"
-        android:textSize="20sp" />
-
+        android:padding="@dimen/padding_medium"
+        android:textSize="@dimen/text_size_large" />
     <include
         android:id="@+id/audioPlayerLayout"
         layout="@layout/layout_floating_audio_player" />

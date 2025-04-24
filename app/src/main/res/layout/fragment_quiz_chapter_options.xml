@@ -20,8 +20,8 @@
                 android:id="@+id/backArrowImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="25dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_large"
                 android:background="@drawable/bg_circle_white"
                 android:gravity="left"
                 android:src="@drawable/ic_arrow_left"/>
@@ -32,20 +32,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingBottom="16dp"
+                android:paddingBottom="@dimen/padding_medium"
                 android:text="Select a Chapter"
                 android:textColor="#9BDDF6"
-                android:textSize="30sp"
+                android:textSize="@dimen/text_size_score"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewChapters"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingTop="16dp"
+                    android:paddingTop="@dimen/padding_medium"
                     android:clipToPadding="false"
-                    android:layout_marginTop="46dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_xxlarge"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     tools:listitem="@layout/card_item_quiz_chapter" />
 
 

@@ -4,16 +4,16 @@
     android:layout_height="?attr/actionBarSize"
     android:gravity="center_vertical|end"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="@dimen/padding_small">
 
     <!-- Bookmark Button -->
     <ImageView
         android:id="@+id/bookmarkButton"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/width_xlarge"
+        android:layout_height="@dimen/width_xlarge"
         android:src="@drawable/ic_heart"
-        android:padding="4dp"
-        android:layout_marginEnd="8dp"
+        android:padding="@dimen/padding_tiny"
+        android:layout_marginEnd="@dimen/margin_intermediate"
         android:clickable="true"
         android:focusable="true"
         android:contentDescription="Bookmark this word" />

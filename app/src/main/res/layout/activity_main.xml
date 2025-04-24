@@ -15,10 +15,10 @@
 
         <ImageView
             android:id="@+id/sideMenuButton"
-            android:layout_width="43dp"
-            android:layout_height="39dp"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="30dp"
+            android:layout_width="@dimen/side_menu_icon_width"
+            android:layout_height="@dimen/side_menu_icon_height"
+            android:layout_marginStart="@dimen/side_menu_icon_margin_start"
+            android:layout_marginTop="@dimen/side_menu_icon_margin_top"
             app:srcCompat="@drawable/ic_menu" />
 
         <FrameLayout

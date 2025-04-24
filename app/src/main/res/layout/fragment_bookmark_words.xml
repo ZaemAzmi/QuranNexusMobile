@@ -17,7 +17,7 @@
             android:id="@+id/viewTypeChipGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="@dimen/padding_medium"
             app:singleSelection="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -27,8 +27,8 @@
             android:id="@+id/chipGroupFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="20dp"
-            android:padding="16dp"
+            android:minHeight="@dimen/chip_group_min_height"
+            android:padding="@dimen/padding_medium"
             app:singleSelection="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -84,15 +84,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="@dimen/padding_medium"
                 android:gravity="center_vertical"
                 android:background="#20000000"
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageButton
                     android:id="@+id/toggleRotationButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/width_xxxlarge"
+                    android:layout_height="@dimen/height_xxxlarge"
                     android:src="@drawable/ic_pause"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Toggle rotation" />
@@ -117,7 +117,7 @@
             android:id="@+id/radarChart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/margin_medium"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewTypeChipGroup" />

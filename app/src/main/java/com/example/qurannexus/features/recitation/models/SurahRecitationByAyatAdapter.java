@@ -253,7 +253,9 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
             // Set the waqaf sign and number
             waqafView.setText(arabicNumber);
             waqafView.setTextColor(ContextCompat.getColor(context, R.color.white));
-            waqafView.setTextSize(20f);
+            float textSizeSp = context.getResources().getDimension(R.dimen.arabic_text_size) /
+                    context.getResources().getDisplayMetrics().density;
+            waqafView.setTextSize(textSizeSp);
             waqafView.setPadding(8, 8, 8, 8);
             waqafView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
             waqafView.setTextDirection(View.TEXT_DIRECTION_RTL);
@@ -267,7 +269,9 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
         TextView wordView = new TextView(context);
         wordView.setText(word.getText());
         wordView.setTextColor(ContextCompat.getColor(context, R.color.white));
-        wordView.setTextSize(20f);
+        float textSizeSp = context.getResources().getDimension(R.dimen.arabic_text_size) /
+                context.getResources().getDisplayMetrics().density;
+        wordView.setTextSize(textSizeSp);
         wordView.setPadding(8, 8, 8, 8);
         wordView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
         wordView.setTextDirection(View.TEXT_DIRECTION_RTL);

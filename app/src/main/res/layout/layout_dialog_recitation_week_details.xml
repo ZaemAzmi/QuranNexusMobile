@@ -4,31 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
 
     <TextView
         android:id="@+id/tvDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Weekly Recitation Details"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_size_large"
         android:textStyle="bold"
         android:textColor="@color/primaryColor"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="@dimen/margin_medium"/>
 
     <TextView
         android:id="@+id/tvWeekDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Mar 01 - Mar 07"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="@dimen/margin_medium"/>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="@dimen/margin_medium"
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp">
 
@@ -94,12 +94,12 @@
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/progressDaysRecited"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/width_xxxlarge"
+                    android:layout_height="@dimen/height_xxxlarge"
                     android:layout_gravity="center"
                     app:indicatorColor="@color/primaryColor"
                     app:trackColor="#E0E0E0"
-                    app:indicatorSize="48dp"
+                    app:indicatorSize="@dimen/daily_recitation_indicator_size"
                     app:trackThickness="4dp"
                     app:indicatorDirectionCircular="clockwise"/>
 
@@ -108,7 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5 of 7"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_size_tiny"
                     android:textStyle="bold"
                     android:layout_gravity="center"/>
             </FrameLayout>
@@ -119,9 +119,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Daily Breakdown"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="@dimen/margin_intermediate"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDailyBreakdown"

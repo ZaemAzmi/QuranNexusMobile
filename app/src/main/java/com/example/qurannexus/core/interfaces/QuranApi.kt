@@ -87,7 +87,11 @@ interface QuranApi {
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 20
     ): Call<WordOccurrenceResponse>
-
+    @GET("words/details")
+    fun getWordDetailsAnalysis(
+        @Query("word_text")
+        wordText: String)
+    : Call<com.example.qurannexus.features.analysis.models.WordDetailsResponse>
     @GET("words/distribution")
     fun getWordDistribution(
         @Query("word_text") wordText: String

@@ -11,15 +11,15 @@
         android:orientation="vertical"
         android:gravity="center"
         android:background="#72FBD4"
-        android:padding="8dp"
+        android:padding="@dimen/padding_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:clickable="true">
 
         <ImageView
             android:id="@+id/ivPopupBadgeIcon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="@dimen/popup_badge_width"
+            android:layout_height="@dimen/popup_badge_height"
             android:src="@drawable/badge_12"
             android:contentDescription="Badge Icon" />
 
@@ -28,9 +28,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Badge Name"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_small"
             android:gravity="center"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_intermediate"
             android:textStyle="bold"
             android:textColor="@color/black" />
 
@@ -39,9 +39,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Badge Description"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_tiny"
             android:gravity="center"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/margin_tiny"
             android:textColor="@color/gray" />
 
         <Button
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:text="Share"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_medium"
             android:backgroundTint="@color/black"
             android:textColor="@color/white" />
     </LinearLayout>

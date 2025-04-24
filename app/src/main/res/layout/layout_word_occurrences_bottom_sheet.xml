@@ -4,16 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="16dp"
-    android:paddingBottom="24dp">
+    android:paddingTop="@dimen/padding_medium"
+    android:paddingBottom="@dimen/padding_large">
 
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="16dp">
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_medium">
 
         <TextView
             android:id="@+id/titleText"
@@ -21,17 +21,17 @@
             android:layout_height="wrap_content"
             android:text="Word Occurrences"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_xlarge"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/subtitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/margin_tiny"
             android:text="Click an occurrence to view the verse"
             android:textColor="@android:color/darker_gray"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_size_small" />
 
     </LinearLayout>
 
@@ -48,8 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="8dp"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_small"
         android:maxHeight="400dp" />
 
 </LinearLayout>

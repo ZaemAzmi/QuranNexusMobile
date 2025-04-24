@@ -14,20 +14,20 @@
         <ImageView
             android:id="@+id/previousButton"
             android:src="@drawable/ic_arrow_left"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/width_xlarge"
+            android:layout_height="@dimen/height_xlarge"
             android:background="@drawable/bg_circle_white"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/margin_medium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <include
             android:id="@+id/dailyWordSection"
             android:layout_width="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="@dimen/margin_semi_medium"
             app:layout_constraintTop_toBottomOf="@id/previousButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,15 +38,15 @@
             android:id="@+id/chartsViewPager"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginTop="16dp"
-            android:padding="16dp"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:padding="@dimen/padding_medium"
             app:layout_constraintTop_toBottomOf="@id/dailyWordSection"/>
 
         <!-- Dots indicator -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/dotsIndicator"
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="@dimen/quiz_category_dots_height"
             android:background="@android:color/transparent"
             app:tabBackground="@drawable/tab_selector"
             app:tabGravity="center"
@@ -55,11 +55,11 @@
 
         <Button
             android:id="@+id/answerQuizButton"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="@dimen/answer_quiz_width"
+            android:layout_height="@dimen/answer_quiz_height"
+            android:layout_marginTop="@dimen/margin_medium"
             android:text="Answer Quiz!"
-            android:textSize="30sp"
+            android:textSize="@dimen/text_size_score"
             android:textStyle="bold"
             android:backgroundTint="#418C97"
             app:layout_constraintTop_toBottomOf="@id/dotsIndicator"

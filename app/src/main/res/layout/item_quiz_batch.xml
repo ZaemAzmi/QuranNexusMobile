@@ -10,7 +10,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/margin_intermediate"
         app:cardCornerRadius="8dp"
         android:backgroundTint="@color/green_blue_100"
         app:cardElevation="4dp">
@@ -18,13 +18,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="@dimen/padding_medium">
 
             <TextView
                 android:id="@+id/questionRangeText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/scoreContainer"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,14 +44,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/holo_green_dark"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/statusText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_small" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

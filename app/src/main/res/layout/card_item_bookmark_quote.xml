@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/quoteCard"
@@ -16,18 +16,18 @@
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="110dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/bookmarkQuoteCardTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="Power of Dua"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,12 +35,12 @@
                 android:id="@+id/bookmarkQuoteDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_tiny"
                 android:maxEms="25"
                 android:text="Our Lord, grant us mercy from Yourself and guide us in our affair in the right way."
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkQuoteCardTitle" />
 
@@ -49,11 +49,11 @@
                 android:id="@+id/bookmarkQuoteSource"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="Surah Al-Kahf 18:10"
                 android:textColor="@color/white"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkQuoteDescription" />
 
@@ -63,8 +63,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_vertical_dots_menu"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
@@ -73,8 +73,8 @@
                 android:id="@+id/bookmarkQuoteCardArrowIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_semi_medium"
                 android:src="@drawable/ic_upright_arrow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

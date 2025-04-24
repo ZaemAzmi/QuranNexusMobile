@@ -10,13 +10,13 @@
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
         <!-- Menu placeholder for parent activity -->
         <View
             android:id="@+id/menuPlaceholder"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/highlight_item_icon_size"
+            android:layout_height="@dimen/highlight_item_icon_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,7 +34,7 @@
                 android:id="@+id/surahNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_size_title"
                 android:textColor="@android:color/white"
                 android:gravity="center"
                 android:text="@string/surah_name_placeholder" />
@@ -43,83 +43,31 @@
                 android:id="@+id/englishSurahNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textColor="@android:color/white"
                 android:gravity="center"
                 android:text="@string/english_surah_name_placeholder" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/bookmarkContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_bookmark_container"
-            android:padding="4dp"
-            android:layout_marginStart="8dp"
+        <!-- Menu button -->
+        <ImageView
+            android:id="@+id/bookmarkMenuIcon"
+            android:layout_width="@dimen/width_xxxlarge"
+            android:layout_height="@dimen/height_xxxlarge"
+            android:padding="@dimen/highlight_item_icon_padding"
+            android:src="@drawable/ic_vertical_dots_menu"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp">
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/chapterBookmarkLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp">
-
-                <ImageView
-                    android:id="@+id/bookmarkIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    app:srcCompat="@drawable/ic_bookmark" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chapter"
-                    android:textSize="10sp"
-                    android:textColor="@android:color/white"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#4DFFFFFF"
-                android:layout_marginHorizontal="8dp"/>
-
-            <LinearLayout
-                android:id="@+id/pageBookmarkLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/pageBookmarkIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    app:srcCompat="@drawable/ic_bookmark" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Page"
-                    android:textSize="10sp"
-                    android:textColor="@android:color/white"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/recitationFragmentContainerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="@dimen/recitation_header_height"
         tools:layout="@layout/fragment_by_ayat_recitation" />
 </FrameLayout>

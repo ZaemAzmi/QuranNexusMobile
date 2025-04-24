@@ -25,8 +25,8 @@
 
                 <ImageView
                     android:id="@+id/backButton"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/width_medium"
+                    android:layout_height="@dimen/height_medium"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_arrow_left"
                     app:tint="@color/black" />
@@ -35,11 +35,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="@dimen/margin_xlarge"
                     android:layout_toEndOf="@+id/backButton"
                     android:text="Word Analysis"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/padding_medium">
 
             <!-- Search section -->
             <androidx.cardview.widget.CardView
@@ -68,28 +68,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Search Words"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="@dimen/margin_tiny"
                         android:text="Find specific words to see their distribution and occurrences in the Quran"
                         android:textColor="@color/gray"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_small" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
+                        android:layout_marginTop="@dimen/margin_medium">
 
                         <EditText
                             android:id="@+id/searchEditText"
@@ -97,10 +97,10 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/search_bg"
                             android:hint="Search for a word..."
-                            android:padding="12dp"
+                            android:padding="@dimen/padding_intermediate"
                             android:textColor="@color/black"
                             android:textColorHint="@color/light_gray"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_size_small"
                             app:layout_constraintEnd_toStartOf="@+id/searchButton"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -109,9 +109,10 @@
                             android:id="@+id/searchButton"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
-                            android:layout_marginStart="8dp"
+                            android:layout_marginStart="@dimen/margin_small"
                             android:backgroundTint="@color/primaryColor"
                             android:text="Search"
+                            android:textSize="@dimen/text_size_small"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="@+id/searchEditText"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +130,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Most Frequent Words"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -138,18 +139,18 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
-                android:paddingBottom="8dp"
+                android:paddingBottom="@dimen/padding_small"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <!-- Word Categories Section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:text="Word Categories"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
             <!-- Heaven Category -->
@@ -157,7 +158,7 @@
                 android:id="@+id/heavenCategoryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
@@ -168,18 +169,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/word_analysis_image_card_height_small"
+                        android:layout_height="@dimen/word_analysis_image_card_height_small"
                         android:src="@drawable/ic_heaven"
                         app:tint="@color/primaryColor" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/margin_medium"
                         android:orientation="vertical">
 
                         <TextView
@@ -187,16 +188,16 @@
                             android:layout_height="wrap_content"
                             android:text="Heaven (Jannah)"
                             android:textColor="@color/black"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="@dimen/margin_tiny"
                             android:text="Words related to paradise, rewards, and blessings in the Quran"
                             android:textColor="@color/gray"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -206,7 +207,7 @@
                 android:id="@+id/hellCategoryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
@@ -217,18 +218,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/word_analysis_image_card_height_small"
+                        android:layout_height="@dimen/word_analysis_image_card_height_small"
                         android:src="@drawable/ic_hell"
                         app:tint="#E53935" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/margin_medium"
                         android:orientation="vertical">
 
                         <TextView
@@ -236,16 +237,16 @@
                             android:layout_height="wrap_content"
                             android:text="Hell (Jahannam)"
                             android:textColor="@color/black"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="@dimen/margin_tiny"
                             android:text="Words related to hellfire, punishment, and consequences in the Quran"
                             android:textColor="@color/gray"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -265,18 +266,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/word_analysis_image_card_height_small"
+                        android:layout_height="@dimen/word_analysis_image_card_height_small"
                         android:src="@drawable/ic_prophet"
                         app:tint="#673AB7" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/margin_medium"
                         android:orientation="vertical">
 
                         <TextView
@@ -284,16 +285,16 @@
                             android:layout_height="wrap_content"
                             android:text="Prophets (Anbiya)"
                             android:textColor="@color/black"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="@dimen/margin_tiny"
                             android:text="Names and mentions of prophets throughout the Quran"
                             android:textColor="@color/gray"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -302,7 +303,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/margin_large"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 
@@ -311,33 +312,34 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/gradient_primary"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Did You Know?"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/wordFactTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:text="The word 'Rahman' (الرحمن) and 'Raheem' (الرحيم) which refer to Allah's mercy appear 57 and 114 times respectively in the Quran."
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_medium" />
 
                     <Button
                         android:id="@+id/wordFactButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:background="?attr/selectableItemBackground"
                         android:text="Next Fact"
+                        android:textSize="@dimen/text_size_medium"
                         android:textAllCaps="false"
                         android:textColor="@color/white" />
                 </LinearLayout>

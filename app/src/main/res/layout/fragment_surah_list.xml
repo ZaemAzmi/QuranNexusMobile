@@ -5,21 +5,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <View
+        android:id="@+id/sideMenuView"
+        android:layout_width="@dimen/side_menu_icon_width"
+        android:layout_height="@dimen/side_menu_icon_height"
+        android:layout_marginStart="@dimen/side_menu_icon_margin_start"
+        android:layout_marginTop="@dimen/side_menu_icon_margin_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <SearchView
         android:id="@+id/searchSurahView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_semi_medium"
         android:background="@drawable/search_view_bg"
-        android:queryHint="Find Surah..."
-        android:iconifiedByDefault="false"
         android:elevation="@dimen/elevation_small"
+        android:iconifiedByDefault="false"
+        android:queryHint="Find Surah..."
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/sideMenuView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.85"/>
+        app:layout_constraintWidth_percent="0.85" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/SurahRecyclerView"

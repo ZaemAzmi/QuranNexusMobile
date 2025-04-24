@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Failed to load Surahs"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_medium"
         android:textColor="?android:textColorPrimary"
         app:layout_constraintBottom_toTopOf="@id/retryButton"
         app:layout_constraintEnd_toEndOf="parent"

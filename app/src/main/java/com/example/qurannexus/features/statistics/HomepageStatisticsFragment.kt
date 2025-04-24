@@ -1,6 +1,7 @@
 package com.example.qurannexus.features.statistics
 
 import android.animation.ValueAnimator
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -58,7 +59,10 @@ class HomepageStatisticsFragment : Fragment() {
         setupViewPager()
         setupInfoButton()
         observeViewModel()
-        fetchData()
+
+        view.post{
+            fetchData()
+        }
     }
 
     private fun initializeViews(view: View) {
@@ -254,13 +258,25 @@ class HomepageStatisticsFragment : Fragment() {
     }
 
     private fun fetchData() {
-        val token = requireContext().getSharedPreferences("UserPrefs", android.content.Context.MODE_PRIVATE)
-            .getString("token", null)
+        // Perform SharedPreferences access in a background thread
+        Thread {
+            try {
+                val token = context?.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                    ?.getString("token", null)
 
-        if (token != null) {
-            viewModel.fetchStatistics(token)
-        } else {
-            showError("Please log in again")
-        }
+                // Switch back to main thread to call ViewModel
+                activity?.runOnUiThread {
+                    if (token != null) {
+                        viewModel.fetchStatistics(token)
+                    } else {
+                        showError("Please log in again")
+                    }
+                }
+            } catch (e: Exception) {
+                activity?.runOnUiThread {
+                    showError("Error accessing user data")
+                }
+            }
+        }.start()
     }
 }

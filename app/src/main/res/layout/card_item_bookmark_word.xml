@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    android:padding="@dimen/padding_medium">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -16,17 +16,17 @@
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="@dimen/height_xxxlarge">
 
             <TextView
                 android:id="@+id/bookmarkWordArabicText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="@dimen/margin_xlarge"
+                android:layout_marginTop="@dimen/margin_semi_medium"
                 android:text="Al-Fatihah"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -35,11 +35,11 @@
                 android:id="@+id/bookmarkWordEnglishText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="@dimen/margin_xlarge"
+                android:layout_marginTop="@dimen/margin_semi_medium"
                 android:text="The Opener"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_size_small"
                 app:layout_constraintStart_toEndOf="@+id/bookmarkWordArabicText"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,8 +47,8 @@
                 android:id="@+id/bookmarkQuoteCardArrowIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginTop="@dimen/margin_intermediate"
+                android:layout_marginEnd="@dimen/margin_semi_medium"
                 android:src="@drawable/ic_upright_arrow_word_card"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

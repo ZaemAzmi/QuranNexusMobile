@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="16dp"
+    android:layout_margin="@dimen/margin_medium"
     android:elevation="4dp"
     android:padding="16dp">
 
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="This is a quote"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,9 +26,9 @@
             android:id="@+id/btnBookmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_medium"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp"
+            android:padding="@dimen/padding_small"
             android:src="@drawable/ic_heart"
             app:layout_constraintTop_toBottomOf="@+id/tvQuote"
             app:layout_constraintStart_toStartOf="parent" />
@@ -38,14 +38,14 @@
             android:id="@+id/btnShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="@dimen/margin_intermediate"
+            android:layout_marginTop="@dimen/margin_medium"
             android:backgroundTint="@color/light_green_button"
             android:drawableStart="@drawable/ic_share"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_small"
             android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:paddingStart="@dimen/padding_intermediate"
+            android:paddingEnd="@dimen/padding_intermediate"
             android:text="Spread the Khair"
             app:layout_constraintStart_toEndOf="@+id/btnBookmark"
             app:layout_constraintTop_toBottomOf="@+id/tvQuote" />

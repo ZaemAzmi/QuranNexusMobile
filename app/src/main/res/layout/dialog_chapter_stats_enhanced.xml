@@ -10,46 +10,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="@dimen/padding_large">
 
         <TextView
             android:id="@+id/tvChapterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_xlarge"
             android:textStyle="bold"
             android:textColor="#1976D2"/>
 
         <View
-            android:layout_width="40dp"
+            android:layout_width="@dimen/item_chapter_width"
             android:layout_height="3dp"
             android:background="#2196F3"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginTop="@dimen/margin_semi_medium"
+            android:layout_marginBottom="@dimen/margin_medium"/>
 
         <TextView
             android:id="@+id/tvBookmarkedWords"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_medium"
             android:textColor="#424242"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="@dimen/margin_intermediate"/>
 
         <TextView
             android:id="@+id/tvProgressLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_small"
             android:textColor="#757575"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="@dimen/margin_medium"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
-            android:layout_height="8dp"
+            android:layout_height="@dimen/height_extra_tiny"
             android:progressDrawable="@drawable/progress_gradient"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="@dimen/margin_intermediate"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

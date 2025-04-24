@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
         <!-- Loading Group -->
         <androidx.constraintlayout.widget.Group
@@ -21,7 +21,7 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="360dp"
+            android:layout_marginTop="@dimen/quiz_result_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,9 +30,9 @@
             android:id="@+id/loadingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_medium"
             android:text="Calculating results..."
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progressBar" />
@@ -46,8 +46,8 @@
 
         <ImageButton
             android:id="@+id/backButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/width_xxxlarge"
+            android:layout_height="@dimen/height_xxxlarge"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
             android:src="@drawable/ic_arrow_left"
@@ -58,9 +58,9 @@
             android:id="@+id/resultTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="@dimen/margin_xlarge"
             android:text="Quiz Results"
-            android:textSize="24sp"
+            android:textSize="@dimen/text_size_xxlarge"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +70,7 @@
             android:id="@+id/resultsCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/margin_large"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
             app:layout_constraintTop_toBottomOf="@id/resultTitleText">
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/green_blue_100"
-                android:padding="16dp">
+                android:padding="@dimen/padding_medium">
 
                 <TextView
                     android:id="@+id/scoreText"
@@ -88,33 +88,33 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Score: 0%"
-                    android:textSize="32sp"
+                    android:textSize="@dimen/text_size_score"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/correctAnswersText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_medium"
                     android:text="Correct Answers: 0"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_size_large" />
 
                 <TextView
                     android:id="@+id/totalQuestionsText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/margin_intermediate"
                     android:text="Total Questions: 0"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_size_large" />
 
                 <TextView
                     android:id="@+id/motivationText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_medium"
                     android:gravity="center"
                     android:text="Keep practicing!"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_size_large"
                     android:textStyle="italic" />
             </LinearLayout>
 
@@ -123,7 +123,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent">
 
@@ -131,7 +131,7 @@
                 android:id="@+id/nextBatchButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/margin_intermediate"
                 android:backgroundTint="#05B5A5"
                 android:textColor="@color/black"
                 android:text="Next Batch" />
@@ -140,7 +140,7 @@
                 android:id="@+id/previousBatchButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/margin_intermediate"
                 android:backgroundTint="#05B5A5"
                 android:textColor="@color/black"
                 android:text="Previous Batch" />

@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_gradient_daily_word"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -21,13 +21,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingVertical="8dp">
+            android:paddingVertical="@dimen/padding_small">
 
             <ImageView
                 android:id="@+id/backButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="8dp"
+                android:layout_width="@dimen/width_xlarge"
+                android:layout_height="@dimen/height_xlarge"
+                android:padding="@dimen/padding_small"
                 android:src="@drawable/ic_arrow_left"
                 android:background="@drawable/bg_circle_white"
                 android:contentDescription="Back" />
@@ -37,16 +37,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Word Analysis"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/textColorPrimary"/>
 
             <ImageView
                 android:id="@+id/bookmarkButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="6dp"
+                android:layout_width="@dimen/width_xlarge"
+                android:layout_height="@dimen/height_xlarge"
+                android:padding="@dimen/padding_tiny"
                 android:src="@drawable/ic_heart"
                 android:background="@drawable/bg_circle_white"/>
         </LinearLayout>
@@ -61,13 +61,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="16dp">
+                android:paddingTop="@dimen/padding_medium">
 
                 <!-- Word Text Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
@@ -75,14 +75,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="@dimen/padding_medium">
 
                         <TextView
                             android:id="@+id/wordText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Word"
-                            android:textSize="42sp"
+                            android:textSize="@dimen/text_size_word_analysis"
                             android:textStyle="bold"
                             android:gravity="center"
                             android:textColor="@color/textColorPrimary"/>
@@ -91,22 +91,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:background="#E0E0E0"
-                            android:layout_marginVertical="12dp"/>
+                            android:layout_marginVertical="@dimen/margin_semi_medium"/>
 
                         <TextView
                             android:id="@+id/translationText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
+                            android:textSize="@dimen/text_size_large"
                             android:textColor="@color/textColorPrimary"/>
 
                         <TextView
                             android:id="@+id/transliterationText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_medium"
                             android:textStyle="italic"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="@dimen/margin_tiny"
                             android:textColor="@color/textColorSecondary"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -115,7 +115,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
@@ -123,42 +123,42 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="@dimen/padding_medium">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="First Occurrence Details"
-                            android:textSize="18sp"
+                            android:textSize="@dimen/text_size_large"
                             android:textStyle="bold"
                             android:textColor="@color/textColorPrimary"
-                            android:layout_marginBottom="12dp"/>
+                            android:layout_marginBottom="@dimen/margin_semi_medium"/>
 
                         <TextView
                             android:id="@+id/surahNameText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
+                            android:textSize="@dimen/text_size_medium"
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
                         <TextView
                             android:id="@+id/verseText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
+                            android:textSize="@dimen/text_size_medium"
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
                         <TextView
                             android:id="@+id/ayahKeyText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
+                            android:textSize="@dimen/text_size_medium"
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
 
                         <TextView
                             android:id="@+id/pageIdText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
+                            android:textSize="@dimen/text_size_medium"
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
 
                         <Button
                             android:id="@+id/playAudioButton"
@@ -166,7 +166,7 @@
                             android:layout_height="wrap_content"
                             android:text="Listen to Verse"
                             android:visibility="gone"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/margin_intermediate"
                             android:backgroundTint="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -175,7 +175,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
@@ -183,39 +183,39 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="@dimen/padding_medium">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Distribution Analysis"
-                            android:textSize="18sp"
+                            android:textSize="@dimen/text_size_large"
                             android:textStyle="bold"
                             android:textColor="@color/textColorPrimary"
-                            android:layout_marginBottom="12dp"/>
+                            android:layout_marginBottom="@dimen/margin_semi_medium"/>
 
                         <TextView
                             android:id="@+id/tvTotalOccurrences"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_medium"
                             android:textColor="@color/textColorPrimary"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
 
                         <TextView
                             android:id="@+id/tvMostLeastOccurrences"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_medium"
                             android:textColor="@color/textColorPrimary"
-                            android:layout_marginBottom="16dp"/>
+                            android:layout_marginBottom="@dimen/margin_medium"/>
 
                         <!-- Changed to FrameLayout for PieChart -->
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="600dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="16dp">
+                            android:layout_marginTop="@dimen/margin_intermediate"
+                            android:layout_marginBottom="@dimen/margin_medium">
 
                             <com.github.mikephil.charting.charts.PieChart
                                 android:id="@+id/pieChart"

@@ -11,21 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
         <ImageView
             android:id="@+id/backArrowImageView"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/width_medium"
+            android:layout_height="@dimen/height_medium"
             android:src="@drawable/ic_arrow_left"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="@dimen/margin_medium" />
 
         <TextView
             android:id="@+id/chapterNumberText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="24sp"
+            android:textSize="@dimen/text_size_title"
             android:textStyle="bold"
             tools:text="Chapter 1" />
 
@@ -33,9 +33,9 @@
             android:id="@+id/totalQuestionsText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_intermediate"
             android:layout_gravity="center"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/margin_medium"
             tools:text="Total Questions: 100" />
 
         <androidx.recyclerview.widget.RecyclerView
