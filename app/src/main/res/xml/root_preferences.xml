@@ -1,12 +1,15 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:textSize="@dimen/text_size_large"
         app:title="@string/recitation_layout_header"
         app:layout="@layout/custom_preference_category">
 
         <SwitchPreferenceCompat
             app:key="recitation_layout_by_page"
             app:title="@string/recitation_layout_title"
+            android:textSize="@dimen/text_size_medium"
             app:summaryOn="@string/recitation_layout_by_page_summary_on"
             app:summaryOff="@string/recitation_layout_by_page_summary_off"
             app:defaultValue="false" />
@@ -14,11 +17,13 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:textSize="@dimen/text_size_large"
         app:title="Audio Settings"
         app:layout="@layout/custom_preference_category">
 
         <ListPreference
             app:key="selected_reciter"
+            android:textSize="@dimen/text_size_medium"
             app:title="Select Reciter"
             app:summary="Choose your preferred Quran reciter"
             app:entries="@array/reciter_names"
@@ -27,6 +32,7 @@
 
         <SwitchPreferenceCompat
             app:key="audio_background_play"
+            android:textSize="@dimen/text_size_medium"
             app:title="Background Playback"
             app:summary="Allow audio to continue playing when app is in background"
             app:defaultValue="true" />

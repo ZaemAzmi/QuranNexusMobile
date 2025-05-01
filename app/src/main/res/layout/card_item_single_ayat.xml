@@ -119,21 +119,21 @@
                     android:layout_height="@dimen/button_icon_size"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     app:srcCompat="@drawable/ic_add_notes"
-                    app:layout_constraintEnd_toStartOf="@+id/ayatCardShareIcon"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginEnd="@dimen/margin_large" />
-
-                <ImageView
-                    android:id="@+id/ayatCardShareIcon"
-                    android:layout_width="@dimen/button_icon_size"
-                    android:layout_height="@dimen/button_icon_size"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:srcCompat="@drawable/ic_share"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginEnd="@dimen/margin_large" />
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/ayatCardShareIcon"-->
+<!--                    android:layout_width="@dimen/button_icon_size"-->
+<!--                    android:layout_height="@dimen/button_icon_size"-->
+<!--                    android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--                    app:srcCompat="@drawable/ic_share"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    android:layout_marginEnd="@dimen/margin_large" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

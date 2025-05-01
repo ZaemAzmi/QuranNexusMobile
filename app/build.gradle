@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.multidex)
     // Hilt dependencies
     implementation libs.hilt.android
+    implementation libs.swiperefreshlayout
 
     kapt libs.hilt.compiler
     implementation 'androidx.hilt:hilt-navigation-fragment:1.2.0'

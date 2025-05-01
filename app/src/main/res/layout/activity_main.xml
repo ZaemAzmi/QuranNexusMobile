@@ -61,7 +61,8 @@
         android:layout_gravity="start"
         android:background="@color/light_green_side_nav"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/side_drawer_menu" >
+        app:menu="@menu/side_drawer_menu"
+        style="@style/Widget.App.NavigationView">
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

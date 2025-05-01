@@ -21,6 +21,13 @@
             android:background="@drawable/bg_gradient_daily_word"
             android:padding="@dimen/padding_medium">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Word of the day"
+                android:textSize="@dimen/text_size_large"
+                />
+
             <!-- Arabic Word -->
             <TextView
                 android:id="@+id/arabicWord"
@@ -28,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="الْحَمْدُ لِلَّهِ"
+                android:layout_marginTop="@dimen/margin_semi_medium"
                 android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"
                 android:textColor="@color/black" />
@@ -51,13 +59,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:gravity="end|bottom">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Word of the day"
-                    android:textSize="@dimen/text_size_tiny"
-                    android:layout_marginStart="@dimen/margin_medium"
-                    />
+
                 <!-- Bookmark Button -->
                 <ImageView
                     android:id="@+id/bookmarkButton"
@@ -73,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Read more"
-                    android:textSize="@dimen/text_size_tiny"
+                    android:textSize="@dimen/text_size_large"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:clickable="true"

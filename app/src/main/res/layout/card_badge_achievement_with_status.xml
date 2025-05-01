@@ -4,12 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp">
+    android:layout_margin="@dimen/margin_tiny">
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/margin_intermediate"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         android:background="@drawable/bg_rounded_badge_card"
@@ -22,25 +22,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="@dimen/padding_small"
             android:clickable="true">
 
             <TextView
                 android:id="@+id/tvBadgeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="@dimen/margin_semi_medium"
                 android:fontFamily="@font/aclonica"
                 android:gravity="center"
                 android:text="Badge Name"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/ivBadgeIcon"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="@dimen/achievement_medal_with_status_width_height"
+                android:layout_height="@dimen/achievement_medal_with_status_width_height"
                 android:src="@drawable/badge_12"
                 android:contentDescription="Badge Icon" />
 
@@ -51,11 +51,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/margin_tiny"
                 android:fontFamily="@font/adamina"
                 android:text="Status: Completed"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
         </androidx.cardview.widget.CardView>
 

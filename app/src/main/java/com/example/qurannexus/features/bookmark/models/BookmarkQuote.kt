@@ -12,11 +12,11 @@ data class BookmarkQuote(
     data class QuoteProperties(
         @SerializedName("quote_id")
         val quoteId: String,
-        @SerializedName("quote_title")
+        @SerializedName("title")
         val quoteTitle: String,
-        @SerializedName("quote_description")
+        @SerializedName("description")
         val quoteDescription: String,
-        @SerializedName("quote_source")
+        @SerializedName("source")
         val quoteSource: String
     )
 }

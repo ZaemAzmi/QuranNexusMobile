@@ -205,6 +205,24 @@ The application is organized into distinct features, each contained within its o
    ```
    This will start the backend server, typically at `http://localhost:8000`
 
+### Testing on physical device
+To test the Android app on a real device and connect it to the local Laravel backend:
+1. Connect the Android device and development machine to the same Wi-Fi network.
+2. Start the Laravel server using:
+    ```bash
+   php artisan serve --host=0.0.0.0
+   ```
+3. Find the development machine's local IP address:
+   ```bash
+    ipconfig
+   ```
+Look for the IPv4 Address (e.g., 192.168.1.10).
+4. Update your Android app's API base URL to use this IP address(in ApiService.kt and AuthService.kt), e.g.:
+   ```bash
+    LOCAL_API_URL = "http://10.0.2.2:8000/api/v1/mobile/";
+   ```
+5. Ensure network_security_config.xml allows cleartext traffic to your backend IP:
+
 ### API Configuration
 - The Android application is configured to communicate with the Laravel backend
 - Default API base URL can be configured in the application's build configuration

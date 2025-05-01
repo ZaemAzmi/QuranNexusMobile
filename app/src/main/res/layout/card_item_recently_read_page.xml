@@ -22,16 +22,18 @@
 
             <FrameLayout
                 android:id="@+id/recentlyReadPageNumberFrame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/number_frame_width"
+                android:layout_height="@dimen/number_frame_height"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_medium"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-                <ImageView
+
+            <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/surah_number_frame" />
 
                 <com.example.qurannexus.core.customViews.AutoFitTextView
@@ -40,10 +42,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="35"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/text_size_medium"
-                    android:gravity="center" />
+                    android:textAppearance="@style/TextAppearance.SurahNumber"/>
+
             </FrameLayout>
 
             <TextView
@@ -55,7 +55,7 @@
                 android:text="Page 35"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadPageNumberFrame"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,7 +67,7 @@
                 android:layout_marginTop="@dimen/margin_tiny"
                 android:text="Al-Baqarah (البقرة)"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_tiny"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadPageNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadPageTitle" />
 
@@ -79,7 +79,7 @@
                 android:layout_marginTop="@dimen/margin_tiny"
                 android:text="13 Feb 2025 / 15 Rajab 1446"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_extra_tiny"
+                android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadPageNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadPageSurahInfo" />
 
@@ -91,7 +91,8 @@
                 android:layout_marginTop="@dimen/margin_tiny"
                 android:text="10:30 PM"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_extra_tiny"
+                android:paddingBottom="@dimen/padding_medium"
+                android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadPageNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadPageDate" />
 
@@ -112,7 +113,7 @@
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="Juz 3"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_tiny"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="@dimen/margin_medium" />

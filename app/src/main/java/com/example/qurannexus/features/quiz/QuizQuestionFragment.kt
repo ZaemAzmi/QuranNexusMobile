@@ -1,12 +1,16 @@
 package com.example.qurannexus.features.quiz
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.navArgs
+import com.example.qurannexus.R
 import com.example.qurannexus.features.quiz.models.QuizViewModel.Companion.QUESTIONS_PER_BATCH
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -82,7 +87,7 @@ class QuizQuestionFragment : Fragment() {
         }
     }
     private fun showExitConfirmationDialog() {
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Exit Quiz")
             .setMessage("Are you sure you want to exit? You will lose all progress.")
             .setPositiveButton("Exit") { _, _ ->
@@ -90,8 +95,27 @@ class QuizQuestionFragment : Fragment() {
                 findNavController().popBackStack()
             }
             .setNegativeButton("Cancel", null)
-            .show()
+            .create()
+
+        dialog.setOnShowListener {
+            val titleView = dialog.findViewById<TextView>(androidx.appcompat.R.id.alertTitle)
+            val messageView = dialog.findViewById<TextView>(android.R.id.message)
+            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+            val titleSize = resources.getDimension(R.dimen.text_size_xxlarge) / resources.displayMetrics.scaledDensity
+            val messageSize = resources.getDimension(R.dimen.text_size_large) / resources.displayMetrics.scaledDensity
+            val buttonSize = resources.getDimension(R.dimen.text_size_xlarge) / resources.displayMetrics.scaledDensity
+
+            titleView?.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize)
+            messageView?.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageSize)
+            positiveButton?.setTextSize(TypedValue.COMPLEX_UNIT_SP, buttonSize)
+            negativeButton?.setTextSize(TypedValue.COMPLEX_UNIT_SP, buttonSize)
+        }
+
+        dialog.show()
     }
+
     private fun observeViewModel() {
         // Observe quiz state
         viewLifecycleOwner.lifecycleScope.launch {
@@ -148,9 +172,33 @@ class QuizQuestionFragment : Fragment() {
             it.options.forEach { option ->
                 val radioButton = RadioButton(context).apply {
                     text = option
-                    textSize = 18f
-                    setPadding(12, 12, 12, 12)
+                    textSize = resources.getDimension(R.dimen.text_size_large) / resources.displayMetrics.scaledDensity
+
+                    // Set padding from dimensions resource
+                    val padding = resources.getDimensionPixelSize(R.dimen.padding_intermediate)
+                    setPadding(padding, padding, padding, padding)
+
+                    // Apply the same background as in XML
+                    setBackgroundResource(R.drawable.rounded_recyclerview_background_white)
+
+                    // Set text color
+                    setTextColor(resources.getColor(android.R.color.black, null))
+
+                    // Apply button tint
+                    buttonTintList = resources.getColorStateList(R.color.light_green_button, null)
                 }
+
+                // Create layout params with margins
+                val layoutParams = RadioGroup.LayoutParams(
+                    RadioGroup.LayoutParams.MATCH_PARENT,
+                    RadioGroup.LayoutParams.WRAP_CONTENT
+                )
+                val verticalMargin = resources.getDimensionPixelSize(R.dimen.margin_medium)
+                layoutParams.setMargins(0, verticalMargin, 0, verticalMargin)
+
+                // Apply layout params
+                radioButton.layoutParams = layoutParams
+
                 binding.optionsGroup.addView(radioButton)
             }
         }

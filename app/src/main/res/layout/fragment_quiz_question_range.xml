@@ -36,6 +36,7 @@
             android:layout_marginTop="@dimen/margin_intermediate"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/margin_medium"
+            android:textSize="@dimen/text_size_medium"
             tools:text="Total Questions: 100" />
 
         <androidx.recyclerview.widget.RecyclerView

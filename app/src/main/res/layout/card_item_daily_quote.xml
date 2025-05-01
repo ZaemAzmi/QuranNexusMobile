@@ -5,51 +5,89 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/margin_medium"
-    android:elevation="4dp"
-    android:padding="16dp">
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!-- Quote text -->
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <!-- Quote text - improved for multiline display -->
         <TextView
             android:id="@+id/tvQuote"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="This is a quote"
+            android:text="This is a quote that can span multiple lines and will display properly when it's long enough to wrap"
             android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:lineSpacingMultiplier="1.2"
+            android:gravity="center"
+            android:minHeight="70dp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Bookmark button -->
-        <ImageButton
-            android:id="@+id/btnBookmark"
-            android:layout_width="wrap_content"
+        <!-- Quote source -->
+        <TextView
+            android:id="@+id/tvSource"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Source reference"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="italic"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_marginTop="@dimen/margin_small"
+            app:layout_constraintStart_toStartOf="@id/tvQuote"
+            app:layout_constraintEnd_toEndOf="@id/tvQuote"
+            app:layout_constraintTop_toBottomOf="@id/tvQuote" />
+
+        <!-- Button container for proper alignment -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="@dimen/padding_small"
-            android:src="@drawable/ic_heart"
-            app:layout_constraintTop_toBottomOf="@+id/tvQuote"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:paddingBottom="@dimen/padding_small"
+            app:layout_constraintTop_toBottomOf="@+id/tvSource"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Share button -->
-        <Button
-            android:id="@+id/btnShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_intermediate"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:backgroundTint="@color/light_green_button"
-            android:drawableStart="@drawable/ic_share"
-            android:drawablePadding="@dimen/padding_small"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/padding_intermediate"
-            android:paddingEnd="@dimen/padding_intermediate"
-            android:text="Spread the Khair"
-            app:layout_constraintStart_toEndOf="@+id/btnBookmark"
-            app:layout_constraintTop_toBottomOf="@+id/tvQuote" />
+            <!-- Bookmark button -->
+            <ImageButton
+                android:id="@+id/btnBookmark"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/padding_small"
+                android:src="@drawable/ic_heart"
+                android:contentDescription="Bookmark quote"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
+            <!-- Share button -->
+            <Button
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/dark_bluee_200"
+                android:drawableStart="@drawable/ic_share"
+                android:drawablePadding="@dimen/padding_small"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/padding_intermediate"
+                android:paddingEnd="@dimen/padding_intermediate"
+                android:text="Spread the Khair"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

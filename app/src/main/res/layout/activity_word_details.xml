@@ -144,6 +144,8 @@
                             android:id="@+id/verseText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textDirection="rtl"
+                            android:gravity="left"
                             android:textSize="@dimen/text_size_medium"
                             android:layout_marginBottom="@dimen/margin_intermediate"/>
                         <TextView
@@ -159,7 +161,12 @@
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_size_medium"
                             android:layout_marginBottom="@dimen/margin_intermediate"/>
-
+                        <TextView
+                            android:id="@+id/juzIdText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_size_medium"
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
                         <Button
                             android:id="@+id/playAudioButton"
                             android:layout_width="match_parent"

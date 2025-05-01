@@ -110,10 +110,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_marginStart="@dimen/margin_small"
-                            android:backgroundTint="@color/primaryColor"
+                            android:backgroundTint="@color/green_blue_100"
                             android:text="Search"
+                            android:textColor="@color/dark_bluee_200"
                             android:textSize="@dimen/text_size_small"
-                            android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="@+id/searchEditText"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/searchEditText" />

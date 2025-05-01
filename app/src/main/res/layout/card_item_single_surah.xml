@@ -25,8 +25,8 @@
 
             <FrameLayout
                 android:id="@+id/bookmarkChapterNumberFrameLayout"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/number_frame_width"
+                android:layout_height="@dimen/number_frame_height"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">

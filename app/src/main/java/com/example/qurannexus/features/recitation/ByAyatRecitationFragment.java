@@ -54,7 +54,7 @@ import retrofit2.Response;
 @AndroidEntryPoint
 @UnstableApi
 public class ByAyatRecitationFragment extends Fragment {
-    private static final String ARG_SURAH_NUMBER = "surah_number";
+     static final String ARG_SURAH_NUMBER = "surah_number";
     private static final String ARG_SCROLL_TO_VERSE = "scroll_to_verse";
 
     private int surahNumber;
@@ -160,7 +160,7 @@ public class ByAyatRecitationFragment extends Fragment {
         return paginationAdapter;
     }
 
-    private void fetchBookmarksAndVerses(int surahIndex) {
+    void fetchBookmarksAndVerses(int surahIndex) {
         if (authToken == null) {
             Log.e("ByAyatRecitationFragment", "No auth token available");
             fetchVersesByAyat(surahIndex);

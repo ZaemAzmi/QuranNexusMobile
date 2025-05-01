@@ -6,68 +6,78 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".features.recitation.RecitationPageFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/headerLayout"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_medium">
-
-        <!-- Menu placeholder for parent activity -->
-        <View
-            android:id="@+id/menuPlaceholder"
-            android:layout_width="@dimen/highlight_item_icon_size"
-            android:layout_height="@dimen/highlight_item_icon_size"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/textLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/surahNameTextView"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/headerLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_title"
-                android:textColor="@android:color/white"
-                android:gravity="center"
-                android:text="@string/surah_name_placeholder" />
+                android:padding="@dimen/padding_medium">
 
-            <TextView
-                android:id="@+id/englishSurahNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium"
-                android:textColor="@android:color/white"
-                android:gravity="center"
-                android:text="@string/english_surah_name_placeholder" />
+                <!-- Menu placeholder for parent activity -->
+                <View
+                    android:id="@+id/menuPlaceholder"
+                    android:layout_width="@dimen/highlight_item_icon_size"
+                    android:layout_height="@dimen/highlight_item_icon_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/textLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/surahNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_title"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:text="@string/surah_name_placeholder" />
+
+                    <TextView
+                        android:id="@+id/englishSurahNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:text="@string/english_surah_name_placeholder" />
+                </LinearLayout>
+
+                <!-- Menu button -->
+                <ImageView
+                    android:id="@+id/bookmarkMenuIcon"
+                    android:layout_width="@dimen/width_xxxlarge"
+                    android:layout_height="@dimen/height_xxxlarge"
+                    android:padding="@dimen/highlight_item_icon_padding"
+                    android:src="@drawable/ic_vertical_dots_menu"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/recitationFragmentContainerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/fragment_by_ayat_recitation" />
         </LinearLayout>
-
-        <!-- Menu button -->
-        <ImageView
-            android:id="@+id/bookmarkMenuIcon"
-            android:layout_width="@dimen/width_xxxlarge"
-            android:layout_height="@dimen/height_xxxlarge"
-            android:padding="@dimen/highlight_item_icon_padding"
-            android:src="@drawable/ic_vertical_dots_menu"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-        android:id="@+id/recitationFragmentContainerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/recitation_header_height"
-        tools:layout="@layout/fragment_by_ayat_recitation" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

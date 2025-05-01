@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipChildren="false" android:paddingBottom="@dimen/prayer_card_image_overlap_allowance"> <androidx.constraintlayout.widget.ConstraintLayout
+    android:clipChildren="false">
+    <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/prayerCardBackground"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
@@ -26,15 +27,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline_image_start"
         android:layout_marginEnd="@dimen/margin_small">
+
         <TextView
-        android:id="@+id/nextPrayerTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Asr"
-        android:text="-"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_large"
-        android:textStyle="bold" />
+            android:id="@+id/nextPrayerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Asr"
+            android:text="-"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/timerTextView"
@@ -62,6 +64,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.6"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
@@ -70,8 +73,8 @@
         android:layout_height="@dimen/prayer_card_image_height"
         android:src="@drawable/img_mosque"
         android:scaleType="fitEnd"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/prayerCardBackground"
+        app:layout_constraintEnd_toEndOf="@+id/prayerCardBackground"
         android:layout_marginEnd="@dimen/prayer_card_image_margin_end"
         tools:ignore="ContentDescription" />
 

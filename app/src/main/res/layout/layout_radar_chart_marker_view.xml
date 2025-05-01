@@ -4,16 +4,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="12dp"
-    android:minWidth="200dp"
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_intermediate"
+    android:minWidth="@dimen/radar_chart_popup_min_height"
     android:background="@drawable/marker_background_radar_chart">
 
     <TextView
         android:id="@+id/tvChapterName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
         android:gravity="center"
         android:textColor="@android:color/white"/>
@@ -22,23 +22,23 @@
         android:id="@+id/tvChapterNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_size_small"
         android:gravity="center"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="@dimen/margin_tiny"
         android:textColor="@android:color/white"/>
 
     <View
-        android:layout_width="40dp"
+        android:layout_width="@dimen/width_xxlarge"
         android:layout_height="1dp"
         android:layout_gravity="center"
-        android:layout_marginVertical="8dp"
+        android:layout_marginVertical="@dimen/margin_intermediate"
         android:background="@android:color/white"/>
 
     <TextView
         android:id="@+id/tvWordsProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="13sp"
+        android:textSize="@dimen/text_size_small"
         android:gravity="center"
         android:textColor="@android:color/white"/>
 
@@ -46,9 +46,9 @@
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="@dimen/height_super_tiny"
+        android:layout_marginTop="@dimen/margin_intermediate"
+        android:layout_marginBottom="@dimen/margin_tiny"
         android:progressTint="@android:color/white"
         android:progressBackgroundTint="#80FFFFFF"/>
 
@@ -56,7 +56,7 @@
         android:id="@+id/tvPercentage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_small"
         android:textStyle="bold"
         android:gravity="center"
         android:textColor="@android:color/white"/>

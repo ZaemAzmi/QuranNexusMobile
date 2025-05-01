@@ -21,6 +21,7 @@ import com.example.qurannexus.R
 import com.example.qurannexus.core.activities.MainActivity
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.network.ApiService
+import com.example.qurannexus.features.bookmark.models.FirstOccurrence
 import com.example.qurannexus.features.words.models.WordDetails
 import com.example.qurannexus.features.words.models.WordDetailsViewModel
 import com.example.qurannexus.features.words.models.WordOccurrence
@@ -53,7 +54,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
-
+import androidx.core.text.BidiFormatter
+import androidx.core.text.TextDirectionHeuristicsCompat
 @AndroidEntryPoint
 class WordDetailsActivity : AppCompatActivity() {
     private lateinit var barChart: BarChart
@@ -108,7 +110,10 @@ class WordDetailsActivity : AppCompatActivity() {
         viewModel.isLoadingMore.observe(this) { isLoading ->
             occurrencesAdapter.setLoading(isLoading && viewModel.hasMorePages.value == true)
         }
-
+        // Add observation for first occurrence
+        viewModel.firstOccurrence.observe(this) { firstOccurrence ->
+            updateFirstOccurrenceUI(firstOccurrence)
+        }
         viewModel.hasMorePages.observe(this) { hasMore ->
             if (hasMore && currentPage > 1) {
                 currentPage++
@@ -146,7 +151,57 @@ class WordDetailsActivity : AppCompatActivity() {
             playAudio(audioUrl)
         }
     }
+    private fun updateFirstOccurrenceUI(firstOccurrence: FirstOccurrence?) {
+        if (firstOccurrence == null) {
+            // Hide verse text if no first occurrence data
+            findViewById<TextView>(R.id.verseText)?.visibility = View.GONE
+            return
+        }
 
+        // Update the verse text field with data from first occurrence
+        val verseTextView = findViewById<TextView>(R.id.verseText)
+        verseTextView.visibility = View.VISIBLE
+        // Or if you need the "Full Verse:" label separately
+        val arabicText = firstOccurrence.verseText
+        val label = "Full Verse: "
+        val bidiFormatter = BidiFormatter.getInstance()
+
+        val wrappedArabicText = bidiFormatter.unicodeWrap(
+            arabicText,
+            TextDirectionHeuristicsCompat.ANYRTL_LTR, // Heuristic to determine direction
+            true // Isolate the wrapped string's directionality
+        )
+        // Now concatenate
+        verseTextView.text = "$label$wrappedArabicText"
+        // Optional: Update any other fields if needed
+        // For example, if we want to update surah name, page, juz info
+        findViewById<TextView>(R.id.surahNameText)?.text =
+            "Surah: ${firstOccurrence.surahName} (${firstOccurrence.chapterId})"
+
+        findViewById<TextView>(R.id.ayahKeyText)?.text =
+            "Ayah Key: ${firstOccurrence.chapterId}:${firstOccurrence.verseNumber}"
+
+        findViewById<TextView>(R.id.pageIdText)?.text =
+            "Page ID: ${firstOccurrence.pageId}"
+
+        // Add juz information if not already showing
+        val juzTextView = findViewById<TextView>(R.id.juzIdText)
+        if (juzTextView != null) {
+            juzTextView.visibility = View.VISIBLE
+            juzTextView.text = "Juz: ${firstOccurrence.juzId}"
+        } else {
+            // If juzIdText doesn't exist, we might need to add it to the layout
+            Log.d("WordDetailsActivity", "Juz text view not found in layout")
+        }
+
+        // Update audio URL if needed
+        firstOccurrence.audioUrl?.let { audioUrl ->
+            val playAudioButton = findViewById<Button>(R.id.playAudioButton)
+            playAudioButton.setOnClickListener {
+                playAudio(audioUrl)
+            }
+        }
+    }
     private fun setupBookmarkButton() {
         Log.d("WordDetailsActivity", "setupBookmarkButton called")
         bookmarkButton.setOnClickListener {

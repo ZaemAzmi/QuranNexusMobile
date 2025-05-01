@@ -50,4 +50,19 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
     </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="textAllCaps">false</item>
+    </style>
+    <style name="NavDrawerItemTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="Widget.App.NavigationView" parent="Widget.MaterialComponents.NavigationView">
+        <item name="itemIconSize">@dimen/width_medium</item>
+        <item name="itemTextAppearance">@style/NavDrawerItemTextAppearance</item>
+        <item name="itemIconPadding">@dimen/padding_intermediate</item>
+        <item name="itemHorizontalPadding">@dimen/padding_intermediate</item>
+    </style>
 </resources>

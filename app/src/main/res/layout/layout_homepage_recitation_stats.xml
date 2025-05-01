@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginTop="12dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_semi_medium"
+    android:layout_marginBottom="@dimen/margin_intermediate"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
         <!-- Header with title and info icon -->
         <TextView
@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Recitation Progress"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_size_large"
             android:textStyle="bold"
             android:textColor="@color/primaryColor"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,8 +30,8 @@
 
         <ImageButton
             android:id="@+id/btnInfoRecitation"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/width_medium"
+            android:layout_height="@dimen/height_medium"
             android:src="@drawable/ic_info"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Information about recitation stats"
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintTop_toBottomOf="@id/recitationStatsTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -58,9 +58,9 @@
                 <!-- Current Streak Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/currentStreakCard"
-                    android:layout_width="150dp"
-                    android:layout_height="120dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="@dimen/streak_card_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_semi_medium"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     app:strokeWidth="1dp"
@@ -71,21 +71,21 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="16dp">
+                        android:padding="@dimen/padding_medium">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="@dimen/width_medium"
+                            android:layout_height="@dimen/height_medium"
                             android:src="@drawable/ic_streak"
                             android:contentDescription="Current streak icon"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
 
                         <TextView
                             android:id="@+id/currentStreakValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="28sp"
+                            android:textSize="@dimen/recitation_text_size"
                             android:textStyle="bold"
                             android:textColor="@color/primaryColor"/>
 
@@ -93,7 +93,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Current Streak"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textColor="#757575"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -101,9 +101,9 @@
                 <!-- Longest Streak Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/longestStreakCard"
-                    android:layout_width="150dp"
-                    android:layout_height="120dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="@dimen/streak_card_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_semi_medium"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     app:strokeWidth="1dp"
@@ -114,21 +114,21 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="16dp">
+                        android:padding="@dimen/padding_medium">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="@dimen/width_medium"
+                            android:layout_height="@dimen/height_medium"
                             android:src="@drawable/ic_trophy"
                             android:contentDescription="Longest streak icon"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
 
                         <TextView
                             android:id="@+id/longestStreakValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="28sp"
+                            android:textSize="@dimen/recitation_text_size"
                             android:textStyle="bold"
                             android:textColor="@color/primaryColor"/>
 
@@ -136,7 +136,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Longest Streak"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textColor="#757575"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -144,8 +144,8 @@
                 <!-- Consistency Score Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/consistencyCard"
-                    android:layout_width="150dp"
-                    android:layout_height="120dp"
+                    android:layout_width="@dimen/streak_card_width"
+                    android:layout_height="wrap_content"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
                     app:strokeWidth="1dp"
@@ -156,21 +156,21 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="16dp">
+                        android:padding="@dimen/padding_medium">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="@dimen/width_medium"
+                            android:layout_height="@dimen/height_medium"
                             android:src="@drawable/ic_calendar"
                             android:contentDescription="Consistency icon"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="@dimen/margin_intermediate"/>
 
                         <TextView
                             android:id="@+id/consistencyScoreValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="28sp"
+                            android:textSize="@dimen/recitation_text_size"
                             android:textStyle="bold"
                             android:textColor="@color/primaryColor"/>
 
@@ -179,7 +179,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="days/week"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textColor="#757575"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -191,7 +191,7 @@
             android:id="@+id/chartTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_medium"
             app:tabMode="fixed"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/primaryColor"
@@ -203,11 +203,13 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_medium"
                 android:text="Daily" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_medium"
                 android:text="Weekly" />
         </com.google.android.material.tabs.TabLayout>
 
@@ -215,7 +217,7 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/chartViewPager"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="@dimen/streak_graph_height"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/chartTabLayout"
             app:layout_constraintStart_toStartOf="parent"

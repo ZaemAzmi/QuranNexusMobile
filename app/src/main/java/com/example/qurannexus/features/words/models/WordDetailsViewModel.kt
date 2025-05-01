@@ -48,9 +48,34 @@ class WordDetailsViewModel @Inject constructor(
 
     private val _hasMorePages = MutableLiveData<Boolean>()
     val hasMorePages: LiveData<Boolean> = _hasMorePages
+    // Add new LiveData for first occurrence
+    private val _firstOccurrence = MutableLiveData<FirstOccurrence?>()
+    val firstOccurrence: LiveData<FirstOccurrence?> = _firstOccurrence
 
     private var currentWordText: String? = null
+    fun loadWordFirstOccurrence(wordText: String) {
+        val request = WordFirstOccurrenceRequest(wordText)
 
+        quranApi.getWordFirstOccurrence(request)
+            .enqueue(object : Callback<WordFirstOccurrenceResponse> {
+                override fun onResponse(
+                    call: Call<WordFirstOccurrenceResponse>,
+                    response: Response<WordFirstOccurrenceResponse>
+                ) {
+                    if (response.isSuccessful && response.body() != null) {
+                        _firstOccurrence.value = response.body()!!.data
+                    } else {
+                        _error.value = "Failed to load word's first occurrence"
+                        _firstOccurrence.value = null
+                    }
+                }
+
+                override fun onFailure(call: Call<WordFirstOccurrenceResponse>, t: Throwable) {
+                    _error.value = t.message ?: "Unknown error occurred"
+                    _firstOccurrence.value = null
+                }
+            })
+    }
     fun loadWordData(wordText: String) {
         _isLoading.value = true
         currentWordText = wordText
@@ -75,6 +100,7 @@ class WordDetailsViewModel @Inject constructor(
                     _isLoading.value = false
                 }
             })
+        loadWordFirstOccurrence(wordText)
     }
 
     fun loadOccurrencesForJuz(juzNumber: Int, page: Int = 1) {

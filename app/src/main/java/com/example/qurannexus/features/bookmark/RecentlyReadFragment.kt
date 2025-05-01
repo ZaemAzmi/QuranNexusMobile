@@ -221,6 +221,7 @@ class RecentlyReadFragment : Fragment() {
             chipBackgroundColor = ColorStateList.valueOf(
                 resources.getColor(R.color.white, null)
             )
+            textSize = resources.getDimension(R.dimen.text_size_medium) / resources.displayMetrics.density
         }
     }
 

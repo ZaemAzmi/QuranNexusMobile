@@ -21,6 +21,7 @@
         android:id="@+id/etNoteDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/padding_tiny"
         android:hint="Description"
         android:inputType="textMultiLine"
         android:minLines="3"

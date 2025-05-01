@@ -59,7 +59,7 @@ import retrofit2.Response;
 @androidx.media3.common.util.UnstableApi
 public class ByPageRecitationFragment extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
-    private static final int TOTAL_PAGES = 604;
+     static final int TOTAL_PAGES = 604;
     private Context context;
     private int currentPageNumber;
     private QuranApi quranApi;

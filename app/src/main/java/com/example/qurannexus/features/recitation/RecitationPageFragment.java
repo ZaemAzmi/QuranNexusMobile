@@ -1,5 +1,7 @@
 package com.example.qurannexus.features.recitation;
 
+import static com.example.qurannexus.features.recitation.ByPageRecitationFragment.TOTAL_PAGES;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.preference.PreferenceManager;
 import androidx.lifecycle.LifecycleKt;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
@@ -110,6 +113,7 @@ public class RecitationPageFragment extends Fragment {
     private LinearLayout chapterBookmarkLayout;
     private LinearLayout pageBookmarkLayout;
     private boolean isBookmarkMenuOpen = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
     public RecitationPageFragment() {
     }
 
@@ -190,7 +194,9 @@ public class RecitationPageFragment extends Fragment {
         surahNameTextView = rootView.findViewById(R.id.surahNameTextView);
         surahNameEnglishTextView = rootView.findViewById(R.id.englishSurahNameTextView);
         quranMetadata = QuranMetadata.Companion.getInstance();
-
+        // Initialize SwipeRefreshLayout
+        swipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(() -> refreshCurrentContent());
         setupUI();
         checkBookmarkStatus();
         setupBookmarkMenu();
@@ -263,6 +269,44 @@ public class RecitationPageFragment extends Fragment {
         }
     }
 
+    @OptIn(markerClass = UnstableApi.class)
+    private void refreshCurrentContent() {
+        // Start refresh animation
+        swipeRefreshLayout.setRefreshing(true);
+        Log.d("RecitationPage", "Refreshing content. Layout type: " + layoutType);
+
+        if ("verseByVerse".equals(layoutType)) {
+            // If verse by verse mode
+            int surahNumber = currentSurahIndex + 1;
+            Log.d("RecitationPage", "Refreshing surah: " + surahNumber);
+
+            // Re-create the fragment with the SAME surah number
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            ByAyatRecitationFragment newFragment = ByAyatRecitationFragment.newInstance(surahNumber, -1);
+            transaction.replace(R.id.recitationFragmentContainerView, newFragment);
+            transaction.commit();
+
+            // Update the header to show the correct surah
+            updateSurahHeader(surahNumber);
+
+            // Stop refreshing after a delay to allow fragment to load
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+        }
+        else if ("pageByPage".equals(layoutType)) {
+            // If page by page mode - maintain the current page number
+            Log.d("RecitationPage", "Refreshing page: " + currentPageNumber);
+
+            // Re-create the fragment with the SAME page number
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            ByPageRecitationFragment newFragment = ByPageRecitationFragment.newInstance(currentPageNumber);
+            transaction.replace(R.id.recitationFragmentContainerView, newFragment);
+            transaction.commit();
+
+            // Stop refreshing after a delay to allow fragment to load
+            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+        }
+        Log.d("RecitationPage", "Created new fragment and committed transaction");
+    }
     @OptIn(markerClass = UnstableApi.class)
     private void setupScrollListeners() {
         // When switching to a fragment, we need to attach scroll listeners

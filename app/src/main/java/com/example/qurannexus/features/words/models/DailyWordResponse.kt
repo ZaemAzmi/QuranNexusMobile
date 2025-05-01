@@ -4,7 +4,6 @@ data class DailyWordResponse(
     val status: String,
     val word: DailyWord
 )
-
 data class DailyWord(
     val word_id: String,
     val word_text: String,
@@ -20,8 +19,13 @@ data class DailyQuoteResponse(
 )
 
 data class DailyQuote(
-    val quote_id: String,
-    val title: String,
-    val description: String,
-    val source: String
+    val Id: String,
+    val Title: String,
+    val Description: String,
+    val Source: String
+)
+
+// This class handles the list response from your API
+data class DailyQuoteListResponse(
+    val data: List<DailyQuote>
 )

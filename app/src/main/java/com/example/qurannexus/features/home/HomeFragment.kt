@@ -25,15 +25,22 @@ import com.example.qurannexus.features.bookmark.BookmarkFragment
 import com.example.qurannexus.features.tajweed.TajweedFragment
 import com.example.qurannexus.features.prayerTimes.PrayerTimesFragment
 import com.example.qurannexus.core.interfaces.HighlightClickListener
+import com.example.qurannexus.core.interfaces.QuranApi
+import com.example.qurannexus.features.analysis.QuranAnalysisFragment
 import com.example.qurannexus.features.home.models.Badge
 import com.example.qurannexus.features.home.models.HighlightItem
 import com.example.qurannexus.features.prayerTimes.models.PrayerTimesResponse
 import com.example.qurannexus.features.home.models.DailyInspirationAdapter
 import com.example.qurannexus.features.home.models.HighlightsRecyclerAdapter
 import com.example.qurannexus.features.auth.AuthService
+import com.example.qurannexus.features.bookmark.models.BookmarksResponse
 import com.example.qurannexus.features.home.achievement.AchievementService
+import com.example.qurannexus.features.home.dailyQuote.DailyQuotesService
+import com.example.qurannexus.features.home.dailyQuote.QuoteBookmarkService
 import com.example.qurannexus.features.prayerTimes.PrayerTimesViewModel
+import com.example.qurannexus.features.recitation.SurahListFragment
 import com.example.qurannexus.features.statistics.HomepageStatisticsFragment
+import com.example.qurannexus.features.words.models.DailyQuote
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.google.android.material.tabs.TabLayout
@@ -43,9 +50,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
+
 @AndroidEntryPoint
 class HomeFragment : Fragment(), HighlightClickListener {
 
@@ -69,13 +81,38 @@ class HomeFragment : Fragment(), HighlightClickListener {
     private lateinit var currentStreakValue: TextView
     private lateinit var longestStreakValue: TextView
     private lateinit var consistencyScoreValue: TextView
+    @Inject
+    lateinit var dailyQuotesService: DailyQuotesService
+    @Inject
+    lateinit var quoteBookmarkService: QuoteBookmarkService
+    @Inject
+    lateinit var quranApi: QuranApi
+
+    private val bookmarkedQuoteIds = mutableSetOf<String>()
+    private var userToken: String? = null
 
     private val viewModel: PrayerTimesViewModel by activityViewModels()
 
-    private val quotes = listOf(
-        "And those who strive for Us- We will surely guide them to Our ways.",
-        "Indeed, Allah is with those who fear Him and those who are doers of good.",
-        "So remember Me; I will remember you."
+    // Replace the existing quotes list with this
+    private var inspirationQuotes = listOf(
+        DailyQuote(
+            Id = "default1",
+            Title = "Daily Inspiration",
+            Description = "Verily, with hardship comes ease.",
+            Source = "Quran 94:5"
+        ),
+        DailyQuote(
+            Id = "default2",
+            Title = "Daily Inspiration",
+            Description = "The best among you are those who have the best character.",
+            Source = "Hadith"
+        ),
+        DailyQuote(
+            Id = "default3",
+            Title = "Daily Inspiration",
+            Description = "Whoever is kind, Allah will be kind to him; therefore be kind to people on earth.",
+            Source = "Hadith"
+        )
     )
 
 
@@ -86,7 +123,7 @@ class HomeFragment : Fragment(), HighlightClickListener {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         authService = AuthService()
-
+        getUserToken()
         // Initialize UI views
         greetingsText = view.findViewById(R.id.homepageGreetingsText)
         prayerTrailerCard = view.findViewById(R.id.prayerTrailerCard)
@@ -111,16 +148,28 @@ class HomeFragment : Fragment(), HighlightClickListener {
             loadFragment(PrayerTimesFragment())
         }
 
-        // Set up ViewPager and TabLayout
+        // Initialize UI views
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
-        val adapter = DailyInspirationAdapter(quotes, requireContext())
-        viewPager.adapter = adapter
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            // Optionally customize tabs
-        }.attach()
+        // Make sure we initialize default quotes
+        inspirationQuotes = listOf(
+            DailyQuote(
+                Id = "default1",
+                Title = "Daily Inspiration",
+                Description = "Verily, with hardship comes ease.",
+                Source = "Quran 94:5"
+            ),
+            DailyQuote(
+                Id = "default2",
+                Title = "Daily Inspiration",
+                Description = "The best among you are those who have the best character.",
+                Source = "Hadith"
+            )
+        )
 
+        // Setup quotes after view initialization
+        setupDailyQuotes()
         // Setup UI that doesn't involve heavy disk operations
         highlightSectionSetup(view)
         setupNavigation()
@@ -143,7 +192,92 @@ class HomeFragment : Fragment(), HighlightClickListener {
 
         return view
     }
+    private fun setupDailyQuotes() {
+        // First, set up UI with default quotes
+        setupQuoteViewPager()
 
+        // Then fetch from API
+        dailyQuotesService.fetchDailyQuotes(object : DailyQuotesService.DailyQuotesCallback {
+            override fun onQuotesReceived(quotes: List<DailyQuote>) {
+                if (quotes.isNotEmpty()) {
+                    inspirationQuotes = quotes
+                    // Update UI on main thread
+                    activity?.runOnUiThread {
+                        Log.d("HomeFragment", "Received ${quotes.size} quotes from API")
+                        setupQuoteViewPager()
+                    }
+                }
+            }
+
+            override fun onError(message: String) {
+                Log.e("HomeFragment", "Error fetching quotes: $message")
+                // We'll keep using the default quotes that were already set
+            }
+        })
+    }
+
+    private fun setupQuoteViewPager() {
+        if (!::viewPager.isInitialized || !::tabLayout.isInitialized) {
+            Log.e("HomeFragment", "ViewPager or TabLayout not initialized!")
+            return
+        }
+
+        try {
+            // Create and set the adapter with proper parameters
+            val adapter = DailyInspirationAdapter(
+                inspirationQuotes,
+                requireContext(),
+                quoteBookmarkService,  // Pass the service
+                userToken,             // Pass the token
+                bookmarkedQuoteIds     // Pass the bookmarked IDs set
+            )
+            viewPager.adapter = adapter
+            Log.d("HomeFragment", "New adapter set with ${inspirationQuotes.size} quotes")
+
+            // Connect TabLayout with ViewPager2
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                // No customization needed
+            }.attach()
+            Log.d("HomeFragment", "TabLayoutMediator attached")
+        } catch (e: Exception) {
+            Log.e("HomeFragment", "Error setting up ViewPager: ${e.message}", e)
+        }
+    }
+
+
+    private fun getUserToken() {
+        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        userToken = sharedPreferences.getString("token", null)
+    }
+
+    private fun fetchBookmarkedQuotes() {
+        val call = quranApi.getBookmarks("Bearer $userToken")
+        call.enqueue(object : Callback<BookmarksResponse> {
+            override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
+                if (response.isSuccessful) {
+                    val bookmarksResponse = response.body()
+                    if (bookmarksResponse != null && bookmarksResponse.status == "success") {
+                        // Extract quote IDs from the bookmarks
+                        bookmarkedQuoteIds.clear()
+                        bookmarksResponse.bookmarks.quotes.forEach { quote ->
+                            bookmarkedQuoteIds.add(quote.itemProperties.quoteId)
+                        }
+
+                        // Update the UI if ViewPager is already set up
+                        activity?.runOnUiThread {
+                            setupQuoteViewPager()
+                        }
+                    }
+                } else {
+                    Log.e("HomeFragment", "Failed to fetch bookmarks: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<BookmarksResponse>, t: Throwable) {
+                Log.e("HomeFragment", "Network error fetching bookmarks", t)
+            }
+        })
+    }
 
     fun highlightSectionSetup(rootView : View){
         val highlightsRecyclerView: RecyclerView = rootView.findViewById(R.id.highlightsRecyclerView)
@@ -151,10 +285,10 @@ class HomeFragment : Fragment(), HighlightClickListener {
         // Create the list of highlights
         val highlightsList = listOf(
             HighlightItem(R.drawable.ic_mosque, "Prayer Times"),
-            HighlightItem(R.drawable.ic_duas, "Duas"),
-            HighlightItem(R.drawable.ic_quran, "Bookmarks"),
-            HighlightItem(R.drawable.ic_chatbot, "Tajweed"),
-            HighlightItem(R.drawable.ic_mosque, "NexusAI")
+            HighlightItem(R.drawable.ic_analysis, "Quran Analysis"),
+            HighlightItem(R.drawable.ic_bookmark_black, "Bookmarks"),
+            HighlightItem(R.drawable.ic_quran, "Quran"),
+            HighlightItem(R.drawable.ic_note, "Quizzes")
         )
 
         val layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
@@ -185,10 +319,10 @@ class HomeFragment : Fragment(), HighlightClickListener {
     override fun onHighlightClick(position: Int) {
         val selectedFragment : Fragment = when(position){
             0 -> PrayerTimesFragment()
-//            1 -> DuasFragment()
+            1 -> QuranAnalysisFragment()
             2 -> BookmarkFragment()
-            3 -> TajweedFragment()
-//            4 -> NexusAIFragment()
+            3 -> SurahListFragment()
+//            4 -> Quiz()
             else -> return
         }
         loadFragment(selectedFragment)
@@ -312,7 +446,13 @@ class HomeFragment : Fragment(), HighlightClickListener {
         } ?: Log.e("HomeFragment", "Context is null. Cannot show dialog.")
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Set adapter to null to allow proper garbage collection
+        if (::viewPager.isInitialized) {
+            viewPager.adapter = null
+        }
+    }
 }
 
 

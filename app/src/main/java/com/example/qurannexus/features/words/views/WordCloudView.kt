@@ -84,15 +84,18 @@ class WordCloudView @JvmOverloads constructor(
     var onWordClickListener: ((BookmarkWord) -> Unit)? = null
 
     private fun calculateSizesAndColors() {
-        if (words.isEmpty()) return
+        val validWords = words.filter { true } // Filter out words with null text
 
-        val occurrences = words.map { wordOccurrences[it.itemProperties.wordText] ?: 1 }
+        if (validWords.isEmpty()) return
+
+        // Use validWords for calculations
+        val occurrences = validWords.map { wordOccurrences[it.itemProperties.wordText] ?: 1 } // Safe now because text is not null
         val maxOccurrence = occurrences.maxOrNull() ?: 1
         val minOccurrence = occurrences.minOrNull() ?: 1
 
         Log.d("WordCloudView", "Max occurrence: $maxOccurrence, Min occurrence: $minOccurrence")
 
-        words.forEach { word ->
+        validWords.forEach { word -> // Iterate over the filtered list
             val occurrence = wordOccurrences[word.itemProperties.wordText] ?: 1
 
             // Use logarithmic scaling for more dramatic size differences

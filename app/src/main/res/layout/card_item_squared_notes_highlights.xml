@@ -19,8 +19,8 @@
         <!-- Image -->
         <ImageView
             android:id="@+id/highlightImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/item_highlights_width"
+            android:layout_height="@dimen/item_highlights_height"
             android:src="@drawable/temp_img1"
             android:contentDescription="Highlight Image"
             android:layout_marginBottom="@dimen/margin_intermediate"/>

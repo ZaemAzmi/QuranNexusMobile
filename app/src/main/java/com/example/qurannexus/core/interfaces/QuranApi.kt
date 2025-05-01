@@ -13,10 +13,13 @@ import com.example.qurannexus.features.recitation.audio.models.AudioRecitationRe
 import com.example.qurannexus.features.recitation.models.AyahRecitationModel
 import com.example.qurannexus.features.recitation.models.PageVerseResponse
 import com.example.qurannexus.features.recitation.models.SurahListResponse
+import com.example.qurannexus.features.words.models.DailyQuoteListResponse
 import com.example.qurannexus.features.words.models.DailyQuoteResponse
 import com.example.qurannexus.features.words.models.DailyWordResponse
 import com.example.qurannexus.features.words.models.WordsChaptersDistributionResponse
 import com.example.qurannexus.features.words.models.WordDistributionResponse
+import com.example.qurannexus.features.words.models.WordFirstOccurrenceRequest
+import com.example.qurannexus.features.words.models.WordFirstOccurrenceResponse
 import com.example.qurannexus.features.words.models.WordOccurrenceResponse
 import com.example.qurannexus.features.words.models.WordSearchResponse
 import retrofit2.Call
@@ -42,7 +45,8 @@ interface QuranApi {
         @Query("ayahs") ayahs: Boolean = true,
         @Query("words") words: Boolean = true
     ): Call<PageVerseResponse?>?
-
+    @GET("daily_quotes")
+    fun getDailyQuotes(): Call<DailyQuoteListResponse>
     //words
     @GET("words/{word_key}")
     fun getWordDetails(@Path("word_key") wordKey: String?): Call<WordDetailsResponse?>?
@@ -100,6 +104,13 @@ interface QuranApi {
     fun getWordsChaptersDistribution(
         @Query("words[]") words: List<String>
     ): Call<WordsChaptersDistributionResponse>
+    // New endpoint for finding first occurrence
+    @POST("word/first-occurrence")
+    fun getWordFirstOccurrence(@Body request: WordFirstOccurrenceRequest): Call<WordFirstOccurrenceResponse>
+
+    // Alternative GET method for convenience
+    @GET("word/first-occurrence/{wordText}")
+    fun getWordFirstOccurrenceGet(@Path("wordText") wordText: String): Call<WordFirstOccurrenceResponse>
     @GET("achievements/status")
     fun getAchievementStatus(
         @Header("Authorization") token: String

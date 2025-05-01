@@ -22,16 +22,17 @@
 
             <FrameLayout
                 android:id="@+id/recentlyReadJuzNumberFrame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/number_frame_width"
+                android:layout_height="@dimen/number_frame_height"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_medium"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/surah_number_frame" />
 
                 <com.example.qurannexus.core.customViews.AutoFitTextView
@@ -40,10 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="3"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/text_size_medium"
-                    android:gravity="center" />
+                    android:textAppearance="@style/TextAppearance.SurahNumber"/>
+
             </FrameLayout>
 
             <TextView
@@ -55,7 +54,7 @@
                 android:text="Juz 3"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_large"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,7 +79,7 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="13 Feb 2025 / 15 Rajab 1446"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_tiny"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzRange" />
 
@@ -91,8 +90,9 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="10:30 PM"
+                android:paddingBottom="@dimen/padding_tiny"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_extra_tiny"
+                android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzDate" />
 
@@ -113,10 +113,10 @@
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="Pages 42-65"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_tiny"
+                android:textSize="@dimen/text_size_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="@dimen/margin_medium" />
+                android:layout_marginBottom="@dimen/margin_intermediate" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

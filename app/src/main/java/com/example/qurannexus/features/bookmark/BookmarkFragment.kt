@@ -54,22 +54,22 @@ class BookmarkFragment : Fragment() {
             tab.view.background = ContextCompat.getDrawable(requireContext(), R.drawable.tab_background_selector)
         }.attach()
 
-        setupSearchBar(view)
+//        setupSearchBar(view)
         return view
     }
-    private fun setupSearchBar(view : View){
-        val searchView = view.findViewById<SearchView>(R.id.searchView)
-        searchView.setOnSearchClickListener {
-            // When the user clicks on the search icon, the search bar will expand
-            searchView.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT
-        }
-
-        searchView.setOnCloseListener {
-            // When the search is closed, reset to icon-only state
-            searchView.layoutParams.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
-            false
-        }
-
-    }
+//    private fun setupSearchBar(view : View){
+//        val searchView = view.findViewById<SearchView>(R.id.searchView)
+//        searchView.setOnSearchClickListener {
+//            // When the user clicks on the search icon, the search bar will expand
+//            searchView.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT
+//        }
+//
+//        searchView.setOnCloseListener {
+//            // When the search is closed, reset to icon-only state
+//            searchView.layoutParams.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
+//            false
+//        }
+//
+//    }
 
 }

@@ -273,6 +273,7 @@ class BookmarkWordsFragment : Fragment() {
         }
 
         val set = RadarDataSet(entries, "Words Learned (%)").apply {
+            valueTextSize = R.dimen.text_size_xlarge.toFloat()
             color = Color.parseColor("#0288D1") // Darker blue
             fillColor = Color.parseColor("#B3E5FC") // Light blue
             setDrawFilled(true)
@@ -363,6 +364,7 @@ class BookmarkWordsFragment : Fragment() {
             this.text = text
             isCheckable = true
             chipBackgroundColor = ColorStateList.valueOf(resources.getColor(R.color.white, null))
+            textSize = resources.getDimension(R.dimen.text_size_medium) / resources.displayMetrics.density
         }
     }
     private fun setupWordCloudControls() {
@@ -506,7 +508,7 @@ private class ChapterMarkerView(
             progressBar.progress = it.y.toInt()
 
             // Set percentage
-            tvPercentage.text = "${it.y.toInt()}% Completed"
+            tvPercentage.text = "${it.y.toInt()}% Words Learnt"
         }
     }
 

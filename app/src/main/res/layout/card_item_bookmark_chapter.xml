@@ -23,17 +23,18 @@
 
             <FrameLayout
                 android:id="@+id/bookmarkChapterNumberFrameLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/number_frame_width"
+                android:layout_height="@dimen/number_frame_height"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/bookmark_chapter_card_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageView
                     android:id="@+id/bookmarkChapterNumberFrame"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/surah_number_frame" />
 
                 <com.example.qurannexus.core.customViews.AutoFitTextView
@@ -42,9 +43,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="1"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:gravity="center" />
+                    android:textAppearance="@style/TextAppearance.SurahNumber"
+                    />
 
             </FrameLayout>
 
@@ -52,25 +52,25 @@
                 android:id="@+id/bookmarkChapterTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:text="Al-Fatihah"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_medium"
-                app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
+                app:layout_constraintStart_toEndOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/bookmarkChapterEnglishTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_tiny"
                 android:text="The Opener"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_small"
-                app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
+                app:layout_constraintStart_toEndOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkChapterTitle" />
 
 
@@ -78,13 +78,13 @@
                 android:id="@+id/bookmarkChapterRevelationPlace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_tiny"
-                android:paddingBottom="@dimen/padding_tiny"
+                android:paddingBottom="@dimen/padding_small"
                 android:text="Meccan"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_small"
-                app:layout_constraintStart_toStartOf="@id/bookmarkChapterNumberFrameLayout"
+                app:layout_constraintStart_toEndOf="@id/bookmarkChapterNumberFrameLayout"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkChapterEnglishTitle" />
 
             <ImageView

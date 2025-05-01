@@ -68,6 +68,7 @@ class QuizRepository @Inject constructor(private val api: QuizApi, private val a
                 // First ensure quiz is started
                 val startRequest = StartQuizRequest(surahId = surahId)
                 val startResponse = api.startQuiz(getAuthHeader(), startRequest).execute()
+                Log.e("QuizRepository", startResponse.toString())
 
                 if (!startResponse.isSuccessful) {
                     Log.e("QuizRepository", "Failed to start quiz before submitting answers")

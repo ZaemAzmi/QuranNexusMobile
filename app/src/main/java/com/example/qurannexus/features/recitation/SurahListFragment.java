@@ -6,10 +6,12 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -60,7 +62,6 @@ public class SurahListFragment extends Fragment {
 
         searchView = view.findViewById(R.id.searchSurahView);
         loadingIndicator = view.findViewById(R.id.loadingIndicator);
-        setupSearchView();
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
         fetchSurahs();
 
@@ -74,22 +75,38 @@ public class SurahListFragment extends Fragment {
 
         return view;
     }
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupSearchView();
+    }
     private void setupSearchView() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterSurahList(query);
-                return true;
+        searchView.post(() -> {
+            EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+            if (searchEditText != null) {
+                float textSize = getResources().getDimension(R.dimen.text_size_medium) /
+                        getResources().getDisplayMetrics().scaledDensity;
+                searchEditText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+            } else {
+                Log.e("SurahListFragment", "search_src_text not found inside SearchView");
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterSurahList(newText);
-                return true;
-            }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    filterSurahList(query);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    filterSurahList(newText);
+                    return true;
+                }
+            });
         });
     }
+
 
     private void filterSurahList(String query) {
         if (surahListResponse == null || surahListResponse.getData() == null) return;
