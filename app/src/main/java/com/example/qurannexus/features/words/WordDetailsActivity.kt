@@ -3,13 +3,19 @@ package com.example.qurannexus.features.words
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -19,655 +25,755 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.core.activities.MainActivity
-import com.example.qurannexus.core.interfaces.QuranApi
-import com.example.qurannexus.core.network.ApiService
-import com.example.qurannexus.features.bookmark.models.FirstOccurrence
-import com.example.qurannexus.features.words.models.WordDetails
 import com.example.qurannexus.features.words.models.WordDetailsViewModel
-import com.example.qurannexus.features.words.models.WordOccurrence
-import com.example.qurannexus.features.words.models.WordOccurrenceResponse
-import com.example.qurannexus.features.words.models.WordOccurrencesBottomSheetAdapter
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.MarkerView
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.IOException
 import androidx.core.text.BidiFormatter
 import androidx.core.text.TextDirectionHeuristicsCompat
+import androidx.lifecycle.Observer
+import com.example.qurannexus.core.database.entities.ArabicFormWithFullDetails
+import com.example.qurannexus.core.database.entities.RootEntity
+import com.example.qurannexus.features.words.adapters.MorphFormsAdapter
+import com.example.qurannexus.features.words.adapters.TranslationsAdapter
+import com.example.qurannexus.features.words.adapters.WordOccurrencesAdapter
+import com.example.qurannexus.features.words.models.WordOccurrenceDisplayItem
+import com.google.android.flexbox.FlexboxLayout
+import java.io.IOException
+
 @AndroidEntryPoint
 class WordDetailsActivity : AppCompatActivity() {
-    private lateinit var barChart: BarChart
+    // Remove BarChart if not immediately reimplementing, PieChart is the primary one in your XML
+    // private lateinit var barChart: BarChart
     private lateinit var pieChart: PieChart
-    private lateinit var bookmarkButton: ImageView
+    private lateinit var bookmarkButton: ImageView // Will be used later
     private val viewModel: WordDetailsViewModel by viewModels()
-    private var isBookmarked = false
-    private var authToken: String? = null
-    private var currentWord: WordDetails? = null
-    private lateinit var quranApi: QuranApi
 
-    private var currentJuzNumber: Int = 0
-    private var currentPage = 1
-    private lateinit var occurrencesAdapter: WordOccurrencesBottomSheetAdapter
+    // UI Elements for Root and Selected Arabic Form
+    private lateinit var tvRootLabel: TextView
+    private lateinit var tvRootTotalOccurrences: TextView
+    private lateinit var spinnerArabicForms: Spinner
+    private lateinit var tvSelectedFormArabicText: TextView
+    private lateinit var tvSelectedFormTranslation: TextView
+    private lateinit var tvSelectedFormTransliteration: TextView
+    private lateinit var tvSelectedFormCharacters: TextView // New TextView for characters
+    private lateinit var btnPlaySelectedFormAudio: Button // For audio of selected form
+    private var translationsBottomSheetDialog: BottomSheetDialog? = null // Class member
+    private var morphFormsBottomSheetDialog: BottomSheetDialog? = null // Add this
+    // UI Elements for First Occurrence (of the Root)
+    private lateinit var tvFirstOccSurahName: TextView
+    private lateinit var tvFirstOccVerseText: TextView
+    private lateinit var tvFirstOccAyahKey: TextView
+    private lateinit var tvFirstOccPageId: TextView
+    private lateinit var tvFirstOccJuzId: TextView
+    private lateinit var tvFirstOccCharacters: TextView // Characters of the first occurrence
+
+    // General UI
+    private lateinit var progressBar: ProgressBar
+    private lateinit var tvChartTotalOccurrences: TextView // Renamed from tvTotalOccurrences for clarity
+    private lateinit var tvChartMostLeastOccurrences: TextView // Renamed
+
+    private var currentJuzForBottomSheet: Int = 0
+    private lateinit var occurrencesAdapter: WordOccurrencesAdapter // Renamed Adapter
     private var bottomSheetDialog: BottomSheetDialog? = null
 
-    private var isLoadingMore = false
+    // BidiFormatter for handling RTL text
+    private val bidiFormatter = BidiFormatter.getInstance()
+
+    private var mediaPlayer: MediaPlayer? = null
+    companion object {
+        const val EXTRA_ROOT_LABEL = "ROOT_LABEL"
+        const val EXTRA_WORD_TEXT_FROM_RECITATION = "WORD_TEXT_FROM_RECITATION" // e.g., "ٱللَّهِ"
+        private const val BASE_AUDIO_URL = "https://quran.seaade2024.com/data/quran-audio/"
+        private const val AUDIO_PLAYBACK_TAG = "AudioPlayback"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_details)
-        // Get auth token
-        authToken = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .getString("token", null)
-        quranApi = ApiService.getQuranClient().create(QuranApi::class.java)
+
         initializeViews()
-        setupBookmarkButton()
-        setupCharts()
-        // Initialize adapter early
-        occurrencesAdapter = WordOccurrencesBottomSheetAdapter { occurrence ->
-            navigateToVerse(occurrence.chapter_id, occurrence.verse_number)
-        }
-        // Get word text from intent
-        val wordText = intent.getStringExtra("WORD_TEXT") ?: return finish()
+        setupObservers()
+        setupChartListeners() // Setup chart click listeners
 
-        // Observe data
-        viewModel.wordDistribution.observe(this) { distribution ->
-            updateCharts(distribution.juz_distribution)
+        // Initialize adapter for bottom sheet early
+        occurrencesAdapter = WordOccurrencesAdapter { occurrenceItem -> // occurrenceItem is WordOccurrenceDisplayItem
+            navigateToVerse(occurrenceItem) // Pass the whole item
         }
 
-        viewModel.occurrences.observe(this) { occurrences ->
-            showOccurrencesBottomSheet(occurrences)
-        }
+        val rootLabel = intent.getStringExtra(EXTRA_ROOT_LABEL)
+        val wordTextFromRecitation = intent.getStringExtra(EXTRA_WORD_TEXT_FROM_RECITATION)
 
-        viewModel.isLoading.observe(this) { isLoading ->
-            showLoading(isLoading)
+        if (rootLabel == null && wordTextFromRecitation == null) {
+            Toast.makeText(this, "No root or word specified.", Toast.LENGTH_LONG).show()
+            finish()
+            return
         }
-
-        viewModel.error.observe(this) { error ->
-            showError(error)
-        }
-        // Add observation of new ViewModel states
-        viewModel.isLoadingMore.observe(this) { isLoading ->
-            occurrencesAdapter.setLoading(isLoading && viewModel.hasMorePages.value == true)
-        }
-        // Add observation for first occurrence
-        viewModel.firstOccurrence.observe(this) { firstOccurrence ->
-            updateFirstOccurrenceUI(firstOccurrence)
-        }
-        viewModel.hasMorePages.observe(this) { hasMore ->
-            if (hasMore && currentPage > 1) {
-                currentPage++
-            }
-        }
-        viewModel.loadWordData(wordText)
-        updateWordInfoFromIntent() // Keep this to update UI with intent data
-
-        // Check bookmark status if user is logged in
-        authToken?.let { token ->
-            viewModel.checkBookmarkStatus(token, wordText)
-        }
+        viewModel.loadInitialData(rootLabel, wordTextFromRecitation)
     }
-
-    // Update when user clicks on chart
-//    private fun onJuzSelected(juzNumber: Int) {
-//        val wordText = intent.getStringExtra("WORD_TEXT") ?: return
-//        viewModel.loadWordData(wordText, juzNumber)
-//    }
 
     private fun initializeViews() {
-        Log.d("WordDetailsActivity", "initializeViews called")
-        barChart = findViewById(R.id.barChart)
+        progressBar = findViewById(R.id.progressBar)
         pieChart = findViewById(R.id.pieChart)
         bookmarkButton = findViewById(R.id.bookmarkButton)
-        // Back button
-        findViewById<ImageView>(R.id.backButton).setOnClickListener {
-            onBackPressed()
+
+        bookmarkButton.setOnClickListener {
+            // ViewModel now handles token internally via TokenManager
+            viewModel.toggleSelectedFormBookmark()
         }
 
-        // Audio playback setup
-        val playAudioButton = findViewById<Button>(R.id.playAudioButton)
-        val audioUrl = intent.getStringExtra("AUDIO_URL")
-        playAudioButton.setOnClickListener {
-            playAudio(audioUrl)
+        findViewById<ImageView>(R.id.backButton).setOnClickListener { onBackPressed() }
+
+        // Root and Selected Form Views
+        tvRootLabel = findViewById(R.id.tvRootLabel) // Needs to be added to XML
+        tvRootTotalOccurrences = findViewById(R.id.tvRootTotalOccurrences) // Needs to be added
+        spinnerArabicForms = findViewById(R.id.spinnerArabicForms) // Needs to be added
+        tvSelectedFormArabicText = findViewById(R.id.tvSelectedFormArabicText) // Replaces old wordText
+        tvSelectedFormTranslation = findViewById(R.id.tvSelectedFormTranslation_main) // Replaces old translationText
+        tvSelectedFormTransliteration = findViewById(R.id.tvSelectedFormTransliteration) // Replaces old transliterationText
+        tvSelectedFormCharacters = findViewById(R.id.tvSelectedFormCharacters) // Needs to be added
+        btnPlaySelectedFormAudio = findViewById(R.id.btnPlaySelectedFormAudio) // Needs to be added
+
+        // First Occurrence Views (of the Root)
+        tvFirstOccSurahName = findViewById(R.id.tvFirstOccSurahName) // Replaces surahNameText
+        tvFirstOccVerseText = findViewById(R.id.tvFirstOccVerseText) // Replaces verseText
+        tvFirstOccAyahKey = findViewById(R.id.tvFirstOccAyahKey) // Replaces ayahKeyText
+        tvFirstOccPageId = findViewById(R.id.tvFirstOccPageId) // Replaces pageIdText
+        tvFirstOccJuzId = findViewById(R.id.tvFirstOccJuzId) // Replaces juzIdText
+        tvFirstOccCharacters = findViewById(R.id.tvFirstOccCharacters) // Needs to be added
+
+        // Chart specific TextViews
+        tvChartTotalOccurrences = findViewById(R.id.tvChartTotalOccurrences)
+        tvChartMostLeastOccurrences = findViewById(R.id.tvChartMostLeastOccurrences)
+
+        // Setup Spinner for Arabic Forms
+        spinnerArabicForms.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Get the list of ArabicFormWithFullDetails from the ViewModel
+                // that was used to populate the spinner adapter's display strings.
+                viewModel.arabicForms.value?.getOrNull(position)?.let { selectedFormObject ->
+                    // Now 'selectedFormObject' is the actual ArabicFormWithFullDetails object
+                    viewModel.selectArabicForm(selectedFormObject)
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+
+    }
+
+    private fun setupObservers() {
+        viewModel.isLoading.observe(this, Observer { isLoading ->
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        })
+
+        viewModel.error.observe(this, Observer { error ->
+            error?.let { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
+        })
+
+        viewModel.rootDetails.observe(this, Observer { rootEntity ->
+            updateRootInfoUI(rootEntity)
+            updateFirstOccurrenceUI(rootEntity)
+            if(rootEntity == null){
+                bookmarkButton.setImageResource(R.drawable.ic_heart)
+            }
+        })
+
+        // This observer populates the spinner adapter.
+        viewModel.arabicForms.observe(this) { forms ->
+            Log.d("ActivityObserver", "arabicForms emitted with ${forms.size} forms. Updating spinner adapter.")
+            updateArabicFormsSpinner(forms)
+            // After updating the adapter, try to set the selection based on the *current*
+            // selectedArabicForm value, as it might have been set by loadInitialData.
+            viewModel.selectedArabicForm.value?.let { currentSelection ->
+                val position = forms.indexOfFirst { it.arabicFormEntity.arabicFormId == currentSelection.arabicFormEntity.arabicFormId }
+                if (position != -1 && spinnerArabicForms.selectedItemPosition != position) {
+                    Log.d("ActivityObserver", "[arabicForms obs] Setting spinner to $position for ${currentSelection.arabicFormEntity.arabicText}")
+                    spinnerArabicForms.setSelection(position, false)
+                }
+            }
+        }
+
+        // This observer reacts to changes in the selected form (either by user or initial load)
+        // and updates the UI accordingly. It also attempts to set the spinner selection.
+        viewModel.selectedArabicForm.observe(this) { selectedForm ->
+            Log.d("ActivityObserver", "selectedArabicForm emitted: ${selectedForm?.arabicFormEntity?.arabicText}")
+            updateSelectedArabicFormUI(selectedForm) // This updates the TextViews
+            // When selected form changes, check its bookmark status
+            viewModel.checkSelectedFormBookmarkStatus(selectedForm?.arabicFormEntity?.arabicText)
+
+            // Ensure spinner reflects this selection if the adapter is ready
+            if (selectedForm != null && spinnerArabicForms.adapter != null && spinnerArabicForms.adapter.count > 0) {
+                viewModel.arabicForms.value?.let { currentFormsList -> // Get the list used by adapter
+                    val position = currentFormsList.indexOfFirst { it.arabicFormEntity.arabicFormId == selectedForm.arabicFormEntity.arabicFormId }
+                    if (position != -1 && spinnerArabicForms.selectedItemPosition != position) {
+                        Log.d("ActivityObserver", "[selectedArabicForm obs] Updating spinner selection to: $position for ${selectedForm.arabicFormEntity.arabicText}")
+                        spinnerArabicForms.setSelection(position, true) // true to trigger onItemSelected if it's a *new* programmatic change that should behave like a user click. Or false if you want to avoid it. `false` is safer to prevent loops if onItemSelected also modifies ViewModel.
+                    } else if (position != -1) {
+                        Log.d("ActivityObserver", "[selectedArabicForm obs] Spinner already at correct position: $position")
+                    } else {
+                        Log.w("ActivityObserver", "[selectedArabicForm obs] Selected form ${selectedForm.arabicFormEntity.arabicText} not found in spinner's current list.")
+                    }
+                }
+            }
+        }
+
+        // Observe isBookmarked LiveData from ViewModel
+        viewModel.isBookmarked.observe(this) { isBookmarked ->
+            Log.d("WordDetailsActivity", "Bookmark status LiveData from VM: $isBookmarked")
+            bookmarkButton.setImageResource(
+                if (isBookmarked) R.drawable.ic_heart_bookmarked// Ensure you have this drawable
+                else R.drawable.ic_heart // Ensure you have this drawable
+            )
+        }
+
+        // Observe toast messages from ViewModel
+        viewModel.toastMessage.observe(this) { message ->
+            message?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.onToastMessageShown() // Notify ViewModel that toast was shown
+            }
+        }
+
+        viewModel.juzDistribution.observe(this, Observer { distribution ->
+            updateJuzDistributionChart(distribution)
+            updateChartStatisticsText(distribution)
+        })
+
+        viewModel.occurrencesInJuz.observe(this, Observer { occurrences ->
+            showOccurrencesInJuzBottomSheet(occurrences)
+        })
+
+        viewModel.isLoadingMoreOccurrences.observe(this, Observer { isLoadingMore ->
+            occurrencesAdapter.setLoading(isLoadingMore && viewModel.hasMoreOccurrences.value == true)
+        })
+        viewModel.hasMoreOccurrences.observe(this) { /* Handled by adapter setLoading */ }
+
+        viewModel.contributingMorphForms.observe(this) { morphForms ->
+            // ... (Flexbox population code as before) ...
+            val flexboxLayout = findViewById<FlexboxLayout>(R.id.flexboxMorphForms)
+            val morphFormsLabel = findViewById<TextView>(R.id.tvContributingMorphFormsLabel)
+            val btnShowAllMorphForms = findViewById<Button>(R.id.btnShowAllMorphForms) // Make sure this ID exists
+
+            flexboxLayout.removeAllViews()
+
+            if (morphForms.isNotEmpty()) {
+                morphFormsLabel.visibility = View.VISIBLE
+                flexboxLayout.visibility = View.VISIBLE
+
+                val maxInitialForms = 6 // Example
+                val formsToShowInitially = if (morphForms.size > maxInitialForms) morphForms.take(maxInitialForms) else morphForms
+
+                formsToShowInitially.forEach { formText ->
+                    val chipView = LayoutInflater.from(this).inflate(R.layout.item_morph_form_chip, flexboxLayout, false) as TextView
+                    chipView.text = formText
+                    flexboxLayout.addView(chipView)
+                }
+
+                if (morphForms.size > maxInitialForms) {
+                    btnShowAllMorphForms.visibility = View.VISIBLE
+                    btnShowAllMorphForms.text = "View All ${morphForms.size} Forms" // Or just "View All"
+                    btnShowAllMorphForms.setOnClickListener {
+                        showAllMorphFormsBottomSheet(viewModel.rootDetails.value?.rootLabel ?: "Root", morphForms)
+                    }
+                } else {
+                    btnShowAllMorphForms.visibility = View.GONE
+                }
+            } else {
+                morphFormsLabel.visibility = View.GONE
+                flexboxLayout.visibility = View.GONE
+                btnShowAllMorphForms.visibility = View.GONE
+            }
         }
     }
-    private fun updateFirstOccurrenceUI(firstOccurrence: FirstOccurrence?) {
-        if (firstOccurrence == null) {
-            // Hide verse text if no first occurrence data
-            findViewById<TextView>(R.id.verseText)?.visibility = View.GONE
+    private fun showAllMorphFormsBottomSheet(rootLabel: String, morphForms: List<String>) {
+        if (morphFormsBottomSheetDialog == null) {
+            morphFormsBottomSheetDialog = BottomSheetDialog(this)
+            // Reuse generic list bottom sheet layout if you created one, or use translations one and adapt
+            val bottomSheetView = layoutInflater.inflate(R.layout.layout_bottom_sheet_list_generic, null)
+            morphFormsBottomSheetDialog!!.setContentView(bottomSheetView)
+        }
+
+        val titleTextView = morphFormsBottomSheetDialog!!.findViewById<TextView>(R.id.tvBottomSheetGenericTitle)
+        val recyclerView = morphFormsBottomSheetDialog!!.findViewById<RecyclerView>(R.id.rvGenericList)
+
+        titleTextView?.text = "All Morphological Forms for Root: $rootLabel"
+        recyclerView?.layoutManager = LinearLayoutManager(this)
+        recyclerView?.adapter = MorphFormsAdapter(morphForms)
+
+        morphFormsBottomSheetDialog!!.show()
+    }
+    private fun updateRootInfoUI(rootEntity: RootEntity?) {
+        tvRootLabel.text = "Root: ${rootEntity?.rootLabel ?: "N/A"}"
+        tvRootTotalOccurrences.text = "Total Root Occurrences: ${rootEntity?.totalOccurrences ?: 0}"
+    }
+
+    private fun updateArabicFormsSpinner(forms: List<ArabicFormWithFullDetails>) {
+        if (forms.isEmpty()) {
+            spinnerArabicForms.adapter = null
+            Log.d("SpinnerUpdate", "Forms list is empty, clearing adapter.")
+            return
+        }
+        val displayTexts = forms.map { it.arabicFormEntity.arabicText ?: "Unknown Form" }
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            displayTexts
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerArabicForms.adapter = adapter
+        Log.d("SpinnerUpdate", "Spinner adapter populated with ${forms.size} items.")
+        // The initial selection will be handled by the _selectedArabicForm observer
+        // or by the _arabicForms observer's attempt after adapter is set.
+    }
+
+    private fun updateSelectedArabicFormUI(formWithDetails: ArabicFormWithFullDetails?) {
+        if (formWithDetails == null) {
+            Log.d("UpdateUI", "Selected form is null, clearing UI.")
+            tvSelectedFormArabicText.text = "" // Clear it
+            // ... (rest of the clearing logic from your code)
+            findViewById<TextView>(R.id.tvSelectedFormTransliteration).text = "Transliteration: N/A"
+            findViewById<TextView>(R.id.tvSelectedFormCharacters).text = "Characters: N/A"
+            return
+        }
+        Log.d("UpdateUI", "Updating UI for form: ${formWithDetails.arabicFormEntity.arabicText}")
+
+        val formEntity = formWithDetails.arabicFormEntity
+        tvSelectedFormArabicText.text = formEntity.arabicText ?: "N/A" // Should be visible
+        Log.d("UpdateUI", "Arabic Text set to: ${tvSelectedFormArabicText.text}") // CHECK THIS LOG
+
+
+        // Translation section (as implemented previously with BottomSheet)
+        val mainTranslationTV = findViewById<TextView>(R.id.tvSelectedFormTranslation_main)
+        val moreTranslationsIcon = findViewById<ImageView>(R.id.ivMoreTranslations)
+        val translationSectionLayout = findViewById<LinearLayout>(R.id.layoutTranslationSection)
+        val translations = formWithDetails.translations
+        if (translations.isNotEmpty()) {
+            mainTranslationTV.text = translations.first()
+            if (translations.size > 1) {
+                mainTranslationTV.append(" (+${translations.size - 1} more...)") // Append to first
+                moreTranslationsIcon.visibility = View.VISIBLE
+                translationSectionLayout.setOnClickListener {
+                    showAllTranslationsBottomSheet(formWithDetails.arabicFormEntity.arabicText ?: "Word", translations)
+                }
+            } else {
+                moreTranslationsIcon.visibility = View.GONE
+                translationSectionLayout.setOnClickListener(null)
+            }
+        } else {
+            mainTranslationTV.text = "N/A"
+            moreTranslationsIcon.visibility = View.GONE
+            translationSectionLayout.setOnClickListener(null)
+        }
+
+
+        val transliterationText = "Transliteration: ${formWithDetails.transliterations.joinToString(" / ")}"
+        findViewById<TextView>(R.id.tvSelectedFormTransliteration).text = transliterationText
+        Log.d("UpdateUI", "Transliteration set to: $transliterationText")
+
+        val characters = viewModel.getCharactersForSelectedForm()
+        val charactersText = "Characters: ${characters.joinToString(" ")}" // Join with space for Arabic
+        findViewById<TextView>(R.id.tvSelectedFormCharacters).text = charactersText
+        Log.d("UpdateUI", "Characters set to: $charactersText")
+
+
+        if (formEntity.audioUrl != null) {
+            val relativeAudioPath = formWithDetails.arabicFormEntity.audioUrl
+            if (!relativeAudioPath.isNullOrEmpty()) {
+                btnPlaySelectedFormAudio.visibility = View.VISIBLE
+                btnPlaySelectedFormAudio.setOnClickListener {
+                    val fullUrl = BASE_AUDIO_URL + relativeAudioPath
+                    playAudioUrl(fullUrl)
+                }
+                // Optional: Change button text or icon
+                // btnPlaySelectedFormAudio.text = "Play Form Audio"
+            } else {
+                btnPlaySelectedFormAudio.visibility = View.GONE
+            }
+        } else {
+            btnPlaySelectedFormAudio.visibility = View.GONE
+        }
+    }
+    private fun showAllTranslationsBottomSheet(arabicFormText: String, translations: List<String>) {
+        if (translationsBottomSheetDialog == null) {
+            translationsBottomSheetDialog = BottomSheetDialog(this)
+            // Inflate custom layout
+            val bottomSheetView = layoutInflater.inflate(R.layout.layout_bottom_sheet_translations, null)
+            translationsBottomSheetDialog!!.setContentView(bottomSheetView)
+        }
+
+        val titleTextView = translationsBottomSheetDialog!!.findViewById<TextView>(R.id.tvBottomSheetTranslationTitle)
+        val recyclerView = translationsBottomSheetDialog!!.findViewById<RecyclerView>(R.id.rvTranslations)
+
+        titleTextView?.text = "All Translations for $arabicFormText"
+        recyclerView?.layoutManager = LinearLayoutManager(this)
+        recyclerView?.adapter = TranslationsAdapter(translations)
+
+        translationsBottomSheetDialog!!.show()
+    }
+    private fun updateFirstOccurrenceUI(rootEntity: RootEntity?) {
+        if (rootEntity == null) {
+            tvFirstOccSurahName.text = "Surah: N/A"
+            tvFirstOccVerseText.text = "Word in First Verse: N/A"
+            tvFirstOccAyahKey.text = "Ayah Key: N/A"
+            tvFirstOccPageId.text = "Page ID: N/A"
+            tvFirstOccJuzId.text = "Juz: N/A"
+            tvFirstOccCharacters.text = "Word Characters: N/A"
             return
         }
 
-        // Update the verse text field with data from first occurrence
-        val verseTextView = findViewById<TextView>(R.id.verseText)
-        verseTextView.visibility = View.VISIBLE
-        // Or if you need the "Full Verse:" label separately
-        val arabicText = firstOccurrence.verseText
-        val label = "Full Verse: "
-        val bidiFormatter = BidiFormatter.getInstance()
+        val surahDetails = rootEntity.firstOccurrenceSurahId?.let {
+            com.example.qurannexus.core.utils.QuranMetadata.getInstance().getSurahDetails(it)
+        }
+
+        tvFirstOccSurahName.text = "Surah: ${surahDetails?.arabicName ?: ""} (${surahDetails?.englishName ?: "N/A"})"
 
         val wrappedArabicText = bidiFormatter.unicodeWrap(
-            arabicText,
-            TextDirectionHeuristicsCompat.ANYRTL_LTR, // Heuristic to determine direction
-            true // Isolate the wrapped string's directionality
+            rootEntity.firstOccurrenceArabicText ?: "N/A",
+            TextDirectionHeuristicsCompat.ANYRTL_LTR, true
         )
-        // Now concatenate
-        verseTextView.text = "$label$wrappedArabicText"
-        // Optional: Update any other fields if needed
-        // For example, if we want to update surah name, page, juz info
-        findViewById<TextView>(R.id.surahNameText)?.text =
-            "Surah: ${firstOccurrence.surahName} (${firstOccurrence.chapterId})"
+        tvFirstOccVerseText.text = "Word in First Verse: $wrappedArabicText"
 
-        findViewById<TextView>(R.id.ayahKeyText)?.text =
-            "Ayah Key: ${firstOccurrence.chapterId}:${firstOccurrence.verseNumber}"
+        tvFirstOccAyahKey.text = "Ayah Key: ${rootEntity.firstOccurrenceWordKey ?: "N/A"}"
+        tvFirstOccPageId.text = "Page ID: ${rootEntity.firstOccurrencePageId ?: "N/A"}"
+        tvFirstOccJuzId.text = "Juz: ${rootEntity.firstOccurrenceJuzId ?: "N/A"}"
 
-        findViewById<TextView>(R.id.pageIdText)?.text =
-            "Page ID: ${firstOccurrence.pageId}"
+        val firstOccChars = viewModel.getFirstOccurrenceCharacters()
+        tvFirstOccCharacters.text = "Word Characters: ${firstOccChars.joinToString(" ")}" // Join with space
 
-        // Add juz information if not already showing
-        val juzTextView = findViewById<TextView>(R.id.juzIdText)
-        if (juzTextView != null) {
-            juzTextView.visibility = View.VISIBLE
-            juzTextView.text = "Juz: ${firstOccurrence.juzId}"
-        } else {
-            // If juzIdText doesn't exist, we might need to add it to the layout
-            Log.d("WordDetailsActivity", "Juz text view not found in layout")
-        }
-
-        // Update audio URL if needed
-        firstOccurrence.audioUrl?.let { audioUrl ->
-            val playAudioButton = findViewById<Button>(R.id.playAudioButton)
-            playAudioButton.setOnClickListener {
-                playAudio(audioUrl)
-            }
-        }
     }
-    private fun setupBookmarkButton() {
-        Log.d("WordDetailsActivity", "setupBookmarkButton called")
-        bookmarkButton.setOnClickListener {
-            authToken?.let { token ->
-                val wordText = intent.getStringExtra("WORD_TEXT")
-                if (isBookmarked) {
-                    wordText?.let { text -> viewModel.removeWordBookmark(token, text) }
-                } else {
-                    // Get current word occurrence from intent extras
-                    val currentOccurrence = WordOccurrence(
-//                        word_id = intent.getStringExtra("WORD_ID") ?: "", //#
-                        word_id = wordText ?: "",
-                        word_text = wordText ?: "",
-                        translation = intent.getStringExtra("TRANSLATION") ?: "",
-                        transliteration = intent.getStringExtra("TRANSLITERATION"),
-                        chapter_id = intent.getStringExtra("CHAPTER_ID") ?: "",
-                        verse_number = intent.getStringExtra("VERSE_NUMBER") ?: "",
-                        verse_text = intent.getStringExtra("VERSE_TEXT"),
-                        ayah_key = "${intent.getStringExtra("CHAPTER_ID")}:${intent.getStringExtra("VERSE_NUMBER")}",
-                        juz_number = intent.getStringExtra("JUZ_NUMBER") ?: "",
-                        position = intent.getIntExtra("POSITION", 0),
-                        audio_url = intent.getStringExtra("AUDIO_URL")
-                    )
+    private fun playAudioUrl(url: String) {
+        Log.d(AUDIO_PLAYBACK_TAG, "Attempting to play audio from URL: $url")
+        releaseMediaPlayer() // Release any existing player first
 
-                    // Get total occurrences from distribution data
-                    val totalOccurrences = viewModel.wordDistribution.value?.total_occurrences ?: 0
-                    viewModel.addWordBookmark(token, currentOccurrence, totalOccurrences)
-                }
-            } ?: run {
-                Toast.makeText(this, "Please login to bookmark words", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        viewModel.isBookmarked.observe(this) { bookmarked ->
-            isBookmarked = bookmarked
-            bookmarkButton.setImageResource(
-                if (bookmarked) R.drawable.ic_heart_bookmarked
-                else R.drawable.ic_heart
+        mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
             )
+            try {
+                setDataSource(url)
+                setOnPreparedListener {
+                    Log.d(AUDIO_PLAYBACK_TAG, "MediaPlayer prepared, starting playback.")
+                    start()
+                    // Optionally, disable play button while playing and re-enable on completion
+                    // You can also update UI to show a "playing" state
+                }
+                setOnCompletionListener {
+                    Log.d(AUDIO_PLAYBACK_TAG, "MediaPlayer playback completed.")
+                    releaseMediaPlayer()
+                    // Re-enable play button or reset UI state
+                }
+                setOnErrorListener { mp, what, extra ->
+                    Log.e(AUDIO_PLAYBACK_TAG, "MediaPlayer Error: what: $what, extra: $extra for URL: $url")
+                    Toast.makeText(this@WordDetailsActivity, "Error playing audio.", Toast.LENGTH_SHORT).show()
+                    releaseMediaPlayer()
+                    true // True if the error has been handled
+                }
+                prepareAsync() // Prepare asynchronously to avoid blocking UI thread
+                Log.d(AUDIO_PLAYBACK_TAG, "MediaPlayer prepareAsync called.")
+                // You could show a small loading indicator here until onPrepared is called
+            } catch (e: IOException) {
+                Log.e(AUDIO_PLAYBACK_TAG, "IOException setting data source for $url", e)
+                Toast.makeText(this@WordDetailsActivity, "Failed to set up audio.", Toast.LENGTH_SHORT).show()
+                releaseMediaPlayer()
+            } catch (e: IllegalStateException) {
+                Log.e(AUDIO_PLAYBACK_TAG, "IllegalStateException for $url", e)
+                Toast.makeText(this@WordDetailsActivity, "Audio player state error.", Toast.LENGTH_SHORT).show()
+                releaseMediaPlayer()
+            }
         }
     }
 
-    private fun updateWordInfoFromIntent() {
-        findViewById<TextView>(R.id.wordText).text = intent.getStringExtra("WORD_TEXT")
-        findViewById<TextView>(R.id.translationText).text =
-            "Translation: ${intent.getStringExtra("TRANSLATION")}"
-        findViewById<TextView>(R.id.transliterationText).text =
-            "Transliteration: ${intent.getStringExtra("TRANSLITERATION")}"
-        findViewById<TextView>(R.id.surahNameText).text =
-            "Surah: ${intent.getStringExtra("SURAH_NAME_ARABIC")} (${intent.getStringExtra("SURAH_NAME_ENGLISH")})"
-        findViewById<TextView>(R.id.ayahKeyText).text =
-            "Ayah Key: ${intent.getStringExtra("AYAH_KEY")}"
-//        findViewById<TextView>(R.id.surahNumberText).text =
-//            "Surah Number: ${intent.getStringExtra("SURAH_NUMBER")}"
-//        findViewById<TextView>(R.id.lineNumberText).text =
-//            "Line Number: ${intent.getIntExtra("LINE_NUMBER", -1)}"
-//        findViewById<TextView>(R.id.wordNumberText).text =
-//            "Word Number: ${intent.getStringExtra("WORD_NUMBER")}"
-        findViewById<TextView>(R.id.verseText).text =
-            "Full Verse: ${intent.getStringExtra("VERSE_TEXT")}"
-        findViewById<TextView>(R.id.pageIdText).text =
-            "Page ID: ${intent.getStringExtra("PAGE_ID")}"
-
-
+    private fun releaseMediaPlayer() {
+        mediaPlayer?.let {
+            if (it.isPlaying) {
+                it.stop()
+            }
+            it.reset() // Resets the MediaPlayer to its uninitialized state.
+            it.release() // Releases resources associated with this MediaPlayer object.
+            Log.d(AUDIO_PLAYBACK_TAG, "MediaPlayer released.")
+        }
+        mediaPlayer = null
     }
 
-    private fun setupCharts() {
-        // Bar chart click listener
-        barChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-            override fun onValueSelected(e: Entry?, h: Highlight?) {
-                e?.let {
-                    currentJuzNumber = it.x.toInt()
-                    currentPage = 1
-                    loadOccurrences(currentJuzNumber)
-                    showOccurrencesBottomSheet(emptyList())
-                }
-            }
-
-            override fun onNothingSelected() {}
-        })
-
-        // Pie chart click listener
+    private fun setupChartListeners() {
         pieChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onValueSelected(e: Entry?, h: Highlight?) {
-                Log.d("PieChart", "Value selected: ${e?.toString()}")
                 if (e is PieEntry) {
-                    // Extract juz number by removing "Juz " prefix and parsing remaining number
                     val juzStr = e.label?.replace("Juz ", "")?.trim()
-                    Log.d("PieChart", "Extracted juz string: $juzStr")
-                    // Extract juz number from label
                     try {
                         val juzNumber = juzStr?.toInt()
                         if (juzNumber != null) {
-                            Log.d("PieChart", "Successfully parsed juz number: $juzNumber")
-                            currentJuzNumber = juzNumber
-                            currentPage = 1
-                            loadOccurrences(juzNumber)
-                            showOccurrencesBottomSheet(emptyList())
-                        } else {
-                            Log.e("PieChart", "Juz number was null after parsing")
+                            currentJuzForBottomSheet = juzNumber
+                            // Load occurrences for this Juz, initial load
+                            viewModel.loadOccurrencesForJuz(juzNumber, isInitialLoad = true)
+                            // Open bottom sheet (it will be populated by observer)
                         }
                     } catch (ex: NumberFormatException) {
                         Log.e("PieChart", "Error parsing juz number from: $juzStr", ex)
                     }
                 }
             }
-
-            override fun onNothingSelected() {
-                Log.d("PieChart", "Nothing selected")
-            }
+            override fun onNothingSelected() {}
         })
+        // Add BarChart listener if you re-add it
+    }
 
-        // Show occurrences when available
-        viewModel.occurrences.observe(this) { occurrences ->
-            showOccurrencesBottomSheet(occurrences)
+    private fun updateJuzDistributionChart(juzDistribution: Map<String, Int>) {
+        // juzDistribution is Map<JuzNumber (String), Count (Int)>
+        if (juzDistribution.isEmpty()) {
+            pieChart.clear()
+            pieChart.invalidate()
+            // barChart.clear() // if using
+            return
         }
+        setupPieChart(juzDistribution) // Reusing your existing pie chart setup
+        // setupBarChart(juzDistribution) // If you re-add barchart
     }
 
-    private fun updateCharts(juzDistribution: Map<String, Int>) {
-        setupBarChart(juzDistribution)
-        setupPieChart(juzDistribution)
-    }
-
-    private fun
-            showLoading(isLoading: Boolean) {
-        // Implement loading UI - you might want to show/hide a ProgressBar
-        findViewById<ProgressBar>(R.id.progressBar)?.visibility =
-            if (isLoading) View.VISIBLE else View.GONE
-    }
-
-    private fun showError(error: String) {
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun setupBarChart(juzDistribution: Map<String, Int>) {
-        val entries = juzDistribution.map { (juz, count) ->
-            BarEntry(juz.toFloat(), count.toFloat())
-        }
-        val dataSet = BarDataSet(entries, "")
-        dataSet.color = Color.BLUE
-        dataSet.valueTextSize = 8f
-        dataSet.valueTextColor = Color.TRANSPARENT
-
-        barChart.apply {
-            data = BarData(dataSet)
-            description.isEnabled = false
-            setFitBars(true)
-            animateY(1400)
-
-            // X-axis setup
-            xAxis.apply {
-                position = XAxis.XAxisPosition.BOTTOM
-                setDrawGridLines(false)
-                textSize = 10f
-                granularity = 1f
-                valueFormatter = IndexAxisValueFormatter(
-                    (1..30).map { it.toString() } + listOf("Juz")
-                )
-                labelRotationAngle = 0f
-            }
-
-            // Y-axis setup
-            axisLeft.apply {
-                axisMinimum = 0f
-                axisMaximum = (juzDistribution.values.maxOrNull() ?: 100).toFloat()
-                labelCount = 5
-                setDrawGridLines(false)
-            }
-            axisRight.isEnabled = false
-
-            invalidate()
-        }
-
-        // Update statistics text
+    private fun updateChartStatisticsText(juzDistribution: Map<String, Int>) {
         val total = juzDistribution.values.sum()
         val maxEntry = juzDistribution.maxByOrNull { it.value }
-        val minEntry = juzDistribution.minByOrNull { it.value }
+        val minEntry = juzDistribution.filterValues { it > 0 }.minByOrNull { it.value }
 
-        findViewById<TextView>(R.id.tvTotalOccurrences).text = "Total Occurrences: $total"
-        findViewById<TextView>(R.id.tvMostLeastOccurrences).text =
-            "Most: Juz ${maxEntry?.key} (${maxEntry?.value}), " +
-                    "Least: Juz ${minEntry?.key} (${minEntry?.value})"
+        tvChartTotalOccurrences.text = "Total Occurrences (Root): $total" // Clarified this is for the root
+
+        val mostText = if (maxEntry != null) "Most: Juz ${maxEntry.key} (${maxEntry.value})" else "Most: N/A"
+        val leastText = if (minEntry != null) "Least: Juz ${minEntry.key} (${minEntry.value})" else "Least: N/A"
+        tvChartMostLeastOccurrences.text = "$mostText, $leastText"
     }
 
+    // Re-using your PieChart setup method (ensure it's compatible with Map<String, Int>)
     private fun setupPieChart(juzDistribution: Map<String, Int>) {
         try {
             val total = juzDistribution.values.sum().toFloat()
+            if (total == 0f) {
+                pieChart.clear() // Clear if no data
+                pieChart.setNoDataText("No distribution data available.")
+                pieChart.invalidate()
+                return
+            }
 
-            // Create entries
             val entries = juzDistribution
                 .filter { (_, count) -> count > 0 }
                 .map { (juz, count) ->
-                    val percentage = (count.toFloat() / total) * 100f
-                    PieEntry(count.toFloat(), "Juz $juz", percentage)
+                    // val percentage = (count.toFloat() / total) * 100f // Percentage is calculated by formatter
+                    PieEntry(count.toFloat(), "Juz $juz", count.toFloat()) // Store raw count in data field for formatter
                 }
                 .sortedByDescending { it.value }
 
-            // Set up colors and data
             val dataSet = PieDataSet(entries, "").apply {
-                colors = mutableListOf<Int>().apply {
-                    entries.forEach { entry ->
-                        val percentage = entry.data as Float
-                        add(
-                            when {
-                                percentage > 10f -> Color.parseColor("#4CAF50")  // Green
-                                percentage > 5f -> Color.parseColor("#FFC107")   // Yellow
-                                percentage > 2f -> Color.parseColor("#F44336")   // Red
-                                else -> Color.parseColor("#9C27B0")             // Purple
-                            }
-                        )
-                    }
+                val colorList = mutableListOf<Int>()
+                val baseColors = listOf(
+                    Color.parseColor("#4CAF50"), // Green
+                    Color.parseColor("#2196F3"), // Blue
+                    Color.parseColor("#FFC107"), // Yellow
+                    Color.parseColor("#F44336"), // Red
+                    Color.parseColor("#9C27B0"), // Purple
+                    Color.parseColor("#FF9800"), // Orange
+                    Color.parseColor("#00BCD4"), // Cyan
+                    Color.parseColor("#E91E63")  // Pink
+                )
+                // Dynamically assign colors if more entries than base colors
+                entries.forEachIndexed { index, entry ->
+                    val percentage = (entry.value / total) * 100f
+                    colorList.add(
+                        when {
+                            percentage > 10f -> Color.parseColor("#4CAF50")
+                            percentage > 5f -> Color.parseColor("#FFC107")
+                            percentage > 2f -> Color.parseColor("#F44336")
+                            else -> baseColors[index % baseColors.size] // Cycle through base colors
+                        }
+                    )
                 }
+                colors = colorList
 
                 setValueTextColors(listOf(Color.BLACK))
-                valueTextSize = 11f
+                valueTextSize = 10f
                 valueFormatter = object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String {
+                    override fun getFormattedValue(value: Float): String { // value is the raw count here
                         val percentage = (value / total) * 100f
-                        return if (percentage >= 1f) String.format("%.1f%%", percentage) else ""
+                        return if (percentage >= 1.5f) String.format("%.1f%%", percentage) else ""
                     }
                 }
-
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-                valueLinePart1Length = 0.6f
-                valueLinePart2Length = 0.3f
-                valueLineWidth = 1.5f
+                valueLinePart1Length = 0.5f
+                valueLinePart2Length = 0.2f
+                valueLineWidth = 1f
                 valueLineColor = Color.GRAY
-                sliceSpace = 2f
+                sliceSpace = 1f
             }
 
-            // Configure pie chart
             pieChart.apply {
-                setExtraOffsets(
-                    30f,
-                    30f,
-                    30f,
-                    100f
-                )  // Important: Give extra space at bottom for legend
+                setExtraOffsets(20f, 5f, 20f, 80f) // Adjust offsets
                 data = PieData(dataSet)
                 description.isEnabled = false
                 isRotationEnabled = true
-
-                // Center settings
                 isDrawHoleEnabled = true
                 setHoleColor(Color.WHITE)
+                holeRadius = 40f
+                transparentCircleRadius = 45f
                 setTransparentCircleColor(Color.WHITE)
                 setTransparentCircleAlpha(110)
-                holeRadius = 35f
-                transparentCircleRadius = 40f
-
-                // Configure legend - THIS IS THE KEY PART
+                centerText = "Juz\nDistribution"
+                setCenterTextSize(12f)
+                setUsePercentValues(false) // Important if formatter calculates percent from raw values
                 legend.apply {
                     isEnabled = true
                     verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
                     horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-                    orientation = Legend.LegendOrientation.VERTICAL
-                    setDrawInside(false)
-                    yOffset = 10f
-                    xOffset = 10f
-                    yEntrySpace = 10f
-                    textSize = 12f
-                    formSize = 12f
-                    form = Legend.LegendForm.CIRCLE
-                    textColor = Color.BLACK
+                    orientation = Legend.LegendOrientation.HORIZONTAL
+                    setDrawInside(false); yOffset = 10f; xEntrySpace = 7f; yEntrySpace = 5f
+                    textSize = 10f; formSize = 10f; form = Legend.LegendForm.CIRCLE
+                    textColor = Color.BLACK; isWordWrapEnabled = true
 
-                    // Create custom legend entries
-                    val customEntries = arrayOf(
-                        LegendEntry(
-                            "Frequent (>10%)",
-                            Legend.LegendForm.CIRCLE,
-                            Float.NaN,
-                            Float.NaN,
-                            null,
-                            Color.parseColor("#4CAF50")
-                        ),
-                        LegendEntry(
-                            "Common (5-10%)",
-                            Legend.LegendForm.CIRCLE,
-                            Float.NaN,
-                            Float.NaN,
-                            null,
-                            Color.parseColor("#FFC107")
-                        ),
-                        LegendEntry(
-                            "Occasional (2-5%)",
-                            Legend.LegendForm.CIRCLE,
-                            Float.NaN,
-                            Float.NaN,
-                            null,
-                            Color.parseColor("#F44336")
-                        ),
-                        LegendEntry(
-                            "Rare (<2%)",
-                            Legend.LegendForm.CIRCLE,
-                            Float.NaN,
-                            Float.NaN,
-                            null,
-                            Color.parseColor("#9C27B0")
-                        )
-                    )
-                    setCustom(customEntries)
+                    val customLegendEntries = mutableListOf<LegendEntry>()
+                    if (entries.any { (it.value / total * 100f) > 10f })
+                        customLegendEntries.add(LegendEntry("Frequent (>10%)", Legend.LegendForm.CIRCLE, Float.NaN, Float.NaN, null, Color.parseColor("#4CAF50")))
+                    if (entries.any { val p = (it.value / total * 100f); p > 5f && p <= 10f })
+                        customLegendEntries.add(LegendEntry("Common (5-10%)", Legend.LegendForm.CIRCLE, Float.NaN, Float.NaN, null, Color.parseColor("#FFC107")))
+                    if (entries.any { val p = (it.value / total * 100f); p > 2f && p <= 5f})
+                        customLegendEntries.add(LegendEntry("Occasional (2-5%)", Legend.LegendForm.CIRCLE, Float.NaN, Float.NaN, null, Color.parseColor("#F44336")))
+                    if (entries.any { (it.value / total * 100f) <= 2f}) // A more generic "Other" or cycle through baseColors for legend too
+                        customLegendEntries.add(LegendEntry("Rare (<2%)", Legend.LegendForm.CIRCLE, Float.NaN, Float.NaN, null, Color.parseColor("#9C27B0"))) // Example rare color
+
+
+                    if (customLegendEntries.isNotEmpty()) setCustom(customLegendEntries)
+                    else setCustom(arrayOf(LegendEntry("Distribution", Legend.LegendForm.NONE, Float.NaN, Float.NaN, null, Color.TRANSPARENT)))
                 }
-
-                // Center text and animation
-                centerText = "Total\n${total.toInt()}"
-                setCenterTextSize(14f)
-
-                // Important: Set minimum height to ensure legend fits
-                minimumHeight = 600
-
-                // Animate
+                minimumHeight = 500 // Adjust as needed
                 animateY(800, Easing.EaseInOutQuad)
                 invalidate()
             }
 
         } catch (e: Exception) {
             Log.e("PieChart", "Error setting up pie chart", e)
+            pieChart.clear()
+            pieChart.setNoDataText("Error displaying chart.")
+            pieChart.invalidate()
         }
     }
 
-    private fun setupPieChartLegend(pieChart: PieChart) {
-        pieChart.legend.apply {
-            isEnabled = true
-            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            orientation = Legend.LegendOrientation.VERTICAL
-            setDrawInside(false)
-            direction = Legend.LegendDirection.LEFT_TO_RIGHT
-            textSize = 12f
-            formSize = 12f
-            xEntrySpace = 10f
-            yEntrySpace = 10f
-            setWordWrapEnabled(true)
-            maxSizePercent = 0.95f  // Allow legend to take up more space
-            textColor = Color.BLACK
-            form = Legend.LegendForm.CIRCLE
-
-            // Create legend entries manually
-            setCustom(
-                arrayOf(
-                    LegendEntry(
-                        "Frequent (>10%)", Legend.LegendForm.CIRCLE,
-                        12f, 2f, null, Color.parseColor("#4CAF50")
-                    ),
-                    LegendEntry(
-                        "Common (5-10%)", Legend.LegendForm.CIRCLE,
-                        12f, 2f, null, Color.parseColor("#FFC107")
-                    ),
-                    LegendEntry(
-                        "Occasional (2-5%)", Legend.LegendForm.CIRCLE,
-                        12f, 2f, null, Color.parseColor("#F44336")
-                    ),
-                    LegendEntry(
-                        "Rare (<2%)", Legend.LegendForm.CIRCLE,
-                        12f, 2f, null, Color.parseColor("#9C27B0")
-                    )
-                )
-            )
+    private fun showOccurrencesInJuzBottomSheet(occurrences: List<WordOccurrenceDisplayItem>) {
+        if (isFinishing) return
+        // Only show/refresh if there are occurrences or if it's meant to clear an existing list
+        if (occurrences.isEmpty() && (bottomSheetDialog == null || bottomSheetDialog?.isShowing != true)) {
+            // If list is empty and dialog not showing, do nothing
+            // If dialog is showing and list becomes empty, adapter will handle empty state
+            if (bottomSheetDialog?.isShowing == true) occurrencesAdapter.submitList(emptyList())
+            return
         }
 
-        // Add extra bottom offset to accommodate legend
-        pieChart.setExtraOffsets(20f, 20f, 20f, 140f)  // Increased bottom offset
-    }
-
-    private fun updateStatisticsText(juzDistribution: Map<String, Int>, total: Float) {
-        val maxEntry = juzDistribution.maxByOrNull { it.value }
-        val minEntry = juzDistribution.filterValues { it > 0 }.minByOrNull { it.value }
-
-        findViewById<TextView>(R.id.tvTotalOccurrences).text =
-            "Total Occurrences: ${total.toInt()}"
-
-        findViewById<TextView>(R.id.tvMostLeastOccurrences).text = buildString {
-            append("Most: Juz ${maxEntry?.key} (")
-            append("%.1f%%".format((maxEntry?.value?.toFloat() ?: 0f) / total * 100))
-            append(")\nLeast: Juz ${minEntry?.key} (")
-            append("%.1f%%".format((minEntry?.value?.toFloat() ?: 0f) / total * 100))
-            append(")")
-        }
-    }
-
-    private fun loadOccurrences(juzNumber: Int) {
-        viewModel.loadOccurrencesForJuz(juzNumber, currentPage)
-    }
-
-
-    private fun showOccurrencesBottomSheet(occurrences: List<WordOccurrence>) {
-        if(isFinishing)return
 
         if (bottomSheetDialog == null) {
             bottomSheetDialog = BottomSheetDialog(this).apply {
                 setContentView(R.layout.layout_word_occurrences_bottom_sheet)
-
-//                // Initialize the adapter
-//                occurrencesAdapter = WordOccurrencesBottomSheetAdapter { occurrence ->
-//                    navigateToVerse(occurrence.chapter_id, occurrence.verse_number)
-//                }
-
                 findViewById<RecyclerView>(R.id.occurrencesRecyclerView)?.apply {
                     layoutManager = LinearLayoutManager(this@WordDetailsActivity)
-                    adapter = occurrencesAdapter
-
-                    // Add scroll listener for pagination
+                    adapter = occurrencesAdapter // Already initialized
                     addOnScrollListener(object : RecyclerView.OnScrollListener() {
                         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            super.onScrolled(recyclerView, dx, dy)
                             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                             val visibleItemCount = layoutManager.childCount
-                            val totalItemCount = layoutManager.itemCount
-                            val firstVisibleItemPosition =
-                                layoutManager.findFirstVisibleItemPosition()
+                            val totalItemCount = layoutManager.itemCount // Use adapter's item count
+                            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                            if (!viewModel.isLoadingMore.value!! &&
-                                viewModel.hasMorePages.value == true &&
+                            if (viewModel.isLoadingMoreOccurrences.value == false &&
+                                viewModel.hasMoreOccurrences.value == true &&
                                 (visibleItemCount + firstVisibleItemPosition) >= totalItemCount &&
-                                firstVisibleItemPosition >= 0
-                            ) {
-                                loadOccurrences(currentJuzNumber)
+                                firstVisibleItemPosition >= 0 && totalItemCount > 0) { // Check totalItemCount > 0
+                                viewModel.loadMoreOccurrencesForCurrentJuz()
                             }
                         }
                     })
                 }
             }
         }
-        // Update title every time bottom sheet is shown
         bottomSheetDialog?.findViewById<TextView>(R.id.titleText)?.text =
-            "Occurrences in Juz $currentJuzNumber"
-        // Update adapter with initial data
-        occurrencesAdapter.submitList(occurrences)
-        bottomSheetDialog?.show()
-    }
+            "Occurrences in Juz $currentJuzForBottomSheet"
 
-    private fun playAudio(audioUrl: String?) {
-        Log.d("playdio", "Audio URL: $audioUrl")
-        audioUrl?.let {
-            val mediaPlayer = MediaPlayer()
-            try {
-                mediaPlayer.setDataSource(it)
-                mediaPlayer.prepare()
-                mediaPlayer.start()
-            } catch (e: IOException) {
-                Toast.makeText(this, "Failed to play audio", Toast.LENGTH_SHORT).show()
-            }
+        occurrencesAdapter.submitList(occurrences)
+
+        if (!bottomSheetDialog!!.isShowing && occurrences.isNotEmpty()) {
+            bottomSheetDialog?.show()
         }
     }
 
-    private fun navigateToVerse(chapterId: String, verseNumber: String) {
+    private fun navigateToVerse(occurrenceItem: WordOccurrenceDisplayItem) {
         bottomSheetDialog?.dismiss()
-        // Get user's layout preference
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val isByPage = sharedPreferences.getBoolean("recitation_layout_by_page", false)
 
-        // Create navigation intent
         val intent = Intent(this, MainActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra("NAVIGATE_TO_RECITATION", true)
-            putExtra("CHAPTER_ID", chapterId)
-            putExtra("VERSE_NUMBER", verseNumber)
+            putExtra("CHAPTER_ID", occurrenceItem.chapterIdString)
+            putExtra("VERSE_NUMBER", occurrenceItem.verseNumberString)
             putExtra("IS_BY_PAGE", isByPage)
 
-            if(isByPage){
-                putExtra("CURRENT_SURAH_INDEX", chapterId.toInt() - 1)
-                putExtra("SCROLL_TO_VERSE", verseNumber.toInt())
+            if (isByPage) {
+                val targetPage = occurrenceItem.pageId
+                if (targetPage != null) {
+                    putExtra("TARGET_PAGE_NUMBER", targetPage as Int) // Explicit cast
+                    putExtra("SCROLL_TO_VERSE_ON_PAGE", occurrenceItem.ayahIndex) // ayahIndex is Int
+                    putExtra("HIGHLIGHT_CHAPTER_ID", occurrenceItem.chapterIdString)
+                    Log.d("WordDetailsActivity", "Navigating to Page: $targetPage, Verse: ${occurrenceItem.ayahIndex}")
+                } else {
+                    Log.e("WordDetailsActivity", "PageId is null for page-based navigation.")
+                    Toast.makeText(this@WordDetailsActivity, "Could not determine page for this verse.", Toast.LENGTH_SHORT).show()
+                    return@apply // Exit .apply block
+                }
+            } else {
+                // Verse-by-verse navigation (CURRENT_SURAH_INDEX should be 0-based)
+                val surahIndex = occurrenceItem.chapterIdString.toIntOrNull()?.minus(1)
+                if (surahIndex != null) {
+                    putExtra("CURRENT_SURAH_INDEX", surahIndex as Int) // Explicit cast
+                } else {
+                    putExtra("CURRENT_SURAH_INDEX", 0) // Default or handle error
+                    Log.e("WordDetailsActivity", "Could not parse chapterIdString to Int for surahIndex")
+                }
+                putExtra("SCROLL_TO_VERSE", occurrenceItem.ayahIndex) // ayahIndex is Int
+                Log.d("WordDetailsActivity", "Navigating to Surah Index: $surahIndex, Verse: ${occurrenceItem.ayahIndex}")
             }
         }
-
+        // Check if intent setup was aborted (e.g. pageId was null)
+        if (intent.extras?.containsKey("TARGET_PAGE_NUMBER") == false && isByPage && occurrenceItem.pageId == null) {
+            // Don't start activity if essential extras for page navigation are missing
+            return
+        }
         startActivity(intent)
         finish()
+    }
+    override fun onStop() {
+        super.onStop()
+        // Release media player when activity is stopped to free resources
+        // especially if audio might continue playing when app goes to background.
+        // If you want audio to stop when activity is merely paused (e.g. dialog comes up), use onPause.
+        // For short clips, stopping on onStop is usually fine.
+        releaseMediaPlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Final cleanup, though onStop should have handled it.
+        releaseMediaPlayer()
     }
 }
 class CustomMarkerView(

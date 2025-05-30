@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingVertical="12dp"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground">
+
+<ImageView
+android:id="@+id/ivMorphFormBullet"
+    android:layout_width="@dimen/icon_size_standard"
+    android:layout_height="@dimen/icon_size_standard"
+    android:src="@drawable/ic_bullet_point"
+    android:layout_marginEnd="10dp"
+    app:tint="@color/dark_blue_200" />
+
+<TextView
+android:id="@+id/tvMorphFormText"
+android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    tools:text="yaf'oolu (Form I)"
+    android:textSize="@dimen/text_size_medium"
+    android:textColor="?attr/colorOnSurfaceVariant"
+    android:fontFamily="sans-serif" />
+
+    </LinearLayout>

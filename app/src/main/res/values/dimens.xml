@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--values/dimens/xml-->
 <resources>
+
+    <dimen name="icon_size_standard">36dp</dimen>
+
     <dimen name="highlight_item_spacing">2dp</dimen>
     <dimen name="highlight_edge_spacing">6dp</dimen>
     <dimen name="recycler_item_spacing">8dp</dimen>
@@ -185,6 +188,6 @@
 
 <!--    bookmark dimens-->
     <dimen name="chip_group_min_height">20dp</dimen>
-    <dimen name="radar_chart_popup_min_height">200dp</dimen>
+    <dimen name="radar_chart_popup_min_height">300dp</dimen>
 
 </resources>

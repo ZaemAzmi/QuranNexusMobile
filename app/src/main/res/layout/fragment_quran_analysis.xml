@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:text="Quran Analysis"
                 android:textColor="#0F103E"
+                android:layout_gravity="center"
                 android:textSize="@dimen/text_size_title"
                 android:textStyle="bold" />
 
@@ -54,7 +55,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/gradient_primary"
+                    android:background="@drawable/bg_gradient_primary"
                     android:orientation="vertical"
                     android:padding="@dimen/padding_medium">
 
@@ -62,8 +63,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Explore Quran Analytics"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:gravity="center"
+                        android:textColor="@color/textOnSecondary"
+                        android:textSize="@dimen/text_size_xxlarge"
                         android:textStyle="bold" />
 
                     <TextView
@@ -143,7 +145,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="#3F51B5" />
+                        app:tint="@color/accentWarmCoral" />
 
                     <TextView
                         android:id="@+id/wordAnalysisTitle"
@@ -204,7 +206,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="#3F51B5"/>
+                        app:tint="@color/accentWarmCoral"/>
 <!--                        app:tint="@color/colorAccent"-->
 
                     <TextView
@@ -253,6 +255,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@drawable/bg_gradient_secondary"
                     android:padding="@dimen/padding_medium">
 
                     <TextView

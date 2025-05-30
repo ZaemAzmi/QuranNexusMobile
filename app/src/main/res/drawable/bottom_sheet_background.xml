@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Optional: Top Accent Line (Subtle) -->
+    <item android:top="0dp" android:left="-2dp" android:right="-2dp" android:bottom="-2dp"> <!-- Negative margins to hide other sides -->
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" /> <!-- Transparent base -->
+
+        </shape>
+    </item>
+
+    <!-- Main Background with Gradient and Rounded Corners -->
+    <!-- The gradient starts slightly below the top accent line -->
+    <item android:top="3dp"> <!-- Adjust this 'top' to position gradient below accent -->
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#A8C8FB"
+                android:centerColor="#C7F6DE"
+                android:endColor="#D1FDED"
+                android:type="linear" />
+            <!-- Or use theme attributes for more dynamic colors:
+            <gradient
+                android:angle="270"
+                android:startColor="?attr/colorSurfaceContainerLowest"
+                android:endColor="?attr/colorSurface"
+                android:type="linear" />
+            -->
+            <corners
+                android:topLeftRadius="24dp"
+                android:topRightRadius="24dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+        </shape>
+    </item>
+
+</layer-list>

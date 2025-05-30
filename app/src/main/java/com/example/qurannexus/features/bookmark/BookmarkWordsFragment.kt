@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -31,7 +32,6 @@ import com.example.qurannexus.features.words.WordDetailsActivity
 import com.example.qurannexus.features.words.models.AccordionAdapter
 import com.example.qurannexus.features.words.models.AccordionSection
 import com.example.qurannexus.features.words.models.WordsChaptersDistributionResponse
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.MarkerView
@@ -61,7 +61,6 @@ class BookmarkWordsFragment : Fragment() {
     private lateinit var listViewChip: Chip
     private lateinit var cloudViewChip: Chip
     private var chapterWordCounts: Map<String, Int> = emptyMap()
-    private lateinit var radarChart: RadarChart
     private val colors = listOf(
         Color.parseColor("#2196F3"),  // Blue
         Color.parseColor("#4CAF50"),  // Green
@@ -110,21 +109,13 @@ class BookmarkWordsFragment : Fragment() {
             WindowInsetsCompat.CONSUMED
         }
     }
-    private fun navigateToWordDetails(word: BookmarkWord) {
+    private fun navigateToWordDetails(bookmarkWord: BookmarkWord) {
         val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
-            putExtra("WORD_TEXT", word.itemProperties.wordText)
-            putExtra("TRANSLATION", word.itemProperties.translation)
-            putExtra("TRANSLITERATION", word.itemProperties.transliteration)
-            putExtra("TOTAL_OCCURRENCES", word.itemProperties.totalOccurrences)
-
-            // First occurrence details
-            putExtra("CHAPTER_ID", word.itemProperties.firstOccurrence.chapterId)
-            putExtra("VERSE_NUMBER", word.itemProperties.firstOccurrence.verseNumber)
-            putExtra("SURAH_NAME", word.itemProperties.firstOccurrence.surahName)
-            putExtra("PAGE_ID", word.itemProperties.firstOccurrence.pageId)
-            putExtra("JUZ_NUMBER", word.itemProperties.firstOccurrence.juzId)
-            putExtra("VERSE_TEXT", word.itemProperties.firstOccurrence.verseText)
-            putExtra("AUDIO_URL", word.itemProperties.firstOccurrence.audioUrl)
+            // Pass the ARABIC FORM TEXT as EXTRA_WORD_TEXT_FROM_RECITATION
+            putExtra(
+                WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION,
+                bookmarkWord.itemProperties.wordText
+            )
         }
         startActivity(intent)
     }
@@ -144,7 +135,22 @@ class BookmarkWordsFragment : Fragment() {
 
         // Setup word cloud and controls
         setupWordCloudControls()
-        setupRadarChart()
+        setupRadarChartInFragment()
+
+        binding.radarChart.setOnClickListener{
+            if(binding.radarChart.data != null && !binding.radarChart.isEmpty){
+                showRadarChartInDialog()
+            }else{
+                Toast.makeText(context, "No chart data available", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.btnZoomRadarChart.setOnClickListener {
+            if (binding.radarChart.data != null && !binding.radarChart.isEmpty) {
+                showRadarChartInDialog()
+            } else {
+                Toast.makeText(requireContext(), "No chart data to display larger.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     private fun setupChips() {
         // Create view type chips
@@ -176,17 +182,55 @@ class BookmarkWordsFragment : Fragment() {
 //        }
     }
 
-    private fun setupRadarChart() {
-        radarChart = binding.radarChart
-        radarChart.apply {
+    private fun setupRadarChartInFragment() { // Renamed method
+        // Use binding.radarChart directly
+        configureRadarChartInstance(binding.radarChart, isDialog = false)
+    }
+
+    private fun showRadarChartInDialog() {
+        if (context == null) return
+
+        val dialogBuilder = AlertDialog.Builder(requireContext(), R.style.FullScreenDialogTheme)
+        val inflater = requireActivity().layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_radar_chart_fullscreen, null)
+        dialogBuilder.setView(dialogView)
+
+        val dialogChartInstance = dialogView.findViewById<RadarChart>(R.id.dialogRadarChart)
+        val btnClose = dialogView.findViewById<ImageButton>(R.id.btnCloseDialogRadar)
+
+        configureRadarChartInstance(dialogChartInstance, isDialog = true) // Configure the dialog's chart
+
+        // Set the SAME data from the fragment's chart
+        if (binding.radarChart.data != null) {
+            dialogChartInstance.data = binding.radarChart.data
+            dialogChartInstance.animateXY(1000, 1000) // Re-animate for effect
+            dialogChartInstance.invalidate() // Refresh display
+        } else {
+            Log.w("BookmarkWordsFragment", "Original chart data is null, cannot populate dialog chart.")
+            // Optionally, show a message in the dialog's chart or don't show the dialog
+        }
+
+
+        val dialog = dialogBuilder.create()
+        btnClose.setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+
+        // To make the dialog truly full screen (optional, style might handle this)
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    }
+
+    // Common configuration method for any RadarChart instance
+    private fun configureRadarChartInstance(chart: RadarChart, isDialog: Boolean) {
+        chart.apply {
             description.isEnabled = false
             webLineWidth = 1.2f
             webColor = Color.parseColor("#A5D6A7") // Light green for web lines
             webLineWidthInner = 0.8f
             webColorInner = Color.parseColor("#A5D6A7") // Same light green
-            webAlpha = 150 // More visible
+            webAlpha = 150
 
-            setTouchEnabled(true)
+            setTouchEnabled(true) // Allow touch for marker view in both
             isRotationEnabled = true
             isHighlightPerTapEnabled = true
 
@@ -195,22 +239,38 @@ class BookmarkWordsFragment : Fragment() {
                 horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
                 orientation = Legend.LegendOrientation.HORIZONTAL
                 setDrawInside(false)
-                textSize = 12f
+                textSize = if (isDialog) 12f else 10f // Slightly larger legend text in dialog
                 yOffset = 15f
                 form = Legend.LegendForm.CIRCLE
-                formSize = 10f
+                formSize = if (isDialog) 10f else 8f
                 formLineWidth = 2f
                 xEntrySpace = 15f
-                textColor = Color.parseColor("#1E4620") // Dark green for better visibility
+                textColor = Color.parseColor("#1E4620")
             }
 
             xAxis.apply {
-                textSize = 9f
-                textColor = Color.parseColor("#1E4620") // Dark green
+                textSize = if (isDialog) 11f else 9f // Larger axis labels in dialog
+                textColor = Color.parseColor("#1E4620")
+                // Updated XAxis Formatter for more labels in dialog
                 valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         val index = value.toInt()
-                        return if (index % 20 == 0) (index + 1).toString() else ""
+                        val surahNumber = index + 1 // Assuming index is 0-based for 114 Surahs
+                        if (surahNumber < 1 || surahNumber > 114) return "" // Bounds check
+
+                        return if (isDialog) { // Show more labels in dialog
+                            if (surahNumber == 1 || surahNumber == 114 || surahNumber % 10 == 0) {
+                                surahNumber.toString()
+                            } else {
+                                ""
+                            }
+                        } else { // Fewer labels in fragment chart
+                            if (surahNumber == 1 || surahNumber % 20 == 0) {
+                                surahNumber.toString()
+                            } else {
+                                ""
+                            }
+                        }
                     }
                 }
                 yOffset = 0f
@@ -218,17 +278,19 @@ class BookmarkWordsFragment : Fragment() {
 
             yAxis.apply {
                 axisMinimum = 0f
-                axisMaximum = 100f
+                axisMaximum = 100f // Assuming percentage data
                 setLabelCount(5, true)
-                textSize = 9f
-                textColor = Color.parseColor("#1E4620") // Dark green
-                valueFormatter = PercentageFormatter()
+                textSize = if (isDialog) 10f else 9f
+                textColor = Color.parseColor("#1E4620")
+                valueFormatter = PercentageFormatter() // Your existing formatter
             }
 
-            marker = ChapterMarkerView(context, this@BookmarkWordsFragment)
-            rotationAngle = 90f
-            minOffset = 60f
-            setExtraOffsets(20f, 20f, 20f, 20f)
+            // Re-assign marker. ChapterMarkerView needs context, pass it if it's not activity/fragment context.
+            // Assuming ChapterMarkerView can use fragment.requireContext()
+            marker = ChapterMarkerView(requireContext(), this@BookmarkWordsFragment)
+            rotationAngle = 90f // Or adjust as needed
+            minOffset = if (isDialog) 20f else 60f // Less offset for more space in dialog
+            setExtraOffsets(10f, 10f, 10f, 10f) // Less extra offset for dialog
         }
     }
     private fun updateRadarChart(words: List<BookmarkWord>) {
@@ -273,35 +335,27 @@ class BookmarkWordsFragment : Fragment() {
         }
 
         val set = RadarDataSet(entries, "Words Learned (%)").apply {
-            valueTextSize = R.dimen.text_size_xlarge.toFloat()
-            color = Color.parseColor("#0288D1") // Darker blue
-            fillColor = Color.parseColor("#B3E5FC") // Light blue
+            valueTextSize = 0f // Hide values on lines for RadarChart, marker shows details
+            color = Color.parseColor("#0288D1")
+            fillColor = Color.parseColor("#B3E5FC")
             setDrawFilled(true)
-            fillAlpha = 40 // Lower alpha
+            fillAlpha = 160 // Slightly more opaque fill
             lineWidth = 2f
-            valueTextSize = 0f
             isDrawHighlightCircleEnabled = true
             highlightCircleFillColor = Color.WHITE
             highlightCircleStrokeColor = Color.parseColor("#0288D1")
             highlightCircleStrokeWidth = 2f
-            highlightCircleInnerRadius = 2f
-            highlightCircleOuterRadius = 4f
+            highlightCircleInnerRadius = 3f // Slightly larger marker points
+            highlightCircleOuterRadius = 5f
         }
 
-        radarChart.apply {
+        binding.radarChart.apply { // Configure the fragment's chart
             data = RadarData(set)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-                override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    e?.let {
-                        // The marker view will be shown automatically
-                        // No need to call any additional methods
-                    }
-                }
-                override fun onNothingSelected() {
-                    highlightValue(null) // Clear highlight when clicking away
-                }
+                override fun onValueSelected(e: Entry?, h: Highlight?) { /* Marker handles this */ }
+                override fun onNothingSelected() { highlightValue(null) }
             })
-            highlightValue(null) // Clear any existing highlights
+            highlightValue(null)
             animateXY(1000, 1000)
             invalidate()
         }
@@ -328,36 +382,6 @@ class BookmarkWordsFragment : Fragment() {
                 Toast.makeText(context, "Failed to load chapter word counts: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-    }
-    private fun showChapterStats(
-        chapterId: String,
-        bookmarkedCount: Int,
-        totalWords: Int,
-        percentage: Float
-    ) {
-        val context = requireContext()
-        val dialog = AlertDialog.Builder(context, R.style.TransparentDialog)
-        val dialogView = layoutInflater.inflate(R.layout.dialog_chapter_stats_enhanced, null)
-        val surahDetails = QuranMetadata.getInstance().getSurahDetails(chapterId.toInt())
-
-        dialogView.apply {
-            findViewById<TextView>(R.id.tvChapterName).text =
-                "Chapter ${chapterId}: ${surahDetails?.englishName}"
-            findViewById<TextView>(R.id.tvBookmarkedWords).text =
-                "$bookmarkedCount words bookmarked"
-            findViewById<TextView>(R.id.tvProgressLabel).text =
-                "${percentage.toInt()}% Complete"
-            findViewById<ProgressBar>(R.id.progressBar).progress = percentage.toInt()
-        }
-
-        dialog.apply {
-            setView(dialogView)
-            create().apply {
-                window?.setBackgroundDrawableResource(android.R.color.transparent)
-                window?.attributes?.windowAnimations = R.style.DialogAnimation
-                show()
-            }
-        }
     }
     private fun createChip(text: String): Chip {
         return Chip(requireContext()).apply {

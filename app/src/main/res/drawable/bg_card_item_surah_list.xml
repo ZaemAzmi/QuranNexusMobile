@@ -1,0 +1,27 @@
+<!-- res/drawable/your_gradient_layer_list_drawable_name.xml (should be correct now) -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Layer 1: Gradient Background (this will be the "stroke") -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" /> <!-- Matches CardView's outer radius -->
+            <gradient
+                android:angle="45"
+                android:startColor="#5C63B2"
+                android:centerColor="#3CBAC4"
+                android:endColor="#8349B7"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+    <!-- Layer 2: Inner Content Background (inset to reveal the gradient as a stroke) -->
+    <item
+        android:top="2dp"
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FBFCFF" /> <!-- Your card's inner background color -->
+            <corners android:radius="14dp" /> <!-- Outer radius (16dp) - stroke_width (2dp) -->
+        </shape>
+    </item>
+</layer-list>

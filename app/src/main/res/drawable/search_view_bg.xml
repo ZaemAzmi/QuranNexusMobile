@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <corners android:radius="25dp"/>
-    <solid android:color="@color/white"/>
-
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Background of the search bar itself -->
+    <solid android:color="@android:color/white" />
+    <corners android:radius="28dp" /> <!-- Fully rounded ends for typical height -->
+    <!-- Subtle border with a soft blue or purple accent -->
+    <stroke
+        android:width="1dp"
+        android:color="#AEC6CF" /> <!-- Soft Blue-Gray, or use ?attr/colorPrimary for stronger accent -->
 </shape>

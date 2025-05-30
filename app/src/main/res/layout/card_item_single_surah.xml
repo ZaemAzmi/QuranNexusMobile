@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_medium"
         android:layout_marginVertical="@dimen/margin_small"
-        app:cardBackgroundColor="@color/surah_card_dark_green_300"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardPreventCornerOverlap="false"
         app:cardCornerRadius="@dimen/card_corner_radius"
         app:cardElevation="@dimen/card_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,6 +22,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_card_item_surah_list"
             android:padding="@dimen/padding_medium">
 
             <FrameLayout
@@ -36,6 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
+                    app:tint="@color/accent_deep_indigo_purple"
                     android:src="@drawable/surah_number_frame" />
 
                 <com.example.qurannexus.core.customViews.AutoFitTextView
@@ -44,6 +47,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="1"
+                    android:textColor="@color/accent_deep_indigo_purple"
+
                     android:textAppearance="@style/TextAppearance.SurahNumber"/>
             </FrameLayout>
 
@@ -62,6 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Al-Fatihah"
+                    android:textColor="@color/accent_deep_indigo_purple"
                     android:textSize="@dimen/text_size_title"
                     android:textAppearance="@style/TextAppearance.SurahName"/>
 
@@ -70,6 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="The Opening"
+                    android:textColor="@color/accent_deep_indigo_purple"
                     android:textSize="@dimen/text_size_large"
                     android:textAppearance="@style/TextAppearance.SurahMeaning"/>
             </LinearLayout>
@@ -89,6 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="الفاتحة"
+                    android:textColor="@color/accent_deep_indigo_purple"
                     android:textSize="@dimen/text_size_title"
                     android:textAppearance="@style/TextAppearance.ArabicSurahName"/>
 
@@ -97,6 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="7 Ayahs"
+                    android:textColor="@color/accent_deep_indigo_purple"
                     android:textSize="@dimen/text_size_medium"
                     android:textAppearance="@style/TextAppearance.AyatNumber"/>
             </LinearLayout>

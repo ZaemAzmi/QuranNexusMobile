@@ -27,14 +27,17 @@ import com.example.qurannexus.features.auth.AuthActivity;
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest;
 import com.example.qurannexus.features.bookmark.models.BookmarkResponse;
 import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse;
-import com.example.qurannexus.features.recitation.extensions.TextUtils;
-import com.example.qurannexus.features.words.WordDetailsActivity;
+// Remove unused TextUtils import if it's not used elsewhere
+// import com.example.qurannexus.features.recitation.extensions.TextUtils;
+import com.example.qurannexus.features.words.WordDetailsActivity; // Correct import
 import com.example.qurannexus.core.interfaces.QuranApi;
-import com.example.qurannexus.features.home.models.WordDetails;
-import com.example.qurannexus.features.home.models.WordDetailsResponse;
+// Remove unused WordDetails and WordDetailsResponse from home.models if not used for other things
+// import com.example.qurannexus.features.home.models.WordDetails;
+// import com.example.qurannexus.features.home.models.WordDetailsResponse;
 import com.example.qurannexus.core.network.ApiService;
-import com.example.qurannexus.core.utils.SurahDetails;
-import com.example.qurannexus.core.utils.QuranMetadata;
+// Remove unused SurahDetails if QuranMetadata provides all needed info directly or not needed here
+// import com.example.qurannexus.core.utils.SurahDetails;
+// import com.example.qurannexus.core.utils.QuranMetadata;
 import com.example.qurannexus.features.recitation.audio.AudioPlayerManager;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
@@ -49,6 +52,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 @androidx.media3.common.util.UnstableApi
 public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahRecitationByAyatAdapter.MyViewHolder> {
     private QuranApi quranApi;
@@ -56,7 +60,8 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
     ArrayList<ChapterAyah> ayahList;
     private String authToken;
     private AudioPlayerManager audioPlayerManager;
-    private MaterialCardView expandedAudioPlayer;
+    // private MaterialCardView expandedAudioPlayer; // Not used in this adapter, can be removed
+
     public SurahRecitationByAyatAdapter(Context context, ArrayList<ChapterAyah> ayahList){
         this.context = context;
         this.ayahList = ayahList;
@@ -65,6 +70,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
                 .getString("token", null);
         this.audioPlayerManager = new AudioPlayerManager(context, quranApi);
     }
+
     @NonNull
     @Override
     public SurahRecitationByAyatAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -76,14 +82,22 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
     @Override
     public void onBindViewHolder(@NonNull SurahRecitationByAyatAdapter.MyViewHolder holder, int position) {
         ChapterAyah ayah = ayahList.get(position);
+        holder.arabicWordsContainer.removeAllViews(); // Clear before re-populating
 
-        // Clear any existing views in the FlexboxLayout
-        holder.arabicWordsContainer.removeAllViews();
+        // This call will now set up the word TextViews and their long click listeners
+        setupWordViewsAndClickListeners(holder, ayah);
 
-        setupWordClickListeners(holder, ayah);
+        // Assuming getTranslations().get(1) is English. Consider a safer way to get specific translation.
+        if (ayah.getTranslations() != null && ayah.getTranslations().size() > 1) {
+            holder.englishTranslation.setText(ayah.getTranslations().get(1).getText());
+        } else if (ayah.getTranslations() != null && !ayah.getTranslations().isEmpty()){
+            holder.englishTranslation.setText(ayah.getTranslations().get(0).getText()); // Fallback
+        } else {
+            holder.englishTranslation.setText("No translation available.");
+        }
 
-        holder.englishTranslation.setText(ayah.getTranslations().get(1).getText());
-        holder.ayatNumber.setText(ayah.getAyahKey());
+        holder.ayatNumber.setText(ayah.getAyahKey()); // e.g., "1:1"
+
         holder.ayatCardAddNotesIcon.setOnClickListener(view -> {
             if (authToken == null) {
                 showLoginDialog();
@@ -102,18 +116,148 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
                 if (ayah.isBookmarked()) {
                     removeBookmark(holder, ayah, position);
                 } else {
-                    // When clicking bookmark directly, add without notes
                     addBookmarkWithNotes(holder, ayah, "");
                 }
             }
         });
 
         holder.ayatCardPlayAudioIcon.setOnClickListener(v -> {
-            ChapterAyah chapterAyah = ayahList.get(position);
-            audioPlayerManager.playAyah(chapterAyah.getAyahKey());
+            // ChapterAyah chapterAyah = ayahList.get(position); // Already have 'ayah'
+            audioPlayerManager.playAyah(ayah.getAyahKey());
         });
     }
 
+    // Merged setupWordClickListeners and addWordTextView
+    private void setupWordViewsAndClickListeners(MyViewHolder holder, ChapterAyah ayah) {
+        if (ayah.getWords() == null) return;
+
+        List<Word> words = new ArrayList<>(ayah.getWords());
+        String waqafSign = "";
+        String ayahNumberInArabic = new com.example.qurannexus.core.utils.UtilityService()
+                .convertToArabicNumber(Integer.parseInt(ayah.getAyahIndex()));
+
+        // Handle waqaf sign: it's usually the last "word" object in the API response for an ayah
+        if (!words.isEmpty()) {
+            Word lastWordObject = words.get(words.size() - 1);
+            // A simple heuristic: if the last word's text is short (like a symbol)
+            // and its translation is null or just the ayah number in parens.
+            boolean isLikelyWaqf = (lastWordObject.getText() != null && lastWordObject.getText().length() <= 2 &&
+                    (lastWordObject.getTranslation() == null ||
+                            lastWordObject.getTranslation().matches("\\(\\d+\\)")));
+
+            if (isLikelyWaqf) {
+                // Don't use lastWordObject.getText() for waqaf. Use standard ayah end symbol.
+                // The waqafView will now contain the ayah number.
+                words.remove(words.size() - 1); // Remove it so it's not treated as a clickable word
+            }
+        }
+
+        FlexboxLayout container = holder.arabicWordsContainer;
+        container.setFlexDirection(FlexDirection.ROW_REVERSE); // For RTL
+
+        // Add clickable word TextViews
+        for (Word word : words) {
+            if (word == null || word.getText() == null || word.getText().isEmpty()) continue;
+
+            TextView wordView = new TextView(context);
+            wordView.setText(word.getText());
+            wordView.setTextColor(ContextCompat.getColor(context, R.color.white)); // Or your theme color
+            float textSizeSp = context.getResources().getDimension(R.dimen.arabic_text_size) /
+                    context.getResources().getDisplayMetrics().density;
+            wordView.setTextSize(textSizeSp);
+            wordView.setPadding(8, 8, 8, 8); // Adjust padding as needed
+            wordView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
+            wordView.setTextDirection(View.TEXT_DIRECTION_RTL);
+
+            wordView.setOnLongClickListener(v -> {
+                animateWord(v); // Optional animation
+                // highlightWord(wordView); // Optional highlight
+                // showPopupHint(wordView, "Tap for word analysis"); // Optional hint
+
+                // Directly navigate to WordDetailsActivity with the word's Arabic text
+                String clickedWordText = word.getText();
+                if (clickedWordText != null && !clickedWordText.isEmpty()) {
+                    Intent intent = new Intent(context, WordDetailsActivity.class);
+                    intent.putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION, clickedWordText);
+
+                    // Log for debugging
+                    Log.d("RecitationAdapter", "Navigating with Word Text: " + clickedWordText);
+                    if (intent.hasExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION)) {
+                        Log.d("RecitationAdapter", "Intent has EXTRA_WORD_TEXT_FROM_RECITATION");
+                    } else {
+                        Log.e("RecitationAdapter", "Intent MISSING EXTRA_WORD_TEXT_FROM_RECITATION");
+                    }
+
+                    // For future audio feature, you might pass the specific word's audio URL
+                    // if (word.getAudioUrl() != null) {
+                    //    intent.putExtra("INITIAL_AUDIO_URL", word.getAudioUrl());
+                    // }
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, "Word data not available.", Toast.LENGTH_SHORT).show();
+                }
+                return true; // Consume the long click
+            });
+            container.addView(wordView);
+        }
+
+        // Add the ayah number (waqf) at the end (which is visually left in RTL)
+        TextView waqafView = new TextView(context);
+        waqafView.setText(String.format(" %s ", ayahNumberInArabic)); // Add spaces for padding from circle
+        waqafView.setTextColor(ContextCompat.getColor(context, R.color.white)); // Ayah number color
+//        waqafView.setBackgroundResource(R.drawable.ayah_number_background); // Circular background
+        waqafView.setGravity(Gravity.CENTER);
+        waqafView.setTextSize(context.getResources().getDimension(R.dimen.arabic_text_size) /
+                context.getResources().getDisplayMetrics().density);
+        waqafView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
+        waqafView.setPadding(8,0,8,0);
+
+        FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(8,0,8,0); // Add some margin around the ayah number
+        waqafView.setLayoutParams(params);
+
+        container.addView(waqafView);
+    }
+
+
+    // REMOVE fetchWordDetails method as it's no longer needed for this navigation
+    // private void fetchWordDetails(String wordKey) { ... }
+
+
+    // ... (keep highlightWord, showPopupHint, animateWord if you still want those UI effects)
+    private void highlightWord(TextView wordView) {
+        wordView.setBackgroundColor(ContextCompat.getColor(context, R.color.light_gray));
+        wordView.postDelayed(() -> wordView.setBackgroundResource(0), 1000);
+    }
+
+    private void showPopupHint(View anchor, String message) {
+        View popupView = LayoutInflater.from(context).inflate(R.layout.dialog_word_hint, null);
+        TextView hintTextView = popupView.findViewById(R.id.hintTextView);
+        hintTextView.setText(message);
+
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setElevation(10);
+        int[] location = new int[2];
+        anchor.getLocationOnScreen(location);
+        popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, location[0], location[1] - anchor.getHeight() - 20);
+        new Handler(Looper.getMainLooper()).postDelayed(popupWindow::dismiss, 1500);
+    }
+
+    private void animateWord(View wordView) {
+        wordView.animate()
+                .scaleX(1.2f)
+                .scaleY(1.2f)
+                .setDuration(200)
+                .withEndAction(() -> wordView.animate().scaleX(1f).scaleY(1f).setDuration(200))
+                .start();
+    }
+
+    // ... (keep addBookmarkWithNotes, removeBookmark, getItemCount, MyViewHolder, showAddNotesDialog, showLoginDialog)
+    // Make sure MyViewHolder has `FlexboxLayout arabicWordsContainer;`
     private void addBookmarkWithNotes(MyViewHolder holder, ChapterAyah ayah, String notes) {
         Map<String, Object> verseProperties = new HashMap<>();
         verseProperties.put("verse_id", String.valueOf(ayah.getId()));
@@ -175,10 +319,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
                 if (response.isSuccessful() && response.body() != null) {
                     RemoveBookmarkResponse removeResponse = response.body();
                     if ("success".equals(removeResponse.getStatus())) {
-                        // Update the ayah object
                         ayah.setBookmarked(false);
-
-                        // Update the UI
                         holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark);
                         Toast.makeText(context, "Bookmark removed successfully",
                                 Toast.LENGTH_SHORT).show();
@@ -205,184 +346,20 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
             }
         });
     }
-    private void setupWordClickListeners(MyViewHolder holder, ChapterAyah ayah) {
-        holder.arabicWordsContainer.removeAllViews();
-        List<Word> words = new ArrayList<>(ayah.getWords());
 
-        // Extract the waqaf sign but don't add it yet
-        String waqafSign = "";
-        if (!words.isEmpty()) {
-            Word lastWord = words.get(words.size() - 1);
-            // Check if it's likely a waqaf sign
-            if (lastWord.getText() != null &&
-                    (lastWord.getText().length() <= 2 ||
-                            lastWord.getWordIndex().equals(String.valueOf(words.size())))) {
-                waqafSign = lastWord.getText();
-                // Remove from the words list
-                words.remove(words.size() - 1);
-            }
-        }
-
-        // Create container for RTL layout with proper order
-        FlexboxLayout container = holder.arabicWordsContainer;
-        container.setFlexDirection(FlexDirection.ROW_REVERSE);  // Ensure RTL ordering
-
-        // Add all the words except the waqaf sign
-        for (int i = 0; i < words.size(); i++) {
-            Word word = words.get(i);
-            addWordTextView(holder, word);
-        }
-
-        // Add the waqaf sign and ayah number as the leftmost element (appears at end for RTL)
-        // This ensures it appears AFTER all the words in RTL display
-        if (!waqafSign.isEmpty()) {
-            TextView waqafView = new TextView(context);
-
-            // Get ayah number in Arabic
-            String ayahNumber = ayah.getAyahIndex();
-            int ayahNum = 0;
-            try {
-                ayahNum = Integer.parseInt(ayahNumber);
-            } catch (NumberFormatException e) {
-                Log.e("SurahAdapter", "Error parsing ayah number: " + ayahNumber);
-            }
-
-            // Use utility service to convert to Arabic numerals
-            String arabicNumber = new com.example.qurannexus.core.utils.UtilityService().convertToArabicNumber(ayahNum);
-
-            // Set the waqaf sign and number
-            waqafView.setText(arabicNumber);
-            waqafView.setTextColor(ContextCompat.getColor(context, R.color.white));
-            float textSizeSp = context.getResources().getDimension(R.dimen.arabic_text_size) /
-                    context.getResources().getDisplayMetrics().density;
-            waqafView.setTextSize(textSizeSp);
-            waqafView.setPadding(8, 8, 8, 8);
-            waqafView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
-            waqafView.setTextDirection(View.TEXT_DIRECTION_RTL);
-
-            // Add it to the LEFT of the FlexboxLayout in the visual RTL layout
-            // This makes it appear at the END of the text
-            container.addView(waqafView);
-        }
-    }
-    private void addWordTextView(MyViewHolder holder, Word word) {
-        TextView wordView = new TextView(context);
-        wordView.setText(word.getText());
-        wordView.setTextColor(ContextCompat.getColor(context, R.color.white));
-        float textSizeSp = context.getResources().getDimension(R.dimen.arabic_text_size) /
-                context.getResources().getDisplayMetrics().density;
-        wordView.setTextSize(textSizeSp);
-        wordView.setPadding(8, 8, 8, 8);
-        wordView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
-        wordView.setTextDirection(View.TEXT_DIRECTION_RTL);
-
-        // Long click: Highlight and show popup
-        wordView.setOnLongClickListener(v -> {
-            animateWord(v);
-            highlightWord(wordView);
-            showPopupHint(wordView, "Tap for word analysis");
-            fetchWordDetails(word.getWordKey());
-            return true;
-        });
-
-        holder.arabicWordsContainer.addView(wordView);
-    }
-    private void highlightWord(TextView wordView) {
-        wordView.setBackgroundColor(ContextCompat.getColor(context, R.color.light_gray));
-        wordView.postDelayed(() -> wordView.setBackgroundResource(0), 1000); // Reset after 1s
-    }
-
-    private void showPopupHint(View anchor, String message) {
-        View popupView = LayoutInflater.from(context).inflate(R.layout.dialog_word_hint, null);
-        TextView hintTextView = popupView.findViewById(R.id.hintTextView);
-        hintTextView.setText(message);
-
-        PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                true
-        );
-
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        popupWindow.setElevation(10);
-
-        // Show the popup above the anchor view
-        int[] location = new int[2];
-        anchor.getLocationOnScreen(location);
-        popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, location[0], location[1] - anchor.getHeight() - 20);
-
-        // Automatically dismiss the popup after a delay
-        new Handler(Looper.getMainLooper()).postDelayed(popupWindow::dismiss, 1500);
-    }
-
-
-    private void fetchWordDetails(String wordKey) {
-        quranApi = ApiService.getQuranClient().create(QuranApi.class);
-
-        quranApi.getWordDetails(wordKey).enqueue(new Callback<WordDetailsResponse>() {
-            @Override
-            public void onResponse(Call<WordDetailsResponse> call, Response<WordDetailsResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    WordDetails wordDetails = response.body().getData();
-
-                    // Fetch Surah name from QuranMetadata
-                    SurahDetails surahDetails = QuranMetadata.Companion.getInstance().getSurahDetails(Integer.parseInt(wordDetails.getSurahId()));
-                    String surahNameArabic = surahDetails.getArabicName();
-                    String surahNameEnglish = surahDetails.getEnglishName();
-
-                    // Prepare intent to navigate to WordDetailsActivity
-                    Intent intent = new Intent(context, WordDetailsActivity.class);
-
-                    intent.putExtra("WORD_ID", wordDetails.getId());
-                    intent.putExtra("WORD_TEXT", wordDetails.getText());
-                    intent.putExtra("TRANSLATION", wordDetails.getTranslation()); // Replace if available
-                    intent.putExtra("TRANSLITERATION", wordDetails.getTransliteration()); // Replace if available
-                    intent.putExtra("SURAH_NAME_ARABIC", surahNameArabic);
-                    intent.putExtra("SURAH_NAME_ENGLISH", surahNameEnglish);
-                    intent.putExtra("AYAH_KEY", wordDetails.getAyahKey());
-                    intent.putExtra("AUDIO_URL", wordDetails.getAudioUrl());
-                    intent.putExtra("SURAH_NUMBER", wordDetails.getSurahId());
-                    intent.putExtra("LINE_NUMBER", wordDetails.getLineNumber());
-                    intent.putExtra("WORD_NUMBER", wordDetails.getWordIndex());
-                    intent.putExtra("PAGE_ID", wordDetails.getPageId());
-                    context.startActivity(intent);
-                } else {
-                    Toast.makeText(context, "Failed to fetch word details", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<WordDetailsResponse> call, Throwable t) {
-                Toast.makeText(context, "API Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-
-    private void animateWord(View wordView) {
-        wordView.animate()
-                .scaleX(1.2f)
-                .scaleY(1.2f)
-                .setDuration(200)
-                .withEndAction(() -> wordView.animate().scaleX(1f).scaleY(1f).setDuration(200))
-                .start();
-    }
     @Override
     public int getItemCount() {
         return this.ayahList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        FlexboxLayout arabicWordsContainer;
+        FlexboxLayout arabicWordsContainer; // Make sure this ID exists in card_item_single_ayat.xml
         TextView englishTranslation, ayatNumber;
         ImageView ayatCardBookmarkIcon, ayatCardAddNotesIcon, ayatCardPlayAudioIcon;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            arabicWordsContainer = itemView.findViewById(R.id.arabicWordsContainer);
+            arabicWordsContainer = itemView.findViewById(R.id.arabicWordsContainer); // Ensure this ID is correct
             englishTranslation = itemView.findViewById(R.id.EnglishTranslationTV);
             ayatNumber = itemView.findViewById(R.id.AyatNumberByAyatTV);
             ayatCardBookmarkIcon = itemView.findViewById((R.id.ayatCardBookmarkIcon));
@@ -391,36 +368,21 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
         }
     }
     private void showAddNotesDialog(MyViewHolder holder, ChapterAyah ayah) {
-        // Inflate the custom layout for the dialog using the adapter's context
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_notes, null);
-
-        // Get references to EditTexts and Button
         EditText etNoteDescription = dialogView.findViewById(R.id.etNoteDescription);
         Button btnCancel = dialogView.findViewById(R.id.btnCancel);
         Button btnSave = dialogView.findViewById(R.id.btnSave);
-
-        // Create the AlertDialog with the context from the adapter
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setCancelable(false)
                 .create();
-
-        // Set up the Cancel button
         btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        // Set up the Save button
         btnSave.setOnClickListener(v -> {
             String description = etNoteDescription.getText().toString().trim();
             addBookmarkWithNotes(holder, ayah, description);
             dialog.dismiss();
         });
-
         dialog.show();
-    }
-    private void saveNote(String title, String description) {
-        // Implement save logic here
-        // Example: Save to local database or remote server
-        Toast.makeText(context, "Note saved!", Toast.LENGTH_SHORT).show();
     }
 
     private void showLoginDialog() {
@@ -428,7 +390,6 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
         builder.setTitle("Login Required")
                 .setMessage("Please login to use bookmark feature")
                 .setPositiveButton("Login", (dialog, which) -> {
-                    // Navigate to login activity
                     Intent intent = new Intent(context, AuthActivity.class);
                     context.startActivity(intent);
                 })

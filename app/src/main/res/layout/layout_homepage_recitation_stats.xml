@@ -92,7 +92,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Current Streak"
+                            android:text="Current Recitation"
+                            android:gravity="center"
                             android:textSize="@dimen/text_size_small"
                             android:textColor="#757575"/>
                     </LinearLayout>
@@ -135,8 +136,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Longest Streak"
+                            android:text="Longest Recitation Days"
                             android:textSize="@dimen/text_size_small"
+                            android:gravity="center"
                             android:textColor="#757575"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

@@ -1,6 +1,7 @@
 package com.example.qurannexus.features.words.models
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,28 +46,18 @@ class AccordionAdapter(
         fun bind(section: AccordionSection) {
             binding.textViewSectionTitle.text = section.title
             binding.textViewItemCount.text = "(${section.words.size})"
-
-            // Setup child RecyclerView with BookmarkWord items
-            val childAdapter = BookmarkWordChildAdapter(
-                onItemClick = { bookmarkWord ->
-                    val intent = Intent(binding.root.context, WordDetailsActivity::class.java).apply {
-                        putExtra("WORD_TEXT", bookmarkWord.itemProperties.wordText)
-                        putExtra("TRANSLATION", bookmarkWord.itemProperties.translation)
-                        putExtra("TRANSLITERATION", bookmarkWord.itemProperties.transliteration)
-                        putExtra("TOTAL_OCCURRENCES", bookmarkWord.itemProperties.totalOccurrences)
-
-                        // First occurrence details
-                        putExtra("CHAPTER_ID", bookmarkWord.itemProperties.firstOccurrence.chapterId)
-                        putExtra("VERSE_NUMBER", bookmarkWord.itemProperties.firstOccurrence.verseNumber)
-                        putExtra("SURAH_NAME", bookmarkWord.itemProperties.firstOccurrence.surahName)
-                        putExtra("PAGE_ID", bookmarkWord.itemProperties.firstOccurrence.pageId)
-                        putExtra("JUZ_NUMBER", bookmarkWord.itemProperties.firstOccurrence.juzId)
-                        putExtra("VERSE_TEXT", bookmarkWord.itemProperties.firstOccurrence.verseText)
-                        putExtra("AUDIO_URL", bookmarkWord.itemProperties.firstOccurrence.audioUrl)
-                    }
-                    binding.root.context.startActivity(intent)
+            val childAdapter = BookmarkWordChildAdapter { bookmarkWord -> // Lambda for child item click
+                val intent = Intent(binding.root.context, WordDetailsActivity::class.java).apply {
+                    // Pass the ARABIC FORM TEXT as EXTRA_WORD_TEXT_FROM_RECITATION
+                    // Access properties using Kotlin syntax
+                    putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION, bookmarkWord.itemProperties.wordText)
                 }
-            )
+
+                // Log for debugging
+                Log.d("AccordionAdapter", "Navigating with Word Text: ${bookmarkWord.itemProperties.wordText}")
+
+                binding.root.context.startActivity(intent)
+            }
             childAdapter.submitList(section.words)
 
             binding.recyclerViewWordAccordionChildItems.apply {

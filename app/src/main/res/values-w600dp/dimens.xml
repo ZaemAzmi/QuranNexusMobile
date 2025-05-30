@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--inside values-w600dp folder (For tablets ~7" and larger):-->
 <resources>
+    <dimen name="icon_size_standard">72dp</dimen>
+
     <dimen name="text_size_skip">22sp</dimen>
     <dimen name="text_size_salam">44sp</dimen>
     <!-- MeowBottomNavigation default height plus some padding -->

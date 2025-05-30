@@ -3,101 +3,161 @@ package com.example.qurannexus.core.activities
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log // Import Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.media3.common.util.UnstableApi
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation
-import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ClickListener
-import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ReselectListener
-import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ShowListener
+// Removed unused MeowBottomNavigation Listeners for brevity, add back if used
+// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ClickListener
+// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ReselectListener
+// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ShowListener
 import com.example.qurannexus.R
 import com.example.qurannexus.core.enums.BottomMenuItemId
-import com.example.qurannexus.core.enums.BottomMenuItemId.Companion.fromId
-import com.example.qurannexus.core.utils.QuranMetadata
+// import com.example.qurannexus.core.utils.QuranMetadata // Not directly used in this revised method
 import com.example.qurannexus.features.analysis.QuranAnalysisFragment
 import com.example.qurannexus.features.auth.AuthActivity
 import com.example.qurannexus.features.auth.AuthService
 import com.example.qurannexus.features.bookmark.BookmarkFragment
 import com.example.qurannexus.features.home.HomeFragment
-import com.example.qurannexus.features.irab.IrabFragment
 import com.example.qurannexus.features.prayerTimes.PrayerTimesFragment
 import com.example.qurannexus.features.quiz.QuizActivity
-import com.example.qurannexus.features.recitation.ByAyatRecitationFragment
+// import com.example.qurannexus.features.recitation.ByAyatRecitationFragment // RecitationPageFragment handles this
 import com.example.qurannexus.features.recitation.RecitationPageFragment
 import com.example.qurannexus.features.recitation.SurahListFragment
-import com.example.qurannexus.features.recitation.models.SurahModel
+// import com.example.qurannexus.features.recitation.models.SurahModel // Not needed for this navigation
 import com.example.qurannexus.features.settings.SettingsFragment
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var authService: AuthService
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var meowBottomNavigation: MeowBottomNavigation
+
+    companion object { // Added for Logcat tag
+        private const val TAG = "MainActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate called")
+
         authService = AuthService()
         setupNavigationDrawer()
         setupMeowNavigationBar()
-        if (savedInstanceState == null) {
+
+        // Handle navigation from intent FIRST, before loading default HomeFragment if savedInstanceState is null
+        if (intent.getBooleanExtra("NAVIGATE_TO_RECITATION", false)) {
+            Log.d(TAG, "Intent has NAVIGATE_TO_RECITATION = true")
+            handleRecitationNavigation(intent)
+            // It's important that after handling specific navigation, we don't then
+            // immediately replace it with HomeFragment if savedInstanceState is null.
+            // So, we can return or use an else block for the default HomeFragment loading.
+        } else if (savedInstanceState == null) {
+            Log.d(TAG, "No specific navigation, savedInstanceState is null, loading HomeFragment.")
             supportFragmentManager.beginTransaction()
                 .replace(R.id.mainFragmentContainer, HomeFragment())
                 .commit()
-        }
-        // Handle navigation from intent
-        if (intent.getBooleanExtra("NAVIGATE_TO_RECITATION", false)) {
-            handleRecitationNavigation(intent)
+            meowBottomNavigation.show(BottomMenuItemId.HOME.id, true) // Ensure correct tab is shown
         }
     }
 
-    @OptIn(UnstableApi::class)
+    // This method is called if MainActivity is already running and receives a new intent
+    // (e.g., from WordDetailsActivity with FLAG_ACTIVITY_CLEAR_TOP or FLAG_ACTIVITY_SINGLE_TOP)
+
+    override fun onNewIntent(intent: Intent) { // intent should be nullable Intent?
+        super.onNewIntent(intent)
+        Log.d(TAG, "onNewIntent called with intent: $intent")
+        if (intent != null && intent.getBooleanExtra("NAVIGATE_TO_RECITATION", false)) {
+            Log.d(TAG, "onNewIntent: Intent has NAVIGATE_TO_RECITATION = true")
+            setIntent(intent) // This is important to update the activity's current intent
+            handleRecitationNavigation(intent) // Pass the non-null intent
+        }
+    }
+    @OptIn(UnstableApi::class) // Keep if RecitationPageFragment or children use UnstableApi
     private fun handleRecitationNavigation(intent: Intent) {
-        val chapterId = intent.getStringExtra("CHAPTER_ID") ?: return
-        val verseNumber = intent.getStringExtra("VERSE_NUMBER") ?: return
+        Log.d(TAG, "handleRecitationNavigation called")
+        val chapterId = intent.getStringExtra("CHAPTER_ID") // 1-based from WordDetailsActivity
+        val verseNumber = intent.getStringExtra("VERSE_NUMBER") // 1-based from WordDetailsActivity
         val isByPage = intent.getBooleanExtra("IS_BY_PAGE", false)
 
-        if (isByPage) {
-            // Handle page-based navigation (your existing code)
-            val quranMetadata = QuranMetadata.getInstance()
-            val surahDetails = quranMetadata.getSurahDetails(chapterId.toInt())
+        if (chapterId == null || verseNumber == null) {
+            Log.e(TAG, "Chapter ID or Verse Number is null in recitation navigation intent. Aborting.")
+            Toast.makeText(this, "Error: Missing navigation details.", Toast.LENGTH_SHORT).show()
+            // Fallback to home or show error state
+            if (supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) == null) {
+                loadFragment(HomeFragment()) // Ensure some fragment is loaded
+            }
+            return
+        }
 
-            val surahModel = SurahModel(
-                surahDetails?.translationName ?: " ",
-                surahDetails?.arabicName,
-                chapterId,
-                surahDetails?.englishName,
-                verseNumber,
-                false
-            )
+        val targetPageNumber: Int? = if (isByPage) intent.getIntExtra("TARGET_PAGE_NUMBER", -1).takeIf { it != -1 } else null
+        val scrollToVerseOnPage: Int? = if (isByPage) intent.getIntExtra("SCROLL_TO_VERSE_ON_PAGE", -1).takeIf { it != -1 } else null
+        // HIGHLIGHT_CHAPTER_ID for page mode will be the same as chapterId
 
-            // Create and show RecitationPageFragment
-            val fragment = RecitationPageFragment.newInstance(
-                surahModel,
-                "pageByPage",
-                chapterId.toInt() - 1
-            ).apply {
-                arguments = Bundle().apply {
-                    putParcelable("surahModel", surahModel)
-                    putInt("scrollToVerse", verseNumber.toInt())
+        val currentSurahIndexForVerseMode: Int? = if (!isByPage) intent.getIntExtra("CURRENT_SURAH_INDEX", -1).takeIf { it != -1 } else null
+
+        Log.d(TAG, "handleRecitationNavigation Params: isByPage=$isByPage, chapterId=$chapterId, verseNumber=$verseNumber, targetPage=$targetPageNumber, scrollToVerseOnPage=$scrollToVerseOnPage, surahIndexVerseMode=$currentSurahIndexForVerseMode")
+
+        if (isByPage && targetPageNumber == null) {
+            Log.e(TAG, "Page navigation selected, but TARGET_PAGE_NUMBER is missing or invalid. chapterId: $chapterId, verseNumber: $verseNumber")
+            Toast.makeText(this, "Error: Could not determine target page.", Toast.LENGTH_SHORT).show()
+            // Attempt to fallback or show error
+            val derivedPage = chapterId.toIntOrNull()?.let { com.example.qurannexus.core.utils.QuranMetadata.getInstance().getStartingPage(it) }
+            if (derivedPage != null && derivedPage != -1) {
+                Log.w(TAG, "Fallback: Navigating to start page of Surah $chapterId (Page $derivedPage)")
+                val fragment = RecitationPageFragment.newInstanceForNavigation(
+                    true,                         // isByPage
+                    chapterId,                    // chapterId
+                    verseNumber,                  // verseNumber
+                    derivedPage,                  // targetPageNumber
+                    verseNumber.toIntOrNull(),    // scrollToVerseOnPage
+                    null                          // currentSurahIndexForVerseMode
+                )
+                loadFragment(fragment)
+            } else {
+                if (supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) == null) {
+                    loadFragment(HomeFragment())
                 }
             }
-            loadFragment(fragment)
-        } else {
-            // Handle verse-based navigation
-            val fragment = ByAyatRecitationFragment.newInstance(
-                chapterId.toInt(),
-                verseNumber.toInt()
-            )
-            loadFragment(fragment)
+            return
         }
+
+        val actualSurahIndexForVerseMode = if (!isByPage) {
+            currentSurahIndexForVerseMode ?: chapterId.toIntOrNull()?.minus(1)
+        } else {
+            null
+        }
+
+        if (!isByPage && actualSurahIndexForVerseMode == null) {
+            Log.e(TAG, "Verse navigation selected, but could not determine 0-based surah index. chapterId: $chapterId")
+            Toast.makeText(this, "Error: Could not determine Surah for navigation.", Toast.LENGTH_SHORT).show()
+            if (supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) == null) {
+                loadFragment(HomeFragment())
+            }
+            return
+        }
+
+        val fragment = RecitationPageFragment.newInstanceForNavigation(
+            isByPage,                       // isByPage
+            chapterId,                      // chapterId
+            verseNumber,                    // verseNumber
+            targetPageNumber,               // targetPageNumber
+            scrollToVerseOnPage,            // scrollToVerseOnPage
+            actualSurahIndexForVerseMode    // currentSurahIndexForVerseMode
+        )
+        loadFragment(fragment)
+        // Optionally, ensure the correct bottom navigation tab is selected for recitation
+        meowBottomNavigation.show(BottomMenuItemId.SURAHLIST.id, true) // Or whichever ID represents your recitation section
     }
 
     private fun setupNavigationDrawer() {
@@ -117,25 +177,21 @@ class MainActivity : AppCompatActivity() {
     private fun handleSideNavigationItemSelected(menuItem: MenuItem) {
         val selectedFragment: Fragment? =
             when (menuItem.itemId) {
-            R.id.nav_home -> HomeFragment()
-            R.id.nav_analysis -> QuranAnalysisFragment()
-            R.id.nav_settings -> SettingsFragment()
-            R.id.nav_irab -> IrabFragment()
-            R.id.nav_test -> {
-                startActivity(Intent(this, TestActivity::class.java))
-                null
+                R.id.nav_home -> HomeFragment()
+                R.id.nav_analysis -> QuranAnalysisFragment()
+                R.id.nav_settings -> SettingsFragment()
+                R.id.nav_test -> {
+                    startActivity(Intent(this, TestActivity::class.java))
+                    null
+                }
+                R.id.nav_logout -> {
+                    handleLogout()
+                    null
+                }
+                else -> null
             }
-            R.id.nav_logout -> {
-                handleLogout()
-                null
-            }
-            else -> null
-        }
-
         selectedFragment?.let { loadFragment(it) }
     }
-
-// Add these methods to MainActivity.kt
 
     fun setBottomNavigationVisibility(isVisible: Boolean) {
         if (::meowBottomNavigation.isInitialized) {
@@ -170,9 +226,10 @@ class MainActivity : AppCompatActivity() {
                 .start()
         }
     }
+
     private fun setupMeowNavigationBar() {
         meowBottomNavigation = findViewById(R.id.meowBottomNav)
-
+        // ... (rest of your Meow setup code remains the same)
         with(meowBottomNavigation) {
             add(MeowBottomNavigation.Model(BottomMenuItemId.HOME.id, R.drawable.ic_home))
             add(MeowBottomNavigation.Model(BottomMenuItemId.SURAHLIST.id, R.drawable.ic_quran))
@@ -183,55 +240,63 @@ class MainActivity : AppCompatActivity() {
             setOnClickMenuListener { model ->
                 when (BottomMenuItemId.fromId(model.id)) {
                     BottomMenuItemId.HOME -> loadFragment(HomeFragment())
-                    BottomMenuItemId.SURAHLIST -> loadFragment(SurahListFragment())
+                    BottomMenuItemId.SURAHLIST -> loadFragment(SurahListFragment()) // This typically leads to RecitationPageFragment after selection
                     BottomMenuItemId.ANALYSIS -> loadFragment(QuranAnalysisFragment())
                     BottomMenuItemId.BOOKMARK -> loadFragment(BookmarkFragment())
                     BottomMenuItemId.QUIZ -> {
                         startActivity(Intent(this@MainActivity, QuizActivity::class.java))
                     }
-
                     null -> {
                         // Handle unknown menu item ID
                     }
                 }
             }
-            setOnShowListener { }
-            setOnReselectListener { }
+            setOnShowListener { } // No-op listener if not used
+            setOnReselectListener { } // No-op listener if not used
         }
     }
 
     private fun loadFragment(fragment: Fragment) {
+        Log.d(TAG, "Loading fragment: ${fragment.javaClass.simpleName}")
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.mainFragmentContainer, fragment)
-            .addToBackStack(null)
+            // .addToBackStack(null) // Be careful with addToBackStack for main navigation items
             .commit()
 
-        when (fragment) {
-            is HomeFragment -> meowBottomNavigation.show(BottomMenuItemId.HOME.id, true)
-            is SurahListFragment -> meowBottomNavigation.show(BottomMenuItemId.SURAHLIST.id, true)
-            is QuranAnalysisFragment -> meowBottomNavigation.show(BottomMenuItemId.ANALYSIS.id, true)
-            is BookmarkFragment -> meowBottomNavigation.show(BottomMenuItemId.BOOKMARK.id, true)
-            is PrayerTimesFragment -> meowBottomNavigation.show(BottomMenuItemId.QUIZ.id, true)
+        // Update Meow Bottom Navigation selected item based on the loaded fragment
+        // You might need a more robust way to map fragments to menu IDs if not direct
+        val menuIdToShow = when (fragment) {
+            is HomeFragment -> BottomMenuItemId.HOME.id
+            is SurahListFragment, is RecitationPageFragment -> BottomMenuItemId.SURAHLIST.id // Group recitation under SurahList tab
+            is QuranAnalysisFragment -> BottomMenuItemId.ANALYSIS.id
+            is BookmarkFragment -> BottomMenuItemId.BOOKMARK.id
+            // is PrayerTimesFragment -> BottomMenuItemId.QUIZ.id // Assuming PrayerTimesFragment maps to Quiz icon
+            else -> -1 // Or some default / no-change
+        }
+        if (menuIdToShow != -1 && ::meowBottomNavigation.isInitialized) {
+            try {
+                meowBottomNavigation.show(menuIdToShow, true)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error showing MeowBottomNavigation tab: $menuIdToShow", e)
+            }
         }
     }
 
     private fun handleLogout() {
-        // Show loading dialog
         val progressDialog = ProgressDialog(this).apply {
             setMessage("Logging out...")
+            setCancelable(false)
             show()
         }
-
         authService.logout(this) {
             progressDialog.dismiss()
-            // Redirect to auth activity regardless of server response
             Intent(this@MainActivity, AuthActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(this)
             }
             finish()
-            null // Required for Java lambda compatibility
+            null
         }
     }
 }

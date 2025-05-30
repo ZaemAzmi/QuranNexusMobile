@@ -4,29 +4,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.cardview.widget.CardView
+import androidx.cardview.widget.CardView // If your item_frequent_word.xml uses CardView
+import androidx.recyclerview.widget.ListAdapter // Changed to ListAdapter for DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
-import com.example.qurannexus.features.analysis.FrequentWord
+import com.example.qurannexus.features.analysis.viewmodels.DisplayableFrequentRoot // Updated import
 
 class FrequentWordsAdapter(
-    private val words: List<FrequentWord>,
-    private val onItemClick: (FrequentWord) -> Unit
-) : RecyclerView.Adapter<FrequentWordsAdapter.ViewHolder>() {
+    private val onItemClick: (DisplayableFrequentRoot) -> Unit
+) : ListAdapter<DisplayableFrequentRoot, FrequentWordsAdapter.ViewHolder>(FrequentRootDiffCallback()) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val wordCard: CardView = view.findViewById(R.id.wordCard)
-        val arabicTextView: TextView = view.findViewById(R.id.arabicTextView)
-        val translationTextView: TextView = view.findViewById(R.id.translationTextView)
-        val occurrencesTextView: TextView = view.findViewById(R.id.occurrencesTextView)
+        // Ensure these IDs match your item_frequent_word.xml
+        private val wordCard: View = view.findViewById(R.id.wordCard) // Assuming root is a CardView or clickable LinearLayout
+        private val arabicTextView: TextView = view.findViewById(R.id.arabicTextView)
+        private val translationTextView: TextView = view.findViewById(R.id.translationTextView)
+        private val occurrencesTextView: TextView = view.findViewById(R.id.occurrencesTextView)
+        // private val rootLabelTextView: TextView? = view.findViewById(R.id.rootLabelTextView) // Optional: if you want to show root label on card
 
-        fun bind(word: FrequentWord, onItemClick: (FrequentWord) -> Unit) {
-            arabicTextView.text = word.text
-            translationTextView.text = word.translation
-            occurrencesTextView.text = "${word.occurrences} times"
+        fun bind(root: DisplayableFrequentRoot, onItemClick: (DisplayableFrequentRoot) -> Unit) {
+            arabicTextView.text = root.displayArabicText // Show the example Arabic form
+            translationTextView.text = root.displayTranslation
+            occurrencesTextView.text = "${root.totalOccurrences} occurrences (root)"
+            // rootLabelTextView?.text = "Root: ${root.rootLabel}"
+
 
             wordCard.setOnClickListener {
-                onItemClick(word)
+                onItemClick(root)
             }
         }
     }
@@ -38,8 +43,16 @@ class FrequentWordsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(words[position], onItemClick)
+        holder.bind(getItem(position), onItemClick)
+    }
+}
+
+class FrequentRootDiffCallback : DiffUtil.ItemCallback<DisplayableFrequentRoot>() {
+    override fun areItemsTheSame(oldItem: DisplayableFrequentRoot, newItem: DisplayableFrequentRoot): Boolean {
+        return oldItem.rootLabel == newItem.rootLabel
     }
 
-    override fun getItemCount() = words.size
+    override fun areContentsTheSame(oldItem: DisplayableFrequentRoot, newItem: DisplayableFrequentRoot): Boolean {
+        return oldItem == newItem
+    }
 }

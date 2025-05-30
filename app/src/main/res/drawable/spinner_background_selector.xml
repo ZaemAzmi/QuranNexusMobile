@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/white"/> <!-- Or your desired background -->
+                    <corners android:radius="8dp"/>
+                    <stroke android:width="1dp" android:color="@color/colorAccent"/> <!-- Or your border color -->
+                    <padding android:right="12dp"/>
+                </shape>
+            </item>
+            <item
+                android:drawable="@drawable/ic_arrow_down"
+                android:gravity="center_vertical|end"
+                android:width="24dp"
+                android:height="24dp"
+                android:right="8dp"/>
+        </layer-list>
+    </item>
+</selector>

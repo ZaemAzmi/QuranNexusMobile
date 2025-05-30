@@ -28,7 +28,6 @@
                 android:id="@+id/arabicTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/uthmanic_scripts_hafs"
                 android:gravity="center"
                 android:textColor="#3F51B5"
                 android:textSize="@dimen/recitation_text_size" />

@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/uthmanic_scripts_hafs"
             android:gravity="center"
-            android:textColor="@color/dark_bluee_200"
+            android:textColor="@color/dark_blue_200"
             android:textSize="@dimen/recitation_text_size" />
 
         <TextView

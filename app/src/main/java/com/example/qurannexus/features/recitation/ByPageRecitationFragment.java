@@ -59,6 +59,12 @@ import retrofit2.Response;
 @androidx.media3.common.util.UnstableApi
 public class ByPageRecitationFragment extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
+    private static final String ARG_SCROLL_TO_VERSE_ON_PAGE = "arg_scroll_to_verse_on_page";
+    private static final String ARG_HIGHLIGHT_CHAPTER_ID = "arg_highlight_chapter_id";
+
+    // Add these as instance variables
+    private int receivedScrollToVerseOnPage = -1;
+    private String receivedHighlightChapterId = null;
      static final int TOTAL_PAGES = 604;
     private Context context;
     private int currentPageNumber;
@@ -74,19 +80,33 @@ public class ByPageRecitationFragment extends Fragment {
     private boolean isPlayerExpanded = false;
     private PageVerseResponse.PageData responseData;
     private AchievementService achievementService;
-    public static ByPageRecitationFragment newInstance(int pageNumber) {
+
+    public static ByPageRecitationFragment newInstance(int pageNumber, int scrollToVerseOnPage, String highlightChapterId) {
         ByPageRecitationFragment fragment = new ByPageRecitationFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE_NUMBER, pageNumber);
+        Log.d("ByPageF_newInstance", "Page: " + pageNumber + ", ScrollToVerse: " + scrollToVerseOnPage + ", HighlightChap: " + highlightChapterId);
+        if (scrollToVerseOnPage > 0) {
+            args.putInt(ARG_SCROLL_TO_VERSE_ON_PAGE, scrollToVerseOnPage);
+            if (highlightChapterId != null && !highlightChapterId.isEmpty()) {
+                args.putString(ARG_HIGHLIGHT_CHAPTER_ID, highlightChapterId);
+            }
+        }
         fragment.setArguments(args);
         return fragment;
     }
-
+    // Overload newInstance for when scroll info is not needed
+    public static ByPageRecitationFragment newInstance(int pageNumber) {
+        return newInstance(pageNumber, -1, null);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             currentPageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
+            receivedScrollToVerseOnPage = getArguments().getInt(ARG_SCROLL_TO_VERSE_ON_PAGE, -1);
+            receivedHighlightChapterId = getArguments().getString(ARG_HIGHLIGHT_CHAPTER_ID);
+            Log.d("ByPageF_onCreate", "Page: " + currentPageNumber + ", ScrollToVerse: " + receivedScrollToVerseOnPage + ", HighlightChap: " + receivedHighlightChapterId);
         }
         context = getContext();
     }
@@ -318,6 +338,18 @@ public class ByPageRecitationFragment extends Fragment {
                         contentCallback.onPageContentFetched(pageContent);
                     }
                     callback.onPageContentFetched(pageContent);
+
+                    if (receivedScrollToVerseOnPage > 0 && receivedHighlightChapterId != null) {
+                        Log.d("ByPageRecitation", "Attempting to highlight/scroll to: " + receivedHighlightChapterId + ":" + receivedScrollToVerseOnPage);
+                        // TODO: Implement the actual logic to find this verse in the 'pageContent' SpannableStringBuilder
+                        // and apply a highlight (e.g., BackgroundColorSpan) or attempt to scroll the TextView to it.
+                        // This is complex because 'pageContent' is one large block.
+                        // You would need to find the start/end index of the target verse text within pageContent.
+                        // One way: Iterate through `verseList` again, reconstruct text as it was added to `pageContent`,
+                        // keeping track of start/end indices, then find the one matching receivedHighlightChapterId/receivedScrollToVerseOnPage.
+                        // For now, a Toast or Log is a good placeholder.
+                        Toast.makeText(context, "Should highlight " + receivedHighlightChapterId + ":" + receivedScrollToVerseOnPage, Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     callback.onPageContentFetchFailed(SpannableStringBuilder.valueOf("Failed to fetch page content"));
                 }

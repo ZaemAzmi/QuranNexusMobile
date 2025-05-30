@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.qurannexus.R
 import com.example.qurannexus.features.bookmark.BookmarkFragment
-import com.example.qurannexus.features.tajweed.TajweedFragment
 import com.example.qurannexus.features.prayerTimes.PrayerTimesFragment
 import com.example.qurannexus.core.interfaces.HighlightClickListener
 import com.example.qurannexus.core.interfaces.QuranApi

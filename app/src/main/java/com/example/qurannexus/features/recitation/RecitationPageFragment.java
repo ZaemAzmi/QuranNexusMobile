@@ -114,6 +114,17 @@ public class RecitationPageFragment extends Fragment {
     private LinearLayout pageBookmarkLayout;
     private boolean isBookmarkMenuOpen = false;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    // New variables for handling navigation intent parameters
+    private boolean isNavigatingWithExtras = false; // Flag to indicate if launched with specific nav extras
+    private boolean navIsByPage = false;
+    private String navChapterId = null; // 1-based
+    private String navVerseNumber = null; // 1-based
+    private int navTargetPageNumber = -1;
+    private int navScrollToVerseOnPage = -1;
+    private int navCurrentSurahIndex = -1; // 0-based, for verse mode
+
+    private String fragmentTypeFromNav = null; // To store "pageByPage" or "verseByVerse" if coming from nav
     public RecitationPageFragment() {
     }
 
@@ -143,40 +154,82 @@ public class RecitationPageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         readingStartTime = System.currentTimeMillis();
-        if (getArguments() != null) {
-            surahModel = getArguments().getParcelable("surah_model");
-            startPosition = getArguments().getInt("start_position");
-            mode = getArguments().getString("mode");
-            layoutType = getArguments().getString("fragment_type");
-            currentSurahIndex = getArguments().getInt("current_surah_index");
+        Log.d("RPF_onCreate", "onCreate called.");
 
-            // Get initial page if available
-            if (getArguments().containsKey("initial_page")) {
-                currentPageNumber = getArguments().getInt("initial_page");
-            }
-            // Get scroll to verse if available
-            if (getArguments().containsKey("scroll_to_verse")) {
-                scrollToVerse = getArguments().getInt("scroll_to_verse", -1);
+        Bundle args = getArguments();
+        if (args != null) {
+            isNavigatingWithExtras = args.getBoolean("IS_NAVIGATING_WITH_EXTRAS", false);
+            Log.d("RPF_onCreate", "isNavigatingWithExtras: " + isNavigatingWithExtras);
+
+            if (isNavigatingWithExtras) {
+                navIsByPage = args.getBoolean("NAV_IS_BY_PAGE", false);
+                navChapterId = args.getString("NAV_CHAPTER_ID");
+                navVerseNumber = args.getString("NAV_VERSE_NUMBER");
+                fragmentTypeFromNav = args.getString("FRAGMENT_TYPE_FROM_NAV");
+
+                layoutType = fragmentTypeFromNav; // Set layoutType based on navigation preference
+
+                Log.d("RPF_onCreate", "NAV - isByPage: " + navIsByPage + ", layoutType: " + layoutType);
+                Log.d("RPF_onCreate", "NAV - chapterId: " + navChapterId + ", verseNumber: " + navVerseNumber);
+
+
+                if (navIsByPage) {
+                    navTargetPageNumber = args.getInt("NAV_TARGET_PAGE_NUMBER", -1);
+                    navScrollToVerseOnPage = args.getInt("NAV_SCROLL_TO_VERSE_ON_PAGE", -1);
+                    currentPageNumber = (navTargetPageNumber != -1) ? navTargetPageNumber : 1; // Use target page
+                    // For page mode, currentSurahIndex is less critical initially, header updates later
+                    Log.d("RPF_onCreate", "NAV_PAGE_MODE - targetPage: " + navTargetPageNumber + ", scrollOnPage: " + navScrollToVerseOnPage);
+
+                } else { // Verse mode navigation from WordDetailsActivity
+                    navCurrentSurahIndex = args.getInt("NAV_CURRENT_SURAH_INDEX", -1); // 0-based
+                    if (navCurrentSurahIndex != -1) {
+                        currentSurahIndex = navCurrentSurahIndex;
+                    } else if (navChapterId != null) { // Fallback if NAV_CURRENT_SURAH_INDEX wasn't passed correctly
+                        try {
+                            currentSurahIndex = Integer.parseInt(navChapterId) -1;
+                        } catch (NumberFormatException e) {
+                            currentSurahIndex = 0; // Absolute fallback
+                        }
+                    }
+                    // scrollToVerse will be taken from NAV_VERSE_NUMBER for ByAyatRecitationFragment
+                    if (navVerseNumber != null) {
+                        try {
+                            scrollToVerse = Integer.parseInt(navVerseNumber);
+                        } catch (NumberFormatException e) {
+                            scrollToVerse = -1;
+                        }
+                    }
+                    Log.d("RPF_onCreate", "NAV_VERSE_MODE - currentSurahIndex (0-based): " + currentSurahIndex + ", scrollToVerse: " + scrollToVerse);
+                }
+                surahModel = null; // Don't use surahModel if navigating with specific extras
+
+            } else { // Existing argument handling (e.g., from SurahListFragment)
+                Log.d("RPF_onCreate", "Not navigating with specific extras, using old arg parsing.");
+                surahModel = args.getParcelable("surah_model");
+                startPosition = args.getInt("start_position", 0); // Provide default
+                mode = args.getString("mode");
+                layoutType = args.getString("fragment_type");
+                currentSurahIndex = args.getInt("current_surah_index", -1); // Default to -1 if not present
+
+                if (args.containsKey("initial_page")) {
+                    currentPageNumber = args.getInt("initial_page");
+                }
+                if (args.containsKey("scroll_to_verse")) { // This is the generic scroll_to_verse
+                    scrollToVerse = args.getInt("scroll_to_verse", -1);
+                }
             }
         }
-        // Get layout type from preferences if not specified
+
+        // Default layoutType if not set by any means
         if (layoutType == null) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
-            layoutType = prefs.getBoolean("recitation_layout_by_page", false) ?
-                    "pageByPage" : "verseByVerse";
+            layoutType = prefs.getBoolean(KEY_LAYOUT_TYPE, false) ? "pageByPage" : "verseByVerse";
+            Log.d("RPF_onCreate", "LayoutType not set, defaulting from prefs: " + layoutType);
         }
+
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
         bookmarkApi = ApiService.getQuranClient().create(BookmarkApi.class);
         statisticsApi = ApiService.getQuranClient().create(StatisticsApi.class);
-
-//        coroutineScope = LifecycleKt.getLifecycleScope(this);
-
-        // Initialize repository with dependencies
-//        recentlyReadRepository = new RecentlyReadRepository(
-//                ApiService.getQuranClient().create(BookmarkApi.class),
-//                new TokenManager(requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)),
-//                Dispatchers.getIO()
-//        );
         authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                 .getString("token", null);
     }
@@ -185,7 +238,44 @@ public class RecitationPageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupScrollListeners();
     }
+    public static RecitationPageFragment newInstanceForNavigation(
+            boolean isByPage,
+            String chapterId, // 1-based
+            String verseNumber, // 1-based
+            Integer targetPageNumber, // Nullable, only for isByPage = true
+            Integer scrollToVerseOnPage, // Nullable, only for isByPage = true
+            Integer currentSurahIndexForVerseMode // Nullable, 0-based, only for isByPage = false
+    ) {
+        RecitationPageFragment fragment = new RecitationPageFragment();
+        Bundle args = new Bundle();
+        Log.d("RPF_newInstanceNav", "isByPage: " + isByPage + ", chap: " + chapterId + ", verse: " + verseNumber + ", targetPage: " + targetPageNumber + ", scrollOnPage: " + scrollToVerseOnPage + ", surahIdxVerseMode: " + currentSurahIndexForVerseMode);
 
+        args.putBoolean("IS_NAVIGATING_WITH_EXTRAS", true); // Special flag
+        args.putBoolean("NAV_IS_BY_PAGE", isByPage);
+        args.putString("NAV_CHAPTER_ID", chapterId);
+        args.putString("NAV_VERSE_NUMBER", verseNumber);
+        args.putString("FRAGMENT_TYPE_FROM_NAV", isByPage ? "pageByPage" : "verseByVerse");
+
+
+        if (isByPage) {
+            if (targetPageNumber != null) {
+                args.putInt("NAV_TARGET_PAGE_NUMBER", targetPageNumber);
+            }
+            if (scrollToVerseOnPage != null) {
+                args.putInt("NAV_SCROLL_TO_VERSE_ON_PAGE", scrollToVerseOnPage);
+            }
+        } else { // VerseByVerse navigation
+            if (currentSurahIndexForVerseMode != null) {
+                args.putInt("NAV_CURRENT_SURAH_INDEX", currentSurahIndexForVerseMode); // 0-based
+            }
+            // NAV_VERSE_NUMBER (String) will be used by ByAyatRecitationFragment as its scrollToVerse (int)
+            if (verseNumber != null) {
+                args.putString("SCROLL_TO_VERSE", verseNumber); // For ByAyatRecitationFragment
+            }
+        }
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
@@ -740,40 +830,67 @@ public class RecitationPageFragment extends Fragment {
             }
         }
     }
+    @OptIn(markerClass = UnstableApi.class)
     private void fetchVerses() {
-        if (surahModel == null) {
-            int surahNumber = currentSurahIndex + 1; // Since index is 0-based
-            int scrollToVerse = getArguments() != null ? getArguments().getInt("scroll_to_verse", -1) : -1;
+        Log.d("RPF_fetchVerses", "LayoutType: " + layoutType + ", isNavigatingWithExtras: " + isNavigatingWithExtras);
 
-            if ("verseByVerse".equals(layoutType)) {
-                displayByAyatRecitationFragment(surahNumber, scrollToVerse);
-                updateSurahHeader(surahNumber);
-            } else if ("pageByPage".equals(layoutType)) {
-                // Use initial_page if specified, otherwise use starting page of surah
-                int pageToShow = getArguments() != null && getArguments().containsKey("initial_page")
-                        ? getArguments().getInt("initial_page")
-                        : QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
+        if ("pageByPage".equals(layoutType)) {
+            int pageToDisplay;
+            int verseToScrollOnPage = -1; // Default, no scroll
+            String chapterToHighlight = null;
 
-                displayByPageRecitationFragment(pageToShow);  // Passing the page number
-                setPageContentCallback(pageToShow);
+            if (isNavigatingWithExtras && navIsByPage) {
+                pageToDisplay = (navTargetPageNumber != -1) ? navTargetPageNumber : 1;
+                verseToScrollOnPage = navScrollToVerseOnPage; // Can be -1
+                chapterToHighlight = navChapterId; // For ByPage to know which chapter's verse to highlight
+                Log.d("RPF_fetchVerses", "PAGE_MODE (Nav): page=" + pageToDisplay + ", scrollVerse=" + verseToScrollOnPage + ", chapHighlight=" + chapterToHighlight);
+            } else if (surahModel != null) { // Coming from SurahList, user prefers page mode
+                pageToDisplay = QuranMetadata.Companion.getInstance().getStartingPage(Integer.parseInt(surahModel.getSurahNumber()));
+                if (getArguments() != null && getArguments().containsKey("SCROLL_TO_VERSE")) {
+                    verseToScrollOnPage = getArguments().getInt("SCROLL_TO_VERSE", -1);
+                    chapterToHighlight = surahModel.getSurahNumber();
+                }
+                Log.d("RPF_fetchVerses", "PAGE_MODE (SurahModel): page=" + pageToDisplay);
+            } else { // Fallback or direct page mode selection
+                // Use currentPageNumber if it was set (e.g., by swiping in ByPageRecitationFragment)
+                // or derive from currentSurahIndex if that's all we have
+                pageToDisplay = (currentPageNumber > 1) ? currentPageNumber :
+                        (currentSurahIndex != -1 ? QuranMetadata.Companion.getInstance().getStartingPage(currentSurahIndex + 1) : 1);
+                if (getArguments() != null && getArguments().containsKey("SCROLL_TO_VERSE")) {
+                    verseToScrollOnPage = getArguments().getInt("SCROLL_TO_VERSE", -1);
+                    if(currentSurahIndex != -1) chapterToHighlight = String.valueOf(currentSurahIndex + 1);
+                }
+                Log.d("RPF_fetchVerses", "PAGE_MODE (Fallback): page=" + pageToDisplay);
             }
+            currentPageNumber = pageToDisplay; // IMPORTANT: Update the fragment's currentPageNumber
+            displayByPageRecitationFragment(pageToDisplay, verseToScrollOnPage, chapterToHighlight);
+            setPageContentCallback(pageToDisplay); // To update header
+
+        } else if ("verseByVerse".equals(layoutType)) {
+            int surahNumberToLoad;
+            int verseToScrollInSurah = -1; // Default to -1 (no specific scroll)
+
+            if (isNavigatingWithExtras && !navIsByPage) {
+                // Use navChapterId (1-based) and navVerseNumber (1-based)
+                surahNumberToLoad = (navChapterId != null) ? Integer.parseInt(navChapterId) : (currentSurahIndex != -1 ? currentSurahIndex + 1 : 1);
+                verseToScrollInSurah = (navVerseNumber != null) ? Integer.parseInt(navVerseNumber) : -1;
+                Log.d("RPF_fetchVerses", "VERSE_MODE (Nav): surah=" + surahNumberToLoad + ", verseScroll=" + verseToScrollInSurah);
+            } else if (surahModel != null) { // Coming from SurahList, user prefers verse mode
+                surahNumberToLoad = Integer.parseInt(surahModel.getSurahNumber());
+                verseToScrollInSurah = scrollToVerse; // Use the general scrollToVerse from args
+                Log.d("RPF_fetchVerses", "VERSE_MODE (SurahModel): surah=" + surahNumberToLoad + ", verseScroll=" + verseToScrollInSurah);
+            } else { // Fallback or direct verse mode selection
+                surahNumberToLoad = (currentSurahIndex != -1) ? currentSurahIndex + 1 : 1; // Ensure valid surah number
+                verseToScrollInSurah = scrollToVerse;
+                Log.d("RPF_fetchVerses", "VERSE_MODE (Fallback): surah=" + surahNumberToLoad + ", verseScroll=" + verseToScrollInSurah);
+            }
+            currentSurahIndex = surahNumberToLoad - 1; // Keep currentSurahIndex (0-based) consistent
+            displayByAyatRecitationFragment(surahNumberToLoad, verseToScrollInSurah);
+            updateSurahHeader(surahNumberToLoad);
         } else {
-            // Use surahModel if available
-            int surahNumber = Integer.parseInt(surahModel.getSurahNumber());
-            final int scrollToVerse = getArguments() != null ? getArguments().getInt("scrollToVerse", -1) : -1;
-
-            if ("verseByVerse".equals(layoutType)) {
-                displayByAyatRecitationFragment(surahNumber, scrollToVerse);
-                updateSurahHeader(surahNumber);
-            } else if ("pageByPage".equals(layoutType)) {
-                // Use initial_page if specified, otherwise use starting page of surah
-                int pageToShow = getArguments() != null && getArguments().containsKey("initial_page")
-                        ? getArguments().getInt("initial_page")
-                        : QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
-
-                displayByPageRecitationFragment(pageToShow);  // Passing the page number
-                setPageContentCallback(pageToShow);
-            }
+            Log.e("RPF_fetchVerses", "Unknown layoutType: " + layoutType + ". Defaulting to Surah 1, verseByVerse.");
+            displayByAyatRecitationFragment(1, -1);
+            updateSurahHeader(1);
         }
     }
 
@@ -840,51 +957,18 @@ public class RecitationPageFragment extends Fragment {
 
     // In RecitationPageFragment.java
     @OptIn(markerClass = UnstableApi.class)
-    private void displayByPageRecitationFragment(int pageNumber) {
-        Log.d("RecitationPageFragment", "Displaying page: " + pageNumber);
+    private void displayByPageRecitationFragment(int pageNumber, int scrollToVerseOnPage, String highlightChapterId) {
+        Log.d("RPF_displayByPage", "Page: " + pageNumber + ", ScrollToVerse: " + scrollToVerseOnPage + ", HighlightChap: " + highlightChapterId);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        ByPageRecitationFragment fragment = ByPageRecitationFragment.newInstance(pageNumber);
+        // Ensure ByPageRecitationFragment.newInstance is updated to accept these
+        ByPageRecitationFragment fragment = ByPageRecitationFragment.newInstance(pageNumber, scrollToVerseOnPage, highlightChapterId);
         transaction.replace(R.id.recitationFragmentContainerView, fragment);
         transaction.commit();
     }
-    // Add this method to RecitationPageFragment.java
-    public void navigateToSpecificPage(int pageNumber) {
-        Log.d("RecitationPageFragment", "Navigating to specific page: " + pageNumber);
-        // Update the current page number
-        currentPageNumber = pageNumber;
-
-        // Ensure we're using the pageByPage layout
-        layoutType = "pageByPage";
-
-        // Display the page
-        displayByPageRecitationFragment(pageNumber);
-
-        // Update the page content callback
-        setPageContentCallback(pageNumber);
-
-        // Update bookmark status for the new page
-        checkBookmarkStatus();
+    // Overload for cases where scroll/highlight info is not needed (e.g., simple page swipe)
+    @OptIn(markerClass = UnstableApi.class)
+    private void displayByPageRecitationFragment(int pageNumber) {
+        displayByPageRecitationFragment(pageNumber, -1, null);
     }
-//
-//    private void navigateToSurah(int newIndex) {
-//        if (newIndex >= 0 && newIndex < 114) {
-//            currentSurahIndex = newIndex;
-//
-//            // Create a new fragment with the updated index
-//            FragmentTransaction transaction = requireActivity()
-//                    .getSupportFragmentManager()
-//                    .beginTransaction();
-//
-//            RecitationPageFragment newFragment = RecitationPageFragment.newInstance(
-//                    null,  // We don't need surahModel for navigation
-//                    layoutType,
-//                    newIndex
-//            );
-//
-//            transaction.replace(R.id.mainFragmentContainer, newFragment);
-//            transaction.addToBackStack(null);
-//            transaction.commit();
-//        }
-//    }
 
 }

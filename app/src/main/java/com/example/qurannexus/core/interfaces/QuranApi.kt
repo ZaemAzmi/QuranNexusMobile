@@ -15,15 +15,9 @@ import com.example.qurannexus.features.recitation.models.PageVerseResponse
 import com.example.qurannexus.features.recitation.models.SurahListResponse
 import com.example.qurannexus.features.words.models.DailyQuoteListResponse
 import com.example.qurannexus.features.words.models.DailyQuoteResponse
-import com.example.qurannexus.features.words.models.DailyWordResponse
-import com.example.qurannexus.features.words.models.WordsChaptersDistributionResponse
-import com.example.qurannexus.features.words.models.WordDistributionResponse
-import com.example.qurannexus.features.words.models.WordFirstOccurrenceRequest
-import com.example.qurannexus.features.words.models.WordFirstOccurrenceResponse
 import com.example.qurannexus.features.words.models.WordOccurrenceResponse
-import com.example.qurannexus.features.words.models.WordSearchResponse
+import com.example.qurannexus.features.words.models.WordsChaptersDistributionResponse
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -96,21 +90,13 @@ interface QuranApi {
         @Query("word_text")
         wordText: String)
     : Call<com.example.qurannexus.features.analysis.models.WordDetailsResponse>
-    @GET("words/distribution")
-    fun getWordDistribution(
-        @Query("word_text") wordText: String
-    ): Call<WordDistributionResponse>
+
     @GET("words/chapters-distribution")
     fun getWordsChaptersDistribution(
         @Query("words[]") words: List<String>
     ): Call<WordsChaptersDistributionResponse>
     // New endpoint for finding first occurrence
-    @POST("word/first-occurrence")
-    fun getWordFirstOccurrence(@Body request: WordFirstOccurrenceRequest): Call<WordFirstOccurrenceResponse>
 
-    // Alternative GET method for convenience
-    @GET("word/first-occurrence/{wordText}")
-    fun getWordFirstOccurrenceGet(@Path("wordText") wordText: String): Call<WordFirstOccurrenceResponse>
     @GET("achievements/status")
     fun getAchievementStatus(
         @Header("Authorization") token: String

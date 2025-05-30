@@ -1,22 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Core Theme Colors (Blue/Teal Focus) -->
+    <color name="appPrimary">#05B5A5</color> <!-- Teal (was dark_blue_200) - Good for primary actions, text -->
+    <color name="appPrimaryVariant">#00796B</color> <!-- Darker Teal (for depth, status bar) -->
+    <color name="appSecondary">#BAFFEE</color> <!-- Light Greenish-Blue (was green_blue_100) - For lighter elements, backgrounds -->
+    <color name="appSecondaryVariant">#80CBC4</color> <!-- Muted Teal -->
+    <!-- Backgrounds -->
+    <color name="backgroundPage">#F7F9FC</color> <!-- Very Light Blueish Grey (instead of #FAFAFA for cooler tone) -->
+    <color name="backgroundCard">#FFFFFF</color>
+    <color name="backgroundCardSubtle">#E0F2F1</color> <!-- Very light teal for subtle card bg or selected states -->
+    <color name="backgroundWarmWhite">#FDF6EC</color> <!-- For cards or side panels -->
+    <color name="backgroundWarmBeige">#F5F5DC</color> <!-- Subtle section backgrounds -->
+
+    <!-- Text -->
+    <color name="textPrimary">#263238</color> <!-- Dark Blue-Gray (instead of pure black for softer look) -->
+    <color name="textSecondary">#546E7A</color> <!-- Medium Blue-Gray -->
+    <color name="textTertiary">#78909C</color> <!-- Light Blue-Gray (was gray) -->
+    <color name="textOnPrimary">#FFFFFF</color> <!-- Text on appPrimary backgrounds -->
+    <color name="textOnSecondary">#004D40</color> <!-- Text on appSecondary backgrounds (needs contrast) -->
+    <color name="coolSlateBlue">#4A6572</color> <!-- Less harsh than black -->
+    <color name="coolIndigoGray">#37474F</color> <!-- Alternative to #263238 -->
+
+    <!-- Accent Colors (for Pop & Highlights) -->
+    <color name="accentWarmCoral">#FF7F50</color>
+    <color name="accentWarmPeach">#FFDAB9</color>
+    <color name="accentGold">#FFCA28</color> <!-- Brighter Gold -->
+    <color name="accentSoftMustard">#F4C430</color> <!-- Subtle highlight or active icons -->
+    <color name="accentSoftLavender">#B39DDB</color> <!-- If you still want a hint of purple, but softer -->
+
+    <!-- Specific UI Elements -->
+    <color name="iconTint">@color/textSecondary</color>
+    <color name="iconTintActive">@color/appPrimary</color>
+    <color name="dividerColor">#CFD8DC</color> <!-- Light Blue-Gray -->
+
+
+
+    <color name="colorPrimary">#7FFBD0</color>
+    <color name="light_gray_background_chip">#DADADA</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#818080</color>
     <color name="light_gray">#B3B2B2</color>
-
+    <color name="colorAccent">#03DAC5</color>
     <color name="light_green_100">#80F184</color>
     <color name="dark_green_200">#108A83</color>
     <color name="surah_card_dark_green_300">#003F30</color>
     <color name="surah_card_dark_green_350">#1D6050</color>
     <color name="green_blue_100">#BAFFEE</color>
 
+    <!-- Accent Colors (from your gradient, or derived) -->
+    <color name="accent_deep_indigo_purple">#5C63B2</color>
+    <color name="accent_bright_teal">#3CBAC4</color>
+    <color name="accent_rich_purple">#8349B7</color>
+    <color name="accent_dark_teal_cyan">#149DA1</color>
+
+    <!-- Text Colors for Light Backgrounds -->
+    <color name="text_primary_on_light">#DE000000</color> <!-- 87% Black -->
+    <color name="text_secondary_on_light">#8A000000</color> <!-- 54% Black -->
+    <color name="text_tertiary_on_light">#61000000</color> <!-- 38% Black -->
+    <!-- Specific for Surah Item Text -->
+    <color name="surah_item_title_text">@color/accent_deep_indigo_purple</color> <!-- Or a dark blue -->
+    <color name="surah_item_subtitle_text">@color/accent_dark_teal_cyan</color> <!-- Or a medium blue/gray -->
+    <color name="surah_item_arabic_text">@color/accent_deep_indigo_purple</color> <!-- Darker for readability -->
+    <color name="surah_item_ayah_count_text">@color/text_secondary_on_light</color>
+
     <color name="ayah_card_dark_green_400">#0C2414</color>
     <color name="light_green_side_nav">#C6FFD9</color>
     <color name="bottom_nav_dark_green">#004337</color>
     <color name="light_green_button">#A4E8A2</color>
-    <color name="dark_bluee_200">#05B5A5</color>
+    <color name="dark_blue_200">#05B5A5</color>
     <!-- bottom navigation selected icon colors -->
     <color name="selected_color">#108A83</color>
     <color name="unselected_color">#FFFFFFFF</color>
