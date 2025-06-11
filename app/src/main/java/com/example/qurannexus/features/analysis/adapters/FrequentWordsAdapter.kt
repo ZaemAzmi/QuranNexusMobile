@@ -23,15 +23,15 @@ class FrequentWordsAdapter(
         private val occurrencesTextView: TextView = view.findViewById(R.id.occurrencesTextView)
         // private val rootLabelTextView: TextView? = view.findViewById(R.id.rootLabelTextView) // Optional: if you want to show root label on card
 
-        fun bind(root: DisplayableFrequentRoot, onItemClick: (DisplayableFrequentRoot) -> Unit) {
-            arabicTextView.text = root.displayArabicText // Show the example Arabic form
-            translationTextView.text = root.displayTranslation
-            occurrencesTextView.text = "${root.totalOccurrences} occurrences (root)"
-            // rootLabelTextView?.text = "Root: ${root.rootLabel}"
-
+        fun bind(entry: DisplayableFrequentRoot, onItemClick: (DisplayableFrequentRoot) -> Unit) { // Renamed root to entry
+            arabicTextView.text = entry.displayArabicText
+            translationTextView.text = entry.displayTranslation
+            // Display identifier type along with occurrences
+            occurrencesTextView.text = "${entry.identifierType}: ${entry.totalOccurrences} occurrences"
+            // rootLabelTextView?.text = "Identifier: ${entry.identifierValue}" // If you want to show the raw identifier
 
             wordCard.setOnClickListener {
-                onItemClick(root)
+                onItemClick(entry)
             }
         }
     }
@@ -49,7 +49,7 @@ class FrequentWordsAdapter(
 
 class FrequentRootDiffCallback : DiffUtil.ItemCallback<DisplayableFrequentRoot>() {
     override fun areItemsTheSame(oldItem: DisplayableFrequentRoot, newItem: DisplayableFrequentRoot): Boolean {
-        return oldItem.rootLabel == newItem.rootLabel
+        return oldItem.identifierValue == newItem.identifierValue
     }
 
     override fun areContentsTheSame(oldItem: DisplayableFrequentRoot, newItem: DisplayableFrequentRoot): Boolean {

@@ -48,9 +48,9 @@ class AccordionAdapter(
             binding.textViewItemCount.text = "(${section.words.size})"
             val childAdapter = BookmarkWordChildAdapter { bookmarkWord -> // Lambda for child item click
                 val intent = Intent(binding.root.context, WordDetailsActivity::class.java).apply {
-                    // Pass the ARABIC FORM TEXT as EXTRA_WORD_TEXT_FROM_RECITATION
+                    // Pass the ARABIC FORM TEXT as EXTRA_WORD_TEXT_FOR_PRESELECTION
                     // Access properties using Kotlin syntax
-                    putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION, bookmarkWord.itemProperties.wordText)
+                    putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION, bookmarkWord.itemProperties.wordText)
                 }
 
                 // Log for debugging

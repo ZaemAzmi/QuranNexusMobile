@@ -5,74 +5,56 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.qurannexus.core.database.entities.RootEntity
-import com.example.qurannexus.features.analysis.data.WordRootDao
+import com.example.qurannexus.core.database.entities.AnalysisEntryEntity
+import com.example.qurannexus.features.analysis.data.WordAnalysisDao
 import com.example.qurannexus.features.analysis.enums.SearchType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 // Data class for displaying frequent roots in the UI
-data class DisplayableFrequentRoot(
-    val rootLabel: String,
-    val displayArabicText: String, // e.g., "ٱللَّه" - the most common form or first occurrence text
-    val displayTranslation: String, // e.g., "Allah" - translation of the displayArabicText
+data class DisplayableFrequentRoot( // Or DisplayableAnalysisEntry
+    val identifierValue: String,         // Was rootLabel, now holds the root/lemma/form string
+    val identifierType: String,        // NEW: "ROOT", "LEMMA", "FORM"
+    val displayArabicText: String,     // e.g., "ٱللَّه" - the most common form or first occurrence text
+    val displayTranslation: String,    // e.g., "Allah" - translation of the displayArabicText
     val totalOccurrences: Int
 )
 
 @HiltViewModel
 class WordAnalysisViewModel @Inject constructor(
-    private val wordRootDao: WordRootDao
+    private val wordAnalysisDao: WordAnalysisDao
 ) : ViewModel() {
 
-    private val _frequentRoots = MutableLiveData<List<DisplayableFrequentRoot>>()
-    val frequentRoots: LiveData<List<DisplayableFrequentRoot>> = _frequentRoots
+    // Renamed for clarity, though the displayable item structure is similar
+    private val _frequentEntries = MutableLiveData<List<DisplayableFrequentRoot>>()
+    val frequentEntries: LiveData<List<DisplayableFrequentRoot>> = _frequentEntries
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
-    private val _searchResults = MutableLiveData<List<DisplayableFrequentRoot>>() // Reuse DisplayableFrequentRoot for consistency
+
+    private val _searchResults = MutableLiveData<List<DisplayableFrequentRoot>>()
     val searchResults: LiveData<List<DisplayableFrequentRoot>> = _searchResults
 
     companion object {
         private const val TAG = "WordAnalysisVM"
     }
-    fun fetchFrequentRoots(limit: Int = 8) {
+    fun fetchFrequentEntries(limit: Int = 10) { // Renamed method
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val rootEntities = wordRootDao.getMostFrequentRoots(limit)
-                val displayableRoots = rootEntities.mapNotNull { root ->
-                    // For display, we use the first_occurrence_arabic_text and its translation.
-                    // Alternatively, you could fetch the most common ArabicForm for this root.
-                    if (root.firstOccurrenceArabicText != null && root.firstOccurrenceTranslation != null) {
-                        DisplayableFrequentRoot(
-                            rootLabel = root.rootLabel,
-                            displayArabicText = root.firstOccurrenceArabicText,
-                            displayTranslation = root.firstOccurrenceTranslation,
-                            totalOccurrences = root.totalOccurrences ?: 0
-                        )
-                    } else if (root.firstOccurrenceArabicText != null) { // Fallback if translation is missing
-                        DisplayableFrequentRoot(
-                            rootLabel = root.rootLabel,
-                            displayArabicText = root.firstOccurrenceArabicText,
-                            displayTranslation = "N/A", // Or fetch from its forms
-                            totalOccurrences = root.totalOccurrences ?: 0
-                        )
-                    }
-                    else {
-                        // If first_occurrence details are insufficient, you might skip or fetch its forms.
-                        // For simplicity, skipping if essential display text is missing.
-                        null
-                    }
-                }
-                _frequentRoots.postValue(displayableRoots)
+                // Uses the renamed DAO method that returns List<AnalysisEntryEntity>
+                val entryEntities = wordAnalysisDao.getMostFrequentEntries(limit)
+                val displayableEntries = mapAnalysisEntitiesToDisplayable(entryEntities)
+                _frequentEntries.postValue(displayableEntries)
                 _error.postValue(null)
             } catch (e: Exception) {
-                _error.postValue("Failed to load frequent roots: ${e.localizedMessage}")
-                _frequentRoots.postValue(emptyList())
+                Log.e(TAG, "Failed to load frequent entries", e)
+                _error.postValue("Failed to load frequent entries: ${e.localizedMessage}")
+                _frequentEntries.postValue(emptyList())
             } finally {
                 _isLoading.postValue(false)
             }
@@ -81,42 +63,51 @@ class WordAnalysisViewModel @Inject constructor(
 
     fun performSearch(query: String, searchType: SearchType) {
         _isLoading.value = true
-        _searchResults.value = emptyList() // Clear previous results for a new search
+        _searchResults.value = emptyList()
         Log.d(TAG, "performSearch called with query: '$query', type: ${searchType.name}")
 
         viewModelScope.launch {
             try {
-                val resultsSet = mutableSetOf<RootEntity>() // Use Set to handle distinct roots easily
+                val resultsSet = mutableSetOf<AnalysisEntryEntity>()
 
                 when (searchType) {
                     SearchType.ALL -> {
-                        Log.d(TAG, "SearchType: ALL - Querying all types")
-                        wordRootDao.getRoot(query)?.let { resultsSet.add(it) }
-                        wordRootDao.searchRootsByLabel(query, limit = 10).forEach { resultsSet.add(it) }
-                        wordRootDao.findRootsByExactArabicForm(query).forEach { resultsSet.add(it) }
-                        // Consider if findRootsByArabicFormPrefix is needed for 'ALL'
-                        // wordRootDao.findRootsByArabicFormPrefix(query).forEach { resultsSet.add(it) }
-                        wordRootDao.findRootsByTranslation(query, limit = 10).forEach { resultsSet.add(it) }
+                        Log.d(TAG, "SearchType: ALL")
+                        // Search by identifier value (covers roots, lemmas, forms directly)
+                        wordAnalysisDao.searchEntriesByIdentifierValue(query, limit = 15).forEach { resultsSet.add(it) }
+                        // Search by Arabic form text (finds entries whose forms match)
+                        wordAnalysisDao.findAnalysisEntriesByExactArabicForm(query).forEach { resultsSet.add(it) }
+                        // Search by translation of forms
+                        wordAnalysisDao.findAnalysisEntriesByTranslation(query, limit = 15).forEach { resultsSet.add(it) }
+                        // More comprehensive generic query
+                        wordAnalysisDao.searchEntriesByGenericQuery(query, limit = 20).forEach { resultsSet.add(it) }
                     }
-                    SearchType.ROOT_LABEL -> {
-                        Log.d(TAG, "SearchType: ROOT_LABEL")
-                        wordRootDao.getRoot(query)?.let { resultsSet.add(it) } // Exact match
-                        wordRootDao.searchRootsByLabel(query, limit = 20).forEach { resultsSet.add(it) } // Prefix match
+                    SearchType.ROOT_LABEL -> { // This now means search by IDENTIFIER_VALUE where type might be ROOT
+                        Log.d(TAG, "SearchType: ROOT_LABEL (searching identifier_value)")
+                        wordAnalysisDao.searchEntriesByIdentifierValue(query, limit = 20)
+                            .filter { it.identifierType == "ROOT" } // Filter for actual roots
+                            .forEach { resultsSet.add(it) }
+                        // Also include exact match if the query IS a root identifier
+                        wordAnalysisDao.getAnalysisEntry(query)?.let { if(it.identifierType == "ROOT") resultsSet.add(it) }
+
                     }
                     SearchType.ARABIC_FORM -> {
                         Log.d(TAG, "SearchType: ARABIC_FORM")
-                        wordRootDao.findRootsByExactArabicForm(query).forEach { resultsSet.add(it) }
-                        // Add prefix search for Arabic forms if DAO method exists and is desired
-                        // wordRootDao.findRootsByArabicFormPrefix(query, limit = 20).forEach { resultsSet.add(it) }
+                        wordAnalysisDao.findAnalysisEntriesByExactArabicForm(query).forEach { resultsSet.add(it) }
+                        // You might want a prefix search for Arabic forms too:
+                        // Create a DAO method like:
+                        // @Query("SELECT DISTINCT ae.* FROM analysis_entries ae JOIN entry_arabic_forms eaf ON ae.identifier_value = eaf.parent_identifier_value WHERE eaf.arabic_text LIKE :query || '%'")
+                        // suspend fun findAnalysisEntriesByArabicFormPrefix(query: String): List<AnalysisEntryEntity>
+                        // wordAnalysisDao.findAnalysisEntriesByArabicFormPrefix(query).forEach { resultsSet.add(it) }
                     }
                     SearchType.TRANSLATION -> {
                         Log.d(TAG, "SearchType: TRANSLATION")
-                        wordRootDao.findRootsByTranslation(query, limit = 20).forEach { resultsSet.add(it) }
+                        wordAnalysisDao.findAnalysisEntriesByTranslation(query, limit = 20).forEach { resultsSet.add(it) }
                     }
                 }
 
-                val displayableResults = mapRootEntitiesToDisplayable(resultsSet.toList())
-                    .sortedByDescending { it.totalOccurrences }
+                val displayableResults = mapAnalysisEntitiesToDisplayable(resultsSet.toList())
+                    .sortedByDescending { it.totalOccurrences } // Sort results
 
                 Log.d(TAG, "Search completed. Found ${displayableResults.size} displayable results.")
                 _searchResults.postValue(displayableResults)
@@ -132,36 +123,54 @@ class WordAnalysisViewModel @Inject constructor(
         }
     }
 
-    // Helper function to map RootEntity list to DisplayableFrequentRoot list
-    private suspend fun mapRootEntitiesToDisplayable(roots: List<RootEntity>): List<DisplayableFrequentRoot> {
-        return roots.mapNotNull { root ->
-            if (root.firstOccurrenceArabicText != null) {
+    // Helper function to map AnalysisEntryEntity list to DisplayableFrequentRoot list
+    private suspend fun mapAnalysisEntitiesToDisplayable(entries: List<AnalysisEntryEntity>): List<DisplayableFrequentRoot> {
+        return entries.mapNotNull { entry ->
+            // Use firstOccurrenceArabicText if available
+            val displayArabic = entry.firstOccurrenceArabicText
+            val displayTrans = entry.firstOccurrenceTranslation
+
+            if (displayArabic != null) {
                 DisplayableFrequentRoot(
-                    rootLabel = root.rootLabel,
-                    displayArabicText = root.firstOccurrenceArabicText,
-                    displayTranslation = root.firstOccurrenceTranslation ?: "N/A",
-                    totalOccurrences = root.totalOccurrences ?: 0
+                    identifierValue = entry.identifierValue,
+                    identifierType = entry.identifierType,
+                    displayArabicText = displayArabic,
+                    displayTranslation = displayTrans ?: "N/A",
+                    totalOccurrences = entry.totalOccurrences ?: 0
                 )
             } else {
-                // Fallback: If firstOccurrenceArabicText is null, try to get the first Arabic form
-                val forms = wordRootDao.getArabicFormsForRoot(root.rootLabel)
+                // Fallback: If firstOccurrenceArabicText is null, try to get the first (or most common) Arabic form
+                val forms = wordAnalysisDao.getArabicFormsForEntry(entry.identifierValue)
                 if (forms.isNotEmpty() && forms.first().arabicText != null) {
-                    val firstForm = forms.first()
-                    val firstFormTranslations = wordRootDao.getTranslationsForForm(firstForm.arabicFormId)
+                    val firstForm = forms.first() // Or sort by occurrencesOfThisSpecificArabicForm and pick most common
+                    val firstFormTranslations = wordAnalysisDao.getTranslationsForForm(firstForm.arabicFormId)
                     DisplayableFrequentRoot(
-                        rootLabel = root.rootLabel,
-                        displayArabicText = firstForm.arabicText!!, // Not null due to check
+                        identifierValue = entry.identifierValue,
+                        identifierType = entry.identifierType,
+                        displayArabicText = firstForm.arabicText!!,
                         displayTranslation = firstFormTranslations.firstOrNull()?.translation ?: "N/A",
-                        totalOccurrences = root.totalOccurrences ?: 0
+                        totalOccurrences = entry.totalOccurrences ?: 0
                     )
                 } else {
-                    Log.w(TAG, "Could not find displayable text/translation for root: ${root.rootLabel}")
-                    null // Skip this root if no displayable information can be found
+                    // Last resort: use the identifier value itself if it's an Arabic script (common for FORMs)
+                    // This is a heuristic.
+                    if (entry.identifierValue.matches(Regex("\\p{InArabic}+"))) {
+                        DisplayableFrequentRoot(
+                            identifierValue = entry.identifierValue,
+                            identifierType = entry.identifierType,
+                            displayArabicText = entry.identifierValue, // Display the identifier itself
+                            displayTranslation = "Definition/Type: ${entry.identifierType.lowercase()}", // Generic translation
+                            totalOccurrences = entry.totalOccurrences ?: 0
+                        )
+                    } else {
+                        Log.w(TAG, "Could not find displayable text/translation for entry: ${entry.identifierValue} (${entry.identifierType})")
+                        null // Skip this entry if no displayable information
+                    }
                 }
             }
         }
     }
-    // Clear search results when needed (e.g., when search query is cleared)
+
     fun clearSearchResults() {
         _searchResults.value = emptyList()
     }

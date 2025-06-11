@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/uthmanic_scripts_hafs"
-                android:textColor="@color/primaryColor"
+                android:textColor="@color/appPrimaryVariant"
                 android:textSize="@dimen/text_size_title" />
 
             <TextView

@@ -45,8 +45,8 @@ class WordCloudFragment : Fragment() {
         // Set up word click listener
         wordCloudView.onWordClickListener = { bookmarkWord ->
             val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
-                // Pass the ARABIC FORM TEXT as EXTRA_WORD_TEXT_FROM_RECITATION
-                putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION, bookmarkWord.itemProperties.wordText)
+                // Pass the ARABIC FORM TEXT as EXTRA_WORD_TEXT_FOR_PRESELECTION
+                putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION, bookmarkWord.itemProperties.wordText)
             }
             startActivity(intent)
         }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -24,6 +25,7 @@ class QuranAnalysisFragment : Fragment() {
     private lateinit var statsRecyclerView: RecyclerView
     private lateinit var funFactTextView: TextView
     private lateinit var nextFactButton: Button
+    private lateinit var backButton: ImageView
 
     private val funFacts = listOf(
         "The word 'Allah' (الله) appears 2,699 times in the Quran, making it one of the most frequently mentioned words.",
@@ -56,11 +58,16 @@ class QuranAnalysisFragment : Fragment() {
     }
 
     private fun initViews(view: View) {
+        backButton = view.findViewById(R.id.backButton)
         wordAnalysisCard = view.findViewById(R.id.wordAnalysisCard)
         chapterAnalysisCard = view.findViewById(R.id.chapterAnalysisCard)
         statsRecyclerView = view.findViewById(R.id.statsRecyclerView)
         funFactTextView = view.findViewById(R.id.tvFunFact)
         nextFactButton = view.findViewById(R.id.btnNextFact)
+
+        backButton.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
     }
 
     private fun setupClickListeners() {

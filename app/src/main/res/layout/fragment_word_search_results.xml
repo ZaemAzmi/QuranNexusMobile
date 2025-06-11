@@ -48,6 +48,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
+        android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -68,16 +69,18 @@
             android:gravity="center"
             android:padding="@dimen/padding_xlarge"
             android:text="No words found matching your search"
-            android:textColor="@color/gray"
+            android:textColor="@color/appPrimaryVariant"
             android:textSize="@dimen/text_size_medium"
             android:visibility="gone" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminateTint="@color/primaryColor" />
-
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/accent_deep_indigo_purple"
+        app:layout_anchor="@+id/frameLayout2"
+        app:layout_anchorGravity="center" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

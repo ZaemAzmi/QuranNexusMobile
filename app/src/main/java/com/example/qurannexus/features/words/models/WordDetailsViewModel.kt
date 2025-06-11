@@ -6,12 +6,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.qurannexus.core.database.entities.ArabicFormWithFullDetails
-import com.example.qurannexus.core.database.entities.RootEntity
-import com.example.qurannexus.core.database.entities.RootFullDetails
+import com.example.qurannexus.core.database.entities.AnalysisEntryEntity
+import com.example.qurannexus.core.database.entities.EntryArabicFormWithFullDetails // Renamed
+import com.example.qurannexus.core.database.entities.AnalysisEntryFullDetails // Renamed
+import com.example.qurannexus.core.database.entities.AllWordOccurrenceEntity // Renamed
+import com.example.qurannexus.core.database.entities.WordIdentity // New
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.utils.TokenManager
-import com.example.qurannexus.features.analysis.data.WordRootDao
+import com.example.qurannexus.features.analysis.data.WordAnalysisDao
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest
 import com.example.qurannexus.features.bookmark.models.BookmarkResponse
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse
@@ -28,21 +30,21 @@ import javax.inject.Inject
 @HiltViewModel
 class WordDetailsViewModel @Inject constructor(
     private val application : Application,
-    private val wordRootDao : WordRootDao,
+    private val wordAnalysisDao : WordAnalysisDao,
     private val quranApi: QuranApi,
     private val gson : Gson,
     private val tokenManager: TokenManager
 ) : AndroidViewModel(application) {
 
-    private val _rootDetails = MutableLiveData<RootEntity?>()
-    val rootDetails: LiveData<RootEntity?> = _rootDetails
+    private val _analysisEntry = MutableLiveData<AnalysisEntryEntity?>()
+    val analysisEntry: LiveData<AnalysisEntryEntity?> = _analysisEntry
 
-    private val _arabicForms = MutableLiveData<List<ArabicFormWithFullDetails>>()
-    val arabicForms: LiveData<List<ArabicFormWithFullDetails>> = _arabicForms
+    private val _arabicForms = MutableLiveData<List<EntryArabicFormWithFullDetails>>()
+    val arabicForms: LiveData<List<EntryArabicFormWithFullDetails>> = _arabicForms
 
     // This will hold the Arabic form whose details are currently displayed (e.g., text, translation, transliteration)
-    private val _selectedArabicForm = MutableLiveData<ArabicFormWithFullDetails?>()
-    val selectedArabicForm: LiveData<ArabicFormWithFullDetails?> = _selectedArabicForm
+    private val _selectedArabicForm = MutableLiveData<EntryArabicFormWithFullDetails?>()
+    val selectedArabicForm: LiveData<EntryArabicFormWithFullDetails?> = _selectedArabicForm
 
     private val _contributingMorphForms = MutableLiveData<List<String>>()
     val contributingMorphForms: LiveData<List<String>> = _contributingMorphForms
@@ -73,88 +75,155 @@ class WordDetailsViewModel @Inject constructor(
     // For signaling toast messages to the Activity
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?> = _toastMessage
+    // To store the S:A:W key if navigated from recitation
+    private val _currentWordKey = MutableLiveData<String?>()
+    // To store the originally clicked Arabic text if provided, used for pre-selecting in spinner
+    private val _clickedArabicTextForPreselection = MutableLiveData<String?>()
 
     private var currentOccurrencePage = 1
     private val occurrencesPerPage = 20
-    private var currentRootLabelForOccurrences: String? = null
+    // Store the identifierValue of the current AnalysisEntry for loading its occurrences
+    private var currentIdentifierValueForOccurrences: String? = null
     private var currentJuzForOccurrences: Int? = null
     companion object { // Add a TAG for logging
         private const val TAG = "WordDetailsVM"
     }
-    // Entry point for loading data into the ViewModel.
-    // Called from WordDetailsActivity.
-    // `rootLabelFromIntent`: If navigating directly to a root (e.g., from search).
-    // `wordTextFromRecitation`: If navigating by clicking a specific word in recitation text.
-    fun loadInitialData(rootLabelFromIntent: String?, wordTextFromRecitation: String?) {
+    /**
+     * Main entry point for loading data.
+     * Determines the canonical identifier (root/lemma/form string) and its type,
+     * then fetches the full details for that identifier.
+     *
+     * @param identifierValueFromSearch Directly provides the root/lemma/form string (e.g., from a search result).
+     *                                  If this is provided, its type is assumed or needs to be found.
+     * @param wordKeyFromRecitation The S:A:W key (e.g., "1:2:3") if clicked from recitation text.
+     *                              This is used to find the mapped_identifier_value and _type.
+     * @param wordTextForPreselection The specific Arabic text of the word that was clicked/bookmarked.
+     *                                Used to pre-select the correct item in the spinner.
+     */
+    fun loadInitialData(
+        identifierValueFromSearch: String?,
+        wordKeyFromRecitation: String?,
+        wordTextForPreselection: String?
+    ) {
         if (_isLoading.value == true) return
         _isLoading.value = true
         _error.value = null
-        clearAllDataInternal() // Clear previous state before loading new
+        clearAllDataInternal()
+        _clickedArabicTextForPreselection.value = wordTextForPreselection
 
         viewModelScope.launch {
-            try {
-                val targetRootLabel: String? = if (rootLabelFromIntent != null) {
-                    rootLabelFromIntent
-                } else if (wordTextFromRecitation != null) {
-                    // Find the root for the specific Arabic word text clicked in recitation
-                    val roots = wordRootDao.findRootsByArabicFormText(wordTextFromRecitation)
-                    // Pick the first root if multiple (rare, but possible if a form is shared)
-                    // Or implement disambiguation if necessary.
-                    if (roots.isNotEmpty()) roots.first().rootLabel else null
-                } else {
-                    null
-                }
+            var targetIdentifierValue: String? = null
+            // var targetIdentifierType: String? = null // We get this from AnalysisEntryEntity
 
-                if (targetRootLabel == null) {
-                    _error.postValue("Could not determine the root to load.")
+            try {
+                if (identifierValueFromSearch != null) {
+                    // Navigating with a known identifier (e.g. root "ktb" from search)
+                    targetIdentifierValue = identifierValueFromSearch
+                    Log.d(TAG, "Loading by direct identifierValueFromSearch: $targetIdentifierValue")
+                } else if (wordKeyFromRecitation != null) {
+                    // Navigating from recitation click (S:A:W)
+                    _currentWordKey.value = wordKeyFromRecitation
+                    val identity: WordIdentity? = wordAnalysisDao.getIdentityForWordKey(wordKeyFromRecitation)
+                    if (identity != null) {
+                        targetIdentifierValue = identity.value
+                        // targetIdentifierType = identity.type // Type will be in AnalysisEntryEntity
+                        Log.d(TAG, "Resolved wordKey '$wordKeyFromRecitation' to identifier: ${identity.value} (${identity.type})")
+                        // If original wordTextForPreselection was null, use the one from the S:A:W occurrence
+                        if (_clickedArabicTextForPreselection.value == null) {
+                            val occurrence = wordAnalysisDao.getWordOccurrenceByWordKey(wordKeyFromRecitation)
+                            _clickedArabicTextForPreselection.postValue(occurrence?.arabicText)
+                            Log.d(TAG, "Fetched arabicText '${occurrence?.arabicText}' for preselection from wordKey '$wordKeyFromRecitation'")
+                        }
+                    } else {
+                        _error.postValue("Could not find mapping for word key: $wordKeyFromRecitation")
+                        _isLoading.postValue(false)
+                        return@launch
+                    }
+                } else if (wordTextForPreselection != null) {
+                    // Navigating from bookmark or old click mechanism (only Arabic text provided)
+                    // This is less precise, relies on finding the first occurrence of this text.
+                    val identity: WordIdentity? = wordAnalysisDao.getIdentityForArabicText(wordTextForPreselection)
+                    if (identity != null) {
+                        targetIdentifierValue = identity.value
+                        // targetIdentifierType = identity.type
+                        Log.d(TAG, "Resolved wordText '$wordTextForPreselection' to identifier: ${identity.value} (${identity.type})")
+                    } else {
+                        // Fallback: maybe the wordTextForPreselection IS an identifier_value itself
+                        // (e.g. a root like "ktb" was bookmarked, not a specific form "كاتِب").
+                        // We check if an entry exists with this value.
+                        val directEntry = wordAnalysisDao.getAnalysisEntry(wordTextForPreselection)
+                        if (directEntry != null) {
+                            targetIdentifierValue = directEntry.identifierValue
+                            // targetIdentifierType = directEntry.identifierType
+                            Log.d(TAG, "Found direct entry for '$wordTextForPreselection' as an identifier itself.")
+                        } else {
+                            _error.postValue("Could not determine identifier for word: $wordTextForPreselection")
+                            _isLoading.postValue(false)
+                            return@launch
+                        }
+                    }
+                } else {
+                    _error.postValue("No valid parameters to load word details.")
+                    _isLoading.postValue(false)
                     return@launch
                 }
 
-                currentRootLabelForOccurrences = targetRootLabel // Save for loading occurrences later
-                Log.d("ViewModelLoad", "TargetRootLabel: $targetRootLabel, WordTextFromRecitation: $wordTextFromRecitation")
-                val fullDetails: RootFullDetails? = wordRootDao.getRootFullDetails(targetRootLabel)
+                if (targetIdentifierValue == null) {
+                    _error.postValue("Failed to determine target identifier.")
+                    _isLoading.postValue(false)
+                    return@launch
+                }
+
+                currentIdentifierValueForOccurrences = targetIdentifierValue // For loading occurrences
+                Log.d(TAG, "Fetching full details for identifierValue: $targetIdentifierValue")
+
+                // Fetch the full details using the resolved targetIdentifierValue
+                val fullDetails: AnalysisEntryFullDetails? = wordAnalysisDao.getAnalysisEntryFullDetails(targetIdentifierValue)
 
                 if (fullDetails != null) {
-                    _rootDetails.postValue(fullDetails.rootEntity)
-                    _arabicForms.postValue(fullDetails.arabicForms)
+                    _analysisEntry.postValue(fullDetails.analysisEntryEntity)
+                    _arabicForms.postValue(fullDetails.arabicForms) // Uses Renamed Wrapper
                     _contributingMorphForms.postValue(fullDetails.contributingMorphForms)
 
                     val juzDistMap = fullDetails.juzDistribution
                         .associate { it.juzId.toString() to (it.count ?: 0) }
                     _juzDistribution.postValue(juzDistMap)
 
-                    Log.d("ViewModelLoad", "Available Arabic Forms for $targetRootLabel:")
+                    Log.d(TAG, "Available Arabic Forms for ${fullDetails.analysisEntryEntity.identifierValue} (${fullDetails.analysisEntryEntity.identifierType}):")
                     fullDetails.arabicForms.forEachIndexed { index, formDetail ->
-                        Log.d("ViewModelLoad", "  Form $index: ${formDetail.arabicFormEntity.arabicText}")
+                        Log.d(TAG, "  Form $index: ${formDetail.entryArabicFormEntity.arabicText}")
                     }
-                    // Determine which Arabic form to select initially
-                    val formToSelect = if (wordTextFromRecitation != null) {
-                        Log.d("ViewModelLoad", "Attempting to match: '$wordTextFromRecitation'")
-                        fullDetails.arabicForms.firstOrNull { it.arabicFormEntity.arabicText == wordTextFromRecitation }
+
+                    val actualPreselectionText = _clickedArabicTextForPreselection.value
+                    val formToSelect = if (actualPreselectionText != null) {
+                        Log.d(TAG, "Attempting to pre-select form matching: '$actualPreselectionText'")
+                        fullDetails.arabicForms.firstOrNull { it.entryArabicFormEntity.arabicText == actualPreselectionText }
                     } else {
-                        null // No specific form was clicked, can default or wait for user selection
+                        null
                     }
+
                     if (formToSelect != null) {
-                        Log.d("ViewModelLoad", "Matched form from recitation: ${formToSelect.arabicFormEntity.arabicText}")
-                    } else if (wordTextFromRecitation != null) {
-                        Log.w("ViewModelLoad", "COULD NOT MATCH '$wordTextFromRecitation' with any available forms.")
+                        Log.d(TAG, "Matched form for pre-selection: ${formToSelect.entryArabicFormEntity.arabicText}")
+                    } else if (actualPreselectionText != null) {
+                        Log.w(TAG, "COULD NOT MATCH '$actualPreselectionText' with any available forms for pre-selection.")
                     }
-                    // If no specific form from recitation, or if not found, select the first form if available
+
                     _selectedArabicForm.postValue(formToSelect ?: fullDetails.arabicForms.firstOrNull())
-                    Log.d("ViewModelLoad", "FINAL _selectedArabicForm posted: ${ (formToSelect ?: fullDetails.arabicForms.firstOrNull())?.arabicFormEntity?.arabicText }")
+                    Log.d(TAG, "FINAL _selectedArabicForm posted: ${(formToSelect ?: fullDetails.arabicForms.firstOrNull())?.entryArabicFormEntity?.arabicText}")
+
                 } else {
-                    _error.postValue("Root details for '$targetRootLabel' not found.")
+                    _error.postValue("Details for identifier '$targetIdentifierValue' not found.")
                 }
             } catch (e: Exception) {
-                _error.postValue("Error loading root data: ${e.localizedMessage}")
-                e.printStackTrace()
+                _error.postValue("Error loading word data: ${e.localizedMessage}")
+                Log.e(TAG, "Error in loadInitialData", e)
             } finally {
                 _isLoading.postValue(false)
             }
         }
     }
 
-    fun selectArabicForm(form: ArabicFormWithFullDetails) {
+    fun selectArabicForm(form: EntryArabicFormWithFullDetails) {
         _selectedArabicForm.value = form
         // Here you could also trigger fetching specific details for this form if they aren't already loaded,
         // e.g., if transliterations/translations were very large and fetched on-demand.
@@ -162,7 +231,10 @@ class WordDetailsViewModel @Inject constructor(
     }
 
     fun loadOccurrencesForJuz(juzNumber: Int, isInitialLoad: Boolean = true) {
-        val rootLabel = currentRootLabelForOccurrences ?: return
+        val identifierValue = currentIdentifierValueForOccurrences ?: run {
+            Log.w(TAG, "loadOccurrencesForJuz called but currentIdentifierValueForOccurrences is null")
+            return
+        }
         if (_isLoadingMoreOccurrences.value == true && !isInitialLoad) return
 
         if (isInitialLoad) {
@@ -173,32 +245,29 @@ class WordDetailsViewModel @Inject constructor(
 
         currentJuzForOccurrences = juzNumber
         _isLoadingMoreOccurrences.value = true
-        _error.value = null
+//        _error.value = null
 
         viewModelScope.launch {
             try {
                 val offset = (currentOccurrencePage - 1) * occurrencesPerPage
-                val newDbOccurrences = wordRootDao.getOccurrencesForRootInJuz(
-                    rootLabel = rootLabel,
+                // Use AllWordOccurrenceEntity from DAO
+                val newDbOccurrences: List<AllWordOccurrenceEntity> = wordAnalysisDao.getOccurrencesForEntryInJuz(
+                    identifierValue = identifierValue, // Pass identifierValue
                     juzNumber = juzNumber,
                     limit = occurrencesPerPage,
                     offset = offset
                 )
 
-                // Map DB entities to display items
                 val displayItems = newDbOccurrences.map { occ ->
-                    // TODO: Fetch fullVerseText if needed. This would require another DAO call
-                    // or having verse text directly in RootWordOccurrenceEntity (which makes it very large).
-                    // For now, keeping it null.
                     WordOccurrenceDisplayItem(
                         wordKey = occ.wordKey,
                         surahId = occ.surahId,
                         ayahIndex = occ.ayahIndex,
                         arabicText = occ.arabicText,
-                        translation = occ.translation,
-                        juzId = occ.juzId,// This comes from RootWordOccurrenceEntity
+                        translation = occ.translation, // This is translation of the word, not verse.
+                        juzId = occ.juzId,
                         pageId = occ.pageId,
-                        fullVerseText = null, // Placeholder
+                        fullVerseText = null, // To be fetched if needed
                         chapterIdString = occ.surahId.toString(),
                         verseNumberString = occ.ayahIndex.toString()
                     )
@@ -213,20 +282,20 @@ class WordDetailsViewModel @Inject constructor(
                 _hasMoreOccurrences.postValue(displayItems.size == occurrencesPerPage)
                 if (displayItems.isNotEmpty() && displayItems.size == occurrencesPerPage) {
                     currentOccurrencePage++
-                } else if (displayItems.isEmpty() && !isInitialLoad) {
-                    _hasMoreOccurrences.postValue(false) // No more items from DB
                 }
-
+                // Log.d(TAG, "Loaded ${displayItems.size} occurrences for Juz $juzNumber. HasMore: ${_hasMoreOccurrences.value}")
 
             } catch (e: Exception) {
+                // Post error specific to this operation if desired, or use general _error
                 _error.postValue("Error loading occurrences for Juz $juzNumber: ${e.localizedMessage}")
-                e.printStackTrace()
-                _hasMoreOccurrences.postValue(false) // Stop pagination on error
+                Log.e(TAG, "Error in loadOccurrencesForJuz", e)
+                _hasMoreOccurrences.postValue(false)
             } finally {
                 _isLoadingMoreOccurrences.postValue(false)
             }
         }
     }
+
 
     fun loadMoreOccurrencesForCurrentJuz() {
         if (currentJuzForOccurrences != null && _hasMoreOccurrences.value == true && _isLoadingMoreOccurrences.value == false) {
@@ -235,25 +304,23 @@ class WordDetailsViewModel @Inject constructor(
     }
 
     fun getCharactersForSelectedForm(): List<String> {
-        return _selectedArabicForm.value?.arabicFormEntity?.charactersJson?.let { json ->
+        // Use renamed wrapper and entity
+        return _selectedArabicForm.value?.entryArabicFormEntity?.charactersJson?.let { json ->
             try {
                 val type = object : TypeToken<List<String>>() {}.type
                 gson.fromJson<List<String>>(json, type)
-            } catch (e: Exception) {
-                emptyList()
-            }
+            } catch (e: Exception) { emptyList() }
         } ?: emptyList()
     }
 
     // Helper to parse characters from RootEntity (first occurrence)
     fun getFirstOccurrenceCharacters(): List<String> {
-        return _rootDetails.value?.firstOccurrenceCharactersJson?.let { json ->
+        // Use renamed LiveData
+        return _analysisEntry.value?.firstOccurrenceCharactersJson?.let { json ->
             try {
                 val type = object : TypeToken<List<String>>() {}.type
                 gson.fromJson<List<String>>(json, type)
-            } catch (e: Exception) {
-                emptyList()
-            }
+            } catch (e: Exception) { emptyList() }
         } ?: emptyList()
     }
 
@@ -273,6 +340,8 @@ class WordDetailsViewModel @Inject constructor(
 
         quranApi.getBookmarks("Bearer $token").enqueue(object : Callback<BookmarksResponse> {
             override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
+                Log.e(TAG, "bookmark bearer : $token")
+                
                 if (response.isSuccessful) {
                     val bookmarked = response.body()?.bookmarks?.words?.any {
                         it.itemProperties.wordText == arabicFormText
@@ -307,7 +376,7 @@ class WordDetailsViewModel @Inject constructor(
             return
         }
 
-        val formEntity = selectedFormDetail.arabicFormEntity
+        val formEntity = selectedFormDetail.entryArabicFormEntity
         val wordTextToBookmark = formEntity.arabicText ?: run {
             _toastMessage.postValue("Cannot bookmark, word text is missing.")
             return
@@ -364,20 +433,22 @@ class WordDetailsViewModel @Inject constructor(
     }
 
     private fun clearAllDataInternal() {
-        _rootDetails.value = null
+        _analysisEntry.value = null // Renamed
         _arabicForms.value = emptyList()
         _selectedArabicForm.value = null
         _contributingMorphForms.value = emptyList()
         _juzDistribution.value = emptyMap()
         _occurrencesInJuz.value = emptyList()
-        currentRootLabelForOccurrences = null
+        currentIdentifierValueForOccurrences = null // Renamed
+        _currentWordKey.value = null
+        _clickedArabicTextForPreselection.value = null
         currentJuzForOccurrences = null
         currentOccurrencePage = 1
         _hasMoreOccurrences.value = true
         _error.value = null
         _isLoading.value = false
         _isLoadingMoreOccurrences.value = false
-        _isBookmarked.value = false // Reset bookmark status
+        _isBookmarked.value = false
     }
 }
 

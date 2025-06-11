@@ -176,22 +176,12 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
 
                 // Directly navigate to WordDetailsActivity with the word's Arabic text
                 String clickedWordText = word.getText();
+                String wordKey = ayah.getSurahId() + ":" + ayah.getAyahIndex() + ":" + word.getWordIndex(); // Construct S:A:W
                 if (clickedWordText != null && !clickedWordText.isEmpty()) {
                     Intent intent = new Intent(context, WordDetailsActivity.class);
-                    intent.putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION, clickedWordText);
-
-                    // Log for debugging
-                    Log.d("RecitationAdapter", "Navigating with Word Text: " + clickedWordText);
-                    if (intent.hasExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION)) {
-                        Log.d("RecitationAdapter", "Intent has EXTRA_WORD_TEXT_FROM_RECITATION");
-                    } else {
-                        Log.e("RecitationAdapter", "Intent MISSING EXTRA_WORD_TEXT_FROM_RECITATION");
-                    }
-
-                    // For future audio feature, you might pass the specific word's audio URL
-                    // if (word.getAudioUrl() != null) {
-                    //    intent.putExtra("INITIAL_AUDIO_URL", word.getAudioUrl());
-                    // }
+                    intent.putExtra(WordDetailsActivity.EXTRA_WORD_KEY_FROM_RECITATION, wordKey);
+                    intent.putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION, clickedWordText);
+                    Log.d("RecitationAdapter", "Navigating with WordKey: " + wordKey + ", WordText: " + clickedWordText);
                     context.startActivity(intent);
                 } else {
                     Toast.makeText(context, "Word data not available.", Toast.LENGTH_SHORT).show();

@@ -119,8 +119,8 @@ class WordSearchResultsFragment : Fragment() {
         searchResultsAdapter = SearchResultsAdapter { displayableRoot ->
             // Now displayableRoot is the correct type with rootLabel
             val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
-                putExtra(WordDetailsActivity.EXTRA_ROOT_LABEL, displayableRoot.rootLabel)
-                putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION, displayableRoot.displayArabicText)
+                putExtra(WordDetailsActivity.EXTRA_IDENTIFIER_VALUE, displayableRoot.identifierValue)
+                putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION, displayableRoot.displayArabicText)
             }
             startActivity(intent)
         }

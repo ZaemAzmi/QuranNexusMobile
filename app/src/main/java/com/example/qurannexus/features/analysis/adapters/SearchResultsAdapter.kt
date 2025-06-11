@@ -17,18 +17,18 @@ class SearchResultsAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         // Ensure these IDs match your item_search_result.xml
-        val resultCard: View = view.findViewById(R.id.resultCard) // Assuming root is CardView or clickable LinearLayout
-        val arabicTextView: TextView = view.findViewById(R.id.arabicTextView)
-        val translationTextView: TextView = view.findViewById(R.id.translationTextView)
-        val surahTextView: TextView = view.findViewById(R.id.surahTextView) // Will show root label / occurrences
-        val verseTextView: TextView = view.findViewById(R.id.verseTextView) // Can be hidden or repurposed
+        private val resultCard: View = view.findViewById(R.id.resultCard) // Assuming root is CardView or clickable LinearLayout
+        private val arabicTextView: TextView = view.findViewById(R.id.arabicTextView)
+        private val translationTextView: TextView = view.findViewById(R.id.translationTextView)
+        private val surahTextView: TextView = view.findViewById(R.id.surahTextView) // Will show root label / occurrences
+        private val verseTextView: TextView = view.findViewById(R.id.verseTextView) // Can be hidden or repurposed
 
         fun bind(result: DisplayableFrequentRoot, onItemClick: (DisplayableFrequentRoot) -> Unit) {
             arabicTextView.text = result.displayArabicText
             translationTextView.text = result.displayTranslation
-            // Repurpose surahTextView to show root label and occurrences
-            surahTextView.text = "Root: ${result.rootLabel} (${result.totalOccurrences} times)"
-            verseTextView.visibility = View.GONE // Hide verseText as it's not directly relevant for root display
+            // Show identifierValue and its type, then occurrences
+            surahTextView.text = "${result.identifierType}: ${result.identifierValue} (${result.totalOccurrences} times)"
+            verseTextView.visibility = View.GONE
 
             resultCard.setOnClickListener {
                 onItemClick(result)
@@ -50,7 +50,7 @@ class SearchResultsAdapter(
 // DiffUtil for DisplayableFrequentRoot (can be shared with FrequentWordsAdapter if identical)
 class DisplayableRootDiffCallback : DiffUtil.ItemCallback<DisplayableFrequentRoot>() {
     override fun areItemsTheSame(oldItem: DisplayableFrequentRoot, newItem: DisplayableFrequentRoot): Boolean {
-        return oldItem.rootLabel == newItem.rootLabel
+        return oldItem.identifierValue == newItem.identifierValue
     }
 
     override fun areContentsTheSame(oldItem: DisplayableFrequentRoot, newItem: DisplayableFrequentRoot): Boolean {

@@ -45,8 +45,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.text.BidiFormatter
 import androidx.core.text.TextDirectionHeuristicsCompat
 import androidx.lifecycle.Observer
-import com.example.qurannexus.core.database.entities.ArabicFormWithFullDetails
-import com.example.qurannexus.core.database.entities.RootEntity
+import com.example.qurannexus.core.database.entities.EntryArabicFormWithFullDetails
+import com.example.qurannexus.core.database.entities.AnalysisEntryEntity
 import com.example.qurannexus.features.words.adapters.MorphFormsAdapter
 import com.example.qurannexus.features.words.adapters.TranslationsAdapter
 import com.example.qurannexus.features.words.adapters.WordOccurrencesAdapter
@@ -56,47 +56,63 @@ import java.io.IOException
 
 @AndroidEntryPoint
 class WordDetailsActivity : AppCompatActivity() {
-    // Remove BarChart if not immediately reimplementing, PieChart is the primary one in your XML
-    // private lateinit var barChart: BarChart
-    private lateinit var pieChart: PieChart
-    private lateinit var bookmarkButton: ImageView // Will be used later
     private val viewModel: WordDetailsViewModel by viewModels()
 
-    // UI Elements for Root and Selected Arabic Form
-    private lateinit var tvRootLabel: TextView
-    private lateinit var tvRootTotalOccurrences: TextView
-    private lateinit var spinnerArabicForms: Spinner
-    private lateinit var tvSelectedFormArabicText: TextView
-    private lateinit var tvSelectedFormTranslation: TextView
-    private lateinit var tvSelectedFormTransliteration: TextView
-    private lateinit var tvSelectedFormCharacters: TextView // New TextView for characters
-    private lateinit var btnPlaySelectedFormAudio: Button // For audio of selected form
-    private var translationsBottomSheetDialog: BottomSheetDialog? = null // Class member
-    private var morphFormsBottomSheetDialog: BottomSheetDialog? = null // Add this
-    // UI Elements for First Occurrence (of the Root)
-    private lateinit var tvFirstOccSurahName: TextView
-    private lateinit var tvFirstOccVerseText: TextView
-    private lateinit var tvFirstOccAyahKey: TextView
-    private lateinit var tvFirstOccPageId: TextView
-    private lateinit var tvFirstOccJuzId: TextView
-    private lateinit var tvFirstOccCharacters: TextView // Characters of the first occurrence
-
-    // General UI
+    // --- UI Elements - General & Top Bar ---
     private lateinit var progressBar: ProgressBar
-    private lateinit var tvChartTotalOccurrences: TextView // Renamed from tvTotalOccurrences for clarity
-    private lateinit var tvChartMostLeastOccurrences: TextView // Renamed
+    private lateinit var tvActivityTitle: TextView // For the main page title (e.g., "Root Analysis")
+    private lateinit var bookmarkButton: ImageView
 
-    private var currentJuzForBottomSheet: Int = 0
-    private lateinit var occurrencesAdapter: WordOccurrencesAdapter // Renamed Adapter
-    private var bottomSheetDialog: BottomSheetDialog? = null
+    // --- UI Elements - Main Identifier Card (was Root Information Card) ---
+    private lateinit var tvIdentifierLabel: TextView              // R.id.tvRootLabel - Displays "Root: XYZ" or "Lemma: ABC"
+    private lateinit var tvIdentifierTotalOccurrences: TextView   // R.id.tvRootTotalOccurrences - Displays "Total Root Occurrences: 10"
+    private lateinit var tvTitleContributingMorph: TextView       // R.id.tvContributingMorphFormsLabel - Title for morph forms section
+    private lateinit var flexboxMorphForms: FlexboxLayout         // R.id.flexboxMorphForms
+    private lateinit var btnShowAllMorphForms: Button             // R.id.btnShowAllMorphForms
 
-    // BidiFormatter for handling RTL text
+    // --- UI Elements - Arabic Form Selection and Details Card ---
+    private lateinit var tvTitleArabicForms: TextView             // Title of this card e.g. "Arabic Forms of this Root"
+    private lateinit var spinnerArabicForms: Spinner              // R.id.spinnerArabicForms
+    private lateinit var tvSelectedFormArabicText: TextView       // R.id.tvSelectedFormArabicText
+    private lateinit var btnPlaySelectedFormAudio: Button         // R.id.btnPlaySelectedFormAudio
+    private lateinit var tvSelectedFormTranslation: TextView      // R.id.tvSelectedFormTranslation_main
+    private lateinit var ivMoreTranslations: ImageView            // R.id.ivMoreTranslations
+    private lateinit var layoutTranslationSection: LinearLayout   // R.id.layoutTranslationSection
+    private lateinit var tvSelectedFormTransliteration: TextView  // R.id.tvSelectedFormTransliteration
+    private lateinit var tvSelectedFormCharacters: TextView       // R.id.tvSelectedFormCharacters
+
+    // --- UI Elements - First Occurrence Details Card ---
+    private lateinit var tvTitleFirstOccurrence: TextView         // Title of this card e.g. "First Occurrence of Root"
+    private lateinit var tvFirstOccSurahName: TextView            // R.id.tvFirstOccSurahName
+    private lateinit var tvFirstOccVerseText: TextView            // R.id.tvFirstOccVerseText
+    private lateinit var tvFirstOccAyahKey: TextView              // R.id.tvFirstOccAyahKey
+    private lateinit var tvFirstOccPageId: TextView               // R.id.tvFirstOccPageId
+    private lateinit var tvFirstOccJuzId: TextView                // R.id.tvFirstOccJuzId
+    private lateinit var tvFirstOccCharacters: TextView           // R.id.tvFirstOccCharacters
+
+    // --- UI Elements - Distribution Analysis Card ---
+    private lateinit var tvTitleDistribution: TextView            // Title of this card e.g. "Root Distribution"
+    private lateinit var pieChart: PieChart                       // R.id.pieChart
+    private lateinit var tvChartTotalOccurrences: TextView        // R.id.tvChartTotalOccurrences - Text like "Total Occurrences (Root): 150"
+    private lateinit var tvChartMostLeastOccurrences: TextView    // R.id.tvChartMostLeastOccurrences
+
+    // --- BottomSheet Dialogs & Adapters ---
+    private var translationsBottomSheetDialog: BottomSheetDialog? = null
+    private var morphFormsBottomSheetDialog: BottomSheetDialog? = null
+    private var occurrencesBottomSheetDialog: BottomSheetDialog? = null // Renamed from bottomSheetDialog
+    private lateinit var occurrencesAdapter: WordOccurrencesAdapter
+
+    // --- Utilities ---
     private val bidiFormatter = BidiFormatter.getInstance()
-
     private var mediaPlayer: MediaPlayer? = null
+    private var currentJuzForBottomSheet: Int = 0
     companion object {
-        const val EXTRA_ROOT_LABEL = "ROOT_LABEL"
-        const val EXTRA_WORD_TEXT_FROM_RECITATION = "WORD_TEXT_FROM_RECITATION" // e.g., "ٱللَّهِ"
+        // Renamed for clarity, this is the identifier string (root/lemma/form)
+        const val EXTRA_IDENTIFIER_VALUE = "IDENTIFIER_VALUE"
+        // This is the S:A:W key if navigating from recitation
+        const val EXTRA_WORD_KEY_FROM_RECITATION = "WORD_KEY_FROM_RECITATION"
+        // This is the specific Arabic text of the word clicked/bookmarked, for pre-selection
+        const val EXTRA_WORD_TEXT_FOR_PRESELECTION = "WORD_TEXT_FOR_PRESELECTION"
         private const val BASE_AUDIO_URL = "https://quran.seaade2024.com/data/quran-audio/"
         private const val AUDIO_PLAYBACK_TAG = "AudioPlayback"
     }
@@ -106,59 +122,84 @@ class WordDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_word_details)
 
         initializeViews()
+        setupChartListeners()
         setupObservers()
-        setupChartListeners() // Setup chart click listeners
 
         // Initialize adapter for bottom sheet early
         occurrencesAdapter = WordOccurrencesAdapter { occurrenceItem -> // occurrenceItem is WordOccurrenceDisplayItem
             navigateToVerse(occurrenceItem) // Pass the whole item
         }
 
-        val rootLabel = intent.getStringExtra(EXTRA_ROOT_LABEL)
-        val wordTextFromRecitation = intent.getStringExtra(EXTRA_WORD_TEXT_FROM_RECITATION)
+        val identifierValue = intent.getStringExtra(EXTRA_IDENTIFIER_VALUE)
+        val wordKey = intent.getStringExtra(EXTRA_WORD_KEY_FROM_RECITATION)
+        val wordTextForPreselection = intent.getStringExtra(EXTRA_WORD_TEXT_FOR_PRESELECTION)
+        Log.d("WordDetailsActivity", "onCreate - IdentifierValue: $identifierValue, WordKey: $wordKey, WordTextForPreselection: $wordTextForPreselection")
 
-        if (rootLabel == null && wordTextFromRecitation == null) {
-            Toast.makeText(this, "No root or word specified.", Toast.LENGTH_LONG).show()
+        if (identifierValue == null && wordKey == null && wordTextForPreselection == null) {
+            Toast.makeText(this, "No identifier, word key, or word text specified.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
-        viewModel.loadInitialData(rootLabel, wordTextFromRecitation)
+        // Pass all to ViewModel, it will decide the priority
+        viewModel.loadInitialData(identifierValue, wordKey, wordTextForPreselection)
     }
 
     private fun initializeViews() {
+        // General & Top Bar
         progressBar = findViewById(R.id.progressBar)
-        pieChart = findViewById(R.id.pieChart)
+        // Assuming the TextView for the page title in your topBar LinearLayout has android:id="@+id/tvActivityTitle"
+        // If it's the default one from a Toolbar, you'd set it differently (e.g., supportActionBar?.title = "...")
+        // For now, assuming a dedicated TextView in your R.id.topBar LinearLayout:
+        val topBarLayout = findViewById<LinearLayout>(R.id.topBar)
+        // You need to give the title TextView in topBar an ID. Let's assume it's R.id.tvPageTitleInTopBar
+        // tvActivityTitle = topBarLayout.findViewById(R.id.tvPageTitleInTopBar) // Example, replace with actual ID
+        // If it's the one directly in the topBar XML with text "Root Word Analysis"
+        // you need to give THAT TextView an ID. For example: android:id="@+id/tv_page_title"
+        tvActivityTitle = topBarLayout.findViewById(R.id.tvPageTitle) // Update R.id.tv_page_title to your actual ID
+
         bookmarkButton = findViewById(R.id.bookmarkButton)
-
-        bookmarkButton.setOnClickListener {
-            // ViewModel now handles token internally via TokenManager
-            viewModel.toggleSelectedFormBookmark()
-        }
-
         findViewById<ImageView>(R.id.backButton).setOnClickListener { onBackPressed() }
 
-        // Root and Selected Form Views
-        tvRootLabel = findViewById(R.id.tvRootLabel) // Needs to be added to XML
-        tvRootTotalOccurrences = findViewById(R.id.tvRootTotalOccurrences) // Needs to be added
-        spinnerArabicForms = findViewById(R.id.spinnerArabicForms) // Needs to be added
-        tvSelectedFormArabicText = findViewById(R.id.tvSelectedFormArabicText) // Replaces old wordText
-        tvSelectedFormTranslation = findViewById(R.id.tvSelectedFormTranslation_main) // Replaces old translationText
-        tvSelectedFormTransliteration = findViewById(R.id.tvSelectedFormTransliteration) // Replaces old transliterationText
-        tvSelectedFormCharacters = findViewById(R.id.tvSelectedFormCharacters) // Needs to be added
-        btnPlaySelectedFormAudio = findViewById(R.id.btnPlaySelectedFormAudio) // Needs to be added
+        // Main Identifier Card
+        tvIdentifierLabel = findViewById(R.id.tvRootLabel) // XML uses tvRootLabel
+        tvIdentifierTotalOccurrences = findViewById(R.id.tvRootTotalOccurrences) // XML uses tvRootTotalOccurrences
+        tvTitleContributingMorph = findViewById(R.id.tvContributingMorphFormsLabel) // XML uses this ID
+        flexboxMorphForms = findViewById(R.id.flexboxMorphForms)
+        btnShowAllMorphForms = findViewById(R.id.btnShowAllMorphForms)
 
-        // First Occurrence Views (of the Root)
-        tvFirstOccSurahName = findViewById(R.id.tvFirstOccSurahName) // Replaces surahNameText
-        tvFirstOccVerseText = findViewById(R.id.tvFirstOccVerseText) // Replaces verseText
-        tvFirstOccAyahKey = findViewById(R.id.tvFirstOccAyahKey) // Replaces ayahKeyText
-        tvFirstOccPageId = findViewById(R.id.tvFirstOccPageId) // Replaces pageIdText
-        tvFirstOccJuzId = findViewById(R.id.tvFirstOccJuzId) // Replaces juzIdText
-        tvFirstOccCharacters = findViewById(R.id.tvFirstOccCharacters) // Needs to be added
+        // Arabic Form Selection and Details Card
+        // The title TextView within this card needs an ID in XML, e.g., android:id="@+id/tvTitleArabicFormsCard"
+        tvTitleArabicForms = findViewById(R.id.tvTitleArabicFormsCard) // Update R.id.tvTitleArabicFormsCard to your actual ID
+        spinnerArabicForms = findViewById(R.id.spinnerArabicForms)
+        tvSelectedFormArabicText = findViewById(R.id.tvSelectedFormArabicText)
+        btnPlaySelectedFormAudio = findViewById(R.id.btnPlaySelectedFormAudio)
+        tvSelectedFormTranslation = findViewById(R.id.tvSelectedFormTranslation_main)
+        ivMoreTranslations = findViewById(R.id.ivMoreTranslations)
+        layoutTranslationSection = findViewById(R.id.layoutTranslationSection)
+        tvSelectedFormTransliteration = findViewById(R.id.tvSelectedFormTransliteration)
+        tvSelectedFormCharacters = findViewById(R.id.tvSelectedFormCharacters)
 
-        // Chart specific TextViews
+        // First Occurrence Details Card
+        // The title TextView within this card needs an ID in XML, e.g., android:id="@+id/tvTitleFirstOccurrenceCard"
+        tvTitleFirstOccurrence = findViewById(R.id.tvTitleFirstOccurrenceCard) // Update R.id.tvTitleFirstOccurrenceCard to your actual ID
+        tvFirstOccSurahName = findViewById(R.id.tvFirstOccSurahName)
+        tvFirstOccVerseText = findViewById(R.id.tvFirstOccVerseText)
+        tvFirstOccAyahKey = findViewById(R.id.tvFirstOccAyahKey)
+        tvFirstOccPageId = findViewById(R.id.tvFirstOccPageId)
+        tvFirstOccJuzId = findViewById(R.id.tvFirstOccJuzId)
+        tvFirstOccCharacters = findViewById(R.id.tvFirstOccCharacters)
+
+        // Distribution Analysis Card
+        // The title TextView within this card needs an ID in XML, e.g., android:id="@+id/tvTitleDistributionCard"
+        tvTitleDistribution = findViewById(R.id.tvTitleDistributionAnalysisCard) // Update R.id.tvTitleDistributionCard to your actual ID
+        pieChart = findViewById(R.id.pieChart)
         tvChartTotalOccurrences = findViewById(R.id.tvChartTotalOccurrences)
         tvChartMostLeastOccurrences = findViewById(R.id.tvChartMostLeastOccurrences)
 
+        // Setup Listeners that are static
+        bookmarkButton.setOnClickListener {
+            viewModel.toggleSelectedFormBookmark()
+        }
         // Setup Spinner for Arabic Forms
         spinnerArabicForms.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -184,10 +225,10 @@ class WordDetailsActivity : AppCompatActivity() {
             error?.let { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
         })
 
-        viewModel.rootDetails.observe(this, Observer { rootEntity ->
-            updateRootInfoUI(rootEntity)
-            updateFirstOccurrenceUI(rootEntity)
-            if(rootEntity == null){
+        viewModel.analysisEntry.observe(this, Observer { analysisEntry ->
+            updateAnalysisEntryInfoUI(analysisEntry) // New method to handle dynamic labels
+            updateFirstOccurrenceUI(analysisEntry) // Pass AnalysisEntryEntity
+            if (analysisEntry == null) {
                 bookmarkButton.setImageResource(R.drawable.ic_heart)
             }
         })
@@ -199,9 +240,8 @@ class WordDetailsActivity : AppCompatActivity() {
             // After updating the adapter, try to set the selection based on the *current*
             // selectedArabicForm value, as it might have been set by loadInitialData.
             viewModel.selectedArabicForm.value?.let { currentSelection ->
-                val position = forms.indexOfFirst { it.arabicFormEntity.arabicFormId == currentSelection.arabicFormEntity.arabicFormId }
+                val position = forms.indexOfFirst { it.entryArabicFormEntity.arabicFormId == currentSelection.entryArabicFormEntity.arabicFormId }
                 if (position != -1 && spinnerArabicForms.selectedItemPosition != position) {
-                    Log.d("ActivityObserver", "[arabicForms obs] Setting spinner to $position for ${currentSelection.arabicFormEntity.arabicText}")
                     spinnerArabicForms.setSelection(position, false)
                 }
             }
@@ -210,22 +250,22 @@ class WordDetailsActivity : AppCompatActivity() {
         // This observer reacts to changes in the selected form (either by user or initial load)
         // and updates the UI accordingly. It also attempts to set the spinner selection.
         viewModel.selectedArabicForm.observe(this) { selectedForm ->
-            Log.d("ActivityObserver", "selectedArabicForm emitted: ${selectedForm?.arabicFormEntity?.arabicText}")
+            Log.d("ActivityObserver", "selectedArabicForm emitted: ${selectedForm?.entryArabicFormEntity?.arabicText}")
             updateSelectedArabicFormUI(selectedForm) // This updates the TextViews
             // When selected form changes, check its bookmark status
-            viewModel.checkSelectedFormBookmarkStatus(selectedForm?.arabicFormEntity?.arabicText)
+            viewModel.checkSelectedFormBookmarkStatus(selectedForm?.entryArabicFormEntity?.arabicText)
 
             // Ensure spinner reflects this selection if the adapter is ready
             if (selectedForm != null && spinnerArabicForms.adapter != null && spinnerArabicForms.adapter.count > 0) {
                 viewModel.arabicForms.value?.let { currentFormsList -> // Get the list used by adapter
-                    val position = currentFormsList.indexOfFirst { it.arabicFormEntity.arabicFormId == selectedForm.arabicFormEntity.arabicFormId }
+                    val position = currentFormsList.indexOfFirst { it.entryArabicFormEntity.arabicFormId == selectedForm.entryArabicFormEntity.arabicFormId }
                     if (position != -1 && spinnerArabicForms.selectedItemPosition != position) {
-                        Log.d("ActivityObserver", "[selectedArabicForm obs] Updating spinner selection to: $position for ${selectedForm.arabicFormEntity.arabicText}")
+                        Log.d("ActivityObserver", "[selectedArabicForm obs] Updating spinner selection to: $position for ${selectedForm.entryArabicFormEntity.arabicText}")
                         spinnerArabicForms.setSelection(position, true) // true to trigger onItemSelected if it's a *new* programmatic change that should behave like a user click. Or false if you want to avoid it. `false` is safer to prevent loops if onItemSelected also modifies ViewModel.
                     } else if (position != -1) {
                         Log.d("ActivityObserver", "[selectedArabicForm obs] Spinner already at correct position: $position")
                     } else {
-                        Log.w("ActivityObserver", "[selectedArabicForm obs] Selected form ${selectedForm.arabicFormEntity.arabicText} not found in spinner's current list.")
+                        Log.w("ActivityObserver", "[selectedArabicForm obs] Selected form ${selectedForm.entryArabicFormEntity.arabicText} not found in spinner's current list.")
                     }
                 }
             }
@@ -250,7 +290,8 @@ class WordDetailsActivity : AppCompatActivity() {
 
         viewModel.juzDistribution.observe(this, Observer { distribution ->
             updateJuzDistributionChart(distribution)
-            updateChartStatisticsText(distribution)
+            // updateChartStatisticsText needs to be dynamic now based on identifierType
+            updateChartStatisticsText(distribution, viewModel.analysisEntry.value?.identifierType ?: "Identifier")
         })
 
         viewModel.occurrencesInJuz.observe(this, Observer { occurrences ->
@@ -267,6 +308,16 @@ class WordDetailsActivity : AppCompatActivity() {
             val flexboxLayout = findViewById<FlexboxLayout>(R.id.flexboxMorphForms)
             val morphFormsLabel = findViewById<TextView>(R.id.tvContributingMorphFormsLabel)
             val btnShowAllMorphForms = findViewById<Button>(R.id.btnShowAllMorphForms) // Make sure this ID exists
+            // Dynamically update the label for contributing morph forms
+            val identifierType = viewModel.analysisEntry.value?.identifierType ?: "Entry"
+            val identifierValue = viewModel.analysisEntry.value?.identifierValue ?: ""
+
+            morphFormsLabel.text = when(identifierType) {
+                "ROOT" -> "Associated Morphological Forms (Root Level)"
+                "LEMMA" -> "Observed Morphological Variations (Lemma)"
+                "FORM" -> "Morphological Form Details"
+                else -> "Associated Forms"
+            }
 
             flexboxLayout.removeAllViews()
 
@@ -287,7 +338,10 @@ class WordDetailsActivity : AppCompatActivity() {
                     btnShowAllMorphForms.visibility = View.VISIBLE
                     btnShowAllMorphForms.text = "View All ${morphForms.size} Forms" // Or just "View All"
                     btnShowAllMorphForms.setOnClickListener {
-                        showAllMorphFormsBottomSheet(viewModel.rootDetails.value?.rootLabel ?: "Root", morphForms)
+                        showAllMorphFormsBottomSheet(
+                            "${viewModel.analysisEntry.value?.identifierType ?: "Entry"}: ${viewModel.analysisEntry.value?.identifierValue ?: ""}",
+                            morphForms
+                        )
                     }
                 } else {
                     btnShowAllMorphForms.visibility = View.GONE
@@ -299,7 +353,7 @@ class WordDetailsActivity : AppCompatActivity() {
             }
         }
     }
-    private fun showAllMorphFormsBottomSheet(rootLabel: String, morphForms: List<String>) {
+    private fun showAllMorphFormsBottomSheet(identifierDisplayString: String, morphForms: List<String>) {
         if (morphFormsBottomSheetDialog == null) {
             morphFormsBottomSheetDialog = BottomSheetDialog(this)
             // Reuse generic list bottom sheet layout if you created one, or use translations one and adapt
@@ -310,50 +364,65 @@ class WordDetailsActivity : AppCompatActivity() {
         val titleTextView = morphFormsBottomSheetDialog!!.findViewById<TextView>(R.id.tvBottomSheetGenericTitle)
         val recyclerView = morphFormsBottomSheetDialog!!.findViewById<RecyclerView>(R.id.rvGenericList)
 
-        titleTextView?.text = "All Morphological Forms for Root: $rootLabel"
+        titleTextView?.text = "All Morphological Forms for Root: $identifierDisplayString"
         recyclerView?.layoutManager = LinearLayoutManager(this)
         recyclerView?.adapter = MorphFormsAdapter(morphForms)
 
         morphFormsBottomSheetDialog!!.show()
     }
-    private fun updateRootInfoUI(rootEntity: RootEntity?) {
-        tvRootLabel.text = "Root: ${rootEntity?.rootLabel ?: "N/A"}"
-        tvRootTotalOccurrences.text = "Total Root Occurrences: ${rootEntity?.totalOccurrences ?: 0}"
+    // NEW: Method to update UI elements based on the AnalysisEntryEntity
+    private fun updateAnalysisEntryInfoUI(analysisEntry: AnalysisEntryEntity?) {
+        val typeLabel = when (analysisEntry?.identifierType) {
+            "ROOT" -> "Root"
+            "LEMMA" -> "Lemma"
+            "FORM" -> "Form"
+            else -> "Word" // Default label
+        }
+        // Update the main title of the page
+        tvActivityTitle.text = "Analysis of $typeLabel " // CORRECTED LINE
+
+        tvIdentifierLabel.text = "$typeLabel: ${analysisEntry?.identifierValue ?: "N/A"}"
+        tvIdentifierTotalOccurrences.text = "Total $typeLabel Occurrences: ${analysisEntry?.totalOccurrences ?: 0}"
+
+        // Update Card Titles Dynamically
+        tvTitleArabicForms.text = "Arabic Forms of this $typeLabel"
+        tvTitleFirstOccurrence.text = "First Occurrence of $typeLabel"
+        tvTitleDistribution.text = "$typeLabel Distribution in Juz"
+        // tvTitleContributingMorph is updated in its own observer block based on identifierType
+        // Also update the label in the chart statistics
+        updateChartStatisticsText(viewModel.juzDistribution.value ?: emptyMap(), typeLabel)
     }
 
-    private fun updateArabicFormsSpinner(forms: List<ArabicFormWithFullDetails>) {
+    private fun updateArabicFormsSpinner(forms: List<EntryArabicFormWithFullDetails>) {
         if (forms.isEmpty()) {
             spinnerArabicForms.adapter = null
             Log.d("SpinnerUpdate", "Forms list is empty, clearing adapter.")
             return
         }
-        val displayTexts = forms.map { it.arabicFormEntity.arabicText ?: "Unknown Form" }
+        val displayTexts = forms.map { it.entryArabicFormEntity.arabicText ?: "Unknown Form" }
         val adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_spinner_item,
+            R.layout.custom_arabic_form_spinner_item,
             displayTexts
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(R.layout.custom_arabic_form_spinner_dropdown_item)
         spinnerArabicForms.adapter = adapter
         Log.d("SpinnerUpdate", "Spinner adapter populated with ${forms.size} items.")
         // The initial selection will be handled by the _selectedArabicForm observer
         // or by the _arabicForms observer's attempt after adapter is set.
     }
 
-    private fun updateSelectedArabicFormUI(formWithDetails: ArabicFormWithFullDetails?) {
+    private fun updateSelectedArabicFormUI(formWithDetails: EntryArabicFormWithFullDetails?) {
         if (formWithDetails == null) {
-            Log.d("UpdateUI", "Selected form is null, clearing UI.")
             tvSelectedFormArabicText.text = "" // Clear it
             // ... (rest of the clearing logic from your code)
             findViewById<TextView>(R.id.tvSelectedFormTransliteration).text = "Transliteration: N/A"
             findViewById<TextView>(R.id.tvSelectedFormCharacters).text = "Characters: N/A"
             return
         }
-        Log.d("UpdateUI", "Updating UI for form: ${formWithDetails.arabicFormEntity.arabicText}")
 
-        val formEntity = formWithDetails.arabicFormEntity
+        val formEntity = formWithDetails.entryArabicFormEntity
         tvSelectedFormArabicText.text = formEntity.arabicText ?: "N/A" // Should be visible
-        Log.d("UpdateUI", "Arabic Text set to: ${tvSelectedFormArabicText.text}") // CHECK THIS LOG
 
 
         // Translation section (as implemented previously with BottomSheet)
@@ -367,7 +436,7 @@ class WordDetailsActivity : AppCompatActivity() {
                 mainTranslationTV.append(" (+${translations.size - 1} more...)") // Append to first
                 moreTranslationsIcon.visibility = View.VISIBLE
                 translationSectionLayout.setOnClickListener {
-                    showAllTranslationsBottomSheet(formWithDetails.arabicFormEntity.arabicText ?: "Word", translations)
+                    showAllTranslationsBottomSheet(formWithDetails.entryArabicFormEntity.arabicText ?: "Word", translations)
                 }
             } else {
                 moreTranslationsIcon.visibility = View.GONE
@@ -391,7 +460,7 @@ class WordDetailsActivity : AppCompatActivity() {
 
 
         if (formEntity.audioUrl != null) {
-            val relativeAudioPath = formWithDetails.arabicFormEntity.audioUrl
+            val relativeAudioPath = formWithDetails.entryArabicFormEntity .audioUrl
             if (!relativeAudioPath.isNullOrEmpty()) {
                 btnPlaySelectedFormAudio.visibility = View.VISIBLE
                 btnPlaySelectedFormAudio.setOnClickListener {
@@ -424,8 +493,8 @@ class WordDetailsActivity : AppCompatActivity() {
 
         translationsBottomSheetDialog!!.show()
     }
-    private fun updateFirstOccurrenceUI(rootEntity: RootEntity?) {
-        if (rootEntity == null) {
+    private fun updateFirstOccurrenceUI(analysisEntryEntity: AnalysisEntryEntity?) {
+        if (analysisEntryEntity == null) {
             tvFirstOccSurahName.text = "Surah: N/A"
             tvFirstOccVerseText.text = "Word in First Verse: N/A"
             tvFirstOccAyahKey.text = "Ayah Key: N/A"
@@ -435,21 +504,21 @@ class WordDetailsActivity : AppCompatActivity() {
             return
         }
 
-        val surahDetails = rootEntity.firstOccurrenceSurahId?.let {
+        val surahDetails = analysisEntryEntity.firstOccurrenceSurahId?.let {
             com.example.qurannexus.core.utils.QuranMetadata.getInstance().getSurahDetails(it)
         }
 
         tvFirstOccSurahName.text = "Surah: ${surahDetails?.arabicName ?: ""} (${surahDetails?.englishName ?: "N/A"})"
 
         val wrappedArabicText = bidiFormatter.unicodeWrap(
-            rootEntity.firstOccurrenceArabicText ?: "N/A",
+            analysisEntryEntity.firstOccurrenceArabicText ?: "N/A",
             TextDirectionHeuristicsCompat.ANYRTL_LTR, true
         )
         tvFirstOccVerseText.text = "Word in First Verse: $wrappedArabicText"
 
-        tvFirstOccAyahKey.text = "Ayah Key: ${rootEntity.firstOccurrenceWordKey ?: "N/A"}"
-        tvFirstOccPageId.text = "Page ID: ${rootEntity.firstOccurrencePageId ?: "N/A"}"
-        tvFirstOccJuzId.text = "Juz: ${rootEntity.firstOccurrenceJuzId ?: "N/A"}"
+        tvFirstOccAyahKey.text = "Ayah Key: ${analysisEntryEntity.firstOccurrenceWordKey ?: "N/A"}"
+        tvFirstOccPageId.text = "Page ID: ${analysisEntryEntity.firstOccurrencePageId ?: "N/A"}"
+        tvFirstOccJuzId.text = "Juz: ${analysisEntryEntity.firstOccurrenceJuzId ?: "N/A"}"
 
         val firstOccChars = viewModel.getFirstOccurrenceCharacters()
         tvFirstOccCharacters.text = "Word Characters: ${firstOccChars.joinToString(" ")}" // Join with space
@@ -547,12 +616,12 @@ class WordDetailsActivity : AppCompatActivity() {
         // setupBarChart(juzDistribution) // If you re-add barchart
     }
 
-    private fun updateChartStatisticsText(juzDistribution: Map<String, Int>) {
+    private fun updateChartStatisticsText(juzDistribution: Map<String, Int>, identifierTypeLabel : String) {
         val total = juzDistribution.values.sum()
         val maxEntry = juzDistribution.maxByOrNull { it.value }
         val minEntry = juzDistribution.filterValues { it > 0 }.minByOrNull { it.value }
 
-        tvChartTotalOccurrences.text = "Total Occurrences (Root): $total" // Clarified this is for the root
+        tvChartTotalOccurrences.text = "Total Occurrences ($identifierTypeLabel): $total" // Dynamic label
 
         val mostText = if (maxEntry != null) "Most: Juz ${maxEntry.key} (${maxEntry.value})" else "Most: N/A"
         val leastText = if (minEntry != null) "Least: Juz ${minEntry.key} (${minEntry.value})" else "Least: N/A"
@@ -673,16 +742,16 @@ class WordDetailsActivity : AppCompatActivity() {
     private fun showOccurrencesInJuzBottomSheet(occurrences: List<WordOccurrenceDisplayItem>) {
         if (isFinishing) return
         // Only show/refresh if there are occurrences or if it's meant to clear an existing list
-        if (occurrences.isEmpty() && (bottomSheetDialog == null || bottomSheetDialog?.isShowing != true)) {
+        if (occurrences.isEmpty() && (occurrencesBottomSheetDialog == null || occurrencesBottomSheetDialog?.isShowing != true)) {
             // If list is empty and dialog not showing, do nothing
             // If dialog is showing and list becomes empty, adapter will handle empty state
-            if (bottomSheetDialog?.isShowing == true) occurrencesAdapter.submitList(emptyList())
+            if (occurrencesBottomSheetDialog?.isShowing == true) occurrencesAdapter.submitList(emptyList())
             return
         }
 
 
-        if (bottomSheetDialog == null) {
-            bottomSheetDialog = BottomSheetDialog(this).apply {
+        if (occurrencesBottomSheetDialog == null) {
+            occurrencesBottomSheetDialog = BottomSheetDialog(this).apply {
                 setContentView(R.layout.layout_word_occurrences_bottom_sheet)
                 findViewById<RecyclerView>(R.id.occurrencesRecyclerView)?.apply {
                     layoutManager = LinearLayoutManager(this@WordDetailsActivity)
@@ -706,18 +775,18 @@ class WordDetailsActivity : AppCompatActivity() {
                 }
             }
         }
-        bottomSheetDialog?.findViewById<TextView>(R.id.titleText)?.text =
+        occurrencesBottomSheetDialog?.findViewById<TextView>(R.id.titleText)?.text =
             "Occurrences in Juz $currentJuzForBottomSheet"
 
         occurrencesAdapter.submitList(occurrences)
 
-        if (!bottomSheetDialog!!.isShowing && occurrences.isNotEmpty()) {
-            bottomSheetDialog?.show()
+        if (!occurrencesBottomSheetDialog!!.isShowing && occurrences.isNotEmpty()) {
+            occurrencesBottomSheetDialog?.show()
         }
     }
 
     private fun navigateToVerse(occurrenceItem: WordOccurrenceDisplayItem) {
-        bottomSheetDialog?.dismiss()
+        occurrencesBottomSheetDialog?.dismiss()
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val isByPage = sharedPreferences.getBoolean("recitation_layout_by_page", false)
 

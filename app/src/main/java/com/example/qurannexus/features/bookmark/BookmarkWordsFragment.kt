@@ -111,9 +111,9 @@ class BookmarkWordsFragment : Fragment() {
     }
     private fun navigateToWordDetails(bookmarkWord: BookmarkWord) {
         val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
-            // Pass the ARABIC FORM TEXT as EXTRA_WORD_TEXT_FROM_RECITATION
+            // Pass the ARABIC FORM TEXT as EXTRA_WORD_TEXT_FOR_PRESELECTION
             putExtra(
-                WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION,
+                WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION,
                 bookmarkWord.itemProperties.wordText
             )
         }

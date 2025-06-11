@@ -1,5 +1,6 @@
 package com.example.qurannexus.features.analysis
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -40,9 +41,9 @@ class WordAnalysisFragment : Fragment() {
     private lateinit var backButton: ImageView
     private lateinit var searchEditText: EditText
     private lateinit var searchButton: Button
-    private lateinit var heavenCategoryCard: CardView
-    private lateinit var hellCategoryCard: CardView
-    private lateinit var prophetsCategoryCard: CardView
+    private lateinit var rootCategoryCard: CardView
+    private lateinit var lemmaCategoryCard: CardView
+    private lateinit var formCategoryCard: CardView
     private lateinit var wordFactTextView: TextView
     private lateinit var wordFactButton: Button
     private lateinit var frequentWordsRecyclerView: RecyclerView
@@ -74,7 +75,7 @@ class WordAnalysisFragment : Fragment() {
         setupClickListeners()
         observeViewModel()
         displayRandomFact() // Keep if you want this
-        viewModel.fetchFrequentRoots() // Fetch data
+        viewModel.fetchFrequentEntries() // Fetch data
     }
 
     private fun initViews(view: View) {
@@ -83,9 +84,9 @@ class WordAnalysisFragment : Fragment() {
         searchButton = view.findViewById(R.id.searchButton)
         chipGroupSearchFilter = view.findViewById(R.id.chipGroupSearchFilter)
         frequentWordsRecyclerView = view.findViewById(R.id.frequentWordsRecyclerView)
-        heavenCategoryCard = view.findViewById(R.id.heavenCategoryCard)
-        hellCategoryCard = view.findViewById(R.id.hellCategoryCard)
-        prophetsCategoryCard = view.findViewById(R.id.prophetsCategoryCard)
+        rootCategoryCard = view.findViewById(R.id.rootCategoryCard)
+        lemmaCategoryCard = view.findViewById(R.id.lemmaCategoryCard)
+        formCategoryCard = view.findViewById(R.id.formCategoryCard)
         wordFactTextView = view.findViewById(R.id.wordFactTextView)
         wordFactButton = view.findViewById(R.id.wordFactButton)
     }
@@ -100,7 +101,7 @@ class WordAnalysisFragment : Fragment() {
 
 
     private fun observeViewModel() {
-        viewModel.frequentRoots.observe(viewLifecycleOwner) { roots ->
+        viewModel.frequentEntries.observe(viewLifecycleOwner) { roots ->
             if (!isInSearchMode) { // Only update if not in search mode
                 frequentWordsAdapter.submitList(roots)
             }
@@ -152,17 +153,35 @@ class WordAnalysisFragment : Fragment() {
         }
 
 
-        // Category card clicks
-        heavenCategoryCard.setOnClickListener {
-            navigateToWordCategory("heaven")
+        // New Category Card Click Listeners
+        rootCategoryCard.setOnClickListener {
+            showCategoryExplanationDialog(
+                iconResId = R.drawable.ic_root_placeholder, // Replace with your actual icon
+                title = "Quranic Roots (أَصْل - Aṣl)",
+                explanation = "A root is typically a three-letter (triliteral), or sometimes four-letter, consonantal base. It represents a core semantic concept. Arabic words are formed by applying various patterns (أَوْزَان - awzān) to these roots, infusing them with specific grammatical functions and shades of meaning.",
+                examples = "Root: ك-ت-ب (k-t-b) - relates to 'writing'.\n • كَتَبَ (kataba) - 'he wrote' (verb)\n • كِتَاب (kitāb) - 'book' (noun)\n • مَكْتَبَة (maktabah) - 'library'\n • كَاتِب (kātib) - 'writer'",
+                appRelevance = "Analyzing by ROOT reveals all Quranic words sharing that fundamental meaning, highlighting thematic connections."
+            )
         }
 
-        hellCategoryCard.setOnClickListener {
-            navigateToWordCategory("hell")
+        lemmaCategoryCard.setOnClickListener {
+            showCategoryExplanationDialog(
+                iconResId = R.drawable.ic_lemma_placeholder, // Replace
+                title = "Lemmas (مَدْخَل - Madkhal)",
+                explanation = "A lemma is the canonical or dictionary form of a word. For verbs, it's often the 3rd person masculine singular past tense (e.g., فَعَلَ). For nouns, it's the singular, nominative, indefinite form. Particles, pronouns, and prepositions also have lemmas.",
+                examples = " • Lemma for 'he/it': هُوَ (huwa)\n • Lemma for 'in': فِي (fī)\n • Lemma for 'Alif-Lām-Mīm': INIT_Alm",
+                appRelevance = "Analyzing by LEMMA groups different grammatical forms of the same base word, useful for particles, pronouns, or words without a clear triliteral root."
+            )
         }
 
-        prophetsCategoryCard.setOnClickListener {
-            navigateToWordCategory("prophets")
+        formCategoryCard.setOnClickListener {
+            showCategoryExplanationDialog(
+                iconResId = R.drawable.ic_form_placeholder, // Replace
+                title = "Forms (صِيغَة - Ṣīghah)",
+                explanation = "A form refers to the exact textual shape of a word as it appears in the Quran, including all prefixes, suffixes, and vowels. Every segment of the Quranic text has a specific form.",
+                examples = " • وَٱلْعَصْرِ (wa-l-ʿaṣri): contains parts وَ (wa), ٱلْ (al-), عَصْرِ (ʿaṣri).\n • The particle إِلَّا (illā - 'except') is analyzed by its specific form.",
+                appRelevance = "Our analysis prioritizes Root, then Lemma. If neither is assigned for a word segment, we categorize it by its specific textual Form. This often applies to certain particles or very short segments."
+            )
         }
 
         // Next fact button click
@@ -170,33 +189,37 @@ class WordAnalysisFragment : Fragment() {
             displayRandomFact()
         }
     }
+    private fun showCategoryExplanationDialog(iconResId: Int, title: String, explanation: String, examples: String, appRelevance: String) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_word_category_explanation, null)
 
-    // Renamed to distinguish from future local search
-//    private fun searchWordsApi(query: String) {
-//        Toast.makeText(requireContext(), "Searching (API): $query", Toast.LENGTH_SHORT).show()
-//        quranApi.searchWords(query = query, type = "all", page = 1, perPage = 20)
-//            .enqueue(object : Callback<WordOccurrenceResponse> {
-//                override fun onResponse(call: Call<WordOccurrenceResponse>, response: Response<WordOccurrenceResponse>) {
-//                    if (response.isSuccessful) {
-//                        navigateToSearchResults(query) // This likely needs update too if SearchResultsFragment expects different data
-//                    } else {
-//                        Toast.makeText(requireContext(), "Search failed (API).", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//                override fun onFailure(call: Call<WordOccurrenceResponse>, t: Throwable) {
-//                    Toast.makeText(requireContext(), "Network error (API): ${t.message}", Toast.LENGTH_SHORT).show()
-//                }
-//            })
-//    }
+        val ivIcon: ImageView = dialogView.findViewById(R.id.ivDialogCategoryIcon)
+        val tvTitle: TextView = dialogView.findViewById(R.id.tvDialogCategoryTitle)
+        val tvExplanation: TextView = dialogView.findViewById(R.id.tvDialogCategoryExplanation)
+        val tvExamples: TextView = dialogView.findViewById(R.id.tvDialogCategoryExamples)
+        val tvAppRelevance: TextView = dialogView.findViewById(R.id.tvDialogAppRelevance)
+        val btnClose: Button = dialogView.findViewById(R.id.btnDialogCategoryClose)
 
-    // Modified to take DisplayableFrequentRoot
-    private fun navigateToWordDetails(selectedRoot: DisplayableFrequentRoot) {
-        // No API call needed here anymore, WordDetailsActivity will use the rootLabel
+        ivIcon.setImageResource(iconResId) // Make sure you have these drawables
+        tvTitle.text = title
+        tvExplanation.text = explanation
+        tvExamples.text = examples
+        tvAppRelevance.text = appRelevance
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+        // Optional: Make dialog background transparent if your dialog_category_explanation.xml has its own rounded background
+        // dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+    }
+    private fun navigateToWordDetails(selectedEntry: DisplayableFrequentRoot) { // Renamed selectedRoot to selectedEntry
         val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
-            putExtra(WordDetailsActivity.EXTRA_ROOT_LABEL, selectedRoot.rootLabel)
-            // Optionally, pass the specific arabic text that was displayed, so WordDetailsActivity
-            // can try to select it in its spinner initially.
-            putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FROM_RECITATION, selectedRoot.displayArabicText)
+            putExtra(WordDetailsActivity.EXTRA_IDENTIFIER_VALUE, selectedEntry.identifierValue) // Pass the root/lemma/form string
+            putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION, selectedEntry.displayArabicText)
         }
         startActivity(intent)
     }
@@ -232,7 +255,7 @@ class WordAnalysisFragment : Fragment() {
         if (searchEditText.text.isEmpty()) {
             if (isInSearchMode) { // If we were in search mode but now query is empty
                 isInSearchMode = false
-                viewModel.fetchFrequentRoots() // Refresh frequent words
+                viewModel.fetchFrequentEntries() // Refresh frequent words
             }
         }
     }

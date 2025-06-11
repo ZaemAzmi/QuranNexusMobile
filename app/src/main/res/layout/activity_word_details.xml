@@ -34,6 +34,7 @@
             android:src="@drawable/ic_arrow_left" />
 
         <TextView
+            android:id="@+id/tvPageTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -151,6 +152,7 @@
                     android:padding="@dimen/padding_medium">
 
                     <TextView
+                        android:id="@+id/tvTitleArabicFormsCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Arabic Forms of this Root"
@@ -164,7 +166,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_small"
-
                         android:textDirection="ltr"
                         android:layout_marginBottom="@dimen/margin_medium"
                         android:background="@drawable/spinner_background_selector" /> <!-- Style spinner background -->
@@ -215,7 +216,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Translation: "
-                            android:textSize="@dimen/text_size_medium"
+                            android:textSize="@dimen/text_size_large"
                             android:textColor="@color/textColorPrimary"/>
 
                         <TextView
@@ -224,7 +225,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             tools:text="He wrote"
-                            android:textSize="@dimen/text_size_medium"
+                            android:textSize="@dimen/text_size_large"
                             android:textColor="@color/textColorPrimary"/>
 
                         <ImageView
@@ -242,7 +243,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:text="Transliteration: kataba"
-                        android:textSize="@dimen/text_size_medium"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="italic"
                         android:layout_marginTop="@dimen/margin_tiny"
                         android:textColor="@color/textColorSecondary"/>
@@ -251,7 +252,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:text="Characters: ك - ت - ب"
-                        android:textSize="@dimen/text_size_medium"
+                        android:textSize="@dimen/text_size_xxlarge"
                         android:layout_marginTop="@dimen/margin_tiny"
                         android:textColor="@color/textColorSecondary"/>
                 </LinearLayout>
@@ -271,6 +272,7 @@
                     android:padding="@dimen/padding_medium">
 
                     <TextView
+                        android:id="@+id/tvTitleFirstOccurrenceCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="First Occurrence of Root Word"
@@ -343,6 +345,7 @@
                     android:padding="@dimen/padding_medium">
 
                     <TextView
+                        android:id="@+id/tvTitleDistributionAnalysisCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Root Word Distribution in Juz"

@@ -50,13 +50,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingBottom="@dimen/meow_bottom_nav_height"
         android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/meow_bottom_nav_height"
             android:padding="@dimen/padding_medium">
 
             <!-- Search section -->
@@ -179,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
-                android:text="Most Frequent Words"
+                android:text="Most Frequent Entries"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
@@ -199,14 +199,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginBottom="@dimen/margin_small"
-                android:text="Word Categories"
+                android:text="Understanding Word Categories"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
             <!-- Heaven Category -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/heavenCategoryCard"
+                android:id="@+id/rootCategoryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_medium"
@@ -225,8 +225,8 @@
                     <ImageView
                         android:layout_width="@dimen/word_analysis_image_card_height_small"
                         android:layout_height="@dimen/word_analysis_image_card_height_small"
-                        android:src="@drawable/ic_heaven"
-                        app:tint="@color/primaryColor" />
+                        android:src="@drawable/ic_root_placeholder"
+                        app:tint="@color/appPrimary" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -237,7 +237,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Heaven (Jannah)"
+                            android:text="ROOT"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />
@@ -246,7 +246,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_tiny"
-                            android:text="Words related to paradise, rewards, and blessings in the Quran"
+                            android:text="Understand the fundamental building blocks."
                             android:textColor="@color/gray"
                             android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
@@ -255,7 +255,7 @@
 
             <!-- Hell Category -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/hellCategoryCard"
+                android:id="@+id/lemmaCategoryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_medium"
@@ -274,8 +274,8 @@
                     <ImageView
                         android:layout_width="@dimen/word_analysis_image_card_height_small"
                         android:layout_height="@dimen/word_analysis_image_card_height_small"
-                        android:src="@drawable/ic_hell"
-                        app:tint="#E53935" />
+                        android:src="@drawable/ic_lemma_placeholder"
+                        app:tint="@color/iconTintActive" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -286,7 +286,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Hell (Jahannam)"
+                            android:text="LEMMA"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />
@@ -295,7 +295,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_tiny"
-                            android:text="Words related to hellfire, punishment, and consequences in the Quran"
+                            android:text="Explore dictionary forms of words."
                             android:textColor="@color/gray"
                             android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
@@ -304,7 +304,7 @@
 
             <!-- Prophets Category -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/prophetsCategoryCard"
+                android:id="@+id/formCategoryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -322,8 +322,8 @@
                     <ImageView
                         android:layout_width="@dimen/word_analysis_image_card_height_small"
                         android:layout_height="@dimen/word_analysis_image_card_height_small"
-                        android:src="@drawable/ic_prophet"
-                        app:tint="#673AB7" />
+                        android:src="@drawable/ic_form_placeholder"
+                        app:tint="@color/accent_deep_indigo_purple" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -334,7 +334,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Prophets (Anbiya)"
+                            android:text="FORMS"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />
@@ -343,7 +343,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_tiny"
-                            android:text="Names and mentions of prophets throughout the Quran"
+                            android:text="Analyze words by their exact textual appearance."
                             android:textColor="@color/gray"
                             android:textSize="@dimen/text_size_small" />
                     </LinearLayout>

@@ -19,16 +19,29 @@
             android:paddingStart="@dimen/padding_medium"
             android:paddingEnd="@dimen/padding_medium"
             app:layout_scrollFlags="scroll|enterAlways">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="@dimen/width_medium"
+                android:layout_height="@dimen/height_medium"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_arrow_left"
+                app:tint="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Quran Analysis"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_xxlarge"
                 android:textColor="#0F103E"
-                android:layout_gravity="center"
+                android:layout_toEndOf="@+id/backButton"
                 android:textSize="@dimen/text_size_title"
                 android:textStyle="bold" />
-
+            </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

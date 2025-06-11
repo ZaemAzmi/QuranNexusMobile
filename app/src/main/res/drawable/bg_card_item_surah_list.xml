@@ -1,27 +1,26 @@
-<!-- res/drawable/your_gradient_layer_list_drawable_name.xml (should be correct now) -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Layer 1: Gradient Background (this will be the "stroke") -->
-    <item>
-        <shape android:shape="rectangle">
-            <corners android:radius="16dp" /> <!-- Matches CardView's outer radius -->
-            <gradient
-                android:angle="45"
-                android:startColor="#5C63B2"
-                android:centerColor="#3CBAC4"
-                android:endColor="#8349B7"
-                android:type="linear"/>
-        </shape>
-    </item>
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="100dp" android:height="100dp" android:viewportWidth="100"
+    android:viewportHeight="100">
 
-    <!-- Layer 2: Inner Content Background (inset to reveal the gradient as a stroke) -->
-    <item
-        android:top="2dp"
-        android:bottom="2dp"
-        android:left="2dp"
-        android:right="2dp">
-        <shape android:shape="rectangle">
-            <solid android:color="#FBFCFF" /> <!-- Your card's inner background color -->
-            <corners android:radius="14dp" /> <!-- Outer radius (16dp) - stroke_width (2dp) -->
-        </shape>
-    </item>
-</layer-list>
+    <path
+        android:pathData="M0,0 h100 v100 h-100 Z"> <aapt:attr name="android:fillColor">
+        <gradient
+            android:startX="100"
+            android:startY="0"
+            android:endX="0"
+            android:endY="100"
+            android:type="linear">
+            <item
+                android:offset="0.0"
+                android:color="#9FA4E8" /> <item
+            android:offset="0.33"
+            android:color="#84E6ED" /> <item
+            android:offset="0.66"
+            android:color="#C9A6E8" /> <item
+            android:offset="1.0"
+            android:color="#1FDFE4" /> </gradient>
+    </aapt:attr>
+    </path>
+</vector>
