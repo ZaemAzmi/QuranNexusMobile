@@ -1,7 +1,59 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp" android:height="24dp" android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:fillColor="#2196F3"
-        android:pathData="M6,4h13a1,1 0 0,1 1,1v14a1,1 0 0,1 -1,1H6a2,2 0 0,0 0,4h13a1,1 0 0,1 0,2H6a4,4 0 0,1 0,-8h13V6H6a1,1 0 0,1 0,-2z" />
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Dictionary book -->
+    <group>
+        <!-- Book spine -->
+        <path android:pathData="M15,15 L23,15 L23,85 L15,85 Z"
+            android:fillColor="#1A3A4A"/>
+
+        <!-- Book cover -->
+        <path android:pathData="M20,15 L80,15 L80,85 L20,85 Z"
+            android:fillColor="#2C5F7E"
+            android:strokeColor="#1A3A4A"
+            android:strokeWidth="2"/>
+
+        <!-- Book pages -->
+        <path android:pathData="M22,17 L78,17 L78,83 L22,83 Z"
+            android:fillColor="#FFFEF7"
+            android:strokeColor="#E0E0E0"
+            android:strokeWidth="1"/>
+
+        <!-- Page lines representing dictionary entries -->
+        <path android:pathData="M28,28 L72,28"
+            android:strokeColor="#B0B0B0"
+            android:strokeWidth="1"/>
+        <path android:pathData="M28,35 L65,35"
+            android:strokeColor="#B0B0B0"
+            android:strokeWidth="1"/>
+        <path android:pathData="M28,42 L68,42"
+            android:strokeColor="#B0B0B0"
+            android:strokeWidth="1"/>
+        <path android:pathData="M28,49 L62,49"
+            android:strokeColor="#B0B0B0"
+            android:strokeWidth="1"/>
+        <path android:pathData="M28,56 L70,56"
+            android:strokeColor="#B0B0B0"
+            android:strokeWidth="1"/>
+        <path android:pathData="M28,63 L58,63"
+            android:strokeColor="#B0B0B0"
+            android:strokeWidth="1"/>
+        <path android:pathData="M28,70 L66,70"
+            android:strokeColor="#B0B0B0"
+            android:strokeWidth="1"/>
+
+        <!-- Bookmark ribbon -->
+        <path android:pathData="M70,15 L73,15 L73,40 L71.5,45 L70,40 Z"
+            android:fillColor="#C41E3A"/>
+
+        <!-- Dictionary indicators (simple dots) -->
+        <path android:pathData="M30,32 A1,1 0 1,1 30,30 A1,1 0 1,1 30,32"
+            android:fillColor="#2C5F7E"/>
+        <path android:pathData="M30,46 A1,1 0 1,1 30,44 A1,1 0 1,1 30,46"
+            android:fillColor="#2C5F7E"/>
+        <path android:pathData="M30,60 A1,1 0 1,1 30,58 A1,1 0 1,1 30,60"
+            android:fillColor="#2C5F7E"/>
+    </group>
 </vector>

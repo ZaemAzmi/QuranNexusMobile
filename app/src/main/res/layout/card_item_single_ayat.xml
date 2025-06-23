@@ -17,7 +17,7 @@
         android:layout_marginTop="2dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:cardBackgroundColor="@color/ayah_card_dark_green_400"
+        app:cardBackgroundColor="@color/card_background_dark_blue"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.47">
 

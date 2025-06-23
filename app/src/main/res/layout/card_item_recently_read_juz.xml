@@ -13,7 +13,7 @@
         android:clickable="true"
         android:focusable="true"
         app:cardCornerRadius="15dp"
-        app:cardBackgroundColor="@color/surah_card_dark_green_300"
+        app:cardBackgroundColor="@color/card_background_dark_blue"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/surah_number_frame" />
+                    android:src="@drawable/surah_number_frame"
+                    app:tint="@color/accentGold" />
 
                 <com.example.qurannexus.core.customViews.AutoFitTextView
                     android:id="@+id/recentlyReadJuzNumber"
@@ -41,6 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="3"
+                    android:textColor="@color/accentGold"
                     android:textAppearance="@style/TextAppearance.SurahNumber"/>
 
             </FrameLayout>
@@ -78,7 +80,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="13 Feb 2025 / 15 Rajab 1446"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzRange" />
@@ -91,7 +93,7 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="10:30 PM"
                 android:paddingBottom="@dimen/padding_tiny"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadJuzNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadJuzDate" />
@@ -112,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="Pages 42-65"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

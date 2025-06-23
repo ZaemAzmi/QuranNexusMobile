@@ -45,7 +45,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_title"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/black"
                         android:gravity="center"
                         android:text="@string/surah_name_placeholder" />
 
@@ -54,7 +54,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_medium"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/black"
                         android:gravity="center"
                         android:text="@string/english_surah_name_placeholder" />
                 </LinearLayout>
@@ -68,6 +68,7 @@
                     android:src="@drawable/ic_vertical_dots_menu"
                     android:clickable="true"
                     android:focusable="true"
+                    app:tint="@color/black"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />

@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/resultCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_semi_medium"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="8dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"> <!-- Consider app:strokeColor="?attr/colorPrimary" app:strokeWidth="1dp" for a subtle border -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,51 +22,102 @@
         android:orientation="vertical"
         android:padding="@dimen/padding_medium">
 
-        <LinearLayout
+        <!-- Top Row: Example Arabic and its Translation -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/arabicTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:fontFamily="@font/uthmanic_scripts_hafs"
-                android:textColor="@color/appPrimaryVariant"
-                android:textSize="@dimen/text_size_title" />
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/arabic_text_size"
+                tools:text="ٱلرَّحْمَٰنِ" />
 
             <TextView
                 android:id="@+id/translationTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_semi_medium"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_medium" />
-        </LinearLayout>
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@id/arabicTextView"
+                android:gravity="end"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/text_size_large"
+                tools:text="The Most Gracious" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/surahTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_intermediate"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/text_size_small"
-            android:textStyle="italic" />
-
+        <!-- Divider -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/margin_intermediate"
-            android:layout_marginBottom="@dimen/margin_intermediate"
-            android:background="#E0E0E0" />
+            android:layout_height="2dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/gray" />
+        <!-- android:background="?attr/dividerHorizontal" is better for themes -->
 
-        <TextView
-            android:id="@+id/verseTextView"
+
+        <!-- Bottom Row: Identifier Type, Value, and Occurrences -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/uthmanic_scripts_hafs"
-            android:gravity="right"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/identifierTypeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_search_word_identifier_type_chip"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textAllCaps="true"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="@dimen/text_size_tiny"
+                android:textStyle="bold"
+                tools:text="ROOT"
+                />
+
+            <TextView
+                android:id="@+id/identifierValueTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="italic"
+                tools:text="r-H-m" />
+
+            <TextView
+                android:id="@+id/occurrencesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="150 times" />
+        </LinearLayout>
+
+        <!-- Optional: Unique Forms Count (if you add it to DisplayableFrequentRoot) -->
+        <TextView
+            android:id="@+id/uniqueFormsCountTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="@dimen/text_size_small"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="Has 25 distinct Arabic forms" />
+
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

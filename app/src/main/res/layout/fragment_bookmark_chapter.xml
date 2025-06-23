@@ -3,12 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.bookmark.BookmarkChaptersFragment">
+    tools:context=".features.bookmark.BookmarkChaptersFragment"
+    >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bookmarkChaptersRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        tools:listitem="@layout/card_item_bookmark_chapter"
+        />
 
 </FrameLayout>

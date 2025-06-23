@@ -9,7 +9,7 @@
         android:id="@+id/fragmentByPageRecitationViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/ayah_card_dark_green_400" />
+        android:background="@color/card_background_dark_blue" />
 
     <TextView
         android:id="@+id/pageNumber"

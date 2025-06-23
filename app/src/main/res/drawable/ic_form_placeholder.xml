@@ -1,7 +1,55 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp" android:height="24dp" android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:fillColor="#FFC107"
-        android:pathData="M12,2a10,10 0 1,0 10,10A10,10 0 0,0 12,2zM12,6a1.5,1.5 0 1,1 -1.5,1.5A1.5,1.5 0 0,1 12,6zM12,10a1.5,1.5 0 1,1 -1.5,1.5A1.5,1.5 0 0,1 12,10zM12,14a1.5,1.5 0 1,1 -1.5,1.5A1.5,1.5 0 0,1 12,14z" />
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Simple form/document -->
+    <group>
+        <!-- Document background -->
+        <path android:pathData="M20,15 L75,15 L85,25 L85,80 L20,80 Z"
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#CCCCCC"
+            android:strokeWidth="2"/>
+
+        <!-- Folded corner -->
+        <path android:pathData="M75,15 L75,25 L85,25 Z"
+            android:fillColor="#E8E8E8"
+            android:strokeColor="#CCCCCC"
+            android:strokeWidth="1"/>
+
+        <!-- Form title bar -->
+        <path android:pathData="M20,30 L85,30"
+            android:strokeColor="#4A90E2"
+            android:strokeWidth="2"/>
+
+        <!-- Form fields/lines -->
+        <path android:pathData="M30,40 L78,40"
+            android:strokeColor="#DDDDDD"
+            android:strokeWidth="1.5"/>
+        <path android:pathData="M30,48 L65,48"
+            android:strokeColor="#DDDDDD"
+            android:strokeWidth="1.5"/>
+
+        <path android:pathData="M30,58 L78,58"
+            android:strokeColor="#DDDDDD"
+            android:strokeWidth="1.5"/>
+        <path android:pathData="M30,66 L58,66"
+            android:strokeColor="#DDDDDD"
+            android:strokeWidth="1.5"/>
+
+        <!-- Simple checkboxes -->
+        <path android:pathData="M25,38 L29,38 L29,42 L25,42 Z"
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#4A90E2"
+            android:strokeWidth="1"/>
+        <path android:pathData="M25,56 L29,56 L29,60 L25,60 Z"
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#4A90E2"
+            android:strokeWidth="1"/>
+
+        <!-- Simple checkmark -->
+        <path android:pathData="M26,40 L27,41 L28,39"
+            android:strokeColor="#27AE60"
+            android:strokeWidth="1.5"/>
+    </group>
 </vector>

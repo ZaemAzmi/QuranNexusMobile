@@ -18,7 +18,8 @@ data class DisplayableFrequentRoot( // Or DisplayableAnalysisEntry
     val identifierType: String,        // NEW: "ROOT", "LEMMA", "FORM"
     val displayArabicText: String,     // e.g., "ٱللَّه" - the most common form or first occurrence text
     val displayTranslation: String,    // e.g., "Allah" - translation of the displayArabicText
-    val totalOccurrences: Int
+    val totalOccurrences: Int,
+    val uniqueFormCount: Int? = null // Added this as optional
 )
 
 @HiltViewModel
@@ -129,6 +130,10 @@ class WordAnalysisViewModel @Inject constructor(
             // Use firstOccurrenceArabicText if available
             val displayArabic = entry.firstOccurrenceArabicText
             val displayTrans = entry.firstOccurrenceTranslation
+            val uniqueFormsFromEntity = entry.totalNumberOfUniqueArabicForms // Get it from the entity
+
+            // Add a Log here to check the value from the entity:
+            Log.d("ViewModelMap", "Entry: ${entry.identifierValue}, Type: ${entry.identifierType}, UniqueFormsFromEntity: $uniqueFormsFromEntity")
 
             if (displayArabic != null) {
                 DisplayableFrequentRoot(
@@ -136,7 +141,9 @@ class WordAnalysisViewModel @Inject constructor(
                     identifierType = entry.identifierType,
                     displayArabicText = displayArabic,
                     displayTranslation = displayTrans ?: "N/A",
-                    totalOccurrences = entry.totalOccurrences ?: 0
+                    totalOccurrences = entry.totalOccurrences ?: 0,
+                    // Only assign uniqueFormCount if it's meaningful (not for FORM type typically, and > 0)
+                    uniqueFormCount = if (entry.identifierType != "FORM" && uniqueFormsFromEntity != null && uniqueFormsFromEntity > 0) uniqueFormsFromEntity else null
                 )
             } else {
                 // Fallback: If firstOccurrenceArabicText is null, try to get the first (or most common) Arabic form
@@ -149,7 +156,8 @@ class WordAnalysisViewModel @Inject constructor(
                         identifierType = entry.identifierType,
                         displayArabicText = firstForm.arabicText!!,
                         displayTranslation = firstFormTranslations.firstOrNull()?.translation ?: "N/A",
-                        totalOccurrences = entry.totalOccurrences ?: 0
+                        totalOccurrences = entry.totalOccurrences ?: 0,
+                        uniqueFormCount = if (entry.identifierType != "FORM" && uniqueFormsFromEntity != null && uniqueFormsFromEntity > 0) uniqueFormsFromEntity else null
                     )
                 } else {
                     // Last resort: use the identifier value itself if it's an Arabic script (common for FORMs)

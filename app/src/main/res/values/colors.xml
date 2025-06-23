@@ -48,6 +48,7 @@
     <color name="surah_card_dark_green_300">#003F30</color>
     <color name="surah_card_dark_green_350">#1D6050</color>
     <color name="green_blue_100">#BAFFEE</color>
+    <color name="card_background_dark_blue"> #0E2E3E</color>
 
     <!-- Accent Colors (from your gradient, or derived) -->
     <color name="accent_deep_indigo_purple">#5C63B2</color>
@@ -59,6 +60,8 @@
     <color name="text_primary_on_light">#DE000000</color> <!-- 87% Black -->
     <color name="text_secondary_on_light">#8A000000</color> <!-- 54% Black -->
     <color name="text_tertiary_on_light">#61000000</color> <!-- 38% Black -->
+    <color name="text_light_blue_grey">#cbd5e1</color>
+
     <!-- Specific for Surah Item Text -->
     <color name="surah_item_title_text">@color/accent_deep_indigo_purple</color> <!-- Or a dark blue -->
     <color name="surah_item_subtitle_text">@color/accent_dark_teal_cyan</color> <!-- Or a medium blue/gray -->

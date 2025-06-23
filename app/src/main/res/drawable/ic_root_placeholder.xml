@@ -1,7 +1,77 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp" android:height="24dp" android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:fillColor="#4CAF50"
-        android:pathData="M12,2a1,1 0 0,1 1,1v2h2a1,1 0 0,1 0,2h-2v2h2.5a1,1 0 0,1 0,2H13v1.5a1,1 0 0,1 -2,0V11h-1.5a1,1 0 0,1 0,-2H11V7H8.5a1,1 0 0,1 0,-2H11V3a1,1 0 0,1 1,-1zM11,17l-1,4 2,-2 2,2 -1,-4H11z" />
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Tree root system -->
+    <group>
+        <!-- Main root -->
+        <path android:pathData="M50,30 Q50,45 45,55 Q40,65 35,70 Q30,75 25,80"
+            android:strokeColor="#654321"
+            android:strokeWidth="1.5"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+        <path android:pathData="M50,30 Q50,45 55,55 Q60,65 65,70 Q70,75 75,80"
+            android:strokeColor="#654321"
+            android:strokeWidth="1.5"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+
+        <!-- Secondary roots -->
+        <path android:pathData="M45,50 Q35,55 25,65 Q15,70 10,75"
+            android:strokeColor="#654321"
+            android:strokeWidth="1.5"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+        <path android:pathData="M55,50 Q65,55 75,65 Q85,70 90,75"
+            android:strokeColor="#654321"
+            android:strokeWidth="1.5"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+
+        <!-- Tertiary roots -->
+        <path android:pathData="M40,60 Q30,65 20,70"
+            android:strokeColor="#654321"
+            android:strokeWidth="1.5"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+        <path android:pathData="M60,60 Q70,65 80,70"
+            android:strokeColor="#654321"
+            android:strokeWidth="1.5"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+
+        <!-- Fine root hairs -->
+        <path android:pathData="M30,70 Q25,75 20,80"
+            android:strokeColor="#654321"
+            android:strokeWidth="1"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+        <path android:pathData="M70,70 Q75,75 80,80"
+            android:strokeColor="#654321"
+            android:strokeWidth="1"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+        <path android:pathData="M25,75 Q20,80 15,85"
+            android:strokeColor="#654321"
+            android:strokeWidth="1"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+        <path android:pathData="M75,75 Q80,80 85,85"
+            android:strokeColor="#654321"
+            android:strokeWidth="1"
+            android:strokeLineCap="round"
+            android:fillColor="@android:color/transparent"/>
+    </group>
+
+    <!-- Ground line -->
+    <path android:pathData="M10,30 L90,30"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="2"/>
+
+    <!-- Root base/crown -->
+    <path android:pathData="M50,22 A8,8 0 1,1 50,38 A8,8 0 1,1 50,22"
+        android:fillColor="#D2691E"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="2"/>
 </vector>

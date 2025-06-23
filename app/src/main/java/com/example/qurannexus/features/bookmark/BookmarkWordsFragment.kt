@@ -224,11 +224,12 @@ class BookmarkWordsFragment : Fragment() {
     private fun configureRadarChartInstance(chart: RadarChart, isDialog: Boolean) {
         chart.apply {
             description.isEnabled = false
-            webLineWidth = 1.2f
-            webColor = Color.parseColor("#A5D6A7") // Light green for web lines
-            webLineWidthInner = 0.8f
-            webColorInner = Color.parseColor("#A5D6A7") // Same light green
-            webAlpha = 150
+            // You can make these lines thicker and change their color to make them more prominent.
+            webLineWidth = 1.5f // CHANGED: Increased from 1.2f for more emphasis
+            webColor = Color.parseColor("#80CBC4") // CHANGED: A slightly darker teal color for the outer web
+            webLineWidthInner = 1.0f // CHANGED: Increased from 0.8f
+            webColorInner = Color.parseColor("#B2DFDB") // CHANGED: A lighter teal for the inner percentage lines
+            webAlpha = 255 // CHANGED: Made fully opaque
 
             setTouchEnabled(true) // Allow touch for marker view in both
             isRotationEnabled = true
@@ -239,18 +240,20 @@ class BookmarkWordsFragment : Fragment() {
                 horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
                 orientation = Legend.LegendOrientation.HORIZONTAL
                 setDrawInside(false)
-                textSize = if (isDialog) 12f else 10f // Slightly larger legend text in dialog
+
+                textSize = if (isDialog) 14f else 12f // CHANGED: Increased text size from 12f/10f
+
                 yOffset = 15f
                 form = Legend.LegendForm.CIRCLE
                 formSize = if (isDialog) 10f else 8f
                 formLineWidth = 2f
                 xEntrySpace = 15f
-                textColor = Color.parseColor("#1E4620")
+                textColor = Color.parseColor("#004D40")
             }
 
             xAxis.apply {
-                textSize = if (isDialog) 11f else 9f // Larger axis labels in dialog
-                textColor = Color.parseColor("#1E4620")
+                textSize = if (isDialog) 12f else 11f // CHANGED: Increased text size from 11f/9f
+                textColor = Color.parseColor("#004D40") // A darker teal for text
                 // Updated XAxis Formatter for more labels in dialog
                 valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
@@ -336,14 +339,14 @@ class BookmarkWordsFragment : Fragment() {
 
         val set = RadarDataSet(entries, "Words Learned (%)").apply {
             valueTextSize = 0f // Hide values on lines for RadarChart, marker shows details
-            color = Color.parseColor("#0288D1")
-            fillColor = Color.parseColor("#B3E5FC")
+            color = Color.parseColor("#0E2E3E")
+            fillColor = Color.parseColor("#108A83")
             setDrawFilled(true)
             fillAlpha = 160 // Slightly more opaque fill
             lineWidth = 2f
             isDrawHighlightCircleEnabled = true
             highlightCircleFillColor = Color.WHITE
-            highlightCircleStrokeColor = Color.parseColor("#0288D1")
+            highlightCircleStrokeColor = Color.parseColor("#F4C430")
             highlightCircleStrokeWidth = 2f
             highlightCircleInnerRadius = 3f // Slightly larger marker points
             highlightCircleOuterRadius = 5f

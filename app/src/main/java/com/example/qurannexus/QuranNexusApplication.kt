@@ -3,6 +3,7 @@ package com.example.qurannexus
 import android.app.Application
 import android.os.StrictMode
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -43,5 +44,6 @@ class QuranNexusApplication : Application() {
         }.start()
 
         super.onCreate()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }

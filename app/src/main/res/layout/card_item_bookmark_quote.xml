@@ -12,7 +12,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="15dp"
-        app:cardBackgroundColor="@color/surah_card_dark_green_300"
+        app:cardBackgroundColor="@color/card_background_dark_blue"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:paddingBottom="@dimen/padding_intermediate"
                 android:text="Al-Ghafir : 28"
-                android:textColor="@color/white"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_tiny"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkQuoteDescription" />

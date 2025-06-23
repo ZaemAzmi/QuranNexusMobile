@@ -158,7 +158,7 @@ class WordAnalysisFragment : Fragment() {
             showCategoryExplanationDialog(
                 iconResId = R.drawable.ic_root_placeholder, // Replace with your actual icon
                 title = "Quranic Roots (أَصْل - Aṣl)",
-                explanation = "A root is typically a three-letter (triliteral), or sometimes four-letter, consonantal base. It represents a core semantic concept. Arabic words are formed by applying various patterns (أَوْزَان - awzān) to these roots, infusing them with specific grammatical functions and shades of meaning.",
+                explanation = "A root is typically a three-letter (triliteral), or sometimes four-letter, consonantal base that conveys a core meaning. Arabic words are formed by applying various patterns (أَوْزَان - awzān) to these roots, infusing them with specific grammatical functions and shades of meaning.",
                 examples = "Root: ك-ت-ب (k-t-b) - relates to 'writing'.\n • كَتَبَ (kataba) - 'he wrote' (verb)\n • كِتَاب (kitāb) - 'book' (noun)\n • مَكْتَبَة (maktabah) - 'library'\n • كَاتِب (kātib) - 'writer'",
                 appRelevance = "Analyzing by ROOT reveals all Quranic words sharing that fundamental meaning, highlighting thematic connections."
             )
@@ -168,19 +168,19 @@ class WordAnalysisFragment : Fragment() {
             showCategoryExplanationDialog(
                 iconResId = R.drawable.ic_lemma_placeholder, // Replace
                 title = "Lemmas (مَدْخَل - Madkhal)",
-                explanation = "A lemma is the canonical or dictionary form of a word. For verbs, it's often the 3rd person masculine singular past tense (e.g., فَعَلَ). For nouns, it's the singular, nominative, indefinite form. Particles, pronouns, and prepositions also have lemmas.",
-                examples = " • Lemma for 'he/it': هُوَ (huwa)\n • Lemma for 'in': فِي (fī)\n • Lemma for 'Alif-Lām-Mīm': INIT_Alm",
-                appRelevance = "Analyzing by LEMMA groups different grammatical forms of the same base word, useful for particles, pronouns, or words without a clear triliteral root."
+                explanation = "A lemma is the dictionary or base form of a word. For verbs, it's usually the third-person masculine singular perfect tense (e.g., فَعَلَ). For nouns, it's the singular, indefinite, nominative form. Particles, prepositions, and proper names also have lemmas even if they don’t come from a root.",
+                examples = " • Lemma of 'يكتبون' (they write): كَتَبَ (kataba)\n • Lemma of 'المسلمين' (the Muslims): مُسْلِم (muslim)\n • Lemma of 'فِي' (in): فِي (fī)",
+                appRelevance = "Analyzing by LEMMA groups different word forms under a single base entry. This is useful for understanding how a word is used regardless of its grammatical case or affixes."
             )
         }
 
         formCategoryCard.setOnClickListener {
             showCategoryExplanationDialog(
                 iconResId = R.drawable.ic_form_placeholder, // Replace
-                title = "Forms (صِيغَة - Ṣīghah)",
-                explanation = "A form refers to the exact textual shape of a word as it appears in the Quran, including all prefixes, suffixes, and vowels. Every segment of the Quranic text has a specific form.",
-                examples = " • وَٱلْعَصْرِ (wa-l-ʿaṣri): contains parts وَ (wa), ٱلْ (al-), عَصْرِ (ʿaṣri).\n • The particle إِلَّا (illā - 'except') is analyzed by its specific form.",
-                appRelevance = "Our analysis prioritizes Root, then Lemma. If neither is assigned for a word segment, we categorize it by its specific textual Form. This often applies to certain particles or very short segments."
+                title = "Specific Forms (شَكْل - Shakl)", // Or "Ṣīghah Khāṣṣah" if you prefer the Arabic terminology
+                explanation = "In our analysis, some Quranic words or word segments are primarily identified by their specific textual form or a common transliterated representation, especially when they don't have a traditional triliteral root or when their lemma covers many variations. This often applies to pronouns, particles, or very common short phrases where a particular vocalization or common combination is grouped under one 'FORM' identifier in our database.",
+                examples = "Identifier: humo (Type: FORM)\nThis groups occurrences related to the pronoun 'them/they' often appearing with a specific vocalization or in common constructs. Examples of Quranic words that map to this 'humo' identifier include:\n • هُمْ (hum - 'they')\n • لَهُمْ (lahum - 'to them' / 'for them')\n • وَلَهُمْ (walahum - 'and for them')\n • فَهُمْ (fahum - 'so they')",
+                appRelevance = "When you see an entry identified by 'FORM' (like 'humo'), it means we're looking at a collection of actual Quranic word instances that share this specific morphological identifier from our source data. This helps analyze the usage patterns of these particular forms or frequently occurring small word segments throughout the Quran, even if they consist of multiple morphological parts (like a prefix + pronoun)."
             )
         }
 

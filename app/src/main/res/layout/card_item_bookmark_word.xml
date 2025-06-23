@@ -12,7 +12,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="@color/surah_card_dark_green_300"
+        app:cardBackgroundColor="@color/card_background_dark_blue"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

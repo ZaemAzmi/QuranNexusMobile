@@ -17,8 +17,8 @@
 
         <TextView
             android:id="@+id/positionText"
-            android:layout_width="@dimen/width_xxlarge"
-            android:layout_height="@dimen/width_xxlarge"
+            android:layout_width="@dimen/width_xxxlarge"
+            android:layout_height="@dimen/width_xxxlarge"
             android:background="@drawable/bg_circle_primary"
             android:gravity="center"
             android:textColor="@android:color/white"
@@ -41,7 +41,7 @@
                     android:id="@+id/surahName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_large"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
 
@@ -49,9 +49,10 @@
                     android:id="@+id/arabicSurahName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:layout_marginStart="@dimen/margin_intermediate"
                     android:fontFamily="@font/uthmanic_scripts_hafs"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_xlarge"/>
             </LinearLayout>
 
             <TextView
@@ -59,8 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_tiny"
-                android:textSize="@dimen/text_size_small"
-                android:textColor="@android:color/darker_gray"/>
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/coolIndigoGray"/>
 
             <TextView
                 android:id="@+id/verseText"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:fontFamily="@font/uthmanic_scripts_hafs"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/arabic_text_size"
                 android:maxLines="1"
                 android:ellipsize="end"/>
 

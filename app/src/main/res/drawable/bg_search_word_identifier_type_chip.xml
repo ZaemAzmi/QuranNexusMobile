@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- The actual color will be set via tinting or a ColorStateList in code -->
+    <solid android:color="@color/appPrimary" /> <!-- Default/placeholder color -->
+    <corners android:radius="16dp" /> <!-- Adjust for desired roundness, 16dp is quite rounded -->
+</shape>

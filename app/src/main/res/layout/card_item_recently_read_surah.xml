@@ -13,7 +13,7 @@
         android:clickable="true"
         android:focusable="true"
         app:cardCornerRadius="15dp"
-        app:cardBackgroundColor="@color/surah_card_dark_green_300"
+        app:cardBackgroundColor="@color/card_background_dark_blue"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,6 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
+                    app:tint="@color/accentGold"
                     android:src="@drawable/surah_number_frame" />
 
                 <com.example.qurannexus.core.customViews.AutoFitTextView
@@ -43,6 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="36"
+                    android:textColor="@color/accentGold"
                     android:textAppearance="@style/TextAppearance.SurahNumber"/>
 
             </FrameLayout>
@@ -56,7 +58,7 @@
                 android:text="Ya-Sin (يس)"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_large"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadSurahNumberFrame"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,7 +69,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="13 Feb 2025 / 15 Rajab 1446"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_small"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadSurahNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadSurahTitle" />
@@ -80,7 +82,7 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:paddingBottom="@dimen/padding_tiny"
                 android:text="10:30 PM"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_small"
                 app:layout_constraintStart_toEndOf="@id/recentlyReadSurahNumberFrame"
                 app:layout_constraintTop_toBottomOf="@id/recentlyReadDate" />
@@ -101,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="83 Verses • Meccan"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

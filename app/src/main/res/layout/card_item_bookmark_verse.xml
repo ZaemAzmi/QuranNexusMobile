@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="15dp"
-        app:cardBackgroundColor="@color/surah_card_dark_green_300"
+        app:cardBackgroundColor="@color/card_background_dark_blue"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                 android:layout_marginTop="@dimen/margin_tiny"
                 android:text="الفاتحه (Al - Fatihah)"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_xlarge"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkVerseTitle" />
 
@@ -52,7 +52,7 @@
                 android:layout_marginStart="@dimen/bookmark_verse_card_margin"
                 android:layout_marginTop="@dimen/margin_tiny"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non facilisis nisl. Phasellus ligula leo, egestas et ullamcorper at, hendrerit vitae nibh"
-                android:textColor="@color/white"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bookmarkVerseChapter" />
@@ -76,7 +76,7 @@
                 android:layout_marginTop="@dimen/margin_intermediate"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="Chapter 1, Verse 6"
-                android:textColor="@color/white"
+                android:textColor="@color/text_light_blue_grey"
                 android:textSize="@dimen/text_size_small"
                 android:paddingBottom="@dimen/padding_small"
                 app:layout_constraintEnd_toEndOf="parent"
