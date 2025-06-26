@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.interfaces.QuranApi;
+import com.example.qurannexus.core.utils.QuranMetadata;
+import com.example.qurannexus.core.utils.SurahDetails;
 import com.example.qurannexus.features.recitation.models.SurahListResponse;
 import com.example.qurannexus.features.recitation.models.SurahModel;
 import com.example.qurannexus.features.recitation.models.SurahListAdapter;
@@ -40,7 +42,6 @@ import retrofit2.Response;
 public class SurahListFragment extends Fragment {
 
     SurahListResponse surahListResponse;
-    ArrayList<SurahModel> filteredSurahModels = new ArrayList<>();
     String layoutType = "verseByVerse";
     SurahListAdapter surahListAdapter;
     SearchView searchView;
@@ -49,6 +50,8 @@ public class SurahListFragment extends Fragment {
     private View view;
     private View errorView;
     private RecyclerView surahRecyclerView;
+    private ArrayList<SurahModel> allSurahModels = new ArrayList<>();
+    private ArrayList<SurahModel> filteredSurahModels = new ArrayList<>();
 
     private static final int MAX_RETRY_ATTEMPTS = 3;
     private static final long RETRY_DELAY_MS = 1000; // 1 second initial delay
@@ -63,8 +66,8 @@ public class SurahListFragment extends Fragment {
         searchView = view.findViewById(R.id.searchSurahView);
         loadingIndicator = view.findViewById(R.id.loadingIndicator);
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
-        fetchSurahs();
-
+//        fetchSurahs();
+        loadSurahsFromMetadata();
         Button retryButton = view.findViewById(R.id.retryButton);
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,20 +109,57 @@ public class SurahListFragment extends Fragment {
             });
         });
     }
-
-
-    private void filterSurahList(String query) {
-        if (surahListResponse == null || surahListResponse.getData() == null) return;
-
-        query = query.toLowerCase();
+    private void loadSurahsFromMetadata() {
+        showLoading();
+        // Clear previous data
+        allSurahModels.clear();
         filteredSurahModels.clear();
 
-        for (SurahModel surah : surahListResponse.getData()) {
-            if (surah.getName().toLowerCase().contains(query)) {
-                filteredSurahModels.add(surah);
+        QuranMetadata metadata = QuranMetadata.Companion.getInstance();
+        // Loop from Surah 1 to 114
+        for (int i = 1; i <= 114; i++) {
+            SurahDetails details = metadata.getSurahDetails(i);
+            if (details != null) {
+                // Convert SurahDetails to the SurahModel that the adapter uses
+                SurahModel model = new SurahModel(
+                        details.getEnglishName(),
+                        details.getArabicName(),
+                        String.valueOf(details.getSurahIndex()),
+                        details.getTranslationName(),
+                        String.valueOf(details.getNumberOfVerses()),
+                        false // isBookmarked can be handled later if needed
+                );
+                allSurahModels.add(model);
             }
         }
 
+        // Initially, the filtered list is the same as the full list
+        filteredSurahModels.addAll(allSurahModels);
+
+        // Update the UI with the full list
+        updateUI(filteredSurahModels);
+        hideLoading();
+    }
+
+    private void filterSurahList(String query) {
+        // This method now filters the local 'allSurahModels' list
+        if (allSurahModels.isEmpty()) return;
+
+        query = query.toLowerCase().trim();
+        filteredSurahModels.clear();
+
+        if (query.isEmpty()) {
+            filteredSurahModels.addAll(allSurahModels);
+        } else {
+            for (SurahModel surah : allSurahModels) {
+                // Search by English name, Arabic name, or Surah number
+                if (surah.getName().toLowerCase().contains(query) ||
+                        surah.getArabicSurahName().contains(query) ||
+                        surah.getSurahNumber().equals(query)) {
+                    filteredSurahModels.add(surah);
+                }
+            }
+        }
         updateUI(filteredSurahModels);
     }
 

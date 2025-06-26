@@ -9,6 +9,7 @@ import androidx.room.TypeConverters
 import com.example.qurannexus.core.database.converters.ListConverter
 import com.example.qurannexus.core.database.entities.*
 import com.example.qurannexus.features.analysis.data.WordAnalysisDao // Updated DAO name
+import com.example.qurannexus.features.recitation.data.RecitationDao
 
 
 @Database(
@@ -21,16 +22,17 @@ import com.example.qurannexus.features.analysis.data.WordAnalysisDao // Updated 
         EntrySurahDistributionEntity::class,    // Renamed
         EntryJuzDistributionEntity::class,      // Renamed
         EntryPageDistributionEntity::class,     // Renamed
-        AllWordOccurrenceEntity::class          // Renamed
+        AllWordOccurrenceEntity::class,   // Renamed
+        QuranAyahDetailEntity::class // <<<< ADD THIS NEW ENTITY
     ],
-    version = 2, // <<<< IMPORTANT: Increment version number!
+    version = 3, // <<<< IMPORTANT: Increment version number!
     exportSchema = false
 )
 @TypeConverters(ListConverter::class)
 abstract class QuranNexusDatabase : RoomDatabase() {
 
-    abstract fun wordAnalysisDao(): WordAnalysisDao // Renamed DAO method and return type
-
+    abstract fun wordAnalysisDao(): WordAnalysisDao
+    abstract fun recitationDao(): RecitationDao
     companion object {
         @Volatile
         private var INSTANCE: QuranNexusDatabase? = null

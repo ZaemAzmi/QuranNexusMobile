@@ -17,6 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.FlowLiveDataConversions;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +27,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.activities.MainActivity;
+import com.example.qurannexus.core.database.entities.QuranAyahDetailEntity;
 import com.example.qurannexus.core.interfaces.QuranApi;
 import com.example.qurannexus.core.utils.UtilityService;
 import com.example.qurannexus.features.bookmark.models.BookmarkVerse;
@@ -31,15 +35,21 @@ import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
 import com.example.qurannexus.features.home.HomeFragment;
 import com.example.qurannexus.features.home.achievement.AchievementService;
 import com.example.qurannexus.features.home.achievement.StreakCheckCallback;
+import com.example.qurannexus.features.recitation.models.AyahPageAdapter;
 import com.example.qurannexus.features.recitation.models.AyahRecitationModel;
 import com.example.qurannexus.features.recitation.models.ChapterAyah;
 import com.example.qurannexus.features.recitation.models.SurahRecitationByAyatAdapter;
 import com.example.qurannexus.core.network.ApiService;
 import com.example.qurannexus.features.recitation.models.VersesPaginationAdapter;
 import com.example.qurannexus.features.recitation.models.Word;
+import com.example.qurannexus.features.recitation.viewModels.PageDataState;
+import com.example.qurannexus.features.recitation.viewModels.RecitationViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,19 +66,22 @@ import retrofit2.Response;
 public class ByAyatRecitationFragment extends Fragment {
      static final String ARG_SURAH_NUMBER = "surah_number";
     private static final String ARG_SCROLL_TO_VERSE = "scroll_to_verse";
-
-    private int surahNumber;
+    // NEW: Argument key for the JSON data
+    private static final String ARG_INITIAL_PAGE_NUMBER = "arg_initial_page_number";
+    private static final String ARG_AYAH_LIST_JSON = "arg_ayah_list_json";
+    private int initialPageNumber;
+    private RecitationViewModel sharedViewModel;
+    private ArrayList<QuranAyahDetailEntity> initialPageAyahs;
+    private AyahPageAdapter pageAdapter;
+    private ArrayList<QuranAyahDetailEntity> ayatOnPage = new ArrayList<>();
     private int scrollToVerse = -1;
     private int currentPage = 0;
-
     private ArrayList<ChapterAyah> allAyatModels = new ArrayList<>();
     private ArrayList<ArrayList<ChapterAyah>> paginatedAyahs = new ArrayList<>();
-
     private QuranApi quranApi;
     private Set<String> bookmarkedAyahIds = new HashSet<>();
     private String authToken;
     private AchievementService achievementService;
-
     // UI components
     public ViewPager2 versesPager;
     private TabLayout paginationIndicator;
@@ -81,81 +94,141 @@ public class ByAyatRecitationFragment extends Fragment {
 
     public ByAyatRecitationFragment() {}
 
-    public static ByAyatRecitationFragment newInstance(int surahNumber, int scrollToVerse) {
+//    public static ByAyatRecitationFragment newInstance(int surahNumber, int scrollToVerse) {
+//        ByAyatRecitationFragment fragment = new ByAyatRecitationFragment();
+//        Bundle args = new Bundle();
+//        args.putInt(ARG_SURAH_NUMBER, surahNumber);
+//        args.putInt(ARG_SCROLL_TO_VERSE, scrollToVerse);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+    public static ByAyatRecitationFragment newInstance(int pageNumber) {
         ByAyatRecitationFragment fragment = new ByAyatRecitationFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_SURAH_NUMBER, surahNumber);
-        args.putInt(ARG_SCROLL_TO_VERSE, scrollToVerse);
+        args.putInt(ARG_INITIAL_PAGE_NUMBER, pageNumber);
         fragment.setArguments(args);
         return fragment;
     }
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//            surahNumber = getArguments().getInt(ARG_SURAH_NUMBER);
+//            scrollToVerse = getArguments().getInt(ARG_SCROLL_TO_VERSE, -1);
+//        }
+//        quranApi = ApiService.getQuranClient().create(QuranApi.class);
+//        achievementService = new AchievementService(requireContext());
+//        authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+//                .getString("token", null);
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            surahNumber = getArguments().getInt(ARG_SURAH_NUMBER);
-            scrollToVerse = getArguments().getInt(ARG_SCROLL_TO_VERSE, -1);
+            initialPageNumber = getArguments().getInt(ARG_INITIAL_PAGE_NUMBER);
         }
-        quranApi = ApiService.getQuranClient().create(QuranApi.class);
-        achievementService = new AchievementService(requireContext());
-        authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                .getString("token", null);
     }
 
+//    @Override
+//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        View view = inflater.inflate(R.layout.fragment_by_ayat_recitation, container, false);
+//
+//        // Initialize UI components
+//        versesPager = view.findViewById(R.id.versesPager);
+//        paginationIndicator = view.findViewById(R.id.paginationIndicator);
+//        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
+//        pageInfoTextView = view.findViewById(R.id.pageInfoTextView);
+//        prevPageButton = view.findViewById(R.id.prevPageButton);
+//        nextPageButton = view.findViewById(R.id.nextPageButton);
+//
+//        // Setup pagination controls
+//        prevPageButton.setOnClickListener(v -> navigateToPreviousPage());
+//        nextPageButton.setOnClickListener(v -> navigateToNextPage());
+//
+//        // Setup ViewPager2
+//        paginationAdapter = new VersesPaginationAdapter(this);
+//        versesPager.setAdapter(paginationAdapter);
+//
+//        versesPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageSelected(int position) {
+//                super.onPageSelected(position);
+//                currentPage = position;
+//                updatePageControls();
+//                setupScrollListenerForCurrentPage();
+//                // Notify parent fragment about page change
+//                if (getParentFragment() instanceof RecitationPageFragment) {
+//                    String pageId = getCurrentPageId();
+//                    if (pageId != null) {
+//                        try {
+//                            int pageNumber = Integer.parseInt(pageId);
+//                            ((RecitationPageFragment) getParentFragment()).onPageChanged(pageNumber);
+//                        } catch (NumberFormatException e) {
+//                            Log.e("ByAyatRecitationFragment", "Invalid page ID: " + pageId);
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//
+//        // Set bottom nav padding
+//        UtilityService utilityService = new UtilityService();
+//        utilityService.setupBottomNavPadding(this, versesPager);
+//
+//        if (surahNumber != 0) {
+//            fetchBookmarksAndVerses(surahNumber);
+//        }
+//
+//        return view;
+//    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Use your original layout that has the ViewPager2
         View view = inflater.inflate(R.layout.fragment_by_ayat_recitation, container, false);
-
-        // Initialize UI components
         versesPager = view.findViewById(R.id.versesPager);
-        paginationIndicator = view.findViewById(R.id.paginationIndicator);
-        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
-        pageInfoTextView = view.findViewById(R.id.pageInfoTextView);
-        prevPageButton = view.findViewById(R.id.prevPageButton);
-        nextPageButton = view.findViewById(R.id.nextPageButton);
+        // REMOVE pagination controls for now, or hide them.
+        view.findViewById(R.id.paginationContainer).setVisibility(View.GONE);
 
-        // Setup pagination controls
-        prevPageButton.setOnClickListener(v -> navigateToPreviousPage());
-        nextPageButton.setOnClickListener(v -> navigateToNextPage());
+        setupViewPager();
+//        observeSharedViewModel(); // NEW: Start observing for updates
+        return view;
+    }
+//    private void observeSharedViewModel() {
+//        LiveData<PageDataState> pageDataLiveData = FlowLiveDataConversions.asLiveData(sharedViewModel.getPageData());
+//        pageDataLiveData.observe(getViewLifecycleOwner(), state -> {
+//            if (state instanceof PageDataState.Success) {
+//                PageDataState.Success successState = (PageDataState.Success) state;
+//                if (!successState.getAyahs().isEmpty()) {
+//                    // When new data arrives, tell the adapter to update its cache.
+//                    int pageNumber = successState.getAyahs().get(0).getPageId();
+//                    if (pageAdapter != null) {
+//                        // The method name in AyahPageAdapter is setPageData, which is fine.
+//                        pageAdapter.setPageData(pageNumber, successState.getAyahs());
+//                    }
+//                }
+//            }
+//        });
+//    }
+    private void setupViewPager() {
+        pageAdapter = new AyahPageAdapter(this); // Use the new, simpler adapter
+        versesPager.setAdapter(pageAdapter);
 
-        // Setup ViewPager2
-        paginationAdapter = new VersesPaginationAdapter(this);
-        versesPager.setAdapter(paginationAdapter);
+        int initialPosition = AyahPageAdapter.TOTAL_PAGES - initialPageNumber;
+        versesPager.setCurrentItem(initialPosition, false);
 
         versesPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                currentPage = position;
-                updatePageControls();
-                setupScrollListenerForCurrentPage();
-                // Notify parent fragment about page change
+                int newPageNumber = AyahPageAdapter.TOTAL_PAGES - position;
                 if (getParentFragment() instanceof RecitationPageFragment) {
-                    String pageId = getCurrentPageId();
-                    if (pageId != null) {
-                        try {
-                            int pageNumber = Integer.parseInt(pageId);
-                            ((RecitationPageFragment) getParentFragment()).onPageChanged(pageNumber);
-                        } catch (NumberFormatException e) {
-                            Log.e("ByAyatRecitationFragment", "Invalid page ID: " + pageId);
-                        }
-                    }
+                    ((RecitationPageFragment) getParentFragment()).onPageChanged(newPageNumber);
                 }
             }
         });
-
-        // Set bottom nav padding
-        UtilityService utilityService = new UtilityService();
-        utilityService.setupBottomNavPadding(this, versesPager);
-
-        if (surahNumber != 0) {
-            fetchBookmarksAndVerses(surahNumber);
-        }
-
-        return view;
     }
-
     public VersesPaginationAdapter getPaginationAdapter() {
         return paginationAdapter;
     }

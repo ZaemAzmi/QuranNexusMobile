@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="@dimen/margin_tiny"
             android:textColor="@color/white"
+            android:textColorLink="@color/white"
             android:fontFamily="@font/uthmanic_hafs_1ver18"
             android:padding="@dimen/padding_medium"
             android:gravity="center_horizontal"

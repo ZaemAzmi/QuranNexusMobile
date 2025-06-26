@@ -15,27 +15,40 @@
             app:defaultValue="false" />
 
     </PreferenceCategory>
+    <!-- NEW: Translation Preference Category -->
+    <PreferenceCategory
+        app:title="Language &amp; Content">
 
+        <ListPreference
+            app:key="selected_translation_key"
+            app:title="Select Translation"
+            app:summary="Choose your preferred translation language"
+            app:defaultValue="en"
+            app:entries="@array/translation_entries"
+            app:entryValues="@array/translation_values"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
     <PreferenceCategory
         android:textSize="@dimen/text_size_large"
         app:title="Audio Settings"
         app:layout="@layout/custom_preference_category">
 
         <ListPreference
-            app:key="selected_reciter"
-            android:textSize="@dimen/text_size_medium"
+            app:key="selected_reciter_key"
             app:title="Select Reciter"
             app:summary="Choose your preferred Quran reciter"
-            app:entries="@array/reciter_names"
+            app:defaultValue="Alafasy"
+            app:entries="@array/reciter_entries"
             app:entryValues="@array/reciter_values"
-            app:defaultValue="1" />
+            app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreferenceCompat
-            app:key="audio_background_play"
-            android:textSize="@dimen/text_size_medium"
-            app:title="Background Playback"
-            app:summary="Allow audio to continue playing when app is in background"
-            app:defaultValue="true" />
+<!--        <SwitchPreferenceCompat-->
+<!--            app:key="audio_background_play"-->
+<!--            android:textSize="@dimen/text_size_medium"-->
+<!--            app:title="Background Playback"-->
+<!--            app:summary="Allow audio to continue playing when app is in background"-->
+<!--            app:defaultValue="true" />-->
 
     </PreferenceCategory>
 

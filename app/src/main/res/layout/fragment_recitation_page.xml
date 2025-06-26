@@ -81,4 +81,12 @@
                 tools:layout="@layout/fragment_by_ayat_recitation" />
         </LinearLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <!-- ADD THIS PROGRESS BAR -->
+    <ProgressBar
+        android:id="@+id/mainLoadingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </FrameLayout>

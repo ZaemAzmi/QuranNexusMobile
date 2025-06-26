@@ -16,9 +16,13 @@ import androidx.media3.exoplayer.ExoPlayer
 class AudioPlayerService : Service() {
     private var player: ExoPlayer? = null
     private val binder = AudioPlayerBinder()
-    private var currentAyahInfo: String = ""
     private var completionListener: (() -> Unit)? = null
-
+    companion object {
+        const val BASE_AUDIO_URL = "https://quran.seaade2024.com/data/quran-audio/"
+        private const val CHANNEL_ID = "quran_audio_channel"
+        private const val NOTIFICATION_ID = 1
+        private const val ACTION_PLAY_PAUSE = "action_play_pause"
+    }
     inner class AudioPlayerBinder : Binder() {
         fun getService(): AudioPlayerService = this@AudioPlayerService
     }
@@ -35,35 +39,53 @@ class AudioPlayerService : Service() {
         player = ExoPlayer.Builder(this).build().apply {
             addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
-//                    Log.d("AudioDebug", "Playback state changed to: $state")
-                    when (state) {
-                        Player.STATE_ENDED -> {
-//                            Log.d("AudioDebug", "AudioService: Playback ended, triggering completion")
-                            completionListener?.invoke()
-                        }
+                    // This listener now handles the entire playlist
+                    if (state == Player.STATE_ENDED) {
+                        stopForeground(true) // Stop service when playlist finishes
                     }
+                    updateNotification()
+                }
+
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    super.onMediaItemTransition(mediaItem, reason)
+                    // A new ayah is playing, update notification
                     updateNotification()
                 }
             })
         }
     }
-
-    fun setOnCompletionListener(listener: () -> Unit) {
-        completionListener = listener
-    }
-
-    fun playAyah(audioUrl: String, ayahInfo: String) {
-        val fullUrl = "${AWS_URL}/${audioUrl}"
-//        Log.d("AudioDebug", "AudioService: Playing ayah from URL: $fullUrl")
-        currentAyahInfo = ayahInfo
+    fun play(urls: List<String>, ayahKeys: List<String>) {
+        val mediaItems = urls.mapIndexed { index, url ->
+            MediaItem.Builder()
+                .setUri(BASE_AUDIO_URL + url)
+                .setMediaId(url)
+                .setTag(ayahKeys.getOrElse(index) { "Recitation" }) // Store S:A key as a tag
+                .build()
+        }
 
         player?.apply {
-            setMediaItem(MediaItem.fromUri(Uri.parse(fullUrl)))
+            setMediaItems(mediaItems, true) // true to reset position
             prepare()
             play()
         }
         updateNotification()
     }
+    fun setOnCompletionListener(listener: () -> Unit) {
+        completionListener = listener
+    }
+
+//    fun playAyah(audioUrl: String, ayahInfo: String) {
+//        val fullUrl = "${AWS_URL}/${audioUrl}"
+////        Log.d("AudioDebug", "AudioService: Playing ayah from URL: $fullUrl")
+//        currentAyahInfo = ayahInfo
+//
+//        player?.apply {
+//            setMediaItem(MediaItem.fromUri(Uri.parse(fullUrl)))
+//            prepare()
+//            play()
+//        }
+//        updateNotification()
+//    }
 
     fun togglePlayPause() {
         player?.let {
@@ -115,6 +137,10 @@ class AudioPlayerService : Service() {
     }
 
     private fun updateNotification() {
+        if (player == null || player?.playbackState == Player.STATE_IDLE) return
+
+        val currentMediaItem = player?.currentMediaItem
+        val ayahInfo = currentMediaItem?.localConfiguration?.tag as? String ?: "Quran Recitation"
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val playPauseIcon = if (player?.isPlaying == true) {
                 android.R.drawable.ic_media_pause
@@ -124,7 +150,6 @@ class AudioPlayerService : Service() {
 
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Quran Recitation")
-                .setContentText(currentAyahInfo)
                 .setSmallIcon(android.R.drawable.ic_media_play)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -160,12 +185,5 @@ class AudioPlayerService : Service() {
         player?.release()
         player = null
         super.onDestroy()
-    }
-
-    companion object {
-        private const val CHANNEL_ID = "quran_audio_channel"
-        private const val NOTIFICATION_ID = 1
-        private const val ACTION_PLAY_PAUSE = "action_play_pause"
-        private const val AWS_URL = "https://quran-nexus-bucket.s3.ap-southeast-1.amazonaws.com/quran-audio"
     }
 }

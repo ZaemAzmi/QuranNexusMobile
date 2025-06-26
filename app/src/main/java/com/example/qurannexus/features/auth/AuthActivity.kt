@@ -7,36 +7,58 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.example.qurannexus.R
 import com.example.qurannexus.features.onboard.WelcomeFragment
 
-class AuthActivity : AppCompatActivity(), LifecycleOwner {
+class AuthActivity : AppCompatActivity() {
+
+    // companion object for constants - Best Practice!
+    companion object {
+        const val EXTRA_ACTION = "com.example.qurannexus.auth.ACTION"
+        const val ACTION_NAVIGATE_TO_LOGIN = "NAVIGATE_TO_LOGIN"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
 
-        // Defer window insets handling to next frame
-        window.decorView.post {
-            // Only apply top padding for status bar, ignore bottom padding
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
-                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                view.setPadding(0, systemBars.top, 0, 0)  // Only apply top padding
-                insets
-            }
+        // Make UI go edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.navigationBarColor = Color.TRANSPARENT
 
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            window.navigationBarColor = Color.TRANSPARENT
+        // Apply insets for the status bar
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Only apply top padding for status bar, bottom is handled by fragments
+            view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
+            insets
         }
 
-        if(savedInstanceState == null) {
-            // Defer fragment transaction to avoid blocking main thread
-            window.decorView.post {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.authFragmentContainer, WelcomeFragment())
-                    .commit()
-            }
+        if (savedInstanceState == null) {
+            handleIntentNavigation()
         }
+    }
+
+    private fun handleIntentNavigation() {
+        val action = intent.getStringExtra(EXTRA_ACTION)
+
+        // Decide which fragment to show based on the intent action
+        val initialFragment = if (action == ACTION_NAVIGATE_TO_LOGIN) {
+            LoginFragment()
+        } else {
+            WelcomeFragment()
+        }
+
+        showFragment(initialFragment)
+    }
+
+    // Helper function to show a fragment
+    private fun showFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.authFragmentContainer, fragment)
+            .commit()
     }
 }

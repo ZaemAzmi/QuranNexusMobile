@@ -65,9 +65,7 @@ class QuranAnalysisFragment : Fragment() {
         funFactTextView = view.findViewById(R.id.tvFunFact)
         nextFactButton = view.findViewById(R.id.btnNextFact)
 
-        backButton.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
-        }
+
     }
 
     private fun setupClickListeners() {
@@ -92,6 +90,10 @@ class QuranAnalysisFragment : Fragment() {
         // Next fact button click
         nextFactButton.setOnClickListener {
             displayRandomFact()
+        }
+
+        backButton.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
     private fun setupStatsRecyclerView() {

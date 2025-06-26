@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -53,35 +54,32 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             });
         }
 
-        // Reciter Selection Logic
-        ListPreference reciterPreference = findPreference("selected_reciter");
-        if (reciterPreference != null) {
-            reciterPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                String selectedReciter = (String) newValue;
-                // Save preference
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("selected_reciter", selectedReciter);
-                editor.apply();
-                Log.d("SettingsFragment", "Selected reciter changed: " + selectedReciter);
-                return true;
-            });
-        }
     }
 
     @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate our custom layout FIRST
+        View view = inflater.inflate(R.layout.layout_settings_fragment, container, false);
 
-        view.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white));
-        ListView listView = view.findViewById(android.R.id.list);
-        if (listView != null) {
-            listView.setPadding(0,
-                    getResources().getDimensionPixelSize(R.dimen.preference_margin_top_16dp),
-                    0,
-                    0);
+        backButtonSetup(view);
+        ViewGroup preferenceContainer = view.findViewById(android.R.id.list_container);
+        // Let the parent class do its work of inflating the preferences, but tell it
+        // to use our container instead of creating its own view.
+        View preferenceView = super.onCreateView(inflater, preferenceContainer, savedInstanceState);
+        // Add the inflated preferences to our container
+        if (preferenceContainer != null) {
+            preferenceContainer.addView(preferenceView);
         }
-
         return view;
+    }
+
+    private void backButtonSetup(View view) {
+        ImageView backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
     }
 }

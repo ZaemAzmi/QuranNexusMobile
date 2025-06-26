@@ -105,14 +105,6 @@ public class Word {
         LineNumber = lineNumber;
     }
 
-//    public String getText() {
-//        return Text;
-//    }
-
-//    public String getTranslation() {
-//        return Translation;
-//    }
-
     public String getText() {
         try {
             return TextUtils.cleanArabicText(Text);

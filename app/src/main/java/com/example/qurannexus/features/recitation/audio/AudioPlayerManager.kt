@@ -9,19 +9,24 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.qurannexus.core.interfaces.QuranApi
+import androidx.preference.PreferenceManager
+import com.example.qurannexus.core.database.entities.QuranAyahDetailEntity
 import com.example.qurannexus.features.recitation.audio.models.AudioRecitationResponse
 import com.example.qurannexus.features.recitation.models.PageAyah
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.reflect.Type
 import java.util.Collections
+
 
 class AudioPlayerManager(
     private val context: Context,
-    private val quranApi: QuranApi
 ) {
     private data class QueuedAudio(
         val index: Int,
@@ -40,7 +45,7 @@ class AudioPlayerManager(
     private var isPlaybackActive = false
     private var shouldContinuePlayback = false
     private var currentMode = PlaybackMode.SINGLE_AYAH
-
+    private val gson = Gson()
     // LiveData for UI updates
     private val _isPlaying = MutableLiveData<Boolean>().apply { value = false }
     val isPlaying: LiveData<Boolean> = _isPlaying
@@ -59,20 +64,18 @@ class AudioPlayerManager(
 
     private val _shouldShowPlayer = MutableLiveData<Boolean>().apply { value = false }
     val shouldShowPlayer: LiveData<Boolean> = _shouldShowPlayer
+    private val _currentlyPlayingAyahKey = MutableLiveData<String?>()
+    val currentlyPlayingAyahKey: LiveData<String?> = _currentlyPlayingAyahKey
+    private val _isPlaylistMode = MutableLiveData<Boolean>()
+    val isPlaylistMode: LiveData<Boolean> = _isPlaylistMode
 
     private var totalDuration = 0L
     private var currentItemStartTime = 0L
+    private val sharedPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-    private val sharedPrefs = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-    private val prefListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-        if (key == "selected_reciter") {
-            // If audio is playing, restart with new reciter
-            val wasPlaying = isPlaying.value == true
-            stopPlayback()
-            if (wasPlaying && currentPageAyahs != null) {
-                playPageAyahs(currentPageAyahs!!)
-                startPlayback()
-            }
+    private val prefListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == "selected_reciter_key") {
+            // Handle reciter change if needed in the future
         }
     }
     private var currentPageAyahs: List<PageAyah>? = null
@@ -93,21 +96,18 @@ class AudioPlayerManager(
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 val binder = service as AudioPlayerService.AudioPlayerBinder
                 audioService = binder.getService()
-                Log.d("AudioDebug", "Service connected")
             }
-
             override fun onServiceDisconnected(name: ComponentName?) {
                 audioService = null
-                Log.d("AudioDebug", "Service disconnected")
             }
         }
     }
 
     init {
-        // Start and bind the service
         val intent = Intent(context, AudioPlayerService::class.java)
-        context.startService(intent) // First start the service
-        bindService() // Then bind to it
+        context.startService(intent)
+        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        sharedPrefs.registerOnSharedPreferenceChangeListener(prefListener)
     }
 
     private fun bindService() {
@@ -120,121 +120,65 @@ class AudioPlayerManager(
         }
     }
 
-
-    fun playPageAyahs(ayahs: List<PageAyah>) {
-//        Log.d("AudioDebug", "Starting playPageAyahs with ${ayahs.size} ayahs")
-        currentPageAyahs = ayahs
-        stopPlayback()
-        currentMode = PlaybackMode.PAGE_SEQUENCE
-        _isLoadingDuration.postValue(true)
-        _shouldShowPlayer.postValue(true)
-
-        audioQueue.clear()
-        currentQueueIndex = 0
-
-        totalDuration = 0L
-        currentItemStartTime = 0L
-        val estimatedAyahDuration = 15000L
-        totalDuration = (ayahs.size * estimatedAyahDuration)
-        _duration.postValue(totalDuration.toInt())
-
-        // Add Audhubillah and Bismillah if needed
-        if (shouldAddBismillah(ayahs.firstOrNull())) {
-            addPrefixAudios()
-        }
-
-        // Create a synchronized map to store responses in order
-        val audioResponses = Collections.synchronizedMap(LinkedHashMap<String, QueuedAudio>())
-        val startingIndex = audioQueue.size // Account for prefix audios if added
-        var completedCalls = 0
-
-        // First, create placeholders in the correct order
-        ayahs.forEachIndexed { index, ayah ->
-            audioResponses[ayah.ayahKey] = QueuedAudio(
-                index = startingIndex + index,
-                audioUrl = "", // Will be filled when API responds
-                ayahInfo = "Surah ${ayah.surahId}:${ayah.ayahIndex}",
-                isReady = false
-            )
-        }
-
-        // Now make API calls
-        ayahs.forEachIndexed { index, ayah ->
-            quranApi.getAudioRecitation(ayah.ayahKey).enqueue(object : Callback<AudioRecitationResponse> {
-                override fun onResponse(
-                    call: Call<AudioRecitationResponse>,
-                    response: Response<AudioRecitationResponse>
-                ) {
-                    synchronized(audioResponses) {
-                        if (response.isSuccessful && response.body() != null) {
-                            response.body()!!.data.find { it.audioInfoId == getSelectedReciterId() }?.let {
-                                // Update the placeholder with actual audio URL
-                                audioResponses[ayah.ayahKey] = QueuedAudio(
-                                    index = startingIndex + index,
-                                    audioUrl = it.audioUrl,
-                                    ayahInfo = "Surah ${ayah.surahId}:${ayah.ayahIndex}",
-                                    isReady = true
-                                )
-//                                Log.d("AudioDebug", "Received audio for ${ayah.ayahKey} at index $index")
-                            }
-                        }
-
-                        completedCalls++
-                        if (completedCalls == ayahs.size) {
-                            // Add to queue in original order
-                            ayahs.forEachIndexed { i, ayah ->
-                                audioResponses[ayah.ayahKey]?.let { audio ->
-                                    if (audio.isReady) {
-                                        audioQueue.add(audio)
-//                                        Log.d("AudioDebug", "Adding to queue: ${audio.ayahInfo} at position ${audioQueue.size - 1}")
-                                    }
-                                }
-                            }
-                            _isLoadingDuration.postValue(false)
-//                            Log.d("AudioDebug", "Queue prepared with ${audioQueue.size} items in sequence")
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<AudioRecitationResponse>, t: Throwable) {
-//                    Log.e("AudioDebug", "Failed to fetch audio for ayah: ${ayah.ayahKey}", t)
-                    synchronized(audioResponses) {
-                        completedCalls++
-                        if (completedCalls == ayahs.size) {
-                            _isLoadingDuration.postValue(false)
-                        }
-                    }
-                }
-            })
-        }
-    }
-    fun playAyah(ayahKey: String) {
-        stopPlayback()
+    fun playAyah(ayahEntity: QuranAyahDetailEntity) {
+        stopAndHidePlayer()
         currentMode = PlaybackMode.SINGLE_AYAH
+        _shouldShowPlayer.postValue(false) // Don't show the FAB for single ayah playback
+
+        val relativeUrl = getUrlForSelectedReciter(ayahEntity)
+        if (relativeUrl.isNotBlank()) {
+            audioService?.play(listOf(relativeUrl), listOf(ayahEntity.ayahKey))
+            _isPlaying.postValue(true)
+            _currentlyPlayingAyahKey.postValue(ayahEntity.ayahKey) // *** SET THE CURRENT KEY ***
+        }
+        _isPlaylistMode.postValue(false)
+    }
+    /**
+     * Plays a full page sequence. Used for the "By Page" layout.
+     */
+    fun playPageAyahs(ayahs: List<QuranAyahDetailEntity>) {
+        stopAndHidePlayer()
+        currentMode = PlaybackMode.PAGE_SEQUENCE
         _shouldShowPlayer.postValue(true)
 
-        quranApi.getAudioRecitation(ayahKey).enqueue(object : Callback<AudioRecitationResponse> {
-            override fun onResponse(
-                call: Call<AudioRecitationResponse>,
-                response: Response<AudioRecitationResponse>
-            ) {
-                if (response.isSuccessful && response.body() != null) {
-                    val audioRecitation = response.body()!!.data.find {
-                        it.audioInfoId == getSelectedReciterId()
-                    } ?: response.body()!!.data.firstOrNull()
+        val relativeUrls = mutableListOf<String>()
+        val ayahKeys = mutableListOf<String>()
 
-                    audioRecitation?.let {
-                        audioService?.playAyah(it.audioUrl, "Surah ${it.surahId}:${it.ayahIndex}")
-                        startProgressUpdates()
-                        _isPlaying.postValue(true)
-                    }
-                }
+        // 1. Prepend Audhubillah and Bismillah if necessary
+        val firstAyah = ayahs.firstOrNull()
+        if (shouldAddBismillah(firstAyah)) {
+            getPrefixAudios()?.let { (audhu, bismi) ->
+                relativeUrls.add(audhu)
+                ayahKeys.add("Audhubillah")
+                relativeUrls.add(bismi)
+                ayahKeys.add("Bismillah")
             }
+        }
 
-            override fun onFailure(call: Call<AudioRecitationResponse>, t: Throwable) {
-                Log.e("AudioDebug", "Failed to fetch audio for ayah: $ayahKey", t)
+        // 2. Add all ayahs from the page
+        for (ayah in ayahs) {
+            val url = getUrlForSelectedReciter(ayah)
+            if (url.isNotBlank()) {
+                relativeUrls.add(url)
+                ayahKeys.add(ayah.ayahKey)
             }
-        })
+        }
+
+        // 3. Play the entire list
+        if (relativeUrls.isNotEmpty()) {
+            audioService?.play(relativeUrls, ayahKeys)
+            _isPlaying.postValue(true)
+            // TODO: Add progress updates for playlist
+        }
+        _isPlaylistMode.postValue(true)
+    }
+    fun playPageSequence(relativeUrls: List<String>, ayahKeys: List<String>) {
+        if (relativeUrls.isEmpty()) return
+        stopPlayback()
+        _shouldShowPlayer.postValue(true)
+        audioService?.play(relativeUrls, ayahKeys)
+        startProgressUpdates()
+        _isPlaying.postValue(true)
     }
 
     private fun playCurrentInQueue() {
@@ -256,35 +200,18 @@ class AudioPlayerManager(
                     playCurrentInQueue()
                 }
             }
-            playAyah(currentAudio.audioUrl, currentAudio.ayahInfo)
+//            playAyah(currentAudio.audioUrl, currentAudio.ayahInfo)
         }
 
         _isPlaying.postValue(true)
         startProgressUpdates()
     }
 
-    private fun addPrefixAudios() {
-        val reciterId = getSelectedReciterId()
-        val (audhubillahUrl, bismillahUrl) = when (reciterId) {
-            "1" -> Pair("Alafasy/mp3/audhubillah.mp3", "Alafasy/mp3/bismillah.mp3")
-            "2" -> Pair("AbdulBaset/Murattal/mp3/001000.mp3", "AbdulBaset/Murattal/mp3/bismillah.mp3")
-            else -> return
-        }
-
-        audioQueue.add(QueuedAudio(
-            index = 0,
-            audioUrl = audhubillahUrl,
-            ayahInfo = "Audhubillah",
-            isReady = true
-        ))
-        audioQueue.add(QueuedAudio(
-            index = 1,
-            audioUrl = bismillahUrl,
-            ayahInfo = "Bismillah",
-            isReady = true
-        ))
+    private fun getUrlForSelectedReciter(ayahEntity: QuranAyahDetailEntity): String {
+        val type: Type = object : TypeToken<Map<String, String>>() {}.type
+        val audioUrls: Map<String, String> = gson.fromJson(ayahEntity.ayahAudioUrlsJson, type)
+        return audioUrls[getSelectedReciterKey()] ?: ""
     }
-
     fun startPlayback() {
         if (!isPlaybackActive && audioQueue.isNotEmpty()) {
             isPlaybackActive = true
@@ -294,26 +221,22 @@ class AudioPlayerManager(
         }
     }
 
+    // Modify togglePlayPause to handle single ayah state
     fun togglePlayPause() {
-        when (currentMode) {
-            PlaybackMode.PAGE_SEQUENCE -> {
-                if (isPlaybackActive) {
-                    shouldContinuePlayback = !shouldContinuePlayback
-                    if (shouldContinuePlayback) {
-                        playCurrentInQueue()
-                    } else {
-                        audioService?.togglePlayPause()
-                    }
-                    _isPlaying.postValue(shouldContinuePlayback)
-                } else {
-                    startPlayback()
-                }
-            }
-            PlaybackMode.SINGLE_AYAH -> {
-                audioService?.togglePlayPause()
-                _isPlaying.postValue(audioService?.isPlaying() == true)
-            }
+        audioService?.togglePlayPause()
+        val isNowPlaying = audioService?.isPlaying() == true
+        _isPlaying.postValue(isNowPlaying)
+
+        // If we just paused, clear the currently playing key
+        if (!isNowPlaying) {
+            _currentlyPlayingAyahKey.postValue(null)
         }
+    }
+
+    fun stopAndHidePlayer() {
+        audioService?.stopPlayback()
+        _isPlaying.postValue(false)
+        _shouldShowPlayer.postValue(false)
     }
 
     fun stopPlayback() {
@@ -323,8 +246,15 @@ class AudioPlayerManager(
         audioService?.stopPlayback()
         _isPlaying.postValue(false)
         currentQueueIndex = 0
+        _currentlyPlayingAyahKey.postValue(null) // *** CLEAR THE KEY ***
     }
-
+    fun stopSingleAyah() {
+        if (currentMode == PlaybackMode.SINGLE_AYAH) {
+            audioService?.stopPlayback()
+            _isPlaying.postValue(false)
+            _currentlyPlayingAyahKey.postValue(null)
+        }
+    }
     fun seekTo(position: Int) {
         // Calculate which item this position corresponds to
         var accumulatedTime = 0L
@@ -387,26 +317,27 @@ class AudioPlayerManager(
         progressHandler.removeCallbacks(progressRunnable)
     }
 
-
-
-    private fun shouldAddBismillah(firstAyah: PageAyah?): Boolean {
-        // Special case for Al-Fatihah (Surah 1) - don't add Bismillah
-        if (firstAyah != null && firstAyah.surahId == "1") {
-            return false;
+    private fun shouldAddBismillah(firstAyah: QuranAyahDetailEntity?): Boolean {
+        if (firstAyah == null) return false
+        // No Bismillah for Surah 1 (part of Fatiha itself) or Surah 9 (At-Tawbah)
+        if (firstAyah.surahId == 1 || firstAyah.surahId == 9) {
+            return false
         }
-        // For other surahs, add Bismillah if it's the first ayah
-        return firstAyah?.ayahIndex == "1"
+        return firstAyah.ayahIndex == 1
+    }
+    private fun getPrefixAudios(): Pair<String, String>? {
+        // Assuming reciter key in prefs matches the key in the JSON
+        return when (getSelectedReciterKey()) {
+            "Alafasy" -> Pair("Alafasy/mp3/audhubillah.mp3", "Alafasy/mp3/bismillah.mp3")
+            "AbdulBaset_Murattal" -> Pair("AbdulBaset/Murattal/mp3/001000.mp3", "AbdulBaset/Murattal/mp3/bismillah.mp3")
+            else -> null // No prefixes for other reciters unless specified
+        }
+    }
+    private fun getSelectedReciterKey(): String {
+        // Use the new, correct key to get the saved value
+        return sharedPrefs.getString("selected_reciter_key", "Alafasy") ?: "Alafasy"
     }
 
-    private fun getSelectedReciterId(): String {
-        return context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .getString("selected_reciter", "1") ?: "1"
-    }
-
-    fun stopAndHidePlayer() {
-        stopPlayback()
-        _shouldShowPlayer.postValue(false)
-    }
 
     fun handlePageChange(newPage: Int) {
         stopAndHidePlayer()

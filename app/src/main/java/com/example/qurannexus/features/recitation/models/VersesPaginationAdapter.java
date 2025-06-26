@@ -71,8 +71,8 @@ public class VersesPaginationAdapter extends FragmentStateAdapter {
                 if (byAyatFragment.getPaginationAdapter() != null &&
                         pagePosition < byAyatFragment.getPaginationAdapter().paginatedVerses.size()) {
                     pageVerses = byAyatFragment.getPaginationAdapter().paginatedVerses.get(pagePosition);
-                    adapter = new SurahRecitationByAyatAdapter(getContext(), pageVerses);
-                    versesRecyclerView.setAdapter(adapter);
+//                    adapter = new SurahRecitationByAyatAdapter(getContext(), pageVerses);
+//                    versesRecyclerView.setAdapter(adapter);
 
                     // Add scroll listener here as well for immediate effect
                     setupScrollListener();

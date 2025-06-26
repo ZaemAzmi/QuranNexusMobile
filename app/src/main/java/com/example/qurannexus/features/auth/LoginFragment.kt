@@ -223,7 +223,7 @@ class LoginFragment : Fragment() {
             val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Forgot Password")
                 .setView(R.layout.dialog_forgot_password)
-                .setPositiveButton("Send", null) // Set to null initially
+                .setPositiveButton("Send Code", null) // Set to null initially
                 .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
                 .create()
 

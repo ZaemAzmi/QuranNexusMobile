@@ -20,6 +20,8 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation
 // import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ShowListener
 import com.example.qurannexus.R
 import com.example.qurannexus.core.enums.BottomMenuItemId
+import com.example.qurannexus.core.utils.TokenManager
+import com.example.qurannexus.core.utils.UtilityService
 // import com.example.qurannexus.core.utils.QuranMetadata // Not directly used in this revised method
 import com.example.qurannexus.features.analysis.QuranAnalysisFragment
 import com.example.qurannexus.features.auth.AuthActivity
@@ -35,13 +37,19 @@ import com.example.qurannexus.features.recitation.SurahListFragment
 import com.example.qurannexus.features.settings.SettingsFragment
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity (
+) : AppCompatActivity() {
     private lateinit var authService: AuthService
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var meowBottomNavigation: MeowBottomNavigation
-
+    @Inject
+    lateinit var tokenManager: TokenManager
+    @Inject
+    lateinit var utilityService: UtilityService
     companion object { // Added for Logcat tag
         private const val TAG = "MainActivity"
     }
@@ -242,9 +250,45 @@ class MainActivity : AppCompatActivity() {
                     BottomMenuItemId.HOME -> loadFragment(HomeFragment())
                     BottomMenuItemId.SURAHLIST -> loadFragment(SurahListFragment()) // This typically leads to RecitationPageFragment after selection
                     BottomMenuItemId.ANALYSIS -> loadFragment(QuranAnalysisFragment())
-                    BottomMenuItemId.BOOKMARK -> loadFragment(BookmarkFragment())
+                    BottomMenuItemId.BOOKMARK -> {
+                        // You can protect any item this way
+                        if (tokenManager.getToken() != null) {
+                            // User is logged in, show the bookmark fragment
+                            loadFragment(BookmarkFragment())
+                        } else {
+                            // User is NOT logged in, show the dialog
+                            utilityService.showLoginRequiredDialog(this@MainActivity) {
+                                // This lambda runs when the "Login" button in the dialog is clicked
+                                val intent = Intent(this@MainActivity, AuthActivity::class.java).apply {
+                                    putExtra(AuthActivity.EXTRA_ACTION, AuthActivity.ACTION_NAVIGATE_TO_LOGIN)
+                                }
+                                startActivity(intent)
+                            }
+                        }
+                    }
                     BottomMenuItemId.QUIZ -> {
-                        startActivity(Intent(this@MainActivity, QuizActivity::class.java))
+                        // 1. Check if a token exists. A non-null token means the user is logged in.
+                        if (tokenManager.getToken() == null) {
+
+                            // 2. If NO token, call your utility function to show the dialog.
+                            utilityService.showLoginRequiredDialog(this@MainActivity) {
+                                // 3. This is the 'onLoginClicked' lambda. It defines what happens
+                                //    when the user taps "Log In & Continue" on the popup.
+
+                                // 4. Create an Intent to start AuthActivity.
+                                val intent = Intent(this@MainActivity, AuthActivity::class.java)
+
+                                // 5. Add the special "action" extra to tell AuthActivity
+                                //    to show the LoginFragment directly.
+                                intent.putExtra(AuthActivity.EXTRA_ACTION, AuthActivity.ACTION_NAVIGATE_TO_LOGIN)
+
+                                // 6. Start the activity.
+                                startActivity(intent)
+                            }
+                        } else {
+                            // 7. If a token EXISTS, the user is logged in, so proceed to the QuizActivity.
+                            startActivity(Intent(this@MainActivity, QuizActivity::class.java))
+                        }
                     }
                     null -> {
                         // Handle unknown menu item ID

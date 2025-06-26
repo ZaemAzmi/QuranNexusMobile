@@ -136,10 +136,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Longest Recitation Days"
-                            android:textSize="@dimen/text_size_small"
                             android:gravity="center"
-                            android:textColor="#757575"/>
+                            android:text="Longest Recitation"
+                            android:textColor="#757575"
+                            android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

@@ -34,8 +34,12 @@
     <string name="recitation_layout_by_page_summary_on">Recitation is set to By Page</string>
     <string name="recitation_layout_by_page_summary_off">Recitation is set to By Ayat</string>
 
-    <!-- placeholder strings-->
-
+    <!-- Strings for login required dialog -->
+    <string name="unlock_full_access">Unlock Full Access</string>
+    <string name="login_to_continue_prompt">Please log in to your account to continue and unlock this feature.</string>
+    <string name="action_login">Login</string>
+    <string name="action_maybe_later">Maybe Later</string>
+    <string name="login_required_icon_description">Login required icon</string>
     <!-- tooltips strings-->
     <string name="expand_collapse_icon">Expand more</string>
     <!-- TODO: Remove or change this placeholder text -->

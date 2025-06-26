@@ -4,6 +4,8 @@ package com.example.qurannexus.core.di
 import android.content.Context
 import com.example.qurannexus.core.database.QuranNexusDatabase
 import com.example.qurannexus.features.analysis.data.WordAnalysisDao // Updated DAO name
+import com.example.qurannexus.features.recitation.data.RecitationDao
+import com.example.qurannexus.features.recitation.repository.RecitationRepository
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -27,7 +29,17 @@ object DatabaseModule {
     fun provideWordRootDao(database: QuranNexusDatabase): WordAnalysisDao { // Updated DAO name
         return database.wordAnalysisDao() // Updated DAO method name
     }
+    @Provides
+    @Singleton
+    fun provideRecitationDao(db: QuranNexusDatabase): RecitationDao {
+        return db.recitationDao()
+    }
 
+    @Provides
+    @Singleton
+    fun provideRecitationRepository(recitationDao: RecitationDao): RecitationRepository {
+        return RecitationRepository(recitationDao)
+    }
     @Provides
     @Singleton
     fun provideGson(): Gson {
