@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- The exact same gradient you are using -->
+    <gradient
+        android:angle="270"
+        android:startColor="#A8C8FB"
+        android:centerColor="#C7F6DE"
+        android:endColor="#D1FDED"
+        android:type="linear" />
+
+    <!-- The key change: All corners are now rounded to match your CardView -->
+    <corners android:radius="25dp" />
+
+</shape>

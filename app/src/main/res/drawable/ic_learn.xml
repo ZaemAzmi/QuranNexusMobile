@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Main mortarboard cap -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M5,9 L12,6 L19,9 L19,11 L12,8 L5,11 Z"/>
+
+    <!-- Cap base -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M5,10 Q5,8.5 12,8.5 Q19,8.5 19,10 Q19,11.5 12,11.5 Q5,11.5 5,10"/>
+
+    <!-- Tassel cord -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="0.5"
+        android:pathData="M16,9 L17,14"/>
+
+    <!-- Tassel threads -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="1"
+        android:pathData="M16.5,14 L16.5,18"/>
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="0.8"
+        android:pathData="M16,14 L16,17"/>
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="0.8"
+        android:pathData="M17,14 L17,17"/>
+</vector>

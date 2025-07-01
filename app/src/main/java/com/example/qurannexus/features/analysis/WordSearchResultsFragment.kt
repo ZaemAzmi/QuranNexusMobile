@@ -115,46 +115,74 @@ class WordSearchResultsFragment : Fragment() {
         }
     }
 
+    // --- THIS IS THE CORRECTED FUNCTION ---
     private fun setupRecyclerView() {
         searchResultsAdapter = SearchResultsAdapter { displayableRoot ->
-            // Now displayableRoot is the correct type with rootLabel
             val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
                 putExtra(WordDetailsActivity.EXTRA_IDENTIFIER_VALUE, displayableRoot.identifierValue)
                 putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION, displayableRoot.displayArabicText)
             }
             startActivity(intent)
         }
-        resultsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val linearLayoutManager = LinearLayoutManager(requireContext()) // Must store manager in a variable
+        resultsRecyclerView.layoutManager = linearLayoutManager
         resultsRecyclerView.adapter = searchResultsAdapter
+
+        // *** CRITICAL FIX: ADD THE SCROLL LISTENER ***
+        resultsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                // This logic triggers the loading of the next page
+                val visibleItemCount = linearLayoutManager.childCount
+                val totalItemCount = linearLayoutManager.itemCount
+                val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
+
+                // Check if we're near the end, not currently loading, and the search type is one that supports pagination
+                val isLoading = viewModel.isLoading.value ?: false
+                if (!isLoading &&
+                    (visibleItemCount + firstVisibleItemPosition) >= totalItemCount &&
+                    firstVisibleItemPosition >= 0 &&
+                    searchTypeEnum == SearchType.ALL) { // Only paginate for ALL search
+                    viewModel.loadMoreResults()
+                }
+            }
+        })
     }
 
     private fun observeViewModel() {
-        viewModel.searchResults.observe(viewLifecycleOwner) { results -> // results is List<DisplayableFrequentRoot>
-            Log.d(TAG, "Search results received: ${results.size} items")
-            progressBar.visibility = View.GONE
-            if (results.isNotEmpty()) {
-                resultsRecyclerView.visibility = View.VISIBLE
-                noResultsTextView.visibility = View.GONE
-                searchResultsAdapter.submitList(results) // Directly submit the list
+        viewModel.searchResults.observe(viewLifecycleOwner) { results ->
+            Log.d(TAG, "Search results updated: ${results.size} items")
+
+            // Submit the full list (current + new items) to the adapter
+            searchResultsAdapter.submitList(results)
+
+            // Update UI visibility based on the results and loading state
+            val isLoading = viewModel.isLoading.value ?: false
+            if (results.isEmpty() && !isLoading) {
+                showNoResults("No results found for \"$searchQuery\".")
             } else {
-                // Only show "no results" if not loading and query was actually performed
-                if (viewModel.isLoading.value == false) {
-                    showNoResults("No results found for \"$searchQuery\" with filter \"${searchTypeEnum.name.replace("_", " ")}\".")
-                }
+                noResultsTextView.visibility = View.GONE
+                resultsRecyclerView.visibility = View.VISIBLE
             }
         }
+
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            if (isLoading) {
+            // Only show the main progress bar for the *initial* load (when the list is empty)
+            if (isLoading && searchResultsAdapter.itemCount == 0) {
+                progressBar.visibility = View.VISIBLE
                 resultsRecyclerView.visibility = View.GONE
                 noResultsTextView.visibility = View.GONE
+            } else {
+                progressBar.visibility = View.GONE
             }
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
                 progressBar.visibility = View.GONE
-                showNoResults(it) // Show error message
+                showNoResults(it) // Show the error message
                 Log.e(TAG, "Search error LiveData: $it")
             }
         }

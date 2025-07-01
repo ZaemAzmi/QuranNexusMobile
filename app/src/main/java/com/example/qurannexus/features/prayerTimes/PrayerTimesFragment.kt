@@ -42,6 +42,7 @@ class PrayerTimesFragment : Fragment() {
     private lateinit var timerTextView: TextView
     private lateinit var prayerTimesRecycler: RecyclerView
     private lateinit var currentTimeTextView: TextView
+    private lateinit var backButton : ImageView
     private var timeUpdateHandler: Handler? = null
     private var timeUpdateRunnable: Runnable? = null
     private var countDownTimer: CountDownTimer? = null
@@ -82,6 +83,8 @@ class PrayerTimesFragment : Fragment() {
         timerTextView = view.findViewById(R.id.timerTextView)
         prayerTimesRecycler = view.findViewById(R.id.prayerTimesRecycler)
 
+        backButton = view.findViewById(R.id.backButton)
+        backButtonSetup()
 
         prayerTimesRecycler.layoutManager = LinearLayoutManager(context)
         prayerTimesRecycler.apply {
@@ -191,6 +194,12 @@ class PrayerTimesFragment : Fragment() {
         timeUpdateHandler?.removeCallbacks(timeUpdateRunnable ?: return)
         timeUpdateHandler = null
         timeUpdateRunnable = null
+    }
+
+    private fun backButtonSetup() {
+        backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 }
 

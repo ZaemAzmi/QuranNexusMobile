@@ -43,6 +43,13 @@ class WordAnalysisViewModel @Inject constructor(
     companion object {
         private const val TAG = "WordAnalysisVM"
     }
+    // --- PAGINATION STATE VARIABLES ---
+    private var currentPage = 0
+    private var isLastPage = false
+    private var isLoadingMore = false
+    private var currentQuery: String = ""
+    private var currentSearchType: SearchType = SearchType.ALL
+
     fun fetchFrequentEntries(limit: Int = 10) { // Renamed method
         _isLoading.value = true
         viewModelScope.launch {
@@ -63,63 +70,83 @@ class WordAnalysisViewModel @Inject constructor(
     }
 
     fun performSearch(query: String, searchType: SearchType) {
-        _isLoading.value = true
-        _searchResults.value = emptyList()
-        Log.d(TAG, "performSearch called with query: '$query', type: ${searchType.name}")
+        // Reset pagination state for a new search
+        currentPage = 0
+        isLastPage = false
+        currentQuery = query
+        currentSearchType = searchType
+        _searchResults.value = emptyList() // Clear old results immediately
+
+        // If the search is paginated, start the loading process
+        if (searchType == SearchType.ALL) {
+            _isLoading.value = true // Show loading spinner for the first page
+            loadMoreResults()
+        } else {
+            // For other search types, use the original, non-paginated logic
+            _isLoading.value = true
+            viewModelScope.launch {
+                try {
+                    val resultsSet = mutableSetOf<AnalysisEntryEntity>()
+                    when (searchType) {
+                        SearchType.ROOT_LABEL -> {
+                            wordAnalysisDao.searchEntriesByIdentifierValue(query, limit = 20)
+                                .filter { it.identifierType == "ROOT" }
+                                .forEach { resultsSet.add(it) }
+                            wordAnalysisDao.getAnalysisEntry(query)?.let { if(it.identifierType == "ROOT") resultsSet.add(it) }
+                        }
+                        SearchType.ARABIC_FORM -> {
+                            wordAnalysisDao.findAnalysisEntriesByExactArabicForm(query).forEach { resultsSet.add(it) }
+                        }
+                        SearchType.TRANSLATION -> {
+                            wordAnalysisDao.findAnalysisEntriesByTranslation(query, limit = 20).forEach { resultsSet.add(it) }
+                        }
+                        else -> { /* ALL is handled by pagination */ }
+                    }
+                    val displayableResults = mapAnalysisEntitiesToDisplayable(resultsSet.toList())
+                        .sortedByDescending { it.totalOccurrences }
+                    _searchResults.postValue(displayableResults)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Search failed for non-paginated query: '$query'", e)
+                    _error.postValue("Search failed: ${e.localizedMessage}")
+                } finally {
+                    _isLoading.postValue(false)
+                }
+            }
+        }
+    }
+    fun loadMoreResults() {
+        // Prevent multiple simultaneous loads or loading after the end is reached
+        if (isLoadingMore || isLastPage || currentSearchType != SearchType.ALL) return
 
         viewModelScope.launch {
+            isLoadingMore = true
+            // The main spinner is already active for the first page (currentPage == 0)
+
             try {
-                val resultsSet = mutableSetOf<AnalysisEntryEntity>()
+                val offset = currentPage * WordAnalysisDao.SEARCH_PAGE_SIZE
+                // Use the new paginated DAO method
+                val newEntities = wordAnalysisDao.searchAllPaginated(
+                    query = currentQuery,
+                    limit = WordAnalysisDao.SEARCH_PAGE_SIZE,
+                    offset = offset
+                )
 
-                when (searchType) {
-                    SearchType.ALL -> {
-                        Log.d(TAG, "SearchType: ALL")
-                        // Search by identifier value (covers roots, lemmas, forms directly)
-                        wordAnalysisDao.searchEntriesByIdentifierValue(query, limit = 15).forEach { resultsSet.add(it) }
-                        // Search by Arabic form text (finds entries whose forms match)
-                        wordAnalysisDao.findAnalysisEntriesByExactArabicForm(query).forEach { resultsSet.add(it) }
-                        // Search by translation of forms
-                        wordAnalysisDao.findAnalysisEntriesByTranslation(query, limit = 15).forEach { resultsSet.add(it) }
-                        // More comprehensive generic query
-                        wordAnalysisDao.searchEntriesByGenericQuery(query, limit = 20).forEach { resultsSet.add(it) }
-                    }
-                    SearchType.ROOT_LABEL -> { // This now means search by IDENTIFIER_VALUE where type might be ROOT
-                        Log.d(TAG, "SearchType: ROOT_LABEL (searching identifier_value)")
-                        wordAnalysisDao.searchEntriesByIdentifierValue(query, limit = 20)
-                            .filter { it.identifierType == "ROOT" } // Filter for actual roots
-                            .forEach { resultsSet.add(it) }
-                        // Also include exact match if the query IS a root identifier
-                        wordAnalysisDao.getAnalysisEntry(query)?.let { if(it.identifierType == "ROOT") resultsSet.add(it) }
-
-                    }
-                    SearchType.ARABIC_FORM -> {
-                        Log.d(TAG, "SearchType: ARABIC_FORM")
-                        wordAnalysisDao.findAnalysisEntriesByExactArabicForm(query).forEach { resultsSet.add(it) }
-                        // You might want a prefix search for Arabic forms too:
-                        // Create a DAO method like:
-                        // @Query("SELECT DISTINCT ae.* FROM analysis_entries ae JOIN entry_arabic_forms eaf ON ae.identifier_value = eaf.parent_identifier_value WHERE eaf.arabic_text LIKE :query || '%'")
-                        // suspend fun findAnalysisEntriesByArabicFormPrefix(query: String): List<AnalysisEntryEntity>
-                        // wordAnalysisDao.findAnalysisEntriesByArabicFormPrefix(query).forEach { resultsSet.add(it) }
-                    }
-                    SearchType.TRANSLATION -> {
-                        Log.d(TAG, "SearchType: TRANSLATION")
-                        wordAnalysisDao.findAnalysisEntriesByTranslation(query, limit = 20).forEach { resultsSet.add(it) }
-                    }
+                if (newEntities.isEmpty() || newEntities.size < WordAnalysisDao.SEARCH_PAGE_SIZE) {
+                    isLastPage = true // Reached the end
                 }
 
-                val displayableResults = mapAnalysisEntitiesToDisplayable(resultsSet.toList())
-                    .sortedByDescending { it.totalOccurrences } // Sort results
+                val newDisplayableResults = mapAnalysisEntitiesToDisplayable(newEntities)
+                val currentList = _searchResults.value ?: emptyList()
+                _searchResults.postValue(currentList + newDisplayableResults) // Append new results
 
-                Log.d(TAG, "Search completed. Found ${displayableResults.size} displayable results.")
-                _searchResults.postValue(displayableResults)
-                _error.postValue(null)
+                currentPage++ // Increment page for the next call
 
             } catch (e: Exception) {
-                Log.e(TAG, "Search failed for query: '$query', type: $searchType", e)
-                _error.postValue("Search failed: ${e.localizedMessage}")
-                _searchResults.postValue(emptyList())
+                Log.e(TAG, "Failed to load more results for query: '$currentQuery'", e)
+                _error.postValue("Failed to load more results: ${e.message}")
             } finally {
-                _isLoading.postValue(false)
+                isLoadingMore = false
+                _isLoading.postValue(false) // Hide loading spinner after any load
             }
         }
     }

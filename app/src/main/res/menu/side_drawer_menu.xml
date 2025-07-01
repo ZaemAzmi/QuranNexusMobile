@@ -19,11 +19,6 @@
         android:id="@+id/nav_analysis"
         android:icon="@drawable/ic_analysis"
         android:title="Quran Analysis" />
-    <item
-        android:id="@+id/nav_irab"
-        android:icon="@drawable/ic_home"
-        android:title="@string/nav_irab" />
-
 
     <item
         android:id="@+id/nav_quiz"
@@ -42,6 +37,6 @@
 
     <item
         android:id="@+id/nav_logout"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/ic_logout"
         android:title="Logout" />
 </menu>

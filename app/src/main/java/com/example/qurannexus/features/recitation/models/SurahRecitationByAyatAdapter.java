@@ -336,9 +336,11 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
         // Add clickable word TextViews
         for (WordData word : words) {
             if (word == null || word.getText() == null || word.getText().isEmpty()) continue;
+            String cleanText = word.getText().replace("\u06DF", "");
 
             TextView wordView = new TextView(context);
-            wordView.setText(word.getText());
+            wordView.setText(cleanText); // Use the cleaned text
+
             wordView.setTextColor(ContextCompat.getColor(context, R.color.white)); // Or your theme color
             float textSizeSp = context.getResources().getDimension(R.dimen.arabic_text_size) /
                     context.getResources().getDisplayMetrics().density;

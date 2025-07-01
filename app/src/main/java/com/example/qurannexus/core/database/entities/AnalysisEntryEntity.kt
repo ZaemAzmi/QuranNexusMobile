@@ -19,7 +19,7 @@ data class AnalysisEntryEntity(
     val identifierValue: String,
 
     @ColumnInfo(name = "identifier_type") // NEW field
-    val identifierType: String, // "ROOT", "LEMMA", "FORM"
+    val identifierType: String, // "ROOT", "LEMMA", "OTHERS"
 
     @ColumnInfo(name = "total_occurrences")
     val totalOccurrences: Int?,

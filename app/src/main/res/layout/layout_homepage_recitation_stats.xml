@@ -23,7 +23,7 @@
             android:text="Recitation Progress"
             android:textSize="@dimen/text_size_large"
             android:textStyle="bold"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/appPrimaryVariant"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnInfoRecitation"/>
@@ -87,7 +87,7 @@
                             android:text="0"
                             android:textSize="@dimen/recitation_text_size"
                             android:textStyle="bold"
-                            android:textColor="@color/primaryColor"/>
+                            android:textColor="@color/appPrimaryVariant"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -95,7 +95,7 @@
                             android:text="Current Recitation"
                             android:gravity="center"
                             android:textSize="@dimen/text_size_small"
-                            android:textColor="#757575"/>
+                            android:textColor="@color/gray"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -131,14 +131,14 @@
                             android:text="0"
                             android:textSize="@dimen/recitation_text_size"
                             android:textStyle="bold"
-                            android:textColor="@color/primaryColor"/>
+                            android:textColor="@color/appPrimaryVariant"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Longest Recitation"
-                            android:textColor="#757575"
+                            android:textColor="@color/gray"
                             android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -174,7 +174,7 @@
                             android:text="0"
                             android:textSize="@dimen/recitation_text_size"
                             android:textStyle="bold"
-                            android:textColor="@color/primaryColor"/>
+                            android:textColor="@color/appPrimaryVariant"/>
 
                         <TextView
                             android:id="@+id/consistencyLabel"
@@ -182,7 +182,7 @@
                             android:layout_height="wrap_content"
                             android:text="days/week"
                             android:textSize="@dimen/text_size_small"
-                            android:textColor="#757575"/>
+                            android:textColor="@color/gray"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -196,8 +196,8 @@
             android:layout_marginTop="@dimen/margin_medium"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/primaryColor"
-            app:tabSelectedTextColor="@color/primaryColor"
+            app:tabIndicatorColor="@color/accent_deep_indigo_purple"
+            app:tabSelectedTextColor="@color/dark_green_200"
             app:layout_constraintTop_toBottomOf="@id/statsScrollView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">

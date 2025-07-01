@@ -3,6 +3,7 @@ package com.example.qurannexus.features.recitation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -36,6 +37,7 @@ public class WordClickableSpan extends ClickableSpan {
     public void updateDrawState(@NonNull TextPaint ds) {
         // Optional: style the clickable word. For now, we keep the default look.
         super.updateDrawState(ds);
+        ds.setColor(Color.WHITE);
         ds.setUnderlineText(false); // Remove underline
     }
 }

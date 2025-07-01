@@ -8,7 +8,35 @@ import com.example.qurannexus.core.database.entities.*
 @Dao
 interface WordAnalysisDao {
 
-    // --- AnalysisEntryEntity Operations ---
+    companion object {
+        const val SEARCH_PAGE_SIZE = 30
+    }
+    @Query("""
+        SELECT * FROM analysis_entries
+        WHERE 
+            identifier_value IN (
+                -- This subquery finds all matching entry identifiers
+                -- using UNION to combine results from different search criteria
+                -- and remove duplicates automatically.
+                SELECT identifier_value FROM analysis_entries
+                WHERE identifier_value LIKE :query || '%'
+                
+                UNION
+                
+                SELECT T1.parent_identifier_value FROM entry_arabic_forms AS T1
+                WHERE T1.arabic_text LIKE :query || '%'
+                
+                UNION
+                
+                SELECT T1.parent_identifier_value FROM entry_arabic_forms AS T1
+                JOIN arabic_form_translations AS T2 ON T1.arabic_form_id = T2.arabic_form_id
+                WHERE T2.translation LIKE '%' || :query || '%'
+            )
+        ORDER BY total_occurrences DESC
+        LIMIT :limit OFFSET :offset
+    """)
+    suspend fun searchAllPaginated(query: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+
     @Query("SELECT * FROM analysis_entries WHERE identifier_value = :identifierValue")
     suspend fun getAnalysisEntry(identifierValue: String): AnalysisEntryEntity?
 

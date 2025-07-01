@@ -34,7 +34,10 @@ class SearchResultsAdapter(
             arabicTextView.text = result.displayArabicText
             translationTextView.text = result.displayTranslation
 
-            identifierTypeTextView.text = result.identifierType.uppercase() // Make sure it's uppercase for consistency
+            // 1. CHANGE THIS: Display "OTHERS" to the user when the data is "FORM"
+            val displayType = if (result.identifierType == "FORM") "OTHERS" else result.identifierType.uppercase()
+            identifierTypeTextView.text = displayType
+
             identifierValueTextView.text = result.identifierValue
             occurrencesTextView.text = "Occurred ${result.totalOccurrences} times"
 
@@ -63,7 +66,7 @@ class SearchResultsAdapter(
             if (result.uniqueFormCount != null && result.uniqueFormCount > 0) {
                 val uniqueFormsText = when (result.identifierType) {
                     "ROOT", "LEMMA" -> if (result.uniqueFormCount > 1) "Has ${result.uniqueFormCount} distinct Arabic forms" else "Has 1 distinct Arabic form"
-                    "FORM" -> "Specific Quranic Form" // A FORM type identifier essentially refers to one unique form.
+                    "FORM" -> "Specific Word/Particle Group" // UPDATED TEXT
                     else -> ""
                 }
                 if (uniqueFormsText.isNotEmpty()) {

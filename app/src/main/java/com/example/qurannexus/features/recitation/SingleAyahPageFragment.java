@@ -17,6 +17,7 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.qurannexus.core.activities.MainActivity;
 import com.example.qurannexus.core.database.entities.QuranAyahDetailEntity;
 import com.example.qurannexus.features.recitation.models.SurahRecitationByAyatAdapter;
 import com.example.qurannexus.features.recitation.viewModels.PageDataState;
@@ -69,7 +70,23 @@ public class SingleAyahPageFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         observeViewModel(); // Start observing
-
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                // The grandparent fragment is RecitationPageFragment, its parent is MainActivity
+                if (requireParentFragment().requireParentFragment().getActivity() instanceof MainActivity) {
+                    MainActivity mainActivity = (MainActivity) requireParentFragment().requireParentFragment().getActivity();
+                    if(mainActivity != null){
+                        if (dy > 10) { // Scrolling down
+                            mainActivity.setBottomNavigationVisibility(false);
+                        } else if (dy < -10) { // Scrolling up
+                            mainActivity.setBottomNavigationVisibility(true);
+                        }
+                    }
+                }
+            }
+        });
         return view;
     }
 

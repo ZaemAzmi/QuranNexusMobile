@@ -20,11 +20,11 @@
             <ImageView
             android:id="@+id/fragmentHomeHeader"
             android:layout_width="0dp"
-                android:layout_height="0dp"
+            android:layout_height="0dp"
             android:background="@drawable/bg_gradient"
             app:layout_constraintHeight_max="@dimen/home_header_max_height"
-                app:layout_constraintHeight_percent="@dimen/header_height_ratio"
-                app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHeight_percent="@dimen/header_height_ratio"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -193,18 +193,37 @@
                 android:paddingBottom="@dimen/padding_small"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <!-- Word Categories Section -->
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:text="Understanding Word Categories"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_large"
-                android:textStyle="bold" />
+                android:layout_marginBottom="@dimen/margin_small">
 
-            <!-- Heaven Category -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Understanding Word Categories"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:textStyle="bold" />
+
+                <!-- NEW: Info Icon for Tokenization Explanation -->
+                <ImageView
+                    android:id="@+id/wordDefinitionInfoIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_show_hint"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    app:tint="@color/textSecondary"
+                    android:contentDescription="Information about how words are defined" />
+
+            </LinearLayout>
             <androidx.cardview.widget.CardView
                 android:id="@+id/rootCategoryCard"
                 android:layout_width="match_parent"
@@ -304,7 +323,7 @@
 
             <!-- Prophets Category -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/formCategoryCard"
+                android:id="@+id/othersCategoryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -322,7 +341,7 @@
                     <ImageView
                         android:layout_width="@dimen/word_analysis_image_card_height_small"
                         android:layout_height="@dimen/word_analysis_image_card_height_small"
-                        android:src="@drawable/ic_form_placeholder"
+                        android:src="@drawable/ic_bulb"
                         app:tint="@color/accent_deep_indigo_purple" />
 
                     <LinearLayout
@@ -334,7 +353,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="FORMS"
+                            android:text="OTHERS"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />

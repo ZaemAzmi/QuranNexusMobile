@@ -78,7 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         ImageView backButton = view.findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
             if (getActivity() != null) {
-                getActivity().getSupportFragmentManager().popBackStack();
+                getActivity().getOnBackPressedDispatcher().onBackPressed();
             }
         });
     }

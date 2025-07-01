@@ -26,10 +26,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.R;
+import com.example.qurannexus.core.activities.MainActivity;
 import com.example.qurannexus.core.database.entities.QuranAyahDetailEntity;
 import com.example.qurannexus.core.database.entities.WordData;
 import com.example.qurannexus.features.recitation.ByPageRecitationFragment;
@@ -136,10 +138,11 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
                         lastLineNumber = word.getLine_number();
 
                         // Append the clickable word
-                        String wordWithSpace = word.getText() + " ";
+                        String cleanText = word.getText().replace("\u06DF", "");
+                        String wordWithSpace = cleanText + " ";
                         SpannableString wordSpannable = new SpannableString(wordWithSpace);
-                        WordClickableSpan clickableSpan = new WordClickableSpan(context, word.getWord_key(), word.getText());
-                        wordSpannable.setSpan(clickableSpan, 0, word.getText().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        WordClickableSpan clickableSpan = new WordClickableSpan(context, word.getWord_key(), cleanText);
+                        wordSpannable.setSpan(clickableSpan, 0, cleanText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         pageBuilder.append(wordSpannable);
                     }
                 }
@@ -200,7 +203,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
             String bismillahText = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
             SpannableString bismillahSpannable = new SpannableString(bismillahText);
             bismillahSpannable.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, bismillahText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            builder.append(bismillahSpannable).append("\n\n");
+            builder.append(bismillahSpannable).append("\n");
         }
     }
     private Drawable getWhiteDrawable(Context context, String drawableName, float scaleFactor) {
@@ -277,14 +280,31 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
 
     static class QuranPageViewHolder extends RecyclerView.ViewHolder {
         private final TextView contentTextView;
-
+        private final NestedScrollView scrollView;
         QuranPageViewHolder(@NonNull View itemView) {
             super(itemView);
+            scrollView = itemView.findViewById(R.id.pageNestedScrollView);
             contentTextView = itemView.findViewById(R.id.recitationByPageTextView);
+
             // *** IMPORTANT: This makes the links clickable ***
             contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
             Log.e("pageadapter","clicked");
-            contentTextView.setHighlightColor(Color.TRANSPARENT);
+            contentTextView.setHighlightColor(Color.TRANSPARENT); // set the text color for text that can be clicked
+
+            scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
+                    (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                        Context context = v.getContext();
+                        if (context instanceof MainActivity) {
+                            MainActivity mainActivity = (MainActivity) context;
+                            int dy = scrollY - oldScrollY;
+                            if (dy > 10) { // Scrolling down
+                                mainActivity.setBottomNavigationVisibility(false);
+                            } else if (dy < -10) { // Scrolling up
+                                mainActivity.setBottomNavigationVisibility(true);
+                            }
+                        }
+                    });
+
         }
 
         void setContent(SpannableStringBuilder content) {

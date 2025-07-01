@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- The root is a LinearLayout to correctly handle the custom background and shadow -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="25dp"
-    app:cardElevation="5dp"
-    >
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/bg_dialog_word_category"
+    android:elevation="8dp"> <!-- Use elevation for the shadow effect -->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:background="@drawable/bottom_sheet_background">
+    <!-- All children are direct children of the root LinearLayout -->
 
     <ImageView
         android:id="@+id/ivDialogCategoryIcon"
@@ -22,7 +19,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         app:tint="?attr/colorPrimary"
-        tools:src="@drawable/ic_root_placeholder" /> <!-- Placeholder, set programmatically -->
+        tools:src="@drawable/ic_root_placeholder" />
 
     <TextView
         android:id="@+id/tvDialogCategoryTitle"
@@ -33,6 +30,7 @@
         android:textColor="?attr/colorOnSurface"
         android:textStyle="bold"
         android:layout_marginBottom="8dp"
+        android:textSize="@dimen/arabic_text_size"
         tools:text="Quranic Roots (أصل - Aṣl)" />
 
     <androidx.core.widget.NestedScrollView
@@ -40,7 +38,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginBottom="16dp"
-        android:minHeight="150dp"> <!-- Ensure there's enough space for content -->
+        android:minHeight="150dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,6 +52,7 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:lineSpacingMultiplier="1.2"
+                android:textSize="@dimen/text_size_medium"
                 tools:text="A root is typically a three-letter (triliteral) base from which many Arabic words are derived..." />
 
             <TextView
@@ -64,7 +63,8 @@
                 android:text="Example(s):"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="@dimen/text_size_xlarge" />
 
             <TextView
                 android:id="@+id/tvDialogCategoryExamples"
@@ -75,6 +75,7 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:lineSpacingMultiplier="1.2"
+                android:textSize="@dimen/text_size_medium"
                 tools:text="Root: ك-ت-ب (k-t-b) relates to writing.\n- كَتَبَ (kataba) - he wrote\n- كِتَاب (kitāb) - book" />
 
             <TextView
@@ -85,7 +86,8 @@
                 android:text="In This App:"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="@dimen/text_size_large" />
 
             <TextView
                 android:id="@+id/tvDialogAppRelevance"
@@ -95,6 +97,7 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:lineSpacingMultiplier="1.2"
+                android:textSize="@dimen/text_size_medium"
                 tools:text="When you analyze a word by its ROOT, you see all Quranic words derived from that fundamental concept."/>
 
         </LinearLayout>
@@ -107,6 +110,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:text="Got it" />
-    </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</LinearLayout>

@@ -3,23 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/pageNestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
+        android:fillViewport="true">
 
         <TextView
             android:id="@+id/recitationByPageTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="@dimen/margin_tiny"
-            android:textColor="@color/white"
-            android:textColorLink="@color/white"
-            android:fontFamily="@font/uthmanic_hafs_1ver18"
-            android:padding="@dimen/padding_medium"
-            android:gravity="center_horizontal"
-            android:textSize="@dimen/arabic_text_size" />
+            android:padding="16dp"
+            android:textColor="@android:color/white"
+            android:textColorHighlight="@color/white"
+            android:textSize="22sp"
+            android:lineSpacingExtra="12dp"
+            android:gravity="center_horizontal" />
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>

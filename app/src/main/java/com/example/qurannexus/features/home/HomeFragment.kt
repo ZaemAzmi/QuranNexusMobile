@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -25,7 +26,10 @@ import com.example.qurannexus.features.bookmark.BookmarkFragment
 import com.example.qurannexus.features.prayerTimes.PrayerTimesFragment
 import com.example.qurannexus.core.interfaces.HighlightClickListener
 import com.example.qurannexus.core.interfaces.QuranApi
+import com.example.qurannexus.core.utils.TokenManager
+import com.example.qurannexus.core.utils.UtilityService
 import com.example.qurannexus.features.analysis.QuranAnalysisFragment
+import com.example.qurannexus.features.auth.AuthActivity
 import com.example.qurannexus.features.home.models.Badge
 import com.example.qurannexus.features.home.models.HighlightItem
 import com.example.qurannexus.features.prayerTimes.models.PrayerTimesResponse
@@ -39,6 +43,7 @@ import com.example.qurannexus.features.home.dailyQuote.QuoteBookmarkService
 import com.example.qurannexus.features.prayerTimes.PrayerTimesViewModel
 import com.example.qurannexus.features.recitation.SurahListFragment
 import com.example.qurannexus.features.statistics.HomepageStatisticsFragment
+import com.example.qurannexus.features.statistics.HomepageStatisticsLockedFragment
 import com.example.qurannexus.features.words.models.DailyQuote
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
@@ -86,7 +91,11 @@ class HomeFragment : Fragment(), HighlightClickListener {
     lateinit var quoteBookmarkService: QuoteBookmarkService
     @Inject
     lateinit var quranApi: QuranApi
-
+    @Inject
+    lateinit var tokenManager: TokenManager
+    @Inject
+    lateinit var utilityService: UtilityService
+    private lateinit var statisticsContainer: FrameLayout // Add this
     private val bookmarkedQuoteIds = mutableSetOf<String>()
     private var userToken: String? = null
 
@@ -131,7 +140,7 @@ class HomeFragment : Fragment(), HighlightClickListener {
         dateTextView = prayerTrailerCard.findViewById(R.id.dateTextView)
         seeAllBadgeText = view.findViewById(R.id.seeAllBadgeText)
         llScrollableBadges = view.findViewById(R.id.llScrollableBadges)
-
+        statisticsContainer = view.findViewById(R.id.statisticsContainer) // Initialize the container
         // Set default values immediately
         nextPrayerTextView.text = "Next Prayer: -"
         timerTextView.text = "-"
@@ -181,15 +190,24 @@ class HomeFragment : Fragment(), HighlightClickListener {
             loadInitialData()
             loadUserGreeting()
             loadAchievements()
-
-            if (savedInstanceState == null) {
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.statisticsContainer, HomepageStatisticsFragment())
-                    .commit()
-            }
+            checkLoginAndSetupStatistics()
         }
 
         return view
+    }
+    private fun checkLoginAndSetupStatistics() {
+        // Determine which fragment to show
+        val fragmentToShow: Fragment = if (tokenManager.getToken() != null) {
+            HomepageStatisticsFragment()
+        } else {
+            HomepageStatisticsLockedFragment()
+        }
+
+        // Perform the transaction. This is now safe and reliable.
+        // Use childFragmentManager because this is a fragment within a fragment.
+        childFragmentManager.beginTransaction()
+            .replace(R.id.statisticsContainer, fragmentToShow)
+            .commit()
     }
     private fun setupDailyQuotes() {
         // First, set up UI with default quotes

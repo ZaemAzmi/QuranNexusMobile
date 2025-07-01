@@ -58,7 +58,7 @@ public class SurahListAdapter extends RecyclerView.Adapter<SurahListAdapter.MyVi
     }
 
     public void updateData(List<SurahModel> newData) {
-        surahModels = newData;
+        this.surahModels = newData;
         notifyDataSetChanged();
     }
 

@@ -301,11 +301,10 @@ class MainActivity (
     }
 
     private fun loadFragment(fragment: Fragment) {
-        Log.d(TAG, "Loading fragment: ${fragment.javaClass.simpleName}")
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.mainFragmentContainer, fragment)
-            // .addToBackStack(null) // Be careful with addToBackStack for main navigation items
+            .addToBackStack(null)
             .commit()
 
         // Update Meow Bottom Navigation selected item based on the loaded fragment

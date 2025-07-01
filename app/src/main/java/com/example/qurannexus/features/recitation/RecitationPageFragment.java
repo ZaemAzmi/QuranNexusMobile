@@ -318,6 +318,9 @@ public class RecitationPageFragment extends Fragment {
             isBookmarkMenuOpen = false;
         }
         long durationInSeconds = (System.currentTimeMillis() - readingStartTime) / 1000;
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setBottomNavigationVisibility(true);
+        }
 
         // Check if reading duration is valid
         if (ReadingTracker.INSTANCE.isValidReadingDuration(durationInSeconds)) {

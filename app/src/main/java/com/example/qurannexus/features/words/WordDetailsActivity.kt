@@ -158,7 +158,7 @@ class WordDetailsActivity : AppCompatActivity() {
         tvActivityTitle = topBarLayout.findViewById(R.id.tvPageTitle) // Update R.id.tv_page_title to your actual ID
 
         bookmarkButton = findViewById(R.id.bookmarkButton)
-        findViewById<ImageView>(R.id.backButton).setOnClickListener { onBackPressed() }
+        findViewById<ImageView>(R.id.backButton).setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         // Main Identifier Card
         tvIdentifierLabel = findViewById(R.id.tvRootLabel) // XML uses tvRootLabel
@@ -373,9 +373,9 @@ class WordDetailsActivity : AppCompatActivity() {
     // NEW: Method to update UI elements based on the AnalysisEntryEntity
     private fun updateAnalysisEntryInfoUI(analysisEntry: AnalysisEntryEntity?) {
         val typeLabel = when (analysisEntry?.identifierType) {
-            "ROOT" -> "Root"
-            "LEMMA" -> "Lemma"
-            "FORM" -> "Form"
+            "ROOT" -> "(ROOT)"
+            "LEMMA" -> "(LEMMA)"
+            "FORM" -> "(OTHERS)"
             else -> "Word" // Default label
         }
         // Update the main title of the page
@@ -621,7 +621,7 @@ class WordDetailsActivity : AppCompatActivity() {
         val maxEntry = juzDistribution.maxByOrNull { it.value }
         val minEntry = juzDistribution.filterValues { it > 0 }.minByOrNull { it.value }
 
-        tvChartTotalOccurrences.text = "Total Occurrences ($identifierTypeLabel): $total" // Dynamic label
+        tvChartTotalOccurrences.text = "Sum of Total Occurrences : $total" // Dynamic label
 
         val mostText = if (maxEntry != null) "Most: Juz ${maxEntry.key} (${maxEntry.value})" else "Most: N/A"
         val leastText = if (minEntry != null) "Least: Juz ${minEntry.key} (${minEntry.value})" else "Least: N/A"

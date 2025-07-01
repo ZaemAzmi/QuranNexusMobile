@@ -93,7 +93,7 @@ class QuranAnalysisFragment : Fragment() {
         }
 
         backButton.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
     private fun setupStatsRecyclerView() {

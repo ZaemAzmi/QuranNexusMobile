@@ -2,6 +2,8 @@ package com.example.qurannexus.features.analysis
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,12 +25,8 @@ import com.example.qurannexus.features.analysis.enums.SearchType
 import com.example.qurannexus.features.analysis.viewmodels.DisplayableFrequentRoot
 import com.example.qurannexus.features.analysis.viewmodels.WordAnalysisViewModel
 import com.example.qurannexus.features.words.WordDetailsActivity
-import com.example.qurannexus.features.words.models.WordOccurrenceResponse
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -43,12 +41,13 @@ class WordAnalysisFragment : Fragment() {
     private lateinit var searchButton: Button
     private lateinit var rootCategoryCard: CardView
     private lateinit var lemmaCategoryCard: CardView
-    private lateinit var formCategoryCard: CardView
+    private lateinit var othersCategoryCard: CardView
     private lateinit var wordFactTextView: TextView
     private lateinit var wordFactButton: Button
     private lateinit var frequentWordsRecyclerView: RecyclerView
     private lateinit var frequentWordsAdapter: FrequentWordsAdapter
     private lateinit var chipGroupSearchFilter : ChipGroup
+    private lateinit var wordDefinitionInfoIcon: ImageView
     private var isInSearchMode = false // To track if recycler is showing search results or frequent words
     private val wordFacts = listOf(
         "The word 'Rahman' (الرحمن) and 'Raheem' (الرحيم) which refer to Allah's mercy appear 57 and 114 times respectively in the Quran.",
@@ -86,9 +85,10 @@ class WordAnalysisFragment : Fragment() {
         frequentWordsRecyclerView = view.findViewById(R.id.frequentWordsRecyclerView)
         rootCategoryCard = view.findViewById(R.id.rootCategoryCard)
         lemmaCategoryCard = view.findViewById(R.id.lemmaCategoryCard)
-        formCategoryCard = view.findViewById(R.id.formCategoryCard)
+        othersCategoryCard = view.findViewById(R.id.othersCategoryCard)
         wordFactTextView = view.findViewById(R.id.wordFactTextView)
         wordFactButton = view.findViewById(R.id.wordFactButton)
+        wordDefinitionInfoIcon = view.findViewById(R.id.wordDefinitionInfoIcon)
     }
     private fun setupRecyclerView() {
         frequentWordsAdapter = FrequentWordsAdapter { displayableRoot ->
@@ -152,35 +152,46 @@ class WordAnalysisFragment : Fragment() {
             }
         }
 
-
-        // New Category Card Click Listeners
         rootCategoryCard.setOnClickListener {
             showCategoryExplanationDialog(
-                iconResId = R.drawable.ic_root_placeholder, // Replace with your actual icon
+                iconResId = R.drawable.ic_root_placeholder,
                 title = "Quranic Roots (أَصْل - Aṣl)",
-                explanation = "A root is typically a three-letter (triliteral), or sometimes four-letter, consonantal base that conveys a core meaning. Arabic words are formed by applying various patterns (أَوْزَان - awzān) to these roots, infusing them with specific grammatical functions and shades of meaning.",
-                examples = "Root: ك-ت-ب (k-t-b) - relates to 'writing'.\n • كَتَبَ (kataba) - 'he wrote' (verb)\n • كِتَاب (kitāb) - 'book' (noun)\n • مَكْتَبَة (maktabah) - 'library'\n • كَاتِب (kātib) - 'writer'",
-                appRelevance = "Analyzing by ROOT reveals all Quranic words sharing that fundamental meaning, highlighting thematic connections."
+                explanation = "A root is the fundamental, consonantal base of a word, typically consisting of three (triliteral) letters. It carries a core, abstract meaning from which various related words are derived through patterns.",
+                examples = "From the root ك-ت-ب (k-t-b), related to 'writing', we get:\n • كَتَبَ (kataba) - 'he wrote'\n • كِتَاب (kitāb) - 'book'\n • كَاتِب (kātib) - 'writer'",
+                appRelevance = "Searching by root reveals all Quranic words sharing that fundamental meaning, highlighting thematic connections across the text."
             )
         }
 
         lemmaCategoryCard.setOnClickListener {
             showCategoryExplanationDialog(
-                iconResId = R.drawable.ic_lemma_placeholder, // Replace
+                iconResId = R.drawable.ic_lemma_placeholder,
                 title = "Lemmas (مَدْخَل - Madkhal)",
-                explanation = "A lemma is the dictionary or base form of a word. For verbs, it's usually the third-person masculine singular perfect tense (e.g., فَعَلَ). For nouns, it's the singular, indefinite, nominative form. Particles, prepositions, and proper names also have lemmas even if they don’t come from a root.",
-                examples = " • Lemma of 'يكتبون' (they write): كَتَبَ (kataba)\n • Lemma of 'المسلمين' (the Muslims): مُسْلِم (muslim)\n • Lemma of 'فِي' (in): فِي (fī)",
-                appRelevance = "Analyzing by LEMMA groups different word forms under a single base entry. This is useful for understanding how a word is used regardless of its grammatical case or affixes."
+                explanation = "A lemma is the dictionary or canonical form of a word. It groups together different inflections (e.g., plural, different cases) of the same word. Nouns have lemmas, but many particles are identified by Special Groups instead.",
+                examples = "The lemma for both 'ٱلْكِتَٰبُ' (al-kitābu, the book) and 'كُتُبٌ' (kutubun, books) is the singular form 'كِتَٰب' (kitāb).",
+                appRelevance = "Analyzing by lemma groups different grammatical forms of a word under one entry, perfect for tracking a specific concept regardless of its case or number."
             )
         }
 
-        formCategoryCard.setOnClickListener {
+        othersCategoryCard.setOnClickListener {
+            // Note: In the UI this is "OTHERS", but it corresponds to "FORM" in the backend
+            // and often aligns with the "SP" (Special) feature from the source data.
             showCategoryExplanationDialog(
-                iconResId = R.drawable.ic_form_placeholder, // Replace
-                title = "Specific Forms (شَكْل - Shakl)", // Or "Ṣīghah Khāṣṣah" if you prefer the Arabic terminology
-                explanation = "In our analysis, some Quranic words or word segments are primarily identified by their specific textual form or a common transliterated representation, especially when they don't have a traditional triliteral root or when their lemma covers many variations. This often applies to pronouns, particles, or very common short phrases where a particular vocalization or common combination is grouped under one 'FORM' identifier in our database.",
-                examples = "Identifier: humo (Type: FORM)\nThis groups occurrences related to the pronoun 'them/they' often appearing with a specific vocalization or in common constructs. Examples of Quranic words that map to this 'humo' identifier include:\n • هُمْ (hum - 'they')\n • لَهُمْ (lahum - 'to them' / 'for them')\n • وَلَهُمْ (walahum - 'and for them')\n • فَهُمْ (fahum - 'so they')",
-                appRelevance = "When you see an entry identified by 'FORM' (like 'humo'), it means we're looking at a collection of actual Quranic word instances that share this specific morphological identifier from our source data. This helps analyze the usage patterns of these particular forms or frequently occurring small word segments throughout the Quran, even if they consist of multiple morphological parts (like a prefix + pronoun)."
+                iconResId = R.drawable.ic_bulb,
+                title = "Others / Special Groups",
+                explanation = "This category is assigned to any Quranic word that doesn't fit the standard root or lemma structure. It primarily includes particles (prepositions, conjunctions), pronouns, and crucially, the disconnected letters (Muqatta'at) at the start of some chapters.",
+                examples = "• Common particles like 'إِنَّ' (inna - 'verily') or 'فِى' (fī - 'in').\n• Disconnected letters such as 'الم' (Alif, Lām, Mīm) from the beginning of Surah Al-Baqarah.",
+                appRelevance = "This allows for the analysis of the functional building blocks of the Quran—the particles that connect ideas, and unique symbolic forms like chapter initials."
+            )
+        }
+
+        // --- NEW CLICK LISTENER FOR THE INFO ICON ---
+        wordDefinitionInfoIcon.setOnClickListener {
+            showCategoryExplanationDialog(
+                iconResId = R.drawable.ic_info, // Use the same icon
+                title = "How Words are Defined (Tokenization)",
+                explanation = "A key principle in this analysis is how individual 'words' or 'tokens' are defined. In Quranic Arabic, grammatical particles like prefixes (e.g., 'bi-', 'wa-') are often attached to the word that follows them.",
+                examples = "For instance, the particle 'بِ' (bi) and the noun 'ٱسْمِ' (ismi) appear as one unit: 'بِسْمِ' (bismi).\n\nIn our database, this is treated as **one word** composed of two parts:\n • Part 1: `bi` (prefix)\n • Part 2: `somi` (stem)\n\nThis combined form, 'bismi', is the 'word' you will see in search results.",
+                appRelevance = "This explains why you can't search for standalone prefixes like 'wa-' ('and'). Instead, you search for the full word as it appears in the Quran, such as 'walhamdu'."
             )
         }
 
@@ -208,6 +219,7 @@ class WordAnalysisFragment : Fragment() {
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         btnClose.setOnClickListener {
             dialog.dismiss()
