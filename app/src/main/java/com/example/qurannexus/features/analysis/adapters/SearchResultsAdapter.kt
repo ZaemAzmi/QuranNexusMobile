@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 import com.example.qurannexus.features.analysis.viewmodels.DisplayableFrequentRoot // Use this
+import com.google.android.material.card.MaterialCardView
 
 // Changed to ListAdapter and uses DisplayableFrequentRoot
 class SearchResultsAdapter(
@@ -57,16 +58,19 @@ class SearchResultsAdapter(
                 // Fallback for other drawable types or if you just want to set a solid color
                 identifierTypeTextView.setBackgroundColor(chipBackgroundColor)
             }
-            // Ensure text color on chip provides good contrast (already set to ?attr/colorOnPrimary in XML, which is likely white)
-            // If not, set it programmatically:
-            // identifierTypeTextView.setTextColor(ContextCompat.getColor(itemView.context, R.color.textOnPrimary))
-
+            // 2. UPDATED: SET CARD BACKGROUND FROM YOUR EXISTING COLORS
+            val cardBackgroundColor = when (result.identifierType) {
+                "ROOT" -> ContextCompat.getColor(itemView.context, R.color.backgroundCardSubtle)
+                "LEMMA" -> ContextCompat.getColor(itemView.context, R.color.appSecondary)
+                "FORM" -> ContextCompat.getColor(itemView.context, R.color.accentSoftLavender)
+                else -> ContextCompat.getColor(itemView.context, R.color.backgroundCard) // Default is white
+            }
+            (itemView as MaterialCardView).setCardBackgroundColor(cardBackgroundColor)
 
             // Handle uniqueFormsCountTextView visibility (assuming you've added the field to DisplayableFrequentRoot)
             if (result.uniqueFormCount != null && result.uniqueFormCount > 0) {
                 val uniqueFormsText = when (result.identifierType) {
-                    "ROOT", "LEMMA" -> if (result.uniqueFormCount > 1) "Has ${result.uniqueFormCount} distinct Arabic forms" else "Has 1 distinct Arabic form"
-                    "FORM" -> "Specific Word/Particle Group" // UPDATED TEXT
+                    "ROOT", "LEMMA", "FORM" -> if (result.uniqueFormCount > 1) "Has ${result.uniqueFormCount} distinct Arabic forms" else "Has 1 distinct Arabic form"
                     else -> ""
                 }
                 if (uniqueFormsText.isNotEmpty()) {

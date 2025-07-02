@@ -40,6 +40,8 @@ class WordAnalysisViewModel @Inject constructor(
     private val _searchResults = MutableLiveData<List<DisplayableFrequentRoot>>()
     val searchResults: LiveData<List<DisplayableFrequentRoot>> = _searchResults
 
+    private val _totalResultsCount = MutableLiveData<Int?>()
+    val totalResultsCount: LiveData<Int?> = _totalResultsCount
     companion object {
         private const val TAG = "WordAnalysisVM"
     }
@@ -70,87 +72,82 @@ class WordAnalysisViewModel @Inject constructor(
     }
 
     fun performSearch(query: String, searchType: SearchType) {
-        // Reset pagination state for a new search
+        _isLoading.value = true
+        _totalResultsCount.value = null // Reset count for new search
+
+        // Reset pagination state
         currentPage = 0
         isLastPage = false
         currentQuery = query
         currentSearchType = searchType
-        _searchResults.value = emptyList() // Clear old results immediately
+        _searchResults.value = emptyList() // Clear old results
 
-        // If the search is paginated, start the loading process
-        if (searchType == SearchType.ALL) {
-            _isLoading.value = true // Show loading spinner for the first page
-            loadMoreResults()
-        } else {
-            // For other search types, use the original, non-paginated logic
-            _isLoading.value = true
-            viewModelScope.launch {
+        // Fetch total count and first page of results concurrently
+        viewModelScope.launch {
+            launch { // This is the count-fetching coroutine
                 try {
-                    val resultsSet = mutableSetOf<AnalysisEntryEntity>()
-                    when (searchType) {
-                        SearchType.ROOT_LABEL -> {
-                            wordAnalysisDao.searchEntriesByIdentifierValue(query, limit = 20)
-                                .filter { it.identifierType == "ROOT" }
-                                .forEach { resultsSet.add(it) }
-                            wordAnalysisDao.getAnalysisEntry(query)?.let { if(it.identifierType == "ROOT") resultsSet.add(it) }
-                        }
-                        SearchType.ARABIC_FORM -> {
-                            wordAnalysisDao.findAnalysisEntriesByExactArabicForm(query).forEach { resultsSet.add(it) }
-                        }
-                        SearchType.TRANSLATION -> {
-                            wordAnalysisDao.findAnalysisEntriesByTranslation(query, limit = 20).forEach { resultsSet.add(it) }
-                        }
-                        else -> { /* ALL is handled by pagination */ }
+                    val count = when (searchType) {
+                        // Use the new, more accurate count method for type filters
+                        SearchType.ROOT_LABEL -> wordAnalysisDao.countAllAndFilterByType(query, "ROOT")
+                        SearchType.LEMMA -> wordAnalysisDao.countAllAndFilterByType(query, "LEMMA")
+                        SearchType.FORM -> wordAnalysisDao.countAllAndFilterByType(query, "FORM")
+                        SearchType.ALL -> wordAnalysisDao.countAll(query)
+                        SearchType.ARABIC_FORM -> wordAnalysisDao.countByExactArabicForm(query)
+                        SearchType.TRANSLATION -> wordAnalysisDao.countByTranslation(query)
                     }
-                    val displayableResults = mapAnalysisEntitiesToDisplayable(resultsSet.toList())
-                        .sortedByDescending { it.totalOccurrences }
-                    _searchResults.postValue(displayableResults)
+                    _totalResultsCount.postValue(count)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Search failed for non-paginated query: '$query'", e)
-                    _error.postValue("Search failed: ${e.localizedMessage}")
-                } finally {
-                    _isLoading.postValue(false)
+                    Log.e(TAG, "Failed to get count for query '$query'", e)
+                    _totalResultsCount.postValue(0) // Show 0 on error
                 }
             }
+
+            // --- Feature C (and pagination): Fetch first page ---
+            loadMoreResults()
         }
     }
+    fun applyFilter(newSearchType: SearchType) {
+        // If the filter is the same, do nothing.
+        if (newSearchType == currentSearchType) return
+
+        Log.d(TAG, "Applying new filter: ${newSearchType.name}")
+        // Re-run the entire search with the original query but the new filter type.
+        performSearch(currentQuery, newSearchType)
+    }
     fun loadMoreResults() {
-        // Prevent multiple simultaneous loads or loading after the end is reached
-        if (isLoadingMore || isLastPage || currentSearchType != SearchType.ALL) return
+        if (isLoadingMore || isLastPage) return
 
         viewModelScope.launch {
             isLoadingMore = true
-            // The main spinner is already active for the first page (currentPage == 0)
-
             try {
                 val offset = currentPage * WordAnalysisDao.SEARCH_PAGE_SIZE
-                // Use the new paginated DAO method
-                val newEntities = wordAnalysisDao.searchAllPaginated(
-                    query = currentQuery,
-                    limit = WordAnalysisDao.SEARCH_PAGE_SIZE,
-                    offset = offset
-                )
+                val newEntities = when (currentSearchType) {
+                    SearchType.ALL -> wordAnalysisDao.searchAllPaginated(currentQuery, WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
+                    SearchType.ROOT_LABEL -> wordAnalysisDao.searchAllAndFilterByTypePaginated(currentQuery, "ROOT", WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
+                    SearchType.LEMMA -> wordAnalysisDao.searchAllAndFilterByTypePaginated(currentQuery, "LEMMA", WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
+                    SearchType.FORM -> wordAnalysisDao.searchAllAndFilterByTypePaginated(currentQuery, "FORM", WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
+                    SearchType.ARABIC_FORM -> wordAnalysisDao.findAnalysisEntriesByExactArabicFormPaginated(currentQuery, WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
+                    SearchType.TRANSLATION -> wordAnalysisDao.findAnalysisEntriesByTranslationPaginated(currentQuery, WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
+                }
 
                 if (newEntities.isEmpty() || newEntities.size < WordAnalysisDao.SEARCH_PAGE_SIZE) {
-                    isLastPage = true // Reached the end
+                    isLastPage = true
                 }
 
                 val newDisplayableResults = mapAnalysisEntitiesToDisplayable(newEntities)
                 val currentList = _searchResults.value ?: emptyList()
-                _searchResults.postValue(currentList + newDisplayableResults) // Append new results
-
-                currentPage++ // Increment page for the next call
+                _searchResults.postValue(currentList + newDisplayableResults)
+                currentPage++
 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to load more results for query: '$currentQuery'", e)
+                Log.e(TAG, "Failed to load more results", e)
                 _error.postValue("Failed to load more results: ${e.message}")
             } finally {
                 isLoadingMore = false
-                _isLoading.postValue(false) // Hide loading spinner after any load
+                _isLoading.postValue(false)
             }
         }
     }
-
     // Helper function to map AnalysisEntryEntity list to DisplayableFrequentRoot list
     private suspend fun mapAnalysisEntitiesToDisplayable(entries: List<AnalysisEntryEntity>): List<DisplayableFrequentRoot> {
         return entries.mapNotNull { entry ->

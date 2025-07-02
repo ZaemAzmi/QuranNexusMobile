@@ -45,6 +45,79 @@
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
+        <TextView
+            android:id="@+id/totalResultsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/textSecondary"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:text="256 results found"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/filterToggleGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/filterButtonAll"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="All"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_all_inclusive"
+                app:iconSize="16dp"
+                app:iconGravity="textStart"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/filterButtonRoot"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Roots"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_root_placeholder"
+                app:iconSize="16dp"
+                app:iconGravity="textStart"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/filterButtonLemma"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lemmas"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_lemma_placeholder"
+                app:iconSize="16dp"
+                app:iconGravity="textStart"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/filterButtonOthers"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Others"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_bulb"
+                app:iconSize="16dp"
+                app:iconGravity="textStart"/>
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
@@ -59,19 +132,37 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:padding="@dimen/padding_medium"
+            android:scrollbars="vertical"
+            android:fastScrollEnabled="true"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/noResultsTextView"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/noResultsLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:orientation="vertical"
             android:padding="@dimen/padding_xlarge"
-            android:text="No words found matching your search"
-            android:textColor="@color/appPrimaryVariant"
-            android:textSize="@dimen/text_size_medium"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="gone">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_no_search_results"
+                app:tint="@color/textTertiary" />
+
+            <TextView
+                android:id="@+id/noResultsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="No words found matching your search."
+                android:textColor="@color/textSecondary"
+                android:textSize="@dimen/text_size_medium" />
+
+        </LinearLayout>
 
     </FrameLayout>
 

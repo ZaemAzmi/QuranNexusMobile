@@ -133,7 +133,6 @@ class WordAnalysisFragment : Fragment() {
                 val selectedChipId = chipGroupSearchFilter.checkedChipId
                 Log.d("WordAnalysisFragment", "Selected Chip ID: $selectedChipId") // LOG THIS
                 val searchType = when (selectedChipId) {
-                    R.id.chipFilterRootLabel -> SearchType.ROOT_LABEL
                     R.id.chipFilterArabicForm -> SearchType.ARABIC_FORM
                     R.id.chipFilterTranslation -> SearchType.TRANSLATION
                     R.id.chipFilterAll -> SearchType.ALL
@@ -238,14 +237,6 @@ class WordAnalysisFragment : Fragment() {
     private fun displayRandomFact() {
         wordFactTextView.text = wordFacts[currentFactIndex]
         currentFactIndex = (currentFactIndex + 1) % wordFacts.size
-    }
-    private fun navigateToWordCategory(category: String) {
-        // Navigate to category fragment
-        val fragment = WordCategoryFragment.newInstance(category)
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     private fun navigateToSearchResults(query: String, searchType: SearchType) {
