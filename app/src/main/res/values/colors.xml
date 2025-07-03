@@ -92,5 +92,9 @@
     <color name="background_color">#FAFAFA</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#757575</color>
-
+    <!-- NEW: Colors for the Toggle Button Gradient -->
+    <color name="gradient_start_purple">#6A5ACD</color> <!-- Slate Blue / Deep Purple -->
+    <color name="gradient_mid_purple">#8A63D2</color>
+    <color name="gradient_mid_lavender">#AC74D7</color>
+    <color name="gradient_end_lavender">#C48FE0</color>
 </resources>

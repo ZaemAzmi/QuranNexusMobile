@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -25,6 +26,7 @@ import com.example.qurannexus.features.analysis.enums.SearchType
 import com.example.qurannexus.features.analysis.viewmodels.DisplayableFrequentRoot
 import com.example.qurannexus.features.analysis.viewmodels.WordAnalysisViewModel
 import com.example.qurannexus.features.words.WordDetailsActivity
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -48,6 +50,9 @@ class WordAnalysisFragment : Fragment() {
     private lateinit var frequentWordsAdapter: FrequentWordsAdapter
     private lateinit var chipGroupSearchFilter : ChipGroup
     private lateinit var wordDefinitionInfoIcon: ImageView
+    private lateinit var searchHelpButton: LinearLayout
+    private lateinit var searchHelpLayout: LinearLayout
+    private lateinit var wordDefinitionInfoCard: MaterialCardView
     private var isInSearchMode = false // To track if recycler is showing search results or frequent words
     private val wordFacts = listOf(
         "The word 'Rahman' (الرحمن) and 'Raheem' (الرحيم) which refer to Allah's mercy appear 57 and 114 times respectively in the Quran.",
@@ -88,7 +93,9 @@ class WordAnalysisFragment : Fragment() {
         othersCategoryCard = view.findViewById(R.id.othersCategoryCard)
         wordFactTextView = view.findViewById(R.id.wordFactTextView)
         wordFactButton = view.findViewById(R.id.wordFactButton)
-        wordDefinitionInfoIcon = view.findViewById(R.id.wordDefinitionInfoIcon)
+        wordDefinitionInfoCard = view.findViewById(R.id.wordDefinitionInfoCard)
+        searchHelpButton = view.findViewById(R.id.searchHelpButton) // Update ID
+        searchHelpLayout = view.findViewById(R.id.searchHelpLayout)
     }
     private fun setupRecyclerView() {
         frequentWordsAdapter = FrequentWordsAdapter { displayableRoot ->
@@ -126,7 +133,13 @@ class WordAnalysisFragment : Fragment() {
         backButton.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
-
+        searchHelpButton.setOnClickListener { // Listener is now on the LinearLayout
+            if (searchHelpLayout.visibility == View.VISIBLE) {
+                searchHelpLayout.visibility = View.GONE
+            } else {
+                searchHelpLayout.visibility = View.VISIBLE
+            }
+        }
         searchButton.setOnClickListener {
             val query = searchEditText.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -135,13 +148,14 @@ class WordAnalysisFragment : Fragment() {
                 val searchType = when (selectedChipId) {
                     R.id.chipFilterArabicForm -> SearchType.ARABIC_FORM
                     R.id.chipFilterTranslation -> SearchType.TRANSLATION
-                    R.id.chipFilterAll -> SearchType.ALL
+                    R.id.chipFilterIdentifier -> SearchType.IDENTIFIER
+                    R.id.chipFilterAll -> SearchType.GENERAL
                     else -> {
                         Log.w(
                             "WordAnalysisFragment",
                             "Unknown chip ID: $selectedChipId, defaulting to ALL"
                         )
-                        SearchType.ALL // Default
+                        SearchType.GENERAL // Default
                     }
                 }
                 Log.d("WordAnalysisFragment", "Determined SearchType: ${searchType.name}") // LOG THIS
@@ -172,8 +186,6 @@ class WordAnalysisFragment : Fragment() {
         }
 
         othersCategoryCard.setOnClickListener {
-            // Note: In the UI this is "OTHERS", but it corresponds to "FORM" in the backend
-            // and often aligns with the "SP" (Special) feature from the source data.
             showCategoryExplanationDialog(
                 iconResId = R.drawable.ic_bulb,
                 title = "Others / Special Groups",
@@ -183,14 +195,13 @@ class WordAnalysisFragment : Fragment() {
             )
         }
 
-        // --- NEW CLICK LISTENER FOR THE INFO ICON ---
-        wordDefinitionInfoIcon.setOnClickListener {
+        wordDefinitionInfoCard.setOnClickListener {
             showCategoryExplanationDialog(
-                iconResId = R.drawable.ic_info, // Use the same icon
-                title = "How Words are Defined (Tokenization)",
-                explanation = "A key principle in this analysis is how individual 'words' or 'tokens' are defined. In Quranic Arabic, grammatical particles like prefixes (e.g., 'bi-', 'wa-') are often attached to the word that follows them.",
-                examples = "For instance, the particle 'بِ' (bi) and the noun 'ٱسْمِ' (ismi) appear as one unit: 'بِسْمِ' (bismi).\n\nIn our database, this is treated as **one word** composed of two parts:\n • Part 1: `bi` (prefix)\n • Part 2: `somi` (stem)\n\nThis combined form, 'bismi', is the 'word' you will see in search results.",
-                appRelevance = "This explains why you can't search for standalone prefixes like 'wa-' ('and'). Instead, you search for the full word as it appears in the Quran, such as 'walhamdu'."
+                iconResId = R.drawable.ic_show_hint,
+                title = getString(R.string.tokenization_title),
+                explanation = getString(R.string.tokenization_explanation),
+                examples = getString(R.string.tokenization_examples),
+                appRelevance = getString(R.string.tokenization_relevance)
             )
         }
 

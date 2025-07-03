@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- When checked, use the solid color for "Root" cards -->
+    <item android:state_checked="true" android:color="@color/backgroundCardSubtle" />
+    <!-- When unchecked, use the MID-1 color of our gradient -->
+    <item android:color="@android:color/transparent" />
+</selector>

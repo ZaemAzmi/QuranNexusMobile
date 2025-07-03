@@ -123,7 +123,7 @@
     <!-- Elevation -->
     <dimen name="elevation_small">4dp</dimen>
     <!-- Text sizes -->
-    <dimen name="text_size_skip">18sp</dimen>
+    <dimen name="text_size_skip">26sp</dimen>
 
     <dimen name="text_size_word_analysis">42sp</dimen>
 

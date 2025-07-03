@@ -27,7 +27,7 @@ class FrequentWordsAdapter(
             arabicTextView.text = entry.displayArabicText
             translationTextView.text = entry.displayTranslation
             // Display identifier type along with occurrences
-            val displayType = if (entry.identifierType == "FORM") "OTHERS" else entry.identifierType.uppercase()
+            val displayType = entry.identifierType.uppercase()
             occurrencesTextView.text = "${displayType}: ${entry.totalOccurrences} occurrences"
             // rootLabelTextView?.text = "Identifier: ${entry.identifierValue}" // If you want to show the raw identifier
 

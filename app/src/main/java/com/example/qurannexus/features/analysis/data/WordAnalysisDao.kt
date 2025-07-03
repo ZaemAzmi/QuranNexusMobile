@@ -11,31 +11,98 @@ interface WordAnalysisDao {
     companion object {
         const val SEARCH_PAGE_SIZE = 30
     }
+
     @Query("""
-        SELECT * FROM analysis_entries
-        WHERE 
-            identifier_value IN (
-                -- This subquery finds all matching entry identifiers
-                -- using UNION to combine results from different search criteria
-                -- and remove duplicates automatically.
-                SELECT identifier_value FROM analysis_entries
-                WHERE identifier_value LIKE :query || '%'
-                
-                UNION
-                
-                SELECT T1.parent_identifier_value FROM entry_arabic_forms AS T1
-                WHERE T1.arabic_text LIKE :query || '%'
-                
-                UNION
-                
-                SELECT T1.parent_identifier_value FROM entry_arabic_forms AS T1
-                JOIN arabic_form_translations AS T2 ON T1.arabic_form_id = T2.arabic_form_id
-                WHERE T2.translation LIKE '%' || :query || '%'
-            )
-        ORDER BY total_occurrences DESC
-        LIMIT :limit OFFSET :offset
+        SELECT * FROM analysis_entries WHERE identifier_value IN (
+            SELECT identifier_value FROM analysis_entries WHERE identifier_value LIKE :query || '%'
+            UNION
+            SELECT parent_identifier_value FROM entry_arabic_forms WHERE arabic_text LIKE :query || '%'
+            UNION
+            SELECT T1.parent_identifier_value FROM entry_arabic_forms AS T1 JOIN arabic_form_translations AS T2 ON T1.arabic_form_id = T2.arabic_form_id WHERE T2.translation LIKE '%' || :query || '%'
+        ) ORDER BY total_occurrences DESC LIMIT :limit OFFSET :offset
     """)
-    suspend fun searchAllPaginated(query: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+    suspend fun searchGeneralPaginated(query: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+    @Query("""
+        SELECT COUNT(*) FROM analysis_entries WHERE identifier_value IN (  
+            SELECT identifier_value FROM analysis_entries WHERE identifier_value LIKE :query || '%'
+            UNION
+            SELECT parent_identifier_value FROM entry_arabic_forms WHERE arabic_text LIKE :query || '%'
+            UNION
+            SELECT T1.parent_identifier_value FROM entry_arabic_forms AS T1 JOIN arabic_form_translations AS T2 ON T1.arabic_form_id = T2.arabic_form_id WHERE T2.translation LIKE '%' || :query || '%'
+        )
+        """)
+    suspend fun countGeneral(query: String): Int
+    // --- Scope: ARABIC_FORM (Using LIKE for substring) ---
+    @Query("""
+        SELECT * FROM analysis_entries WHERE identifier_value IN (
+            SELECT parent_identifier_value FROM entry_arabic_forms WHERE arabic_text LIKE :query || '%'
+        ) ORDER BY total_occurrences DESC LIMIT :limit OFFSET :offset
+    """)
+    suspend fun searchArabicFormPaginated(query: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+    @Query("SELECT COUNT(DISTINCT parent_identifier_value) FROM entry_arabic_forms WHERE arabic_text LIKE :query || '%'")
+    suspend fun countArabicForm(query: String): Int
+    // --- Scope: TRANSLATION ---
+    @Query("""
+        SELECT DISTINCT ae.* FROM analysis_entries ae
+        JOIN entry_arabic_forms eaf ON ae.identifier_value = eaf.parent_identifier_value
+        JOIN arabic_form_translations aft ON eaf.arabic_form_id = aft.arabic_form_id
+        WHERE aft.translation LIKE '%' || :query || '%'
+        ORDER BY ae.total_occurrences DESC LIMIT :limit OFFSET :offset
+    """)
+    suspend fun searchTranslationPaginated(query: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+
+    @Query("SELECT COUNT(DISTINCT eaf.parent_identifier_value) FROM entry_arabic_forms eaf JOIN arabic_form_translations aft ON eaf.arabic_form_id = aft.arabic_form_id WHERE aft.translation LIKE '%' || :query || '%'")
+    suspend fun countTranslation(query: String): Int
+
+    @Query("""
+        SELECT * FROM analysis_entries 
+        WHERE identifier_type = :type AND identifier_value IN (
+            -- General Scope Subquery
+            SELECT identifier_value FROM analysis_entries WHERE identifier_value LIKE :query || '%'
+            UNION SELECT parent_identifier_value FROM entry_arabic_forms WHERE arabic_text LIKE :query || '%'
+            UNION SELECT T1.parent_identifier_value FROM entry_arabic_forms AS T1 JOIN arabic_form_translations AS T2 ON T1.arabic_form_id = T2.arabic_form_id WHERE T2.translation LIKE '%' || :query || '%'
+        ) ORDER BY total_occurrences DESC LIMIT :limit OFFSET :offset
+    """)
+    suspend fun searchGeneralAndFilterByTypePaginated(query: String, type: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+
+    @Query("""
+        SELECT COUNT(*) FROM analysis_entries WHERE identifier_type = :type AND identifier_value IN (   
+            SELECT identifier_value FROM analysis_entries WHERE identifier_value LIKE :query || '%'
+            UNION SELECT parent_identifier_value FROM entry_arabic_forms WHERE arabic_text LIKE :query || '%'
+            UNION SELECT T1.parent_identifier_value FROM entry_arabic_forms AS T1 JOIN arabic_form_translations AS T2 ON T1.arabic_form_id = T2.arabic_form_id WHERE T2.translation LIKE '%' || :query || '%'
+        )
+        """)
+    suspend fun countGeneralAndFilterByType(query: String, type: String): Int
+    @Query("""
+        SELECT * FROM analysis_entries 
+        WHERE identifier_type = :type AND identifier_value IN (
+            -- Arabic Form Scope Subquery
+            SELECT parent_identifier_value FROM entry_arabic_forms WHERE arabic_text LIKE :query || '%'
+        ) ORDER BY total_occurrences DESC LIMIT :limit OFFSET :offset
+    """)
+    suspend fun searchArabicFormAndFilterByTypePaginated(query: String, type: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+    @Query("""
+        SELECT COUNT(DISTINCT T1.parent_identifier_value) FROM entry_arabic_forms AS T1
+        JOIN analysis_entries AS T2 ON T1.parent_identifier_value = T2.identifier_value
+        WHERE T1.arabic_text LIKE :query || '%' AND T2.identifier_type = :type
+    """)
+    suspend fun countArabicFormAndFilterByType(query: String, type: String): Int
+    @Query("""
+        SELECT DISTINCT ae.* FROM analysis_entries ae
+        JOIN entry_arabic_forms eaf ON ae.identifier_value = eaf.parent_identifier_value
+        JOIN arabic_form_translations aft ON eaf.arabic_form_id = aft.arabic_form_id
+        WHERE aft.translation LIKE '%' || :query || '%' AND ae.identifier_type = :type
+        ORDER BY ae.total_occurrences DESC LIMIT :limit OFFSET :offset
+    """)
+    suspend fun searchTranslationAndFilterByTypePaginated(query: String, type: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+
+    @Query("""
+        SELECT COUNT(DISTINCT eaf.parent_identifier_value) FROM entry_arabic_forms eaf
+        JOIN arabic_form_translations aft ON eaf.arabic_form_id = aft.arabic_form_id
+        JOIN analysis_entries ae ON eaf.parent_identifier_value = ae.identifier_value
+        WHERE aft.translation LIKE '%' || :query || '%' AND ae.identifier_type = :type
+    """)
+    suspend fun countTranslationAndFilterByType(query: String, type: String): Int
 
     @Query("SELECT * FROM analysis_entries WHERE identifier_value = :identifierValue")
     suspend fun getAnalysisEntry(identifierValue: String): AnalysisEntryEntity?
@@ -43,25 +110,19 @@ interface WordAnalysisDao {
     @Query("SELECT * FROM analysis_entries ORDER BY total_occurrences DESC LIMIT :limit")
     suspend fun getMostFrequentEntries(limit: Int): List<AnalysisEntryEntity>
 
-    @Query("""
-        SELECT DISTINCT ae.* FROM analysis_entries ae
-        JOIN entry_arabic_forms eaf ON ae.identifier_value = eaf.parent_identifier_value
-        WHERE eaf.arabic_text = :exactArabicText
-        ORDER BY ae.total_occurrences DESC
-        LIMIT :limit OFFSET :offset
-    """)
-    suspend fun findAnalysisEntriesByExactArabicFormPaginated(exactArabicText: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+    // --- Scope: IDENTIFIER ---
+    @Query("SELECT * FROM analysis_entries WHERE identifier_value LIKE :query || '%' ORDER BY total_occurrences DESC LIMIT :limit OFFSET :offset")
+    suspend fun searchIdentifierPaginated(query: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
 
-    // NEW: Paginated search by translation
-    @Query("""
-        SELECT DISTINCT ae.* FROM analysis_entries ae
-        JOIN entry_arabic_forms eaf ON ae.identifier_value = eaf.parent_identifier_value
-        JOIN arabic_form_translations aft ON eaf.arabic_form_id = aft.arabic_form_id
-        WHERE aft.translation LIKE '%' || :translationQuery || '%'
-        ORDER BY ae.total_occurrences DESC
-        LIMIT :limit OFFSET :offset
-    """)
-    suspend fun findAnalysisEntriesByTranslationPaginated(translationQuery: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+    @Query("SELECT COUNT(*) FROM analysis_entries WHERE identifier_value LIKE :query || '%'")
+    suspend fun countIdentifier(query: String): Int
+
+    // This one is also needed for the filter buttons on the results screen
+    @Query("SELECT * FROM analysis_entries WHERE identifier_value LIKE :query || '%' AND identifier_type = :type ORDER BY total_occurrences DESC LIMIT :limit OFFSET :offset")
+    suspend fun searchIdentifierAndFilterByTypePaginated(query: String, type: String, limit: Int, offset: Int): List<AnalysisEntryEntity>
+
+    @Query("SELECT COUNT(*) FROM analysis_entries WHERE identifier_value LIKE :query || '%' AND identifier_type = :type")
+    suspend fun countIdentifierAndFilterByType(query: String, type: String): Int
 
     @Query("""
         SELECT COUNT(*) FROM analysis_entries WHERE identifier_value IN (
@@ -178,8 +239,6 @@ interface WordAnalysisDao {
     @Query("SELECT mapped_identifier_value, mapped_identifier_type FROM all_word_occurrences WHERE arabic_text = :arabicText LIMIT 1")
     suspend fun getIdentityForArabicText(arabicText: String): WordIdentity?
 
-
-    // --- Transaction for Full AnalysisEntry Details ---
     @Transaction
     suspend fun getAnalysisEntryFullDetails(identifierValue: String): AnalysisEntryFullDetails? {
         val entry = getAnalysisEntry(identifierValue) ?: return null

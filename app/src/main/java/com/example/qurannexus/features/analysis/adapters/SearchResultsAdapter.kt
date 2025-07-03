@@ -35,9 +35,7 @@ class SearchResultsAdapter(
             arabicTextView.text = result.displayArabicText
             translationTextView.text = result.displayTranslation
 
-            // 1. CHANGE THIS: Display "OTHERS" to the user when the data is "FORM"
-            val displayType = if (result.identifierType == "FORM") "OTHERS" else result.identifierType.uppercase()
-            identifierTypeTextView.text = displayType
+            identifierTypeTextView.text = result.identifierType.uppercase()
 
             identifierValueTextView.text = result.identifierValue
             occurrencesTextView.text = "Occurred ${result.totalOccurrences} times"
@@ -46,7 +44,7 @@ class SearchResultsAdapter(
             val chipBackgroundColor = when (result.identifierType) {
                 "ROOT" -> ContextCompat.getColor(itemView.context, R.color.appPrimaryVariant)
                 "LEMMA" -> ContextCompat.getColor(itemView.context, R.color.accent_dark_teal_cyan)
-                "FORM" -> ContextCompat.getColor(itemView.context, R.color.coolSlateBlue)
+                "OTHERS" -> ContextCompat.getColor(itemView.context, R.color.coolSlateBlue)
                 else -> ContextCompat.getColor(itemView.context, R.color.textTertiary) // A fallback gray
             }
 
@@ -62,7 +60,7 @@ class SearchResultsAdapter(
             val cardBackgroundColor = when (result.identifierType) {
                 "ROOT" -> ContextCompat.getColor(itemView.context, R.color.backgroundCardSubtle)
                 "LEMMA" -> ContextCompat.getColor(itemView.context, R.color.appSecondary)
-                "FORM" -> ContextCompat.getColor(itemView.context, R.color.accentSoftLavender)
+                "OTHERS" -> ContextCompat.getColor(itemView.context, R.color.accentSoftLavender)
                 else -> ContextCompat.getColor(itemView.context, R.color.backgroundCard) // Default is white
             }
             (itemView as MaterialCardView).setCardBackgroundColor(cardBackgroundColor)
@@ -70,7 +68,7 @@ class SearchResultsAdapter(
             // Handle uniqueFormsCountTextView visibility (assuming you've added the field to DisplayableFrequentRoot)
             if (result.uniqueFormCount != null && result.uniqueFormCount > 0) {
                 val uniqueFormsText = when (result.identifierType) {
-                    "ROOT", "LEMMA", "FORM" -> if (result.uniqueFormCount > 1) "Has ${result.uniqueFormCount} distinct Arabic forms" else "Has 1 distinct Arabic form"
+                    "ROOT", "LEMMA", "OTHERS" -> if (result.uniqueFormCount > 1) "Has ${result.uniqueFormCount} distinct Arabic forms" else "Has 1 distinct Arabic form"
                     else -> ""
                 }
                 if (uniqueFormsText.isNotEmpty()) {

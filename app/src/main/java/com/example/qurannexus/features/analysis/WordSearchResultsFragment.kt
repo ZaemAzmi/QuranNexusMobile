@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,11 +17,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
 // Remove QuranApi import if not directly used
 import com.example.qurannexus.features.analysis.adapters.SearchResultsAdapter // Keep this
+import com.example.qurannexus.features.analysis.enums.FilterType
 import com.example.qurannexus.features.analysis.enums.SearchType
-import com.example.qurannexus.features.analysis.viewmodels.DisplayableFrequentRoot // Import this
+import com.example.qurannexus.features.analysis.viewmodels.DisplayableFrequentRoot
 import com.example.qurannexus.features.analysis.viewmodels.WordAnalysisViewModel
 import com.example.qurannexus.features.words.WordDetailsActivity
-import com.example.qurannexus.features.words.services.WordSearchService
 import com.google.android.material.button.MaterialButtonToggleGroup
 // Remove WordOccurrenceResponse if API call is removed
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,8 +41,8 @@ class WordSearchResultsFragment : Fragment() {
     private lateinit var totalResultsTextView: TextView
     private lateinit var filterToggleGroup: MaterialButtonToggleGroup
     private var searchQuery: String = ""
-    private var searchTypeEnum: SearchType = SearchType.ALL
-
+    private var searchTypeEnum: SearchType = SearchType.GENERAL
+    private var isFilterListenerReady = false
     companion object {
         private const val ARG_SEARCH_QUERY = "search_query"
         private const val ARG_SEARCH_TYPE_STRING = "search_type_string"
@@ -62,13 +62,13 @@ class WordSearchResultsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             searchQuery = it.getString(ARG_SEARCH_QUERY, "")
-            val searchTypeString = it.getString(ARG_SEARCH_TYPE_STRING, SearchType.ALL.name)
+            val searchTypeString = it.getString(ARG_SEARCH_TYPE_STRING, SearchType.GENERAL.name)
 
             searchTypeEnum = try {
                 SearchType.valueOf(searchTypeString)
             } catch (e: IllegalArgumentException) {
                 Log.e(TAG, "Invalid searchTypeString: '$searchTypeString', defaulting to ALL.", e)
-                SearchType.ALL
+                SearchType.GENERAL
             }
         }
         Log.d(TAG, "onCreate: searchQuery = $searchQuery")
@@ -85,20 +85,9 @@ class WordSearchResultsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         setupRecyclerView()
-        observeViewModel()
         setupFilterListeners()
-        if (searchQuery.isNotEmpty()) {
-            // Update title to include the search type for clarity
-            val typeDisplay = searchTypeEnum.name.replace("_", " ").lowercase()
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-            titleTextView.text = "Search: \"$searchQuery\" (Type: $typeDisplay)"
-            // Pass the enum to the ViewModel
-            viewModel.performSearch(searchQuery, searchTypeEnum)
-        } else {
-            Log.w(TAG, "Search query is empty.")
-            showNoResults("No search query provided.")
-        }
-
+        observeViewModel()
+        setupSearchQuery()
     }
 
     private fun initViews(view: View) {
@@ -110,12 +99,24 @@ class WordSearchResultsFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
         totalResultsTextView = view.findViewById(R.id.totalResultsTextView)
         filterToggleGroup = view.findViewById(R.id.filterToggleGroup)
+
         backButton.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
 
-    // --- THIS IS THE CORRECTED FUNCTION ---
+    private fun setupSearchQuery(){
+        if (searchQuery.isNotEmpty()) {
+            // ... update title text ...
+            filterToggleGroup.visibility = View.VISIBLE
+            // Call the new, clear method in the ViewModel
+            viewModel.startSearch(searchQuery, searchTypeEnum)
+        } else {
+            Log.w(TAG, "Search query is empty.")
+            showNoResults("No search query provided.")
+        }
+    }
+
     private fun setupRecyclerView() {
         searchResultsAdapter = SearchResultsAdapter { displayableRoot ->
             val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
@@ -125,117 +126,107 @@ class WordSearchResultsFragment : Fragment() {
             startActivity(intent)
         }
 
-        val linearLayoutManager = LinearLayoutManager(requireContext()) // Must store manager in a variable
+        val linearLayoutManager = LinearLayoutManager(requireContext())
         resultsRecyclerView.layoutManager = linearLayoutManager
         resultsRecyclerView.adapter = searchResultsAdapter
 
-        // *** CRITICAL FIX: ADD THE SCROLL LISTENER ***
+        // The OnScrollListener is updated to use the new UIState
         resultsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                // This logic triggers the loading of the next page
-                val visibleItemCount = linearLayoutManager.childCount
-                val totalItemCount = linearLayoutManager.itemCount
-                val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
+                // Get the current state from the ViewModel
+                val currentState = viewModel.uiState.value
 
-                // Check if we're near the end, not currently loading, and the search type is one that supports pagination
-                val isLoading = viewModel.isLoading.value ?: false
-                if (!isLoading &&
-                    (visibleItemCount + firstVisibleItemPosition) >= totalItemCount &&
-                    firstVisibleItemPosition >= 0) {
-                    viewModel.loadMoreResults()
+                // We only proceed if the current state is HasResults and we are NOT already loading more.
+                if (currentState is WordAnalysisUiState.HasResults && !currentState.isLoadingMore) {
+                    val visibleItemCount = linearLayoutManager.childCount
+                    val totalItemCount = linearLayoutManager.itemCount
+                    val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
+
+                    // The classic pagination check: are we near the end of the list?
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
+                        viewModel.loadMoreResults()
+                    }
                 }
             }
         })
     }
     private fun setupFilterListeners() {
-        // Set the initial checked button based on the search type passed to the fragment
-        when(searchTypeEnum) {
-            SearchType.ALL -> filterToggleGroup.check(R.id.filterButtonAll)
-            SearchType.ROOT_LABEL -> filterToggleGroup.check(R.id.filterButtonRoot)
-            SearchType.ARABIC_FORM -> {
-                // Arabic form is not a type filter, it's a content filter.
-                // We should disable the toggle group for this search type.
-                filterToggleGroup.visibility = View.GONE
-            }
-            SearchType.TRANSLATION -> filterToggleGroup.check(R.id.filterButtonAll) // Default to all
-            SearchType.LEMMA -> filterToggleGroup.check(R.id.filterButtonLemma)
-            SearchType.FORM -> filterToggleGroup.check(R.id.filterButtonOthers)
-        }
-
-        filterToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
-            if (isChecked) {
-                // Determine the new search type based on the button clicked
-                val newFilterType = when (checkedId) {
-                    R.id.filterButtonRoot -> SearchType.ROOT_LABEL
-                    R.id.filterButtonLemma -> SearchType.LEMMA // Assuming you add this to SearchType enum
-                    R.id.filterButtonOthers -> SearchType.FORM // Assuming you add this to SearchType enum
-                    else -> SearchType.ALL
+        filterToggleGroup.check(R.id.filterButtonAll)
+        filterToggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked && isFilterListenerReady) {
+                val newFilter = when (checkedId) {
+                    R.id.filterButtonRoot -> FilterType.ROOT
+                    R.id.filterButtonLemma -> FilterType.LEMMA
+                    R.id.filterButtonOthers -> FilterType.OTHERS
+                    else -> FilterType.ALL
                 }
-
-                // Tell the ViewModel to apply the new filter
-                // Note: You need to add LEMMA and FORM to your SearchType enum
-                viewModel.applyFilter(newFilterType)
+                viewModel.applyFilter(newFilter)
             }
         }
+        isFilterListenerReady = true
     }
     private fun observeViewModel() {
-        // Observer 1: Manages the main progress bar's visibility.
-        // It only shows the bar for the very first load.
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            // If we are loading AND the list is currently empty, show the main spinner.
-            if (isLoading && searchResultsAdapter.itemCount == 0) {
-                progressBar.visibility = View.VISIBLE
-                resultsRecyclerView.visibility = View.GONE
-                noResultsLayout.visibility = View.GONE
-            } else if (!isLoading) {
-                // Once loading is finished for a page, the main spinner's job is done.
-                // The searchResults observer will handle showing/hiding content.
-                progressBar.visibility = View.GONE
-            }
-        }
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            // Hide all components by default, then show the correct one.
+            progressBar.visibility = View.GONE
+            resultsRecyclerView.visibility = View.GONE
+            noResultsLayout.visibility = View.GONE
+            totalResultsTextView.visibility = View.GONE
 
-        viewModel.totalResultsCount.observe(viewLifecycleOwner) { count ->
-            if (count != null && count > 0) {
-                totalResultsTextView.text = "$count results found"
-                totalResultsTextView.visibility = View.VISIBLE
-            } else {
-                totalResultsTextView.visibility = View.GONE
-            }
-        }
-        viewModel.searchResults.observe(viewLifecycleOwner) { results ->
-            Log.d(TAG, "Search results updated: ${results.size} items")
+            when (state) {
+                is WordAnalysisUiState.Idle -> {
+                    // Do nothing, wait for search to start
+                }
+                is WordAnalysisUiState.LoadingInitial -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                is WordAnalysisUiState.HasResults -> {
+                    resultsRecyclerView.visibility = View.VISIBLE
+                    totalResultsTextView.visibility = View.VISIBLE
+                    totalResultsTextView.text = "${state.totalCount} results found"
+                    searchResultsAdapter.submitList(state.results)
 
-            searchResultsAdapter.submitList(results)
-
-            // Get the final count. This is our source of truth.
-            val finalCount = viewModel.totalResultsCount.value
-            // The search is officially "over" and has "no results" ONLY when
-            // the count has been calculated and is zero.
-            if (finalCount != null && finalCount == 0) {
-                showNoResults("No results found for \"$searchQuery\".")
-            } else {
-                // Otherwise, show the list. It's either populated or will be populated.
-                resultsRecyclerView.visibility = View.VISIBLE
-                noResultsLayout.visibility = View.GONE
-            }
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { error ->
-            error?.let {
-                progressBar.visibility = View.GONE
-                // The error observer should also trigger the "no results" view, but with an error message.
-                showNoResults(it)
-                Log.e(TAG, "Search error LiveData: $it")
+                    // You would also update your adapter here to show/hide a loading footer
+                    // searchResultsAdapter.setLoadingFooter(state.isLoadingMore)
+                }
+                is WordAnalysisUiState.NoResults -> {
+                    noResultsLayout.visibility = View.VISIBLE
+                    noResultsTextView.text = state.message
+                }
+                is WordAnalysisUiState.Error -> {
+                    noResultsLayout.visibility = View.VISIBLE
+                    noResultsTextView.text = state.message
+                }
             }
         }
     }
 
+    // This method is now only called by the observer.
     private fun showNoResults(message: String) {
         noResultsTextView.text = message
-        noResultsLayout.visibility = View.VISIBLE // Show the whole layout
+        noResultsLayout.visibility = View.VISIBLE
         resultsRecyclerView.visibility = View.GONE
     }
 
+    sealed class WordAnalysisUiState{
+        data object Idle : WordAnalysisUiState()
+
+        // State when the very first page is being loaded
+        object LoadingInitial : WordAnalysisUiState()
+
+        // State when we have results to show
+        data class HasResults(
+            val results: List<DisplayableFrequentRoot>,
+            val totalCount: Int,
+            val isLoadingMore: Boolean // To show a loading footer in the RecyclerView
+        ) : WordAnalysisUiState()
+
+        // State when a search/filter completes with no results
+        data class NoResults(val message: String) : WordAnalysisUiState()
+
+        // State when an error occurs
+        data class Error(val message: String) : WordAnalysisUiState()
+    }
 }

@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.qurannexus.core.database.entities.AnalysisEntryEntity
+import com.example.qurannexus.features.analysis.WordSearchResultsFragment
 import com.example.qurannexus.features.analysis.data.WordAnalysisDao
+import com.example.qurannexus.features.analysis.enums.FilterType
 import com.example.qurannexus.features.analysis.enums.SearchType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +17,7 @@ import javax.inject.Inject
 // Data class for displaying frequent roots in the UI
 data class DisplayableFrequentRoot( // Or DisplayableAnalysisEntry
     val identifierValue: String,         // Was rootLabel, now holds the root/lemma/form string
-    val identifierType: String,        // NEW: "ROOT", "LEMMA", "FORM"
+    val identifierType: String,        // NEW: "ROOT", "LEMMA", "OTHERS"
     val displayArabicText: String,     // e.g., "ٱللَّه" - the most common form or first occurrence text
     val displayTranslation: String,    // e.g., "Allah" - translation of the displayArabicText
     val totalOccurrences: Int,
@@ -42,16 +44,22 @@ class WordAnalysisViewModel @Inject constructor(
 
     private val _totalResultsCount = MutableLiveData<Int?>()
     val totalResultsCount: LiveData<Int?> = _totalResultsCount
-    companion object {
-        private const val TAG = "WordAnalysisVM"
-    }
+
+    // --- The Single Source of Truth for the UI ---
+    private val _uiState = MutableLiveData<WordSearchResultsFragment.WordAnalysisUiState>(
+        WordSearchResultsFragment.WordAnalysisUiState.Idle)
+    val uiState: LiveData<WordSearchResultsFragment.WordAnalysisUiState> = _uiState
+    private var currentResultsList = mutableListOf<DisplayableFrequentRoot>()
+
     // --- PAGINATION STATE VARIABLES ---
     private var currentPage = 0
     private var isLastPage = false
-    private var isLoadingMore = false
     private var currentQuery: String = ""
-    private var currentSearchType: SearchType = SearchType.ALL
-
+    private var initialSearchScope: SearchType = SearchType.GENERAL
+    private var currentFilter: FilterType = FilterType.ALL
+    companion object {
+        private const val TAG = "WordAnalysisVM"
+    }
     fun fetchFrequentEntries(limit: Int = 10) { // Renamed method
         _isLoading.value = true
         viewModelScope.launch {
@@ -70,84 +78,125 @@ class WordAnalysisViewModel @Inject constructor(
             }
         }
     }
-
-    fun performSearch(query: String, searchType: SearchType) {
-        _isLoading.value = true
-        _totalResultsCount.value = null // Reset count for new search
-
-        // Reset pagination state
+    fun startSearch(query: String, searchScope: SearchType) {
+        _uiState.value = WordSearchResultsFragment.WordAnalysisUiState.LoadingInitial
         currentPage = 0
         isLastPage = false
+        currentResultsList.clear()
+
         currentQuery = query
-        currentSearchType = searchType
-        _searchResults.value = emptyList() // Clear old results
+        initialSearchScope = searchScope
+        currentFilter = FilterType.ALL // Always start with "All" filter selected
 
-        // Fetch total count and first page of results concurrently
-        viewModelScope.launch {
-            launch { // This is the count-fetching coroutine
-                try {
-                    val count = when (searchType) {
-                        // Use the new, more accurate count method for type filters
-                        SearchType.ROOT_LABEL -> wordAnalysisDao.countAllAndFilterByType(query, "ROOT")
-                        SearchType.LEMMA -> wordAnalysisDao.countAllAndFilterByType(query, "LEMMA")
-                        SearchType.FORM -> wordAnalysisDao.countAllAndFilterByType(query, "FORM")
-                        SearchType.ALL -> wordAnalysisDao.countAll(query)
-                        SearchType.ARABIC_FORM -> wordAnalysisDao.countByExactArabicForm(query)
-                        SearchType.TRANSLATION -> wordAnalysisDao.countByTranslation(query)
-                    }
-                    _totalResultsCount.postValue(count)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to get count for query '$query'", e)
-                    _totalResultsCount.postValue(0) // Show 0 on error
-                }
-            }
-
-            // --- Feature C (and pagination): Fetch first page ---
-            loadMoreResults()
-        }
+        fetchData()
     }
-    fun applyFilter(newSearchType: SearchType) {
-        // If the filter is the same, do nothing.
-        if (newSearchType == currentSearchType) return
+    fun applyFilter(newFilter: FilterType) {
+        if (newFilter == currentFilter) return
 
-        Log.d(TAG, "Applying new filter: ${newSearchType.name}")
-        // Re-run the entire search with the original query but the new filter type.
-        performSearch(currentQuery, newSearchType)
+        _uiState.value = WordSearchResultsFragment.WordAnalysisUiState.LoadingInitial
+        currentPage = 0
+        isLastPage = false
+        currentResultsList.clear()
+
+        currentFilter = newFilter
+        fetchData()
     }
+
     fun loadMoreResults() {
-        if (isLoadingMore || isLastPage) return
+        // Get the current state
+        val currentState = _uiState.value
+        // Guard against multiple calls if we are already loading or on the last page.
+        if (isLastPage || (currentState is WordSearchResultsFragment.WordAnalysisUiState.HasResults && currentState.isLoadingMore)) {
+            return
+        }
 
+        if (currentState is WordSearchResultsFragment.WordAnalysisUiState.HasResults) {
+            // Correctly update the state to show we are now loading more.
+            _uiState.value = currentState.copy(isLoadingMore = true)
+        }
+
+        // Proceed to fetch the data
+        fetchData()
+    }
+    private fun fetchData() {
         viewModelScope.launch {
-            isLoadingMore = true
             try {
                 val offset = currentPage * WordAnalysisDao.SEARCH_PAGE_SIZE
-                val newEntities = when (currentSearchType) {
-                    SearchType.ALL -> wordAnalysisDao.searchAllPaginated(currentQuery, WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
-                    SearchType.ROOT_LABEL -> wordAnalysisDao.searchAllAndFilterByTypePaginated(currentQuery, "ROOT", WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
-                    SearchType.LEMMA -> wordAnalysisDao.searchAllAndFilterByTypePaginated(currentQuery, "LEMMA", WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
-                    SearchType.FORM -> wordAnalysisDao.searchAllAndFilterByTypePaginated(currentQuery, "FORM", WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
-                    SearchType.ARABIC_FORM -> wordAnalysisDao.findAnalysisEntriesByExactArabicFormPaginated(currentQuery, WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
-                    SearchType.TRANSLATION -> wordAnalysisDao.findAnalysisEntriesByTranslationPaginated(currentQuery, WordAnalysisDao.SEARCH_PAGE_SIZE, offset)
+                val limit = WordAnalysisDao.SEARCH_PAGE_SIZE
+                val count: Int = if (currentPage == 0) {
+                    // --- COUNT LOGIC ---
+                    if (currentFilter == FilterType.ALL) {
+                        when (initialSearchScope) {
+                            SearchType.GENERAL -> wordAnalysisDao.countGeneral(currentQuery)
+                            SearchType.ARABIC_FORM -> wordAnalysisDao.countArabicForm(currentQuery)
+                            SearchType.TRANSLATION -> wordAnalysisDao.countTranslation(currentQuery)
+                            SearchType.IDENTIFIER -> wordAnalysisDao.countIdentifier(currentQuery)
+                        }
+                    } else {
+                        val typeString = when(currentFilter) {
+                            FilterType.ROOT -> "ROOT"
+                            FilterType.LEMMA -> "LEMMA"
+                            FilterType.OTHERS -> "OTHERS"
+                            else -> ""
+                        }
+                        when (initialSearchScope) {
+                            SearchType.GENERAL -> wordAnalysisDao.countGeneralAndFilterByType(currentQuery, typeString)
+                            SearchType.ARABIC_FORM -> wordAnalysisDao.countArabicFormAndFilterByType(currentQuery, typeString)
+                            SearchType.TRANSLATION -> wordAnalysisDao.countTranslationAndFilterByType(currentQuery, typeString)
+                            SearchType.IDENTIFIER -> wordAnalysisDao.countIdentifierAndFilterByType(currentQuery, typeString)
+                        }
+                    }
+                } else {
+                    (_uiState.value as? WordSearchResultsFragment.WordAnalysisUiState.HasResults)?.totalCount ?: 0
                 }
 
-                if (newEntities.isEmpty() || newEntities.size < WordAnalysisDao.SEARCH_PAGE_SIZE) {
+                if (currentPage == 0 && count == 0) {
+                    _uiState.postValue(WordSearchResultsFragment.WordAnalysisUiState.NoResults("No results found for \"$currentQuery\"."))
+                    return@launch
+                }
+
+                val newEntities: List<AnalysisEntryEntity> = if (currentFilter == FilterType.ALL) {
+                    // --- PAGINATED FETCH LOGIC (ALL Filter) ---
+                    when (initialSearchScope) {
+                        SearchType.GENERAL -> wordAnalysisDao.searchGeneralPaginated(currentQuery, limit, offset)
+                        SearchType.ARABIC_FORM -> wordAnalysisDao.searchArabicFormPaginated(currentQuery, limit, offset)
+                        SearchType.TRANSLATION -> wordAnalysisDao.searchTranslationPaginated(currentQuery, limit, offset)
+                        SearchType.IDENTIFIER -> wordAnalysisDao.searchIdentifierPaginated(currentQuery, limit, offset)
+                    }
+                } else {
+                    // --- PAGINATED FETCH LOGIC (Specific Filter) ---
+                    val typeString = when(currentFilter) {
+                        FilterType.ROOT -> "ROOT"
+                        FilterType.LEMMA -> "LEMMA"
+                        FilterType.OTHERS -> "OTHERS"
+                        else -> ""
+                    }
+                    when (initialSearchScope) {
+                        SearchType.GENERAL -> wordAnalysisDao.searchGeneralAndFilterByTypePaginated(currentQuery, typeString, limit, offset)
+                        SearchType.ARABIC_FORM -> wordAnalysisDao.searchArabicFormAndFilterByTypePaginated(currentQuery, typeString, limit, offset)
+                        SearchType.TRANSLATION -> wordAnalysisDao.searchTranslationAndFilterByTypePaginated(currentQuery, typeString, limit, offset)
+                        SearchType.IDENTIFIER -> wordAnalysisDao.searchIdentifierAndFilterByTypePaginated(currentQuery, typeString, limit, offset)
+                    }
+                }
+                if (newEntities.size < WordAnalysisDao.SEARCH_PAGE_SIZE) {
                     isLastPage = true
                 }
-
-                val newDisplayableResults = mapAnalysisEntitiesToDisplayable(newEntities)
-                val currentList = _searchResults.value ?: emptyList()
-                _searchResults.postValue(currentList + newDisplayableResults)
+                currentResultsList.addAll(mapAnalysisEntitiesToDisplayable(newEntities))
+                _uiState.postValue(
+                    WordSearchResultsFragment.WordAnalysisUiState.HasResults(
+                    results = ArrayList(currentResultsList),
+                    totalCount = count,
+                    isLoadingMore = false
+                ))
                 currentPage++
 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to load more results", e)
-                _error.postValue("Failed to load more results: ${e.message}")
-            } finally {
-                isLoadingMore = false
-                _isLoading.postValue(false)
+                Log.e("ViewModel", "Error fetching data", e)
+                _uiState.postValue(WordSearchResultsFragment.WordAnalysisUiState.Error("An error occurred."))
             }
         }
     }
+
     // Helper function to map AnalysisEntryEntity list to DisplayableFrequentRoot list
     private suspend fun mapAnalysisEntitiesToDisplayable(entries: List<AnalysisEntryEntity>): List<DisplayableFrequentRoot> {
         return entries.mapNotNull { entry ->
@@ -167,7 +216,7 @@ class WordAnalysisViewModel @Inject constructor(
                     displayTranslation = displayTrans ?: "N/A",
                     totalOccurrences = entry.totalOccurrences ?: 0,
                     // Only assign uniqueFormCount if it's meaningful (not for FORM type typically, and > 0)
-                    uniqueFormCount = if (entry.identifierType != "FORM" && uniqueFormsFromEntity != null && uniqueFormsFromEntity > 0) uniqueFormsFromEntity else null
+                    uniqueFormCount = if (entry.identifierType != "OTHERS" && uniqueFormsFromEntity != null && uniqueFormsFromEntity > 0) uniqueFormsFromEntity else null
                 )
             } else {
                 // Fallback: If firstOccurrenceArabicText is null, try to get the first (or most common) Arabic form
@@ -181,7 +230,7 @@ class WordAnalysisViewModel @Inject constructor(
                         displayArabicText = firstForm.arabicText!!,
                         displayTranslation = firstFormTranslations.firstOrNull()?.translation ?: "N/A",
                         totalOccurrences = entry.totalOccurrences ?: 0,
-                        uniqueFormCount = if (entry.identifierType != "FORM" && uniqueFormsFromEntity != null && uniqueFormsFromEntity > 0) uniqueFormsFromEntity else null
+                        uniqueFormCount = if (entry.identifierType != "OTHERS" && uniqueFormsFromEntity != null && uniqueFormsFromEntity > 0) uniqueFormsFromEntity else null
                     )
                 } else {
                     // Last resort: use the identifier value itself if it's an Arabic script (common for FORMs)
@@ -203,7 +252,4 @@ class WordAnalysisViewModel @Inject constructor(
         }
     }
 
-    fun clearSearchResults() {
-        _searchResults.value = emptyList()
-    }
 }

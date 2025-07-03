@@ -123,7 +123,10 @@
             android:id="@+id/skipTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" android:layout_marginEnd="16dp" android:padding="8dp" android:text="Skip"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="@dimen/padding_medium"
+            android:text="Skip"
             android:textSize="@dimen/text_size_skip" android:textStyle="bold"
             android:textColor="@color/white" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

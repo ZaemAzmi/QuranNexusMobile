@@ -315,7 +315,7 @@ class WordDetailsActivity : AppCompatActivity() {
             morphFormsLabel.text = when(identifierType) {
                 "ROOT" -> "Associated Morphological Forms (Root Level)"
                 "LEMMA" -> "Observed Morphological Variations (Lemma)"
-                "FORM" -> "Morphological Form Details"
+                "OTHERS" -> "Others/Special Groups Words"
                 else -> "Associated Forms"
             }
 
@@ -375,7 +375,7 @@ class WordDetailsActivity : AppCompatActivity() {
         val typeLabel = when (analysisEntry?.identifierType) {
             "ROOT" -> "(ROOT)"
             "LEMMA" -> "(LEMMA)"
-            "FORM" -> "(OTHERS)"
+            "OTHERS" -> "(OTHERS)"
             else -> "Word" // Default label
         }
         // Update the main title of the page

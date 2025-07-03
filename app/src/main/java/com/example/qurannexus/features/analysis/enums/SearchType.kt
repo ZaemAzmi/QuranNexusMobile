@@ -1,11 +1,15 @@
 package com.example.qurannexus.features.analysis.enums
 
-// In enums/SearchType.kt
 enum class SearchType {
-    ALL,
-    ROOT_LABEL,
+    GENERAL,
     ARABIC_FORM,
     TRANSLATION,
+    IDENTIFIER
+}
+
+enum class FilterType {
+    ALL,
+    ROOT,
     LEMMA,
-    FORM
+    OTHERS
 }

@@ -58,66 +58,67 @@
             tools:text="256 results found"
             tools:visibility="visible" />
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/filterToggleGroup"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="8dp"
-            app:selectionRequired="true"
-            app:singleSelection="true">
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_toggle_group_gradient"
+            android:elevation="2dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/filterButtonAll"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
+            <!-- The ToggleGroup now only manages the checking logic. It no longer controls the shape. -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/filterToggleGroup"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="All"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_all_inclusive"
-                app:iconSize="16dp"
-                app:iconGravity="textStart"/>
+                app:selectionRequired="true"
+                app:singleSelection="true">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/filterButtonRoot"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Roots"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_root_placeholder"
-                app:iconSize="16dp"
-                app:iconGravity="textStart"/>
+                <!-- Button 1: LEFT -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/filterButtonAll"
+                    style="@style/Widget.App.FilterToggleButton"
+                    android:text="All"
+                    android:textColor="@color/filter_button_text_color"
+                    app:backgroundTint="@color/filter_button_all_tint"
+                    app:iconTint="@color/filter_button_text_color"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Button.LeftCurved" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/filterButtonLemma"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Lemmas"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_lemma_placeholder"
-                app:iconSize="16dp"
-                app:iconGravity="textStart"/>
+                <!-- Button 2: MIDDLE -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/filterButtonRoot"
+                    style="@style/Widget.App.FilterToggleButton"
+                    android:text="Roots"
+                    android:textColor="@color/filter_button_text_color_light_bg"
+                    app:backgroundTint="@color/filter_button_root_tint"
+                    app:iconTint="@color/filter_button_text_color_light_bg"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Button.Middle" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/filterButtonOthers"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Others"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_bulb"
-                app:iconSize="16dp"
-                app:iconGravity="textStart"/>
+                <!-- Button 3: MIDDLE -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/filterButtonLemma"
+                    style="@style/Widget.App.FilterToggleButton"
+                    android:text="Lemmas"
+                    android:textColor="@color/filter_button_text_color_light_bg"
+                    app:backgroundTint="@color/filter_button_lemma_tint"
+                    app:iconTint="@color/filter_button_text_color_light_bg"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Button.Middle" />
 
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+                <!-- Button 4: RIGHT -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/filterButtonOthers"
+                    style="@style/Widget.App.FilterToggleButton"
+                    android:text="Others"
+                    android:textColor="@color/filter_button_text_color_light_bg"
+                    app:backgroundTint="@color/filter_button_others_tint"
+                    app:iconTint="@color/filter_button_text_color_light_bg"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Button.RightCurved" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        </FrameLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout

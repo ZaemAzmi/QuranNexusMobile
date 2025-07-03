@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Use the same corner radius as your style -->
+    <corners android:radius="28dp" />
+
+    <!-- A gradient similar to your image. Adjust colors as needed. -->
+    <gradient
+        android:angle="0"
+        android:endColor="#9FD5FF"
+        android:startColor="#BDB8FF"
+        android:type="linear" />
+</shape>

@@ -75,13 +75,53 @@
                     android:background="@color/backgroundCardSubtle"
                     android:padding="@dimen/padding_large">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Search Words"
-                        android:textColor="@color/textPrimary"
-                        android:textSize="@dimen/text_size_large"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Search Words"
+                            android:textColor="@color/textPrimary"
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold" />
+                        <!-- === NEW: Emphasized Help Button === -->
+                        <LinearLayout
+                            android:id="@+id/searchHelpButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="@drawable/bg_help_button"
+                            app:tint="@color/appPrimary"> <!-- This will tint both icon and text -->
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_info" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="How to Search"
+                                android:layout_marginStart="6dp"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -90,6 +130,40 @@
                         android:text="Find specific words or roots to see their analysis."
                         android:textColor="@color/gray"
                         android:textSize="@dimen/text_size_small" />
+
+                    <!-- === NEW: Collapsible Explanation Layout === -->
+                    <LinearLayout
+                        android:id="@+id/searchHelpLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:padding="12dp"
+                        android:background="@drawable/bg_explanation_box"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <!-- Explanation for General Search -->
+                        <TextView style="@style/SearchHelpChipTitle" android:text="• General" />
+                        <TextView style="@style/SearchHelpChipExplanation" android:text="The broadest search. Looks for your query in translations, Arabic text, and identifiers." />
+                        <TextView style="@style/SearchHelpChipExample" android:text="Examples: peace, سلام, s-l-m" />
+
+                        <!-- Explanation for Arabic Form -->
+                        <TextView style="@style/SearchHelpChipTitle" android:text="• Arabic Form" />
+                        <TextView style="@style/SearchHelpChipExplanation" android:text="Finds exact or partial matches for words as they appear in the Quranic text." />
+                        <TextView style="@style/SearchHelpChipExample" android:text="Examples: ٱلرَّحْمَٰنِ, رب" />
+
+                        <!-- Explanation for Translation -->
+                        <TextView style="@style/SearchHelpChipTitle" android:text="• Translation" />
+                        <TextView style="@style/SearchHelpChipExplanation" android:text="Searches the English translations of all words." />
+                        <TextView style="@style/SearchHelpChipExample" android:text="Examples: mercy, lord, guidance" />
+
+                        <!-- Explanation for Identifier -->
+                        <TextView style="@style/SearchHelpChipTitle" android:text="• Identifier" />
+                        <TextView style="@style/SearchHelpChipExplanation" android:text="An advanced search for academic transliterated roots or lemmas." />
+                        <TextView style="@style/SearchHelpChipExample" android:text="Examples: r-H-m (root), kitAb (lemma)" />
+
+                    </LinearLayout>
 
                         <EditText
                             android:id="@+id/searchEditText"
@@ -126,7 +200,7 @@
                             style="@style/Widget.MaterialComponents.Chip.Filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="All"
+                            android:text="General"
                             android:layout_weight="1"
                             android:checked="true"/>
 
@@ -143,6 +217,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Translation"
+                            />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFilterIdentifier"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Identifier"
                             />
                     </com.google.android.material.chip.ChipGroup>
                     <com.google.android.material.button.MaterialButton
@@ -176,7 +257,66 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/wordDefinitionInfoCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/dividerColor"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_show_hint"
+                        app:tint="@color/textSecondary" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="What is a Word 'Entry'?"
+                            android:textColor="@color/textPrimary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Learn how words are grouped and defined in this app."
+                            android:textColor="@color/textSecondary"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_upright_arrow"
+                        app:tint="@color/textTertiary" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/frequentWordsRecyclerView"
                 android:layout_width="match_parent"
@@ -186,37 +326,7 @@
                 android:paddingBottom="@dimen/padding_small"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginBottom="@dimen/margin_small">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Understanding Word Categories"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:textStyle="bold" />
-
-                <!-- NEW: Info Icon for Tokenization Explanation -->
-                <ImageView
-                    android:id="@+id/wordDefinitionInfoIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_show_hint"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="8dp"
-                    app:tint="@color/textSecondary"
-                    android:contentDescription="Information about how words are defined" />
-
-            </LinearLayout>
             <androidx.cardview.widget.CardView
                 android:id="@+id/rootCategoryCard"
                 android:layout_width="match_parent"
