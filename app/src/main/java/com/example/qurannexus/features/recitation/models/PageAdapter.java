@@ -19,6 +19,7 @@ import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -77,6 +78,19 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
         } else {
             holder.setContent(new SpannableStringBuilder("Page " + pageNumber + "\nLoading..."));
         }
+        holder.scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
+                (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                    if (fragment.getActivity() instanceof MainActivity) {
+                        MainActivity mainActivity = (MainActivity) fragment.getActivity();
+                        int dy = scrollY - oldScrollY;
+
+                        if (dy > 10) { // Scrolling down
+                            mainActivity.setBottomNavigationVisibility(false);
+                        } else if (dy < -10) { // Scrolling up
+                            mainActivity.setBottomNavigationVisibility(true);
+                        }
+                    }
+                });
     }
 
     public void updatePageContent(int pageNumber, List<QuranAyahDetailEntity> ayahs) {
@@ -155,7 +169,9 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
 
             isFirstSurahBlockOnPage = false;
         }
-
+        if (pageBuilder.length() > 0) {
+            pageBuilder.append("\n\n");
+        }
         // Apply global font and size styling at the very end
         if (pageBuilder.length() > 0) {
             pageBuilder.setSpan(new TypefaceSpan(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs)), 0, pageBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -290,21 +306,47 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewH
             contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
             Log.e("pageadapter","clicked");
             contentTextView.setHighlightColor(Color.TRANSPARENT); // set the text color for text that can be clicked
+            // Get a reference to the MainActivity
+            final MainActivity mainActivity = (itemView.getContext() instanceof MainActivity) ? (MainActivity) itemView.getContext() : null;
+
+            // --- 1. SOLVE THE TOUCH ISSUE BY LISTENING ON THE TEXTVIEW ---
+            // We attach the listener to the TextView, as it's the view that receives the initial touch.
+            contentTextView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // The MovementMethod handles clicks on the spans. We let it do its job first.
+                    boolean handledByMovementMethod = contentTextView.getMovementMethod().onTouchEvent(contentTextView, (Spannable) contentTextView.getText(), event);
+                    // If the touch was a click on a word (handled by MovementMethod), we don't do anything else.
+                    if (handledByMovementMethod) {
+                        return true;
+                    }
+                    // If it was NOT a click on a word, we can now handle our custom logic.
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        if (mainActivity != null) {
+                            mainActivity.setBottomNavigationVisibility(false);
+                        }
+                        // --- 2. SOLVE THE ACCESSIBILITY WARNING ---
+                        // Since this is a "click" on the background, we call performClick.
+                        v.performClick();
+                        return true; // We handled this "background click".
+                    }
+
+                    // For other touch events (like scrolling), we let the default handler take over.
+                    return false;
+                }
+            });
 
             scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
                     (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                        Context context = v.getContext();
-                        if (context instanceof MainActivity) {
-                            MainActivity mainActivity = (MainActivity) context;
+                        if (mainActivity != null) {
                             int dy = scrollY - oldScrollY;
-                            if (dy > 10) { // Scrolling down
-                                mainActivity.setBottomNavigationVisibility(false);
-                            } else if (dy < -10) { // Scrolling up
+                            // We only care about scrolling up to show the nav bar.
+                            // The touch listener handles hiding it.
+                            if (dy < -10) { // Scrolling up
                                 mainActivity.setBottomNavigationVisibility(true);
                             }
                         }
                     });
-
         }
 
         void setContent(SpannableStringBuilder content) {

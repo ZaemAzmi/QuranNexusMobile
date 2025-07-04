@@ -26,22 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/nextPageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
-            app:icon="@drawable/ic_arrow_left"
-            app:iconTint="@color/white"
-            app:iconGravity="start"
-            app:iconSize="@dimen/text_size_medium"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="@dimen/margin_small" />
 
         <TextView
             android:id="@+id/pageInfoTextView"
@@ -55,22 +39,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/prevPageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Previous"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
-            app:icon="@drawable/ic_arrow_right"
-            app:iconTint="@color/white"
-            app:iconGravity="end"
-            app:iconSize="@dimen/text_size_medium"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="@dimen/margin_small" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/paginationIndicator"

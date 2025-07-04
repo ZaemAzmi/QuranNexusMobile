@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.cardview.widget.CardView;
+import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,11 +28,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Handler;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
@@ -121,7 +124,6 @@ public class RecitationPageFragment extends Fragment {
     private LinearLayout chapterBookmarkLayout;
     private LinearLayout pageBookmarkLayout;
     private boolean isBookmarkMenuOpen = false;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar mainLoadingIndicator;
     // New variables for handling navigation intent parameters
     private boolean isNavigatingWithExtras = false; // Flag to indicate if launched with specific nav extras
@@ -296,13 +298,11 @@ public class RecitationPageFragment extends Fragment {
         surahNameTextView = rootView.findViewById(R.id.surahNameTextView);
         surahNameEnglishTextView = rootView.findViewById(R.id.englishSurahNameTextView);
         quranMetadata = QuranMetadata.Companion.getInstance();
-        swipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(() -> refreshCurrentContent());
-        // MODIFIED: This replaces the old setupUI() logic
+//        swipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayout);
+//        swipeRefreshLayout.setOnRefreshListener(this::refreshCurrentContent);
         observeViewModel();
         fetchDataForCurrentState();
-//        setupUI();
-
+        setupHeaderPadding();
         checkBookmarkStatus();
         setupBookmarkMenu();
 
@@ -381,7 +381,7 @@ public class RecitationPageFragment extends Fragment {
         LiveData<PageDataState> pageDataLiveData = FlowLiveDataConversions.asLiveData(viewModel.getPageData());
 
         pageDataLiveData.observe(getViewLifecycleOwner(), state -> {
-            swipeRefreshLayout.setRefreshing(false);
+//            swipeRefreshLayout.setRefreshing(false);
 
             if (state instanceof PageDataState.Success) {
                 mainLoadingIndicator.setVisibility(View.GONE);
@@ -474,44 +474,44 @@ public class RecitationPageFragment extends Fragment {
             checkBookmarkStatus();
         }
     }
-    @OptIn(markerClass = UnstableApi.class)
-    private void refreshCurrentContent() {
-        // Start refresh animation
-        swipeRefreshLayout.setRefreshing(true);
-        Log.d("RecitationPage", "Refreshing content. Layout type: " + layoutType);
-
-        if ("verseByVerse".equals(layoutType)) {
-            // If verse by verse mode
-            int surahNumber = currentSurahIndex + 1;
-            Log.d("RecitationPage", "Refreshing surah: " + surahNumber);
-
-            // Re-create the fragment with the SAME surah number
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-//            ByAyatRecitationFragment newFragment = ByAyatRecitationFragment.newInstance(surahNumber, -1);
+//    @OptIn(markerClass = UnstableApi.class)
+//    private void refreshCurrentContent() {
+//        // Start refresh animation
+//        swipeRefreshLayout.setRefreshing(true);
+//        Log.d("RecitationPage", "Refreshing content. Layout type: " + layoutType);
+//
+//        if ("verseByVerse".equals(layoutType)) {
+//            // If verse by verse mode
+//            int surahNumber = currentSurahIndex + 1;
+//            Log.d("RecitationPage", "Refreshing surah: " + surahNumber);
+//
+//            // Re-create the fragment with the SAME surah number
+//            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+////            ByAyatRecitationFragment newFragment = ByAyatRecitationFragment.newInstance(surahNumber, -1);
+////            transaction.replace(R.id.recitationFragmentContainerView, newFragment);
+////            transaction.commit();
+//
+//            // Update the header to show the correct surah
+//            updateSurahHeader(surahNumber);
+//
+//            // Stop refreshing after a delay to allow fragment to load
+//            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+//        }
+//        else if ("pageByPage".equals(layoutType)) {
+//            // If page by page mode - maintain the current page number
+//            Log.d("RecitationPage", "Refreshing page: " + currentPageNumber);
+//
+//            // Re-create the fragment with the SAME page number
+//            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//            ByPageRecitationFragment newFragment = ByPageRecitationFragment.newInstance(currentPageNumber);
 //            transaction.replace(R.id.recitationFragmentContainerView, newFragment);
 //            transaction.commit();
-
-            // Update the header to show the correct surah
-            updateSurahHeader(surahNumber);
-
-            // Stop refreshing after a delay to allow fragment to load
-            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
-        }
-        else if ("pageByPage".equals(layoutType)) {
-            // If page by page mode - maintain the current page number
-            Log.d("RecitationPage", "Refreshing page: " + currentPageNumber);
-
-            // Re-create the fragment with the SAME page number
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            ByPageRecitationFragment newFragment = ByPageRecitationFragment.newInstance(currentPageNumber);
-            transaction.replace(R.id.recitationFragmentContainerView, newFragment);
-            transaction.commit();
-
-            // Stop refreshing after a delay to allow fragment to load
-            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
-        }
-        Log.d("RecitationPage", "Created new fragment and committed transaction");
-    }
+//
+//            // Stop refreshing after a delay to allow fragment to load
+//            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+//        }
+//        Log.d("RecitationPage", "Created new fragment and committed transaction");
+//    }
     @OptIn(markerClass = UnstableApi.class)
     private void setupScrollListeners() {
         // When switching to a fragment, we need to attach scroll listeners
@@ -680,16 +680,50 @@ public class RecitationPageFragment extends Fragment {
                     }
                 });
     }
-    private void setupUI() {
-        // Retrieve the user's layout preference
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        boolean isByPage = sharedPreferences.getBoolean(KEY_LAYOUT_TYPE, false);
-        layoutType = isByPage ? "pageByPage" : "verseByVerse";
-//        fetchVerses();
-        // Always show both bookmark options since we have pagination in both modes now
-        if (pageBookmarkLayout != null) {
-            pageBookmarkLayout.setVisibility(View.VISIBLE);
-        }
+    private void setupHeaderPadding() {
+        final View headerLayout = rootView.findViewById(R.id.headerLayout);
+
+        headerLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (getActivity() instanceof MainActivity) {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    ImageView sideMenuButton = mainActivity.getSideMenuButton();
+
+                    // Also get a reference to the bookmark icon
+                    ImageView bookmarkMenuIcon = headerLayout.findViewById(R.id.bookmarkMenuIcon);
+
+                    Log.d("RecitationPageFragment", "OnGlobalLayout fired. Side menu button: " + sideMenuButton);
+
+                    // Ensure both buttons have been measured
+                    if (sideMenuButton != null && sideMenuButton.getWidth() > 0 && bookmarkMenuIcon != null && bookmarkMenuIcon.getWidth() > 0) {
+
+                        // --- LEFT SIDE CALCULATION ---
+                        // Get the width of the button and its left margin from MainActivity's layout
+                        int sideMenuButtonWidth = sideMenuButton.getWidth();
+                        int sideMenuButtonMargin = ((ViewGroup.MarginLayoutParams) sideMenuButton.getLayoutParams()).leftMargin;
+                        int totalLeftPadding = sideMenuButtonWidth + sideMenuButtonMargin;
+
+                        // --- RIGHT SIDE CALCULATION (THE NEW PART) ---
+                        // Get the width of the bookmark icon and its margin within the header
+                        int bookmarkIconWidth = bookmarkMenuIcon.getWidth();
+                        // The padding of the parent is effectively the margin for the icon
+                        int totalRightPadding =  headerLayout.getPaddingRight();
+
+
+                        // Get the original top and bottom padding to preserve it.
+                        int originalTop = headerLayout.getPaddingTop();
+                        int originalBottom = headerLayout.getPaddingBottom();
+
+                        // Apply the new SYMMETRIC padding.
+                        headerLayout.setPadding(totalLeftPadding, originalTop, totalRightPadding, originalBottom);
+
+                        // IMPORTANT: Remove the listener to prevent it from running again.
+                        headerLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            }
+        });
     }
 
     private void setupBookmarkMenu() {
@@ -697,7 +731,7 @@ public class RecitationPageFragment extends Fragment {
         bookmarkMenuIcon = rootView.findViewById(R.id.bookmarkMenuIcon);
 
         // Set click listener to show popup menu
-        bookmarkMenuIcon.setOnClickListener(v -> showBookmarkMenu(v));
+        bookmarkMenuIcon.setOnClickListener(this::showBookmarkMenu);
 
         // We still need references to these variables for bookmark status updates
         bookmarkIcon = null; // We'll set this dynamically in the menu
@@ -707,11 +741,13 @@ public class RecitationPageFragment extends Fragment {
 // Replace your showBookmarkMenu method with this one
 
     private void showBookmarkMenu(View anchor) {
-        IconPopupMenu popup = new IconPopupMenu(requireContext(), anchor);
+
+        Context wrapper = new ContextThemeWrapper(requireContext(), R.style.Theme_App_PopupMenu_Dark);
+
+        // The rest of your code remains exactly the same!
+        IconPopupMenu popup = new IconPopupMenu(wrapper, anchor);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.bookmark_menu, popup.getMenu());
-
-        // Try to show icons - this works on most devices
         popup.showIcons();
 
         // Update menu items based on bookmark status

@@ -178,9 +178,12 @@ class WordAnalysisFragment : Fragment() {
         lemmaCategoryCard.setOnClickListener {
             showCategoryExplanationDialog(
                 iconResId = R.drawable.ic_lemma_placeholder,
-                title = "Lemmas (مَدْخَل - Madkhal)",
-                explanation = "A lemma is the dictionary or canonical form of a word. It groups together different inflections (e.g., plural, different cases) of the same word. Nouns have lemmas, but many particles are identified by Special Groups instead.",
-                examples = "The lemma for both 'ٱلْكِتَٰبُ' (al-kitābu, the book) and 'كُتُبٌ' (kutubun, books) is the singular form 'كِتَٰب' (kitāb).",
+                title = "Lemmas",
+                explanation = "A lemma is the dictionary or canonical form of a word or a word's base form that does not derive from a standard three-letter root. It groups together different inflections (e.g., plural, different cases) of the same word. Nouns have lemmas, but many particles are identified by Special Groups instead.",
+                examples = "Examples from the database include:\n" +
+                        "• The particle 'لَا' (lā), meaning 'no'.\n" +
+                        "• The preposition 'فِى' (fī), meaning 'in'.\n" +
+                        "• The adverbial phrase 'يَوْمَئِذٍ' (yawma-idhin), meaning 'that Day'.",
                 appRelevance = "Analyzing by lemma groups different grammatical forms of a word under one entry, perfect for tracking a specific concept regardless of its case or number."
             )
         }
@@ -190,7 +193,9 @@ class WordAnalysisFragment : Fragment() {
                 iconResId = R.drawable.ic_bulb,
                 title = "Others / Special Groups",
                 explanation = "This category is assigned to any Quranic word that doesn't fit the standard root or lemma structure. It primarily includes particles (prepositions, conjunctions), pronouns, and crucially, the disconnected letters (Muqatta'at) at the start of some chapters.",
-                examples = "• Common particles like 'إِنَّ' (inna - 'verily') or 'فِى' (fī - 'in').\n• Disconnected letters such as 'الم' (Alif, Lām, Mīm) from the beginning of Surah Al-Baqarah.",
+                examples = "• Pronouns, such as 'هُوَ' (huwa), meaning 'He'.\n" +
+                        "• Disconnected letters like 'الم' (Alif, Lām, Mīm) from Surah Al-Baqarah.\n" +
+                        "• Longer sets of disconnected letters like 'كٓهيعٓصٓ' (Kāf-Hā-Yā-ʿAin-Ṣād) from Surah Maryam.",
                 appRelevance = "This allows for the analysis of the functional building blocks of the Quran—the particles that connect ideas, and unique symbolic forms like chapter initials."
             )
         }

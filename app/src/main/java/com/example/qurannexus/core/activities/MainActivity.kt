@@ -1,9 +1,16 @@
 package com.example.qurannexus.core.activities
 
+// Removed unused MeowBottomNavigation Listeners for brevity, add back if used
+// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ClickListener
+// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ReselectListener
+// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ShowListener
+// import com.example.qurannexus.core.utils.QuranMetadata // Not directly used in this revised method
+// import com.example.qurannexus.features.recitation.ByAyatRecitationFragment // RecitationPageFragment handles this
+// import com.example.qurannexus.features.recitation.models.SurahModel // Not needed for this navigation
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log // Import Log
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -14,15 +21,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.media3.common.util.UnstableApi
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation
-// Removed unused MeowBottomNavigation Listeners for brevity, add back if used
-// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ClickListener
-// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ReselectListener
-// import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ShowListener
 import com.example.qurannexus.R
 import com.example.qurannexus.core.enums.BottomMenuItemId
 import com.example.qurannexus.core.utils.TokenManager
 import com.example.qurannexus.core.utils.UtilityService
-// import com.example.qurannexus.core.utils.QuranMetadata // Not directly used in this revised method
 import com.example.qurannexus.features.analysis.QuranAnalysisFragment
 import com.example.qurannexus.features.auth.AuthActivity
 import com.example.qurannexus.features.auth.AuthService
@@ -30,10 +32,8 @@ import com.example.qurannexus.features.bookmark.BookmarkFragment
 import com.example.qurannexus.features.home.HomeFragment
 import com.example.qurannexus.features.prayerTimes.PrayerTimesFragment
 import com.example.qurannexus.features.quiz.QuizActivity
-// import com.example.qurannexus.features.recitation.ByAyatRecitationFragment // RecitationPageFragment handles this
 import com.example.qurannexus.features.recitation.RecitationPageFragment
 import com.example.qurannexus.features.recitation.SurahListFragment
-// import com.example.qurannexus.features.recitation.models.SurahModel // Not needed for this navigation
 import com.example.qurannexus.features.settings.SettingsFragment
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +46,7 @@ class MainActivity (
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var meowBottomNavigation: MeowBottomNavigation
+    private lateinit var sideMenuButton : ImageView
     @Inject
     lateinit var tokenManager: TokenManager
     @Inject
@@ -169,7 +170,7 @@ class MainActivity (
     }
 
     private fun setupNavigationDrawer() {
-        val sideMenuButton = findViewById<ImageView>(R.id.sideMenuButton)
+        sideMenuButton = findViewById(R.id.sideMenuButton)
         drawerLayout = findViewById(R.id.main)
         navigationView = findViewById(R.id.side_navigation_view)
 
@@ -186,6 +187,24 @@ class MainActivity (
         val selectedFragment: Fragment? =
             when (menuItem.itemId) {
                 R.id.nav_home -> HomeFragment()
+                R.id.nav_bookmark -> {
+                    if (tokenManager.getToken() != null) {
+                        // User is logged in, so load the BookmarkFragment directly.
+                        loadFragment(BookmarkFragment())
+                    } else {
+                        // User is NOT logged in, show the login required dialog.
+                        utilityService.showLoginRequiredDialog(this) {
+                            // This lambda block runs when the "Log In & Continue" button
+                            // on the dialog is clicked.
+                            val intent = Intent(this, AuthActivity::class.java).apply {
+                                putExtra(AuthActivity.EXTRA_ACTION, AuthActivity.ACTION_NAVIGATE_TO_LOGIN)
+                            }
+                            startActivity(intent)
+                        }
+                    }
+                    null
+                }
+                R.id.nav_prayer_times -> PrayerTimesFragment()
                 R.id.nav_analysis -> QuranAnalysisFragment()
                 R.id.nav_settings -> SettingsFragment()
                 R.id.nav_test -> {
@@ -341,5 +360,8 @@ class MainActivity (
             finish()
             null
         }
+    }
+    fun getSideMenuButton(): ImageView {
+        return sideMenuButton
     }
 }

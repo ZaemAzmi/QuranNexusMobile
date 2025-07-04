@@ -82,7 +82,7 @@ public class ByPageRecitationFragment extends Fragment {
     private ArrayList<QuranAyahDetailEntity> initialPageAyahs; // Data for the first page shown
     private int receivedScrollToVerseOnPage = -1;
     private String receivedHighlightChapterId = null;
-     public static final int TOTAL_PAGES = 604;
+    public static final int TOTAL_PAGES = 604;
     private Context context;
     private int currentPageNumber;
     private QuranApi quranApi;
@@ -163,7 +163,7 @@ public class ByPageRecitationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_by_page_recitation, container, false);
         quranApi = ApiService.getQuranClient().create(QuranApi.class);
         viewPager = view.findViewById(R.id.fragmentByPageRecitationViewPager);
-        pageNumberTextView = view.findViewById(R.id.pageNumber);
+        pageNumberTextView = view.findViewById(R.id.pageInfoTextView);
         utilityService = new UtilityService();
         achievementService = new AchievementService(requireContext());
         setupViewPager();
@@ -727,10 +727,11 @@ public class ByPageRecitationFragment extends Fragment {
         }
     }
     private void updatePageNumber(int pageNum) {
-        // Also update the member variable for consistency
+        // Update the member variable for consistency
         this.currentPageNumber = pageNum;
         if (pageNumberTextView != null) {
-            pageNumberTextView.setText(String.format("Page: %d", pageNum));
+            // Use the correct format string
+            pageNumberTextView.setText(String.format("Page %d of %d", pageNum, TOTAL_PAGES));
         }
     }
 

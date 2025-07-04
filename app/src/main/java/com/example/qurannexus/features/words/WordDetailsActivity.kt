@@ -364,7 +364,7 @@ class WordDetailsActivity : AppCompatActivity() {
         val titleTextView = morphFormsBottomSheetDialog!!.findViewById<TextView>(R.id.tvBottomSheetGenericTitle)
         val recyclerView = morphFormsBottomSheetDialog!!.findViewById<RecyclerView>(R.id.rvGenericList)
 
-        titleTextView?.text = "All Morphological Forms for Root: $identifierDisplayString"
+        titleTextView?.text = "All Morphological Forms for $identifierDisplayString"
         recyclerView?.layoutManager = LinearLayoutManager(this)
         recyclerView?.adapter = MorphFormsAdapter(morphForms)
 

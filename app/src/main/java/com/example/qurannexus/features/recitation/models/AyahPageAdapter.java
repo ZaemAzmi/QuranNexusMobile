@@ -2,7 +2,9 @@ package com.example.qurannexus.features.recitation.models;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.fragment.app.Fragment;
+import androidx.media3.common.util.UnstableApi;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.qurannexus.core.database.entities.QuranAyahDetailEntity;
 import com.example.qurannexus.features.recitation.SingleAyahPageFragment;
@@ -18,6 +20,7 @@ public class AyahPageAdapter extends FragmentStateAdapter {
         super(fragment);
     }
 
+    @OptIn(markerClass = UnstableApi.class)
     @NonNull
     @Override
     public Fragment createFragment(int position) {

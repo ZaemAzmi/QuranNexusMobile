@@ -1,5 +1,7 @@
 package com.example.qurannexus.features.recitation;
 
+import static com.example.qurannexus.features.recitation.ByPageRecitationFragment.TOTAL_PAGES;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -189,8 +191,7 @@ public class ByAyatRecitationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_by_ayat_recitation, container, false);
         versesPager = view.findViewById(R.id.versesPager);
         // REMOVE pagination controls for now, or hide them.
-        view.findViewById(R.id.paginationContainer).setVisibility(View.GONE);
-
+        pageInfoTextView = view.findViewById(R.id.pageInfoTextView);
         setupViewPager();
 //        observeSharedViewModel(); // NEW: Start observing for updates
         return view;
@@ -217,12 +218,13 @@ public class ByAyatRecitationFragment extends Fragment {
 
         int initialPosition = AyahPageAdapter.TOTAL_PAGES - initialPageNumber;
         versesPager.setCurrentItem(initialPosition, false);
-
+        updatePageNumberText(initialPageNumber);
         versesPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 int newPageNumber = AyahPageAdapter.TOTAL_PAGES - position;
+                updatePageNumberText(newPageNumber);
                 if (getParentFragment() instanceof RecitationPageFragment) {
                     ((RecitationPageFragment) getParentFragment()).onPageChanged(newPageNumber);
                 }
@@ -398,7 +400,7 @@ public class ByAyatRecitationFragment extends Fragment {
 
                         loadingProgressBar.setVisibility(View.GONE);
                         versesPager.setVisibility(View.VISIBLE);
-                        updatePageControls();
+//                        updatePageControls();
 
                     } else {
                         Log.e("ByAyatRecitationFragment",
@@ -482,30 +484,9 @@ public class ByAyatRecitationFragment extends Fragment {
         return -1;
     }
 
-    private void updatePageControls() {
-        int totalPages = paginatedAyahs.size();
-
-        // Update page info text
-        pageInfoTextView.setText(String.format("Page %d of %d", currentPage + 1, totalPages));
-
-        // Update navigation buttons
-        prevPageButton.setEnabled(currentPage > 0);
-        nextPageButton.setEnabled(currentPage < totalPages - 1);
-
-        // Fade out disabled buttons
-        prevPageButton.setAlpha(prevPageButton.isEnabled() ? 1.0f : 0.5f);
-        nextPageButton.setAlpha(nextPageButton.isEnabled() ? 1.0f : 0.5f);
-    }
-
-    private void navigateToPreviousPage() {
-        if (currentPage > 0) {
-            versesPager.setCurrentItem(currentPage - 1, true);
-        }
-    }
-
-    private void navigateToNextPage() {
-        if (currentPage < paginatedAyahs.size() - 1) {
-            versesPager.setCurrentItem(currentPage + 1, true);
+    private void updatePageNumberText(int pageNum) {
+        if (pageInfoTextView != null) {
+            pageInfoTextView.setText(String.format("Page %d of %d", pageNum, AyahPageAdapter.TOTAL_PAGES));
         }
     }
 

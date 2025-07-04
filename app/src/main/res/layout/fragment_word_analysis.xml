@@ -161,7 +161,7 @@
                         <!-- Explanation for Identifier -->
                         <TextView style="@style/SearchHelpChipTitle" android:text="• Identifier" />
                         <TextView style="@style/SearchHelpChipExplanation" android:text="An advanced search for academic transliterated roots or lemmas." />
-                        <TextView style="@style/SearchHelpChipExample" android:text="Examples: r-H-m (root), kitAb (lemma)" />
+                        <TextView style="@style/SearchHelpChipExample" android:text="Examples: r-H-m (root), A-l-h (root), jahan~am (lemma), Al^m^ (others)" />
 
                     </LinearLayout>
 

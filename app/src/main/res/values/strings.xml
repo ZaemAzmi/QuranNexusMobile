@@ -50,5 +50,5 @@
     <string name="tokenization_title">What is a Word \'Entry\'?</string>
     <string name="tokenization_explanation">A key principle in this analysis is how individual \'words\' or \'tokens\' are defined. In Quranic Arabic, grammatical particles like prefixes (e.g., \'bi-\', \'wa-\') are often attached to the word that follows them.</string>
     <string name="tokenization_examples">For instance, the particle \'بِ\' (bi) and the noun \'ٱسْمِ\' (ismi) appear as one unit: \'بِسْمِ\' (bismi).\n\nIn our database, this is treated as **one word entry** composed of two parts:\n • Part 1: `bi` (prefix)\n • Part 2: `somi` (stem)\n\nThis combined form, \'bismi\', is the \'word\' you will see in search results.</string>
-    <string name="tokenization_relevance">This explains why you can\'t search for standalone prefixes like \'wa-\' (\'and\'). Instead, you search for the full word as it appears in the Quran, such as \'walhamdu\'.</string>
+    <string name="tokenization_relevance">This explains why you can\'t search for standalone prefixes like \'wa-\' (\'and\'). Instead, you search for the full word as it appears in the Quran, such as \'بِسْمِ\' (arabic form) , In the name (translation) or with the identifier (smw).</string>
 </resources>
