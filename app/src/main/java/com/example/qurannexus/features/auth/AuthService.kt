@@ -21,6 +21,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import com.example.qurannexus.BuildConfig
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 class AuthService {
     companion object {
@@ -106,7 +108,18 @@ class AuthService {
         })
     }
 
-
+    suspend fun getUserProfileAsync(token: String): User? {
+        // This bridges the old callback-style function to the new coroutine world.
+        return suspendCancellableCoroutine { continuation ->
+            // Call the original function
+            getUserProfile(token) { user ->
+                // When the callback fires, we resume the coroutine with the result.
+                if (continuation.isActive) { // Ensure the coroutine wasn't cancelled
+                    continuation.resume(user)
+                }
+            }
+        }
+    }
     fun getUserProfile(token: String, callback: (User?) -> Unit) {
         Log.d("AuthService", "Fetching user profile with token: $token")
 

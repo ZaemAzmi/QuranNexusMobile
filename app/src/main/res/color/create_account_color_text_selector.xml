@@ -1,0 +1,8 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when the button is disabled -->
+    <item android:state_enabled="false"
+        android:color="#A0A0A0" /> <!-- A medium gray color for disabled text -->
+
+    <!-- Default state (enabled) -->
+    <item android:color="@android:color/white" />
+</selector>

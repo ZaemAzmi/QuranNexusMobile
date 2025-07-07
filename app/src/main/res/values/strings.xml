@@ -45,7 +45,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="content_desc_welcome_mosque_image">Mosque Welcome Image</string>
-
+    <string name="terms_and_conditions_full">By creating an account, you agree to our %1$s and %2$s</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
 <!--    word analysis card-->
     <string name="tokenization_title">What is a Word \'Entry\'?</string>
     <string name="tokenization_explanation">A key principle in this analysis is how individual \'words\' or \'tokens\' are defined. In Quranic Arabic, grammatical particles like prefixes (e.g., \'bi-\', \'wa-\') are often attached to the word that follows them.</string>

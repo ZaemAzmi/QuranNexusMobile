@@ -1,136 +1,204 @@
 package com.example.qurannexus.features.auth
 
+import android.graphics.Typeface
 import android.os.Bundle
-import android.text.InputType
+import android.text.Html
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.StyleSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.qurannexus.R
 import com.example.qurannexus.core.interfaces.AuthCallback
+import com.example.qurannexus.databinding.FragmentRegisterBinding
 import com.example.qurannexus.features.auth.models.RegisterRequest
-
+import com.google.android.material.snackbar.Snackbar
 
 class RegisterFragment : Fragment() {
 
-    private lateinit var registerNameInput: EditText
-    private lateinit var registerEmailInput: EditText
-    private lateinit var registerPasswordInput: EditText
-    private lateinit var termsCheckBox: CheckBox
-    private lateinit var registerButton: Button
-    private lateinit var authService: AuthService
-    private lateinit var backButton : ImageView
+    // Use ViewBinding - much cleaner and safer
+    private var _binding: FragmentRegisterBinding? = null
+    private val binding get() = _binding!!
 
-    private var isPasswordVisible = false
+    private lateinit var authService: AuthService
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_register, container, false)
-
-        authService = AuthService()
-
-        backButton = view.findViewById(R.id.registerBackButton)
-        registerNameInput = view.findViewById(R.id.registerNameInput)
-        registerEmailInput = view.findViewById(R.id.registerEmailInput)
-        registerPasswordInput = view.findViewById(R.id.registerPasswordInput)
-
-        termsCheckBox = view.findViewById(R.id.termsCheckBox)
-        registerButton = view.findViewById(R.id.registerButton)
-        registerButton.isEnabled = false
-
-        backButton.setOnClickListener {
-            backButtonNavigation()
-        }
-
-        termsCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            handleTermsCheckbox(isChecked)
-        }
-        setupPasswordVisibilityToggle()
-        registerButton.setOnClickListener {
-            register()
-        }
-
-        return view
+    ): View {
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun register() {
-        val name = registerNameInput.text.toString()
-        val email = registerEmailInput.text.toString()
-        val password = registerPasswordInput.text.toString()
-        val passwordConfirmation = password  // You need to add a confirmation input field
-        val deviceName = "mobile"
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || passwordConfirmation.isEmpty()) {
-            Toast.makeText(activity, "Please fill all fields", Toast.LENGTH_SHORT).show()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        authService = AuthService()
+        setupListeners()
+        setupTermsAndConditions()
+    }
+
+    private fun setupListeners() {
+        binding.registerBackButton.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
+        binding.termsCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            binding.registerButton.isEnabled = isChecked
+        }
+
+        binding.registerButton.setOnClickListener {
+            handleRegistration()
+        }
+
+        // Initially disable the button
+        binding.registerButton.isEnabled = false
+    }
+
+    private fun setupTermsAndConditions() {
+        val fullTextTemplate = getString(R.string.terms_and_conditions_full)
+        val termsText = getString(R.string.terms_of_service)
+        val policyText = getString(R.string.privacy_policy)
+
+        // This is the final string that will be displayed
+        val finalFormattedText = String.format(fullTextTemplate, termsText, policyText)
+
+        // Create a SpannableString from the final text
+        val spannableString = SpannableString(finalFormattedText)
+
+        // Create a clickable span for "Terms of Service"
+        val termsClickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                Toast.makeText(context, "Navigate to Terms of Service", Toast.LENGTH_SHORT).show()
+                // TODO: Replace with navigation to a WebView or browser
+            }
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false // Remove underline
+                ds.color = ContextCompat.getColor(requireContext(), R.color.surah_card_dark_green_300) // Set link color
+            }
+        }
+
+        // Create a clickable span for "Privacy Policy"
+        val policyClickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                Toast.makeText(context, "Navigate to Privacy Policy", Toast.LENGTH_SHORT).show()
+                // TODO: Replace with navigation to a WebView or browser
+            }
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false // Remove underline
+                ds.color = ContextCompat.getColor(requireContext(), R.color.surah_card_dark_green_300) // Set link color
+            }
+        }
+
+        // --- THIS IS THE CORRECTED LOGIC ---
+        // Find the start and end indices of the link texts within the final formatted string.
+        val termsStart = finalFormattedText.indexOf(termsText)
+        val termsEnd = termsStart + termsText.length
+
+        val policyStart = finalFormattedText.indexOf(policyText)
+        val policyEnd = policyStart + policyText.length
+
+        // Safety check to avoid crashing if the text isn't found
+        if (termsStart == -1 || policyStart == -1) {
+            // Fallback to plain text if something went wrong
+            binding.termsTextView.text = finalFormattedText
             return
         }
 
-        val request =
-            RegisterRequest(
-                name,
-                email,
-                password,
-                passwordConfirmation,
-                deviceName
-            )
+        // Apply the spans to the string
+        spannableString.setSpan(termsClickableSpan, termsStart, termsEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(StyleSpan(Typeface.BOLD), termsStart, termsEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannableString.setSpan(policyClickableSpan, policyStart, policyEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(StyleSpan(Typeface.BOLD), policyStart, policyEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        // Set the text and make it clickable
+        binding.termsTextView.text = spannableString
+        binding.termsTextView.movementMethod = LinkMovementMethod.getInstance()
+        // Optional: Remove the default highlight color when a link is clicked
+        binding.termsTextView.highlightColor = ContextCompat.getColor(requireContext(), android.R.color.transparent)
+    }
+
+    private fun handleRegistration() {
+        // Clear previous errors
+        binding.registerNameLayout.error = null
+        binding.registerEmailLayout.error = null
+        binding.registerPasswordLayout.error = null
+
+        val name = binding.registerNameInput.text.toString().trim()
+        val email = binding.registerEmailInput.text.toString().trim()
+        val password = binding.registerPasswordInput.text.toString()
+        val deviceName = "Android Device"
+
+        // --- Input Validation ---
+        var isValid = true
+        if (name.isEmpty()) {
+            binding.registerNameLayout.error = "Name is required"
+            isValid = false
+        }
+        if (email.isEmpty()) {
+            binding.registerEmailLayout.error = "Email is required"
+            isValid = false
+        }
+        if (password.isEmpty()) {
+            binding.registerPasswordLayout.error = "Password is required"
+            isValid = false
+        } else if (password.length < 8) {
+            binding.registerPasswordLayout.error = "Password must be at least 8 characters"
+            isValid = false
+        }
+
+        if (!isValid) return
+
+        // --- Show Loading State ---
+        setLoadingState(true)
+
+        // --- Make API Call ---
+        val request = RegisterRequest(name, email, password, password, deviceName)
 
         authService.register(requireContext(), request, object : AuthCallback {
             override fun onSuccess(message: String?) {
-                if (message.isNullOrEmpty()) {
-                    // Handle the case where message is null or empty
-                    Toast.makeText(activity, "Registration successful!", Toast.LENGTH_SHORT).show()
-                }
-                Toast.makeText(activity, "Registration successful! Token: $message", Toast.LENGTH_SHORT).show()
-                val fragmentTransaction = parentFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.authFragmentContainer, LoginFragment())
-                fragmentTransaction.addToBackStack(null) // Optional: To add this transaction to the back stack
-                fragmentTransaction.commit()
+                if (!isAdded) return // Check if fragment is still attached
+                setLoadingState(false)
+                Toast.makeText(activity, "Registration successful! Please log in.", Toast.LENGTH_LONG).show()
+
+                // Navigate to LoginFragment, clearing the back stack
+                parentFragmentManager.popBackStack()
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.authFragmentContainer, LoginFragment())
+                    .commit()
             }
 
             override fun onError(error: String) {
-                Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
+                if (!isAdded) return
+                setLoadingState(false)
+                // Show a generic error in a Snackbar
+                view?.let { Snackbar.make(it, "Registration failed: $error", Snackbar.LENGTH_LONG).show() }
             }
         })
     }
 
-    private fun setupPasswordVisibilityToggle() {
-        // Set the "eye" icon toggle logic
-        registerPasswordInput.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (event.rawX >= (registerPasswordInput.right - registerPasswordInput.compoundDrawables[2].bounds.width())) {
-                    // Toggle password visibility
-                    isPasswordVisible = !isPasswordVisible
-                    updatePasswordVisibility()
-                    return@setOnTouchListener true
-                }
-            }
-            false
-        }
+    private fun setLoadingState(isLoading: Boolean) {
+        binding.registerButton.text = if (isLoading) "" else getString(R.string.register_button)
+        // Add a progress bar to your button in XML if you want a visual indicator
+        // binding.registerProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.registerButton.isEnabled = !isLoading
+        binding.registerNameInput.isEnabled = !isLoading
+        binding.registerEmailInput.isEnabled = !isLoading
+        binding.registerPasswordInput.isEnabled = !isLoading
+        binding.termsCheckBox.isEnabled = !isLoading
     }
 
-    private fun updatePasswordVisibility() {
-        if (isPasswordVisible) {
-            registerPasswordInput.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            registerPasswordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_eye_opened, 0) // "Eye open" icon
-        } else {
-            registerPasswordInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            registerPasswordInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_eye_closed, 0) // "Eye closed" icon
-        }
-        // Move cursor to the end
-        registerPasswordInput.setSelection(registerPasswordInput.text.length)
-    }
-    private fun handleTermsCheckbox(isChecked: Boolean) {
-        // Enable or disable the register button based on whether the checkbox is checked
-        registerButton.isEnabled = isChecked
-    }
-
-    private fun backButtonNavigation() {
-        parentFragmentManager.popBackStack()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

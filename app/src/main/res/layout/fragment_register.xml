@@ -1,122 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".features.auth.RegisterFragment">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        tools:context=".features.auth.RegisterFragment">
 
-        <TextView
-            android:id="@+id/detailsTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter your details :"
-            android:textSize="@dimen/text_size_salam"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/register_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+        <!-- Back Button - No changes needed, already good -->
         <ImageView
             android:id="@+id/registerBackButton"
             android:layout_width="@dimen/width_large"
             android:layout_height="@dimen/width_large"
-            android:src="@drawable/ic_previous"
-            android:layout_margin="@dimen/margin_xlarge"
+            android:layout_marginTop="@dimen/margin_xlarge"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_arrow_left"
+            android:background="@drawable/bg_circle_white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-        <EditText
-            android:id="@+id/registerNameInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/input_margin"
-            android:background="@drawable/bg_edit_text"
-            android:textSize="@dimen/text_size_medium"
-            android:hint="Enter Name"
-            android:drawableStart="@drawable/ic_username"
-            android:padding="@dimen/padding_small"
-            android:drawablePadding="@dimen/padding_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detailsTV"
-            app:layout_constraintWidth_percent="0.7" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/registerEmailInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:background="@drawable/bg_edit_text"
-            android:hint="Enter Email"
-            android:textSize="@dimen/text_size_medium"
-            android:drawableStart="@drawable/ic_email"
-            android:padding="@dimen/padding_small"
-            android:drawablePadding="@dimen/padding_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/registerNameInput"
-            app:layout_constraintWidth_percent="0.7" />
-
-        <EditText
-            android:id="@+id/registerPasswordInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:background="@drawable/bg_edit_text"
-            android:hint="Enter Password"
-            android:textSize="@dimen/text_size_medium"
-            android:inputType="textPassword"
-            android:drawableEnd="@drawable/ic_eye_closed"
-            android:drawableStart="@drawable/ic_password"
-            android:padding="@dimen/padding_small"
-            android:drawablePadding="@dimen/padding_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/registerEmailInput"
-            app:layout_constraintWidth_percent="0.7" />
-
+        <!-- Header Text -->
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/headerTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_xxxlarge"
-            android:text="@string/forgot_password"
-            android:textSize="@dimen/text_size_medium"
-            android:textColor="@color/light_gray"
+            android:layout_marginTop="24dp"
+            android:text="Create your Account"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/registerPasswordInput" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/registerBackButton" />
 
+        <!-- Name Input Field using TextInputLayout -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/registerNameLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerTitle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/registerNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_username"
+                android:drawablePadding="12dp"
+                android:inputType="textPersonName|textCapWords"
+                android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Email Input Field using TextInputLayout -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/registerEmailLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:hint="Email"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/registerNameLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/registerEmailInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="12dp"
+                android:inputType="textEmailAddress"
+                android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Password Input Field using TextInputLayout -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/registerPasswordLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:hint="Password"
+            app:passwordToggleEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/registerEmailLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/registerPasswordInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_password"
+                android:drawablePadding="12dp"
+                android:inputType="textPassword"
+                android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Terms and Conditions Checkbox and Text -->
         <CheckBox
             android:id="@+id/termsCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_xlarge"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/registerPasswordLayout" />
+
+        <TextView
+            android:id="@+id/termsTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/terms_and_conditions"
-            android:layout_marginTop="@dimen/margin_xlarge"
-            android:textSize="@dimen/text_size_medium"
-            android:padding="@dimen/padding_intermediate"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/registerPasswordInput"
+            android:text="@string/terms_and_conditions_full"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/termsCheckBox"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.7"/>
+            app:layout_constraintStart_toEndOf="@id/termsCheckBox"
+            app:layout_constraintTop_toTopOf="@id/termsCheckBox" />
 
-        <Button
+        <!-- Create Account Button -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/registerButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xxxlarge"
-            android:layout_marginTop="@dimen/register_margin"
-            android:textSize="@dimen/text_size_large"
-            android:text="@string/register_button"
+            android:layout_marginTop="24dp"
             android:backgroundTint="@color/surah_card_dark_green_300"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/termsCheckBox"
+            android:text="@string/register_button"
+            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/create_account_color_text_selector"
+            app:cornerRadius="28dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.7"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/termsCheckBox" />
 
-</FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
