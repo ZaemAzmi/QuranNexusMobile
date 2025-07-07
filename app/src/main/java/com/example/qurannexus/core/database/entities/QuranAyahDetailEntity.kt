@@ -9,7 +9,10 @@ import androidx.room.Index
 @Entity(
     tableName = "quran_ayah_details",
     primaryKeys = ["surah_id", "ayah_index"], // This matches your DB's PRIMARY KEY (surah_id, ayah_index)
-    indices = [Index(value = ["page_id"], name = "idx_quran_ayah_details_page_id")] // 2. Define the index
+    indices = [
+        Index(value = ["page_id"], name = "idx_quran_ayah_details_page_id"),
+        Index(value = ["global_ayah_index"], name = "idx_quran_ayah_details_global_ayah_index")
+    ]
 )
 data class QuranAyahDetailEntity(
     // 3. Make fields nullable where the DB allows it, by adding '?'
@@ -39,10 +42,10 @@ data class QuranAyahDetailEntity(
     val ayahTranslationsJson: String?, // <-- MODIFIED: Nullable to match DB
 
     @ColumnInfo(name = "ayah_audio_urls_json")
-    val ayahAudioUrlsJson: String? // <-- MODIFIED: Nullable to match DB
+    val ayahAudioUrlsJson: String?,
 
-    // 4. REMOVE the @PrimaryKey `id` field. Room will use the composite PK defined above.
-    // @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "global_ayah_index")
+    val globalAyahIndex: Int? // Make it nullable to be safe during migration
 )
 
 data class WordData(
@@ -58,4 +61,10 @@ data class WordData(
 data class AyahTranslations(
     val en: String?,
     val my: String?
+)
+data class VerseLocationInfo(
+    @ColumnInfo(name = "page_id")
+    val pageId: Int,
+    @ColumnInfo(name = "ayah_index") // This is the per-surah index
+    val perSurahAyahIndex: Int
 )

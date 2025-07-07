@@ -25,7 +25,7 @@ import com.example.qurannexus.features.recitation.data.RecitationDao
         AllWordOccurrenceEntity::class,   // Renamed
         QuranAyahDetailEntity::class // <<<< ADD THIS NEW ENTITY
     ],
-    version = 4, // <<<< IMPORTANT: Increment version number!
+    version = 7, // <<<< IMPORTANT: Increment version number!
     exportSchema = false
 )
 @TypeConverters(ListConverter::class)

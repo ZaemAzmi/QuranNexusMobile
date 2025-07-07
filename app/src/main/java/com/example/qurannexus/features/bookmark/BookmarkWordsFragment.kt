@@ -144,13 +144,7 @@ class BookmarkWordsFragment : Fragment() {
                 Toast.makeText(context, "No chart data available", Toast.LENGTH_SHORT).show()
             }
         }
-        binding.btnZoomRadarChart.setOnClickListener {
-            if (binding.radarChart.data != null && !binding.radarChart.isEmpty) {
-                showRadarChartInDialog()
-            } else {
-                Toast.makeText(requireContext(), "No chart data to display larger.", Toast.LENGTH_SHORT).show()
-            }
-        }
+
     }
     private fun setupChips() {
         // Create view type chips

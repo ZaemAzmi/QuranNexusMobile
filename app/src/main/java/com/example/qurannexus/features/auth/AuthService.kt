@@ -20,6 +20,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import com.example.qurannexus.BuildConfig
 
 class AuthService {
     companion object {
@@ -35,9 +36,7 @@ class AuthService {
 //        .create()
 
     init {
-        // Reuse ApiService to create Retrofit instance for authentication
-        val retrofit = ApiService.createRetrofit("http://192.168.0.27:8000/api/v1/mobile/")
-//        val retrofit = ApiService.createRetrofit("http://10.0.2.2:8000/api/v1/mobile/")
+        val retrofit = ApiService.createRetrofit(BuildConfig.BASE_URL)
         authApi = retrofit.create(AuthApi::class.java)
     }
 

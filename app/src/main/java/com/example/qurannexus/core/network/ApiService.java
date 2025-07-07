@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.qurannexus.BuildConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -27,27 +28,11 @@ public class ApiService {
 
     private static Retrofit quranRetrofit = null;
     private static Retrofit prayerTimesRetrofit = null;
-//    private static final String LOCAL_API_URL = "http://10.0.2.2:8000/api/v1/mobile/";
-    private static final String LOCAL_API_URL = "http://192.168.0.27:8000/api/v1/mobile/";
+    // Get the base URL from your single source of truth
+    private static final String QURAN_API_URL = BuildConfig.BASE_URL;
+
     private static final String PRAYER_TIMES_API_URL = "https://api.aladhan.com/";
     private static String authToken = null;
-
-    private static class SafeStringDeserializer implements JsonDeserializer<String> {
-        @Override
-        public String deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                throws JsonParseException {
-            if (json.isJsonNull()) return null;
-
-            try {
-                String text = json.getAsString();
-                // Don't filter out ANY Arabic characters or diacritics
-                // Only remove truly problematic control characters that break rendering
-                return text;
-            } catch (Exception e) {
-                return "";
-            }
-        }
-    }
 
     // Create custom Gson instance
     private static Gson createGson() {
@@ -60,7 +45,7 @@ public class ApiService {
 
     public static Retrofit getQuranClient() {
         if (quranRetrofit == null) {
-            quranRetrofit = createRetrofit(LOCAL_API_URL);
+            quranRetrofit = createRetrofit(QURAN_API_URL);
         }
         return quranRetrofit;
     }

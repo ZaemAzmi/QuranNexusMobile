@@ -13,13 +13,16 @@ import com.example.qurannexus.R
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.core.utils.QuranMetadata
+import com.example.qurannexus.core.utils.TokenManager
 import com.example.qurannexus.features.bookmark.models.BookmarkVerse
 import com.example.qurannexus.features.bookmark.models.BookmarkVersesAdapter
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse
+import com.example.qurannexus.features.recitation.data.RecitationDao
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BookmarkVersesFragment : Fragment() {
@@ -27,7 +30,10 @@ class BookmarkVersesFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var bookmarkVersesAdapter: BookmarkVersesAdapter
     private lateinit var quranApi: QuranApi
-    private var authToken: String? = null
+    @Inject
+    lateinit var recitationDao: RecitationDao
+    @Inject
+    lateinit var tokenManager: TokenManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,58 +47,70 @@ class BookmarkVersesFragment : Fragment() {
         recyclerView = view.findViewById(R.id.bookmarkVersesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        bookmarkVersesAdapter = BookmarkVersesAdapter(emptyList())
+        bookmarkVersesAdapter = BookmarkVersesAdapter(emptyList(), recitationDao, this)
         recyclerView.adapter = bookmarkVersesAdapter
 
         quranApi = ApiService.getQuranClient().create(QuranApi::class.java)
-        authToken = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .getString("token", null)
-        if (authToken != null) {
-            fetchBookmarks()
-        } else {
-            Toast.makeText(context, "Please login to view bookmarks", Toast.LENGTH_SHORT).show()
-        }
+        fetchBookmarks()
+
     }
 
     private fun fetchBookmarks() {
-        quranApi.getBookmarks("Bearer $authToken").enqueue(object : Callback<BookmarksResponse> {
-            override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
-                if (response.isSuccessful && response.body() != null) {
-                    val bookmarksResponse = response.body()!!
-                    if (bookmarksResponse.status == "success") {
-                        val verses = bookmarksResponse.bookmarks.verses.map { verseBookmark ->
-                            try {
-                                // Get chapter details from QuranMetadata
-                                val chapterNumber = verseBookmark.itemProperties.chapterId.toInt()
-                                val surahDetails = QuranMetadata.getInstance().getSurahDetails(chapterNumber)
+        val currentToken = tokenManager.getToken()
 
+        // Check if the fresh token is null or empty.
+        if (currentToken.isNullOrEmpty()) {
+            if (isAdded) {
+                Toast.makeText(context, "Please login to view bookmarks", Toast.LENGTH_SHORT).show()
+            }
+            return // Stop execution if there's no token.
+        }
+        quranApi.getBookmarks("Bearer $currentToken").enqueue(object : Callback<BookmarksResponse> {
+            override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
+                if (response.isSuccessful) {
+                    // Use a safe-call `?.` instead of the `!!` operator
+                    val bookmarksResponse = response.body()
+
+                    // Check if the body and the nested properties are not null
+                    if (bookmarksResponse?.status == "success") {
+                        val verseList = bookmarksResponse.bookmarks?.verses
+                        if (verseList == null) {
+                            if (isAdded) {
+                                Toast.makeText(context, "No bookmarked verses found", Toast.LENGTH_SHORT).show()
+                            }
+                            // Update the adapter with an empty list to clear any old data
+                            bookmarkVersesAdapter.updateData(emptyList())
+                            return // Exit the onResponse block
+                        }
+                        val verses = verseList.mapNotNull { verseBookmark ->
+                            // The 'mapNotNull' will automatically filter out any null results from the mapping
+                            try {
+                                // This part is fine
                                 BookmarkVerse(
-                                    itemProperties = BookmarkVerse.VerseProperties(
-                                        verseId = verseBookmark.itemProperties.verseId,
-                                        chapterId = verseBookmark.itemProperties.chapterId
-                                    ),
+                                    itemProperties = verseBookmark.itemProperties,
                                     notes = verseBookmark.notes,
                                     createdAt = verseBookmark.createdAt
                                 )
-                            } catch (e: NumberFormatException) {
-                                null
+                            } catch (e: Exception) {
+                                null // Return null if any error occurs, mapNotNull will discard it
                             }
-                        }.filterNotNull()
-
-                        if (verses.isEmpty()) {
-                            Toast.makeText(context, "No bookmarked verses found", Toast.LENGTH_SHORT).show()
                         }
                         bookmarkVersesAdapter.updateData(verses)
-                    } else {
-                        Toast.makeText(context, "Failed to load bookmarks", Toast.LENGTH_SHORT).show()
+
+                    } else if (isAdded) {
+                        // Handle the case where the status is not "success"
+                        Toast.makeText(context, "Failed to load bookmarks: Invalid response", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    Toast.makeText(context, "Error: ${response.message()}", Toast.LENGTH_SHORT).show()
+                } else if(isAdded) {
+                    // Handle unsuccessful HTTP responses (e.g., 401, 404, 500)
+                    Toast.makeText(context, "Error: ${response.code()} ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<BookmarksResponse>, t: Throwable) {
-                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                if (isAdded) {
+                    Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         })
     }

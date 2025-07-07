@@ -54,8 +54,10 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,6 +71,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
     private AudioPlayerManager audioPlayerManager;
     ArrayList<QuranAyahDetailEntity> ayahEntityList;
     private String currentlyPlayingAyahKey = null;
+    private Set<String> bookmarkedVerseIds = new HashSet<>();
     private final Gson gson = new Gson();
     public SurahRecitationByAyatAdapter(Context context, LifecycleOwner lifecycleOwner, ArrayList<QuranAyahDetailEntity> ayahList){
         this.context = context;
@@ -107,67 +110,21 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
         View view = inflater.inflate(R.layout.card_item_single_ayat, parent, false);
         return new SurahRecitationByAyatAdapter.MyViewHolder(view);
     }
+    public void setBookmarkedVerseIds(Set<String> bookmarkedVerseIds) {
+        this.bookmarkedVerseIds = bookmarkedVerseIds;
+        notifyDataSetChanged();
+    }
 
-//    @Override
-//    public void onBindViewHolder(@NonNull SurahRecitationByAyatAdapter.MyViewHolder holder, int position) {
-//        ChapterAyah ayah = ayahList.get(position);
-//        holder.arabicWordsContainer.removeAllViews(); // Clear before re-populating
-//
-//        // This call will now set up the word TextViews and their long click listeners
-//        setupWordViewsAndClickListeners(holder, ayah);
-//
-//        // Assuming getTranslations().get(1) is English. Consider a safer way to get specific translation.
-//        if (ayah.getTranslations() != null && ayah.getTranslations().size() > 1) {
-//            holder.englishTranslation.setText(ayah.getTranslations().get(1).getText());
-//        } else if (ayah.getTranslations() != null && !ayah.getTranslations().isEmpty()){
-//            holder.englishTranslation.setText(ayah.getTranslations().get(0).getText()); // Fallback
-//        } else {
-//            holder.englishTranslation.setText("No translation available.");
-//        }
-//
-//        holder.ayatNumber.setText(ayah.getAyahKey()); // e.g., "1:1"
-//
-//        holder.ayatCardAddNotesIcon.setOnClickListener(view -> {
-//            if (authToken == null) {
-//                showLoginDialog();
-//            } else {
-//                showAddNotesDialog(holder, ayah);
-//            }
-//        });
-//        holder.ayatCardBookmarkIcon.setImageResource(
-//                ayah.isBookmarked() ? R.drawable.ic_bookmarked : R.drawable.ic_bookmark
-//        );
-//
-//        holder.ayatCardBookmarkIcon.setOnClickListener(v -> {
-//            if (authToken == null) {
-//                showLoginDialog();
-//            } else {
-//                if (ayah.isBookmarked()) {
-//                    removeBookmark(holder, ayah, position);
-//                } else {
-//                    addBookmarkWithNotes(holder, ayah, "");
-//                }
-//            }
-//        });
-//
-//        holder.ayatCardPlayAudioIcon.setOnClickListener(v -> {
-//            // ChapterAyah chapterAyah = ayahList.get(position); // Already have 'ayah'
-//            audioPlayerManager.playAyah(ayah.getAyahKey());
-//        });
-//    }
     @Override
     public void onBindViewHolder(@NonNull SurahRecitationByAyatAdapter.MyViewHolder holder, int position) {
         QuranAyahDetailEntity ayahEntity = ayahEntityList.get(position);
         holder.arabicWordsContainer.removeAllViews();
 
-        // 1. Parse Words JSON
         Type wordListType = new TypeToken<List<WordData>>() {}.getType();
         List<WordData> words = gson.fromJson(ayahEntity.getWordsDataJson(), wordListType);
 
-        // 2. Setup clickable words
         setupWordViewsAndClickListeners(holder, words, ayahEntity.getAyahKey());
 
-        // 1. Get the SharedPreferences instance
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // 2. Get the user's selected language key, defaulting to "en"
@@ -204,100 +161,91 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
             }
         });
 
-        // Bookmark and other icon logic remains mostly the same, but uses properties from ayahEntity
-        // For example, when adding a bookmark, you will need to get surahId from ayahEntity, not the old model.
-        // holder.ayatCardBookmarkIcon.setOnClickListener(...)
+        final boolean isBookmarked = bookmarkedVerseIds.contains(String.valueOf(ayahEntity.getGlobalAyahIndex()));
+        // 2. Set the icon based on the bookmarked status
+        holder.ayatCardBookmarkIcon.setImageResource(
+                isBookmarked ? R.drawable.ic_bookmarked : R.drawable.ic_bookmark
+        );
+
+        // 3. Set the click listener for the bookmark icon
+        holder.ayatCardBookmarkIcon.setOnClickListener(v -> {
+            if (authToken == null) {
+                showLoginDialog();
+                return;
+            }
+            if (isBookmarked) {
+                showRemoveConfirmDialog(holder, ayahEntity, position);
+            } else {
+                showAddBookmarkDialog(holder, ayahEntity, position);
+            }
+        });
+
     }
-    // Merged setupWordClickListeners and addWordTextView
-//    private void setupWordViewsAndClickListeners(MyViewHolder holder, ChapterAyah ayah) {
-//        if (ayah.getWords() == null) return;
-//
-//        List<Word> words = new ArrayList<>(ayah.getWords());
-//        String waqafSign = "";
-//        String ayahNumberInArabic = new com.example.qurannexus.core.utils.UtilityService()
-//                .convertToArabicNumber(Integer.parseInt(ayah.getAyahIndex()));
-//
-//        // Handle waqaf sign: it's usually the last "word" object in the API response for an ayah
-//        if (!words.isEmpty()) {
-//            Word lastWordObject = words.get(words.size() - 1);
-//            // A simple heuristic: if the last word's text is short (like a symbol)
-//            // and its translation is null or just the ayah number in parens.
-//            boolean isLikelyWaqf = (lastWordObject.getText() != null && lastWordObject.getText().length() <= 2 &&
-//                    (lastWordObject.getTranslation() == null ||
-//                            lastWordObject.getTranslation().matches("\\(\\d+\\)")));
-//
-//            if (isLikelyWaqf) {
-//                // Don't use lastWordObject.getText() for waqaf. Use standard ayah end symbol.
-//                // The waqafView will now contain the ayah number.
-//                words.remove(words.size() - 1); // Remove it so it's not treated as a clickable word
-//            }
-//        }
-//
-//        FlexboxLayout container = holder.arabicWordsContainer;
-//        container.setFlexDirection(FlexDirection.ROW_REVERSE); // For RTL
-//
-//        // Add clickable word TextViews
-//        for (Word word : words) {
-//            if (word == null || word.getText() == null || word.getText().isEmpty()) continue;
-//
-//            TextView wordView = new TextView(context);
-//            wordView.setText(word.getText());
-//            wordView.setTextColor(ContextCompat.getColor(context, R.color.white)); // Or your theme color
-//            float textSizeSp = context.getResources().getDimension(R.dimen.arabic_text_size) /
-//                    context.getResources().getDisplayMetrics().density;
-//            wordView.setTextSize(textSizeSp);
-//            wordView.setPadding(8, 8, 8, 8); // Adjust padding as needed
-//            wordView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
-//            wordView.setTextDirection(View.TEXT_DIRECTION_RTL);
-//
-//            wordView.setOnLongClickListener(v -> {
-//                animateWord(v); // Optional animation
-//                // highlightWord(wordView); // Optional highlight
-//                // showPopupHint(wordView, "Tap for word analysis"); // Optional hint
-//
-//                // Directly navigate to WordDetailsActivity with the word's Arabic text
-//                String clickedWordText = word.getText();
-//                String wordKey = ayah.getSurahId() + ":" + ayah.getAyahIndex() + ":" + word.getWordIndex(); // Construct S:A:W
-//                if (clickedWordText != null && !clickedWordText.isEmpty()) {
-//                    Intent intent = new Intent(context, WordDetailsActivity.class);
-//                    intent.putExtra(WordDetailsActivity.EXTRA_WORD_KEY_FROM_RECITATION, wordKey);
-//                    intent.putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION, clickedWordText);
-//                    Log.d("RecitationAdapter", "Navigating with WordKey: " + wordKey + ", WordText: " + clickedWordText);
-//                    context.startActivity(intent);
-//                } else {
-//                    Toast.makeText(context, "Word data not available.", Toast.LENGTH_SHORT).show();
-//                }
-//                return true; // Consume the long click
-//            });
-//            container.addView(wordView);
-//        }
-//
-//        // Add the ayah number (waqf) at the end (which is visually left in RTL)
-//        TextView waqafView = new TextView(context);
-//        waqafView.setText(String.format(" %s ", ayahNumberInArabic)); // Add spaces for padding from circle
-//        waqafView.setTextColor(ContextCompat.getColor(context, R.color.white)); // Ayah number color
-////        waqafView.setBackgroundResource(R.drawable.ayah_number_background); // Circular background
-//        waqafView.setGravity(Gravity.CENTER);
-//        waqafView.setTextSize(context.getResources().getDimension(R.dimen.arabic_text_size) /
-//                context.getResources().getDisplayMetrics().density);
-//        waqafView.setTypeface(ResourcesCompat.getFont(context, R.font.uthmanic_scripts_hafs));
-//        waqafView.setPadding(8,0,8,0);
-//
-//        FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
-//                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT
-//        );
-//        params.setMargins(8,0,8,0); // Add some margin around the ayah number
-//        waqafView.setLayoutParams(params);
-//
-//        container.addView(waqafView);
-//    }
+    private void showRemoveConfirmDialog(MyViewHolder holder, QuranAyahDetailEntity ayah, int position) {
+        new AlertDialog.Builder(context)
+                .setTitle("Remove Bookmark")
+                .setMessage("Are you sure you want to remove the bookmark for this verse?")
+                .setPositiveButton("Remove", (dialog, which) -> {
+                    removeBookmark(holder, ayah, position);
+                })
+                .setNegativeButton("Cancel", null) // Do nothing on cancel
+                .show();
+    }
+    private void showAddBookmarkDialog(MyViewHolder holder, QuranAyahDetailEntity ayah, int position) {
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_notes, null);
+        EditText etNoteDescription = dialogView.findViewById(R.id.etNoteDescription);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+        Button btnSave = dialogView.findViewById(R.id.btnSave);
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setView(dialogView)
+                .setCancelable(false)
+                .create();
 
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnSave.setOnClickListener(v -> {
+            String notes = etNoteDescription.getText().toString().trim();
+            addBookmark(holder, ayah, position, notes); // Pass notes to the add function
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+    private void addBookmark(MyViewHolder holder, QuranAyahDetailEntity ayah, int position, String notes) {
+        Log.d("BookmarkDebug", "--- Preparing to Add Bookmark ---");
+        Log.d("BookmarkDebug", "Auth Token: " + authToken);
+        Log.d("BookmarkDebug", "Verse Key (for verse_id): " + ayah.getAyahKey());
+        Log.d("BookmarkDebug", "Surah ID (for chapter_id): " + String.valueOf(ayah.getSurahId()));
+        Log.d("BookmarkDebug", "Notes: " + notes);
 
-    // REMOVE fetchWordDetails method as it's no longer needed for this navigation
-    // private void fetchWordDetails(String wordKey) { ... }
+        Map<String, Object> verseProperties = new HashMap<>();
+        if (ayah.getGlobalAyahIndex() == null) {
+            Toast.makeText(context, "Error: Missing verse global index.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-    // NEW: Helper method to find an item's position in the list
+        verseProperties.put("surah_id", String.valueOf(ayah.getSurahId()));
+        verseProperties.put("ayah_index", String.valueOf(ayah.getGlobalAyahIndex()));
+
+        BookmarkRequest request = new BookmarkRequest("verse", verseProperties, notes);
+
+        quranApi.addBookmark("Bearer " + authToken, request).enqueue(new Callback<BookmarkResponse>() {
+            @Override
+            public void onResponse(Call<BookmarkResponse> call, Response<BookmarkResponse> response) {
+                if (response.isSuccessful() && "success".equals(response.body().getStatus())) {
+                    // SUCCESS: Update the local state
+                    bookmarkedVerseIds.add(String.valueOf(ayah.getGlobalAyahIndex()));
+                    notifyItemChanged(position); // Efficiently update just this item
+                    Toast.makeText(context, "Bookmark added", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Already bookmarked or failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BookmarkResponse> call, Throwable t) {
+                Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private int findPositionByKey(String ayahKey) {
         for (int i = 0; i < ayahEntityList.size(); i++) {
             if (ayahEntityList.get(i).getAyahKey().equals(ayahKey)) {
@@ -452,44 +400,28 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
         });
     }
 
-
-    private void removeBookmark(MyViewHolder holder, ChapterAyah ayah, int position) {
-        if (authToken == null) {
-            Toast.makeText(context, "Please login to remove bookmark", Toast.LENGTH_SHORT).show();
+    private void removeBookmark(MyViewHolder holder, QuranAyahDetailEntity ayah, int position) {
+         if (ayah.getGlobalAyahIndex() == null) {
+            Toast.makeText(context, "Error: Missing verse global index.", Toast.LENGTH_SHORT).show();
             return;
         }
-        Call<RemoveBookmarkResponse> call = quranApi.removeBookmark("Bearer " + authToken, "verse", ayah.getId());
-        call.enqueue(new Callback<RemoveBookmarkResponse>() {
+        String itemIdToRemove = String.valueOf(ayah.getGlobalAyahIndex());
+        quranApi.removeBookmark("Bearer " + authToken, "verse", itemIdToRemove).enqueue(new Callback<RemoveBookmarkResponse>() {
             @Override
-            public void onResponse(Call<RemoveBookmarkResponse> call,
-                                   Response<RemoveBookmarkResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    RemoveBookmarkResponse removeResponse = response.body();
-                    if ("success".equals(removeResponse.getStatus())) {
-                        ayah.setBookmarked(false);
-                        holder.ayatCardBookmarkIcon.setImageResource(R.drawable.ic_bookmark);
-                        Toast.makeText(context, "Bookmark removed successfully",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, "Failed to remove bookmark",
-                                Toast.LENGTH_SHORT).show();
-                    }
+            public void onResponse(Call<RemoveBookmarkResponse> call, Response<RemoveBookmarkResponse> response) {
+                if (response.isSuccessful() && "success".equals(response.body().getStatus())) {
+                    // SUCCESS: Update the local state
+                    bookmarkedVerseIds.remove(String.valueOf(ayah.getGlobalAyahIndex()));
+                    notifyItemChanged(position); // Efficiently update just this item
+                    Toast.makeText(context, "Bookmark removed", Toast.LENGTH_SHORT).show();
                 } else {
-                    try {
-                        String errorBody = response.errorBody() != null ?
-                                response.errorBody().string() : "Unknown error";
-                        Toast.makeText(context, "Failed to remove bookmark: " + errorBody,
-                                Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        Toast.makeText(context, "Failed to remove bookmark", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(context, "Failed to remove bookmark", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<RemoveBookmarkResponse> call, Throwable t) {
-                Toast.makeText(context, "Error removing bookmark: " + t.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -502,7 +434,7 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         FlexboxLayout arabicWordsContainer; // Make sure this ID exists in card_item_single_ayat.xml
         TextView englishTranslation, ayatNumber;
-        ImageView ayatCardBookmarkIcon, ayatCardAddNotesIcon, ayatCardPlayAudioIcon;
+        ImageView ayatCardBookmarkIcon, ayatCardPlayAudioIcon;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -510,26 +442,9 @@ public class SurahRecitationByAyatAdapter extends RecyclerView.Adapter<SurahReci
             englishTranslation = itemView.findViewById(R.id.EnglishTranslationTV);
             ayatNumber = itemView.findViewById(R.id.AyatNumberByAyatTV);
             ayatCardBookmarkIcon = itemView.findViewById((R.id.ayatCardBookmarkIcon));
-            ayatCardAddNotesIcon = itemView.findViewById((R.id.ayatCardAddNotesIcon));
+//            ayatCardAddNotesIcon = itemView.findViewById((R.id.ayatCardAddNotesIcon));
             ayatCardPlayAudioIcon = itemView.findViewById(R.id.ayatCardPlayAudioIcon);
         }
-    }
-    private void showAddNotesDialog(MyViewHolder holder, ChapterAyah ayah) {
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_notes, null);
-        EditText etNoteDescription = dialogView.findViewById(R.id.etNoteDescription);
-        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
-        Button btnSave = dialogView.findViewById(R.id.btnSave);
-        AlertDialog dialog = new AlertDialog.Builder(context)
-                .setView(dialogView)
-                .setCancelable(false)
-                .create();
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-        btnSave.setOnClickListener(v -> {
-            String description = etNoteDescription.getText().toString().trim();
-            addBookmarkWithNotes(holder, ayah, description);
-            dialog.dismiss();
-        });
-        dialog.show();
     }
 
     private void showLoginDialog() {

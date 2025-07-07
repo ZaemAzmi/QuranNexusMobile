@@ -9,30 +9,33 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.qurannexus.core.database.entities.QuranAyahDetailEntity;
 import com.example.qurannexus.features.recitation.SingleAyahPageFragment;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import android.util.SparseArray;
 
 public class AyahPageAdapter extends FragmentStateAdapter {
-
     public static final int TOTAL_PAGES = 604;
+    private Set<String> bookmarkedVerseIds; // NEW: Hold the bookmark data
 
-    public AyahPageAdapter(@NonNull Fragment fragment) {
+    // MODIFIED: Update the constructor
+    public AyahPageAdapter(Fragment fragment, Set<String> bookmarkedVerseIds) {
         super(fragment);
+        this.bookmarkedVerseIds = bookmarkedVerseIds;
     }
 
-    @OptIn(markerClass = UnstableApi.class)
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        // The adapter's only job is to tell the new fragment which page it is responsible for.
         int pageNumber = TOTAL_PAGES - position;
-        return SingleAyahPageFragment.newInstance(pageNumber);
+        // MODIFIED: Pass the bookmark data to the fragment instance
+        return SingleAyahPageFragment.newInstance(pageNumber, new ArrayList<>(bookmarkedVerseIds));
     }
 
     @Override
     public int getItemCount() {
         return TOTAL_PAGES;
     }
-
-    // REMOVE the pageDataCache and setPageData methods. They are no longer needed here.
 }

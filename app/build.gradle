@@ -12,7 +12,7 @@ apply plugin: 'androidx.navigation.safeargs'
 android {
     namespace 'com.example.qurannexus'
     compileSdk 34
-
+    flavorDimensions += "environment"
     defaultConfig {
         applicationId "com.example.qurannexus"
         minSdk 26
@@ -32,6 +32,29 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    //  Define the actual product flavors
+    // Define the actual product flavors
+    productFlavors {
+        // Flavor for connecting via the Android Emulator
+        create("localEmulator") {
+            dimension = "environment"
+            // The emulator's special IP for the host machine's localhost
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8000/api/v1/mobile/\"")
+        }
+
+        // Flavor for connecting from a physical device on the same Wi-Fi
+        create("localDevice") {
+            dimension = "environment"
+            // IMPORTANT: Replace with your computer's actual Wi-Fi IP address
+            buildConfigField("String", "BASE_URL", "\"http://192.168.0.27:8000/api/v1/mobile/\"")
+        }
+
+        // Flavor for connecting to the production server
+        create("prod") {
+            dimension = "environment"
+            buildConfigField("String", "BASE_URL", "\"http://13.238.101.42/api/v1/mobile/\"")
         }
     }
     buildFeatures{

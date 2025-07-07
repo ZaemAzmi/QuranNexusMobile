@@ -1,7 +1,5 @@
 package com.example.qurannexus.features.recitation;
 
-import static com.example.qurannexus.features.recitation.ByPageRecitationFragment.TOTAL_PAGES;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,22 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.cardview.widget.CardView;
-import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.FlowLiveDataConversions;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.util.UnstableApi;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
-import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -37,14 +31,11 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.lifecycle.LifecycleKt;
 
 import com.example.qurannexus.R;
 import com.example.qurannexus.core.activities.MainActivity;
@@ -54,13 +45,10 @@ import com.example.qurannexus.core.network.ApiService;
 import com.example.qurannexus.core.utils.CoroutinesHelper;
 import com.example.qurannexus.core.utils.IconPopupMenu;
 import com.example.qurannexus.core.utils.ReadingTracker;
-import com.example.qurannexus.core.utils.Result;
 import com.example.qurannexus.core.utils.SurahDetails;
-import com.example.qurannexus.core.utils.TokenManager;
 import com.example.qurannexus.core.utils.UtilityService;
 import com.example.qurannexus.features.bookmark.enums.RecentlyReadType;
 import com.example.qurannexus.features.bookmark.interfaces.BookmarkApi;
-import com.example.qurannexus.features.bookmark.models.AddRecentlyReadRequest;
 import com.example.qurannexus.features.bookmark.models.BookmarkChapter;
 import com.example.qurannexus.features.bookmark.models.BookmarkPage;
 import com.example.qurannexus.features.bookmark.models.BookmarkRequest;
@@ -69,7 +57,6 @@ import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
 import com.example.qurannexus.features.bookmark.models.RemoveBookmarkResponse;
 import com.example.qurannexus.features.bookmark.models.SimpleResponse;
 import com.example.qurannexus.features.bookmark.repositories.RecentlyReadRepository;
-import com.example.qurannexus.features.recitation.models.PageAdapter;
 import com.example.qurannexus.features.recitation.models.SurahModel;
 import com.example.qurannexus.core.utils.QuranMetadata;
 import com.example.qurannexus.features.recitation.viewModels.PageDataState;
@@ -85,9 +72,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import kotlin.Unit;
 import kotlinx.coroutines.CoroutineScope;
-import kotlinx.coroutines.Dispatchers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -388,6 +373,7 @@ public class RecitationPageFragment extends Fragment {
                 rootView.findViewById(R.id.recitationFragmentContainerView).setVisibility(View.VISIBLE);
 
                 PageDataState.Success successState = (PageDataState.Success) state;
+                Log.d("RecitationDebug", "ViewModel Success! Loaded " + successState.getAyahs().size() + " ayahs for page " + successState.getAyahs().get(0).getPageId());
                 if (successState.getAyahs().isEmpty()) {
                     Toast.makeText(getContext(), "No data for this page.", Toast.LENGTH_SHORT).show();
                     return;
@@ -407,6 +393,8 @@ public class RecitationPageFragment extends Fragment {
 
             } else if (state instanceof PageDataState.Error) {
                 mainLoadingIndicator.setVisibility(View.GONE);
+                PageDataState.Error errorState = (PageDataState.Error) state;
+                Log.d("RecitationDebug", "ViewModel Error! " + errorState.getMessage());
                 rootView.findViewById(R.id.recitationFragmentContainerView).setVisibility(View.VISIBLE);
                 // ... (error handling)
             } else if (state instanceof PageDataState.Loading) {
@@ -1047,7 +1035,7 @@ public class RecitationPageFragment extends Fragment {
 //    @OptIn(markerClass = UnstableApi.class)
 //    private void setPageContentCallback(int pageNumber) {
 //        // Create callback for page content
-//        PageAdapter.PageContentCallback callback = new PageAdapter.PageContentCallback() {
+//        ByPageAdapter.PageContentCallback callback = new ByPageAdapter.PageContentCallback() {
 //            @Override
 //            public void onPageContentFetched(SpannableStringBuilder content) {
 //                // Get first surah in the page from QuranMetadata

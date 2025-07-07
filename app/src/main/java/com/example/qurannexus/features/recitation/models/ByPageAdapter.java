@@ -48,13 +48,13 @@ import java.util.List;
 import java.util.Map;
 
 @UnstableApi
-public class PageAdapter extends RecyclerView.Adapter<PageAdapter.QuranPageViewHolder> {
+public class ByPageAdapter extends RecyclerView.Adapter<ByPageAdapter.QuranPageViewHolder> {
 
     private final ByPageRecitationFragment fragment;
     private final SparseArray<SpannableStringBuilder> pageContents = new SparseArray<>();
     private final Gson gson = new Gson();
 
-    public PageAdapter(ByPageRecitationFragment fragment, List<QuranAyahDetailEntity> initialAyahs, int initialPageNum) {
+    public ByPageAdapter(ByPageRecitationFragment fragment, List<QuranAyahDetailEntity> initialAyahs, int initialPageNum) {
         this.fragment = fragment;
         if (initialAyahs != null && !initialAyahs.isEmpty()) {
             pageContents.put(initialPageNum, renderPageContent(initialAyahs));

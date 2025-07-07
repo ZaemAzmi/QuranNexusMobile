@@ -1,7 +1,9 @@
 package com.example.qurannexus.features.recitation;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qurannexus.core.activities.MainActivity;
 import com.example.qurannexus.core.database.entities.QuranAyahDetailEntity;
+import com.example.qurannexus.core.interfaces.QuranApi;
+import com.example.qurannexus.core.network.ApiService;
+import com.example.qurannexus.core.utils.TokenManager;
+import com.example.qurannexus.features.bookmark.models.BookmarkVerse;
+import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
 import com.example.qurannexus.features.recitation.models.SurahRecitationByAyatAdapter;
 import com.example.qurannexus.features.recitation.viewModels.PageDataState;
 import com.example.qurannexus.features.recitation.viewModels.RecitationViewModel;
@@ -27,20 +34,37 @@ import com.google.gson.reflect.TypeToken;
 import com.example.qurannexus.R;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @UnstableApi
+@AndroidEntryPoint
 public class SingleAyahPageFragment extends Fragment {
 
-    private static final String ARG_PAGE_NUMBER = "arg_page_number"; // Changed argument
+    private static final String ARG_PAGE_NUMBER = "arg_page_number";
+    private static final String ARG_BOOKMARKED_IDS = "arg_bookmarked_ids";
     private int pageNumber;
     private RecitationViewModel sharedViewModel;
     private RecyclerView recyclerView;
     private SurahRecitationByAyatAdapter adapter;
-    // MODIFIED: newInstance now only needs the page number
-    public static SingleAyahPageFragment newInstance(int pageNumber) {
+    private QuranApi quranApi;
+    private String authToken;
+    @Inject
+    TokenManager tokenManager;
+    private Set<String> bookmarkedVerseIds = new HashSet<>();
+    public static SingleAyahPageFragment newInstance(int pageNumber, ArrayList<String> bookmarkedIds) {
         SingleAyahPageFragment fragment = new SingleAyahPageFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE_NUMBER, pageNumber);
+        args.putStringArrayList(ARG_BOOKMARKED_IDS, bookmarkedIds); // Pass the list
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,6 +78,10 @@ public class SingleAyahPageFragment extends Fragment {
 
         if (getArguments() != null) {
             pageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
+            List<String> ids = getArguments().getStringArrayList(ARG_BOOKMARKED_IDS);
+            if (ids != null) {
+                this.bookmarkedVerseIds = new HashSet<>(ids);
+            }
         }
     }
 
@@ -68,8 +96,8 @@ public class SingleAyahPageFragment extends Fragment {
         // Setup adapter with an empty list initially
         adapter = new SurahRecitationByAyatAdapter(requireContext(), this,  new ArrayList<>());
         recyclerView.setAdapter(adapter);
-
-        observeViewModel(); // Start observing
+        adapter.setBookmarkedVerseIds(this.bookmarkedVerseIds);
+        observeViewModel();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

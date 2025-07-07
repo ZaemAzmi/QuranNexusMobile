@@ -1,9 +1,5 @@
 package com.example.qurannexus.features.recitation;
 
-import static com.example.qurannexus.features.recitation.ByPageRecitationFragment.TOTAL_PAGES;
-
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -16,14 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.FlowLiveDataConversions;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.util.UnstableApi;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -31,7 +22,9 @@ import com.example.qurannexus.R;
 import com.example.qurannexus.core.activities.MainActivity;
 import com.example.qurannexus.core.database.entities.QuranAyahDetailEntity;
 import com.example.qurannexus.core.interfaces.QuranApi;
-import com.example.qurannexus.core.utils.UtilityService;
+import com.example.qurannexus.core.network.ApiService;
+import com.example.qurannexus.core.utils.TokenManager;
+import com.example.qurannexus.features.bookmark.models.BookmarkList;
 import com.example.qurannexus.features.bookmark.models.BookmarkVerse;
 import com.example.qurannexus.features.bookmark.models.BookmarksResponse;
 import com.example.qurannexus.features.home.HomeFragment;
@@ -40,18 +33,12 @@ import com.example.qurannexus.features.home.achievement.StreakCheckCallback;
 import com.example.qurannexus.features.recitation.models.AyahPageAdapter;
 import com.example.qurannexus.features.recitation.models.AyahRecitationModel;
 import com.example.qurannexus.features.recitation.models.ChapterAyah;
-import com.example.qurannexus.features.recitation.models.SurahRecitationByAyatAdapter;
-import com.example.qurannexus.core.network.ApiService;
 import com.example.qurannexus.features.recitation.models.VersesPaginationAdapter;
 import com.example.qurannexus.features.recitation.models.Word;
-import com.example.qurannexus.features.recitation.viewModels.PageDataState;
 import com.example.qurannexus.features.recitation.viewModels.RecitationViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,6 +47,7 @@ import java.util.Map;
 import java.util.Set;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import jakarta.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,7 +81,9 @@ public class ByAyatRecitationFragment extends Fragment {
     private MaterialButton nextPageButton;
 
     private VersesPaginationAdapter paginationAdapter;
-
+    @Inject
+    TokenManager tokenManager;
+    private Set<String> bookmarkedVerseIds = new HashSet<>();
     public ByAyatRecitationFragment() {}
 
 //    public static ByAyatRecitationFragment newInstance(int surahNumber, int scrollToVerse) {
@@ -131,6 +121,8 @@ public class ByAyatRecitationFragment extends Fragment {
         if (getArguments() != null) {
             initialPageNumber = getArguments().getInt(ARG_INITIAL_PAGE_NUMBER);
         }
+        quranApi = ApiService.getQuranClient().create(QuranApi.class);
+        authToken = tokenManager.getToken();
     }
 
 //    @Override
@@ -187,33 +179,50 @@ public class ByAyatRecitationFragment extends Fragment {
 //    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Use your original layout that has the ViewPager2
         View view = inflater.inflate(R.layout.fragment_by_ayat_recitation, container, false);
         versesPager = view.findViewById(R.id.versesPager);
-        // REMOVE pagination controls for now, or hide them.
         pageInfoTextView = view.findViewById(R.id.pageInfoTextView);
-        setupViewPager();
-//        observeSharedViewModel(); // NEW: Start observing for updates
+//        setupViewPager();
+        fetchBookmarksAndSetupPager();
         return view;
     }
-//    private void observeSharedViewModel() {
-//        LiveData<PageDataState> pageDataLiveData = FlowLiveDataConversions.asLiveData(sharedViewModel.getPageData());
-//        pageDataLiveData.observe(getViewLifecycleOwner(), state -> {
-//            if (state instanceof PageDataState.Success) {
-//                PageDataState.Success successState = (PageDataState.Success) state;
-//                if (!successState.getAyahs().isEmpty()) {
-//                    // When new data arrives, tell the adapter to update its cache.
-//                    int pageNumber = successState.getAyahs().get(0).getPageId();
-//                    if (pageAdapter != null) {
-//                        // The method name in AyahPageAdapter is setPageData, which is fine.
-//                        pageAdapter.setPageData(pageNumber, successState.getAyahs());
-//                    }
-//                }
-//            }
-//        });
-//    }
+    // NEW: Central method to control the loading flow
+    private void fetchBookmarksAndSetupPager() {
+        if (authToken == null) {
+            // If user is not logged in, just setup the pager with an empty set.
+            setupViewPager();
+            return;
+        }
+
+        quranApi.getBookmarks("Bearer " + authToken).enqueue(new Callback<BookmarksResponse>() {
+            @Override
+            public void onResponse(Call<BookmarksResponse> call, Response<BookmarksResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    BookmarkList bookmarkList = response.body().getBookmarks();
+                    if(bookmarkList != null) {
+                        List<BookmarkVerse> bookmarkVerses = bookmarkList.getVerses();
+                        if (bookmarkVerses != null) {
+                            // Only loop if the list is not null
+                            for (BookmarkVerse verse : bookmarkVerses) {
+                                bookmarkedVerseIds.add(verse.getItemProperties().getAyahIndex());
+                            }
+                        }
+                    }
+                }
+                setupViewPager();
+            }
+
+            @Override
+            public void onFailure(Call<BookmarksResponse> call, Throwable t) {
+                Log.e("ByAyatRecitation", "Failed to fetch bookmarks", t);
+                // On failure, still setup the pager so the app doesn't hang.
+                setupViewPager();
+            }
+        });
+    }
     private void setupViewPager() {
-        pageAdapter = new AyahPageAdapter(this); // Use the new, simpler adapter
+        // Pass the (now populated) set of bookmarks to the adapter
+        pageAdapter = new AyahPageAdapter(this, bookmarkedVerseIds);
         versesPager.setAdapter(pageAdapter);
 
         int initialPosition = AyahPageAdapter.TOTAL_PAGES - initialPageNumber;
@@ -251,7 +260,7 @@ public class ByAyatRecitationFragment extends Fragment {
                         bookmarkedAyahIds.clear();
                         List<BookmarkVerse> verses = bookmarksResponse.getBookmarks().getVerses();
                         for (BookmarkVerse verse : verses) {
-                            bookmarkedAyahIds.add(verse.getItemProperties().getVerseId());
+                            bookmarkedAyahIds.add(verse.getItemProperties().getAyahIndex());
                         }
                     }
                 }

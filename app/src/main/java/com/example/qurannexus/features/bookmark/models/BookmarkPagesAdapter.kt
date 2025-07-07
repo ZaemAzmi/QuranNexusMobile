@@ -120,33 +120,12 @@ class BookmarkPagesAdapter(private var pagesList: List<BookmarkPage>) :
 
     private fun navigateWithActivity(activity: FragmentActivity, pageNumber: Int) {
         try {
-            // Get the surah that starts on this page
-            val surahNumber = QuranMetadata.getInstance().getSurahNumberForPage(pageNumber)
-            val surahDetails = QuranMetadata.getInstance().getSurahDetails(surahNumber)
-
-            // Create a SurahModel for the fragment
-            val surahModel = SurahModel(
-                surahDetails?.englishName ?: "",
-                surahDetails?.arabicName ?: "",
-                surahNumber.toString(),
-                surahDetails?.translationName ?: "",
-                surahDetails?.numberOfVerses.toString(),
-                false
+            val fragment = RecitationPageFragment.newInstanceForNavigation(
+                true, null, null, pageNumber, null, null // Force page mode
+                // Not strictly needed for page nav
+                // The most important piece
             )
 
-            // Create RecitationPageFragment with pageByPage layout
-            val fragment = RecitationPageFragment.newInstance(
-                surahModel,
-                "pageByPage",
-                surahNumber - 1
-            )
-
-            // Add the page number as an argument
-            val args = fragment.arguments ?: Bundle()
-            args.putInt("initial_page", pageNumber)
-            fragment.arguments = args
-
-            // Perform the fragment transaction
             activity.supportFragmentManager.beginTransaction()
                 .replace(R.id.mainFragmentContainer, fragment)
                 .addToBackStack(null)

@@ -10,9 +10,9 @@ data class BookmarkVerse(
     val createdAt: String
 ) {
     data class VerseProperties(
-        @SerializedName("verse_id")
-        val verseId: String,
-        @SerializedName("chapter_id")
-        val chapterId: String
+        @SerializedName("ayah_index")
+        val ayahIndex: String,
+        @SerializedName("surah_id")
+        val surahId: String
     )
 }

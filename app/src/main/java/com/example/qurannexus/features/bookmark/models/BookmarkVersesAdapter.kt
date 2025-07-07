@@ -2,8 +2,9 @@ package com.example.qurannexus.features.bookmark.models
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
+import android.content.ContextWrapper
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +14,31 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
+import com.example.qurannexus.core.database.entities.VerseLocationInfo
 import com.example.qurannexus.core.interfaces.QuranApi
 import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.core.utils.QuranMetadata
 import com.example.qurannexus.features.recitation.RecitationPageFragment
+import com.example.qurannexus.features.recitation.data.RecitationDao
 import com.example.qurannexus.features.recitation.models.SurahModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
+class BookmarkVersesAdapter(
+    private var versesList: List<BookmarkVerse>,
+    private val dao: RecitationDao,
+    private val lifecycleOwner: LifecycleOwner
+) :
     RecyclerView.Adapter<BookmarkVersesAdapter.BookmarkVerseViewHolder>() {
 
     inner class BookmarkVerseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -46,8 +60,7 @@ class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
         val verse = versesList[position]
         val context = holder.itemView.context
 
-        // Get chapter details from QuranMetadata
-        val surahDetails = QuranMetadata.getInstance().getSurahDetails(verse.itemProperties.chapterId.toInt())
+        val surahDetails = QuranMetadata.getInstance().getSurahDetails(verse.itemProperties.surahId.toInt())
 
         surahDetails?.let { details ->
             // Set the verse title
@@ -64,7 +77,7 @@ class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
             }
 
             // Set chapter and verse number
-            holder.verseChapterAndVerseNumber.text = "Chapter ${verse.itemProperties.chapterId}, Verse ${verse.itemProperties.verseId}"
+            holder.verseChapterAndVerseNumber.text = "Chapter ${verse.itemProperties.surahId}, Verse ${verse.itemProperties.ayahIndex}"
 
             // Setup menu button
             holder.menuButton.setOnClickListener { view ->
@@ -72,36 +85,90 @@ class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
             }
 
             holder.cardView.setOnClickListener {
-                navigateToVerse(context, verse.itemProperties.chapterId.toInt(), verse.itemProperties.verseId.toInt())
+                val globalIndex = verse.itemProperties.ayahIndex.toInt()
+                val surahId = verse.itemProperties.surahId.toInt()
+                navigateToVerse(context, surahId, globalIndex)
             }
         }
     }
-    private fun navigateToVerse(context: Context, chapterId: Int, verseId: Int) {
-        val activity = context as? FragmentActivity ?: return
 
-        // Get SurahDetails using QuranMetadata
-        val surahDetails = QuranMetadata.getInstance().getSurahDetails(chapterId)
-        val surahModel = SurahModel(
-            surahDetails?.englishName ?: "",
-            surahDetails?.arabicName ?: "",
-            chapterId.toString(),
-            surahDetails?.translationName ?: "",
-            surahDetails?.numberOfVerses.toString(),
-            false // Set initial bookmark state
-        )
-        // Create bundle for the verse to scroll to
-        val bundle = Bundle().apply {
-            putInt("scrollToVerse", verseId)
+    private fun navigateToVerse(context: Context, chapterId: Int, globalAyahIndex: Int) {
+        Log.d("BookmarkAdapter", "Navigate request: chapterId=$chapterId, globalAyahIndex=$globalAyahIndex")
+
+        // Get the correct Activity context, even from a nested fragment
+        var activityContext = context
+        while (activityContext !is FragmentActivity && activityContext is ContextWrapper) {
+            activityContext = activityContext.baseContext
         }
 
-        // Replace current fragment
-        val fragment = RecitationPageFragment.newInstance(surahModel, "verseByVerse", chapterId - 1)
+        val activity = activityContext as? FragmentActivity
+        if (activity == null) {
+            Log.e("BookmarkAdapter", "Could not find FragmentActivity context")
+            Toast.makeText(context, "Unable to navigate to verse", Toast.LENGTH_SHORT).show()
+            return
+        }
+        // Now that we have the activity, proceed with the navigation logic
+        // Use the safe lifecycleScope to perform the background DB query
+        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val locationInfo = dao.getVerseLocationByGlobalIndex(globalAyahIndex)
 
-        // Replace current fragment
-        activity.supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
+            // Switch back to the main thread to perform UI actions
+            withContext(Dispatchers.Main) {
+                if (locationInfo == null) {
+                    Toast.makeText(context, "Could not find verse location.", Toast.LENGTH_SHORT).show()
+                    return@withContext
+                }
+
+                val targetPage = locationInfo.pageId
+                val perSurahIndex = locationInfo.perSurahAyahIndex
+
+                Log.d("BookmarkAdapter", "DB Result: TargetPage=$targetPage, PerSurahIndex=$perSurahIndex")
+
+                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+                val isByPage = sharedPreferences.getBoolean("recitation_layout_by_page", false)
+
+                val fragment: RecitationPageFragment
+
+                if (isByPage) {
+                    // Logic for Page-by-Page navigation
+                    Log.d("BookmarkAdapter", "Navigating in Page Mode")
+                    fragment = RecitationPageFragment.newInstanceForNavigation(
+                        true,
+                        chapterId.toString(),
+                        perSurahIndex.toString(),
+                        targetPage,
+                        perSurahIndex,
+                        null
+                    )
+                } else {
+                    // Logic for Verse-by-Verse navigation
+                    Log.d("BookmarkAdapter", "Navigating in Verse Mode")
+                    // --- FIX: The issue with your Page adapter is here. It uses an older newInstance.
+                    // We will use the correct newInstanceForNavigation.
+                    val verseByVerseFragment = RecitationPageFragment.newInstanceForNavigation(
+                        false,
+                        chapterId.toString(),
+                        perSurahIndex.toString(),
+                        targetPage,
+                        null,
+                        chapterId - 1
+                        // Pass the page number for initial load
+                    )
+                    fragment = verseByVerseFragment
+                }
+
+                // Perform the fragment transaction on the main container
+                try {
+                    activity.supportFragmentManager.beginTransaction()
+                        .replace(R.id.mainFragmentContainer, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                    Log.d("BookmarkAdapter", "Fragment transaction committed successfully.")
+                } catch (e: Exception) {
+                    Log.e("BookmarkAdapter", "Error during fragment transaction", e)
+                }
+            }
+        }
     }
     private fun showPopupMenu(view: View, verse: BookmarkVerse, context: Context) {
         val popup = PopupMenu(context, view)
@@ -147,7 +214,7 @@ class BookmarkVersesAdapter(private var versesList: List<BookmarkVerse>) :
         }
 
         val quranApi = ApiService.getQuranClient().create(QuranApi::class.java)
-        quranApi.removeBookmark("Bearer $token", "verse", verse.itemProperties.verseId)
+        quranApi.removeBookmark("Bearer $token", "verse", verse.itemProperties.ayahIndex)
             .enqueue(object : Callback<RemoveBookmarkResponse> {
                 override fun onResponse(
                     call: Call<RemoveBookmarkResponse>,

@@ -1,21 +1,17 @@
 package com.example.qurannexus.features.recitation;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.style.AlignmentSpan;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -45,30 +41,23 @@ import com.example.qurannexus.features.home.achievement.AchievementService;
 import com.example.qurannexus.features.home.achievement.StreakCheckCallback;
 import com.example.qurannexus.features.recitation.audio.AudioPlayerManager;
 import com.example.qurannexus.features.recitation.audio.ui.DraggableFloatingActionButton;
-import com.example.qurannexus.features.recitation.models.PageAyah;
+import com.example.qurannexus.features.recitation.models.ByPageAdapter;
 import com.example.qurannexus.features.recitation.models.PageVerseResponse;
-import com.example.qurannexus.features.recitation.models.PageAdapter;
 import com.example.qurannexus.core.utils.UtilityService;
 import com.example.qurannexus.core.network.ApiService;
-import com.example.qurannexus.features.recitation.models.Word;
 import com.example.qurannexus.features.recitation.viewModels.PageDataState;
 import com.example.qurannexus.features.recitation.viewModels.RecitationViewModel;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import dagger.hilt.android.UnstableApi;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 @AndroidEntryPoint
 @androidx.media3.common.util.UnstableApi
 public class ByPageRecitationFragment extends Fragment {
@@ -88,9 +77,9 @@ public class ByPageRecitationFragment extends Fragment {
     private QuranApi quranApi;
     private UtilityService utilityService;
     public ViewPager2 viewPager;
-    private PageAdapter pageAdapter;
+    private ByPageAdapter byPageAdapter;
     private TextView pageNumberTextView;
-//    private PageAdapter.PageContentCallback contentCallback;
+//    private ByPageAdapter.PageContentCallback contentCallback;
     private AudioPlayerManager audioPlayerManager;
     private DraggableFloatingActionButton audioFab;
     private MaterialCardView expandedAudioPlayer;
@@ -207,8 +196,8 @@ public class ByPageRecitationFragment extends Fragment {
                 if (!successState.getAyahs().isEmpty()) {
                     // When new data arrives, tell the adapter to update its cache.
                     int pageNumber = successState.getAyahs().get(0).getPageId();
-                    if (pageAdapter != null) {
-                        pageAdapter.updatePageContent(pageNumber, successState.getAyahs());
+                    if (byPageAdapter != null) {
+                        byPageAdapter.updatePageContent(pageNumber, successState.getAyahs());
                     }
                 }
             }
@@ -216,8 +205,8 @@ public class ByPageRecitationFragment extends Fragment {
     }
 
 //    private void setupViewPager() {
-//        pageAdapter = new PageAdapter(this);
-//        viewPager.setAdapter(pageAdapter);
+//        byPageAdapter = new ByPageAdapter(this);
+//        viewPager.setAdapter(byPageAdapter);
 //
 //        int initialPosition = TOTAL_PAGES - currentPageNumber;
 //        viewPager.setCurrentItem(initialPosition, false);
@@ -242,8 +231,8 @@ public class ByPageRecitationFragment extends Fragment {
 
     private void setupViewPager() {
         // Pass the initial data to the adapter
-        pageAdapter = new PageAdapter(this, initialPageAyahs, initialPageNumber);
-        viewPager.setAdapter(pageAdapter);
+        byPageAdapter = new ByPageAdapter(this, initialPageAyahs, initialPageNumber);
+        viewPager.setAdapter(byPageAdapter);
 
         int initialPosition = TOTAL_PAGES - initialPageNumber;
         viewPager.setCurrentItem(initialPosition, false);
@@ -311,10 +300,10 @@ public class ByPageRecitationFragment extends Fragment {
 
     // NEW METHOD: This is called by the parent RecitationPageFragment when new page data arrives.
     public void updateAdapterData(List<QuranAyahDetailEntity> ayahs) {
-        if (pageAdapter != null && ayahs != null && !ayahs.isEmpty()) {
+        if (byPageAdapter != null && ayahs != null && !ayahs.isEmpty()) {
             // Get the page number from the data itself
             int pageNumber = ayahs.get(0).getPageId();
-            pageAdapter.updatePageContent(pageNumber, ayahs);
+            byPageAdapter.updatePageContent(pageNumber, ayahs);
         }
     }
     private void setupAudioControls() {
@@ -418,7 +407,7 @@ public class ByPageRecitationFragment extends Fragment {
             }
         });
     }
-//    public void fetchPageVerses(int pageNumber, PageAdapter.PageContentCallback callback) {
+//    public void fetchPageVerses(int pageNumber, ByPageAdapter.PageContentCallback callback) {
 //        quranApi.getPageVerses(pageNumber, true,true).enqueue(new Callback<PageVerseResponse>() {
 //            @Override
 //            public void onResponse(Call<PageVerseResponse> call, Response<PageVerseResponse> response) {
@@ -735,7 +724,7 @@ public class ByPageRecitationFragment extends Fragment {
         }
     }
 
-//    public void setPageContentCallback(PageAdapter.PageContentCallback callback) {
+//    public void setPageContentCallback(ByPageAdapter.PageContentCallback callback) {
 //        this.contentCallback = callback;
 //    }
 
