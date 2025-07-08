@@ -61,11 +61,14 @@ class BookmarkChaptersFragment : Fragment() {
             override fun onResponse(call: Call<BookmarksResponse>, response: Response<BookmarksResponse>) {
                 if (!isAdded) return
                 if (response.isSuccessful && response.body() != null) {
-                    val bookmarksResponse = response.body()!!
-                    if (bookmarksResponse.status == "success") {
+                    val bookmarksResponse = response.body()
+                    if (bookmarksResponse?.status == "success") {
                         val chapters = bookmarksResponse.bookmarks.chapters
-                        if(chapters.isEmpty()){
-                            Toast.makeText(context, "No bookmarked chapters found", Toast.LENGTH_SHORT).show()
+                        if(chapters.isNullOrEmpty()){
+                            if(isAdded){
+                                Toast.makeText(context, "No bookmarked chapters found", Toast.LENGTH_SHORT).show()
+                            }
+                            bookmarkChaptersAdapter.updateData(emptyList())
                             return
                         }
                         // Map the chapters with QuranMetadata

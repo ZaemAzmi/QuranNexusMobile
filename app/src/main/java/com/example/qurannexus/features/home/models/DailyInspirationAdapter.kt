@@ -45,27 +45,33 @@ class DailyInspirationAdapter(
     override fun onBindViewHolder(holder: InspirationViewHolder, position: Int) {
         val quote = inspirationQuotes[position]
 
-        // Log to debug
         Log.d("DailyInspirationAdapter", "Binding quote ID: ${quote.Id}")
 
-        // Set the quote description
         holder.quoteTextView.text = quote.Description
-
-        // Set the quote source
         holder.sourceTextView.text = quote.Source
+        // 1. Determine if the current quote is a default/placeholder quote.
+        val isDefaultQuote = quote.Id.startsWith("default")
 
-        // Check if this quote is bookmarked and update icon immediately
-        val isBookmarked = isQuoteBookmarked(quote.Id)
-        Log.d("DailyInspirationAdapter", "Quote ${quote.Id} is bookmarked: $isBookmarked")
-        updateBookmarkIcon(holder.btnBookmark, isBookmarked)
+        // 2. Control the visibility and functionality of the bookmark button.
+        if (isDefaultQuote || token == null) {
+            // Hide the bookmark button entirely if it's a default quote or the user is not logged in.
+            holder.btnBookmark.visibility = View.GONE
+        } else {
+            // Only show the button and set up listeners for real quotes when a user is logged in.
+            holder.btnBookmark.visibility = View.VISIBLE
 
-        // Set up bookmark button click listener
-        holder.btnBookmark.setOnClickListener {
-            Log.d("DailyInspirationAdapter", "Bookmark button clicked for quote ID: ${quote.Id}")
-            toggleBookmark(quote, holder.btnBookmark)
+            // Check if this quote is bookmarked and update icon immediately
+            val isBookmarked = isQuoteBookmarked(quote.Id)
+            Log.d("DailyInspirationAdapter", "Quote ${quote.Id} is bookmarked: $isBookmarked")
+            updateBookmarkIcon(holder.btnBookmark, isBookmarked)
+
+            // Set up bookmark button click listener
+            holder.btnBookmark.setOnClickListener {
+                Log.d("DailyInspirationAdapter", "Bookmark button clicked for quote ID: ${quote.Id}")
+                toggleBookmark(quote, holder.btnBookmark)
+            }
         }
-
-        // Set up share button click listener
+        // Set up share button click listener (this part is fine)
         holder.btnShare.setOnClickListener {
             navigateToCustomizationActivity(quote)
         }

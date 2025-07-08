@@ -302,65 +302,42 @@ public class RecitationPageFragment extends Fragment {
             bookmarkDropdownMenu.setVisibility(View.GONE);
             isBookmarkMenuOpen = false;
         }
+        recordRecentlyRead();
+    }
+
+    private void recordRecentlyRead(){
         long durationInSeconds = (System.currentTimeMillis() - readingStartTime) / 1000;
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setBottomNavigationVisibility(true);
         }
-
-        // Check if reading duration is valid
         if (ReadingTracker.INSTANCE.isValidReadingDuration(durationInSeconds)) {
+            // --- START OF NEW, CONSOLIDATED LOGIC ---
             try {
-                // First, record the primary reading type (chapter or page)
-                String primaryItemId;
-                RecentlyReadType primaryType;
+                // 1. Determine the current Chapter and Page numbers, regardless of layout.
+                int chapterForThisView;
+                int pageForThisView;
 
-                if ("verseByVerse".equals(layoutType)) {
-                    primaryType = RecentlyReadType.CHAPTER;
-                    // Handle potential null surahModel
-                    if (surahModel != null) {
-                        primaryItemId = surahModel.getSurahNumber();
-                    } else if (currentSurahIndex >= 0) {
-                        // Use currentSurahIndex + 1 as fallback
-                        // (adding 1 because indices are 0-based but Surah numbers are 1-based)
-                        primaryItemId = String.valueOf(currentSurahIndex + 1);
-                    } else {
-                        // Can't determine chapter, skip recording
-                        Log.w("RecitationPage", "Cannot determine chapter ID, skipping recording");
-                        return;
-                    }
-                } else if ("pageByPage".equals(layoutType)) {
-                    primaryType = RecentlyReadType.PAGE;
-                    primaryItemId = String.valueOf(currentPageNumber);
-                } else {
-                    Log.w("RecitationPage", "Invalid layout type: " + layoutType);
-                    return; // Exit if mode is invalid
-                }
+                pageForThisView = currentPageNumber;
+                chapterForThisView = quranMetadata.getSurahNumberForPage(pageForThisView);
 
-                // Record primary reading type
-                recordRecentlyRead(primaryType, primaryItemId, durationInSeconds);
+                // 2. Determine the Juz number from the page.
+                int juzForThisView = quranMetadata.getJuzForPage(pageForThisView);
+
+                // 3. Record all three types.
+                Log.d("RecentlyRead", "Recording Chapter: " + chapterForThisView + ", Page: " + pageForThisView + ", Juz: " + juzForThisView);
+                recordRecentlyRead(RecentlyReadType.CHAPTER, String.valueOf(chapterForThisView), durationInSeconds);
+                recordRecentlyRead(RecentlyReadType.PAGE, String.valueOf(pageForThisView), durationInSeconds);
+                recordRecentlyRead(RecentlyReadType.JUZ, String.valueOf(juzForThisView), durationInSeconds);
+
+                // 4. Record the total recitation time to statistics (this part is unchanged).
                 recordRecitationTimes(durationInSeconds);
 
-                // Now record the Juz
-                int pageNumber;
-                if ("pageByPage".equals(layoutType)) {
-                    pageNumber = currentPageNumber;
-                } else {
-                    int surahNumber;
-                    if (surahModel != null) {
-                        surahNumber = Integer.parseInt(surahModel.getSurahNumber());
-                    } else {
-                        surahNumber = currentSurahIndex + 1; // Fallback
-                    }
-                    pageNumber = QuranMetadata.Companion.getInstance().getStartingPage(surahNumber);
-                }
-
-                int juzNumber = QuranMetadata.Companion.getInstance().getJuzForPage(pageNumber);
-                recordRecentlyRead(RecentlyReadType.JUZ, String.valueOf(juzNumber), durationInSeconds);
             } catch (Exception e) {
                 Log.e("RecitationPage", "Error recording recently read: " + e.getMessage());
             }
         }
     }
+
     private void observeViewModel() {
         // This LiveData conversion is fine
         LiveData<PageDataState> pageDataLiveData = FlowLiveDataConversions.asLiveData(viewModel.getPageData());

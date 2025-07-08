@@ -197,6 +197,9 @@ public class ByAyatRecitationFragment extends Fragment {
         quranApi.getBookmarks("Bearer " + authToken).enqueue(new Callback<BookmarksResponse>() {
             @Override
             public void onResponse(Call<BookmarksResponse> call, Response<BookmarksResponse> response) {
+                if (!isAdded()) {
+                    return;
+                }
                 if (response.isSuccessful() && response.body() != null) {
                     BookmarkList bookmarkList = response.body().getBookmarks();
                     if(bookmarkList != null) {
@@ -214,6 +217,9 @@ public class ByAyatRecitationFragment extends Fragment {
 
             @Override
             public void onFailure(Call<BookmarksResponse> call, Throwable t) {
+                if (!isAdded()) {
+                    return;
+                }
                 Log.e("ByAyatRecitation", "Failed to fetch bookmarks", t);
                 // On failure, still setup the pager so the app doesn't hang.
                 setupViewPager();

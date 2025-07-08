@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qurannexus.R
@@ -148,21 +149,23 @@ class RecentlyReadFragment : Fragment() {
     }
 
     private fun navigateToChapter(chapterNumber: Int) {
-        val surahDetails = QuranMetadata.getInstance().getSurahDetails(chapterNumber)
-        val surahModel = SurahModel(
-            surahDetails?.englishName ?: "",
-            surahDetails?.arabicName ?: "",
-            chapterNumber.toString(),
-            surahDetails?.translationName ?: "",
-            surahDetails?.numberOfVerses.toString(),
-            false
-        )
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+        val isByPage = sharedPreferences.getBoolean("recitation_layout_by_page", false)
 
-        val fragment = RecitationPageFragment.newInstance(
-            surahModel,
-            "verseByVerse",
-            chapterNumber - 1
-        )
+        val fragment: RecitationPageFragment
+
+        if (isByPage) {
+            // User prefers Page-by-Page view. Find the starting page of the chapter.
+            val startingPage = QuranMetadata.getInstance().getStartingPage(chapterNumber)
+            fragment = RecitationPageFragment.newInstanceForNavigation(
+                true, chapterNumber.toString(), null, startingPage, null, null
+            )
+        } else {
+            // User prefers Verse-by-Verse view.
+            fragment = RecitationPageFragment.newInstanceForNavigation(
+                false, chapterNumber.toString(), null, null, null, chapterNumber - 1
+            )
+        }
 
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.mainFragmentContainer, fragment)
@@ -170,22 +173,20 @@ class RecentlyReadFragment : Fragment() {
             .commit()
     }
 
+    // --- REPLACEMENT for navigateToPage ---
     private fun navigateToPage(pageNumber: Int) {
-        val surahNumber = QuranMetadata.getInstance().getSurahNumberForPage(pageNumber)
-        val surahDetails = QuranMetadata.getInstance().getSurahDetails(surahNumber)
-        val surahModel = SurahModel(
-            surahDetails?.englishName ?: "",
-            surahDetails?.arabicName ?: "",
-            surahNumber.toString(),
-            surahDetails?.translationName ?: "",
-            surahDetails?.numberOfVerses.toString(),
-            false
-        )
+        // When navigating to a specific page, the layout preference doesn't matter as much,
+        // but we should still respect it for consistency.
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+        val isByPage = sharedPreferences.getBoolean("recitation_layout_by_page", false)
 
-        val fragment = RecitationPageFragment.newInstance(
-            surahModel,
-            "pageByPage",
-            surahNumber - 1
+        val fragment = RecitationPageFragment.newInstanceForNavigation(
+            isByPage,
+            null,
+            null,
+            pageNumber,
+            null,
+            null
         )
 
         requireActivity().supportFragmentManager.beginTransaction()
@@ -196,6 +197,7 @@ class RecentlyReadFragment : Fragment() {
 
     private fun navigateToJuz(juzNumber: Int) {
         val firstPage = QuranMetadata.getInstance().getJuzStartPage(juzNumber)
+        // This function is now correct because it calls our fixed navigateToPage
         navigateToPage(firstPage)
     }
 

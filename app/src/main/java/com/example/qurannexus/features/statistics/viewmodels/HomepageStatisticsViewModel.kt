@@ -55,7 +55,7 @@ class HomepageStatisticsViewModel @Inject constructor() : ViewModel() {
         // Create calendar for the specified week
         val calendar = Calendar.getInstance()
         calendar.clear()
-        calendar.set(Calendar.YEAR, 2025)  // Fixed year for consistency
+        calendar.set(Calendar.YEAR, 2025)
         calendar.set(Calendar.WEEK_OF_YEAR, weekNumber)
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 

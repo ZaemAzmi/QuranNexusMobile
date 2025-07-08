@@ -70,9 +70,18 @@ class BookmarkPagesFragment : Fragment() {
                 response: Response<BookmarksResponse>
             ) {
                 if (response.isSuccessful && response.body() != null) {
-                    val bookmarksResponse = response.body()!!
-                    if (bookmarksResponse.status == "success") {
-                        val pages = bookmarksResponse.bookmarks.pages.map { pageBookmark ->
+                    val bookmarksResponse = response.body()
+                    if (bookmarksResponse?.status == "success") {
+
+                        val pages = bookmarksResponse.bookmarks.pages
+                        if(pages.isNullOrEmpty()){
+                            if(isAdded){
+                                Toast.makeText(context, "No bookmarks pages found", Toast.LENGTH_SHORT).show()
+                                updateUI(emptyList())
+                                return
+                            }
+                        }
+                            pages.map { pageBookmark ->
                             try {
                                 // Get chapter details from QuranMetadata for the first surah on this page
                                 val surahNumber = QuranMetadata.getInstance()

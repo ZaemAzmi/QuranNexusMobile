@@ -33,7 +33,7 @@ class DailyChartFragment : Fragment(), RecitationDataReceiver {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_chart_container, container, false)
+        val view = inflater.inflate(R.layout.fragment_daily_chart, container, false)
         dailyChart = view.findViewById(R.id.lineChart)
         setupLineChart()
         pendingData?.let {
@@ -104,10 +104,13 @@ class DailyChartFragment : Fragment(), RecitationDataReceiver {
     }
 
     private fun updateDailyChart(data: List<Pair<String, Int>>) {
+        if(!isAdded) return
         if (data.isEmpty()) {
             onEmptyState()
             return
         }
+        dailyChart.clear()
+        dailyChart.setNoDataText("")
 
         val entries = data.mapIndexed { index, (_, value) ->
             Entry(index.toFloat(), value.toFloat())
@@ -147,11 +150,10 @@ class DailyChartFragment : Fragment(), RecitationDataReceiver {
     }
 
     override fun onEmptyState() {
-        dailyChart.apply {
-            setNoDataText("Start your recitation journey!")
-            setNoDataTextColor(ContextCompat.getColor(requireContext(), R.color.primaryColor))
-            invalidate()
-        }
+        if (!isAdded) return
+        dailyChart.data = null // Clear any old data
+        dailyChart.setNoDataText("Start your recitation journey!")
+        dailyChart.invalidate() // Refresh the chart to show the text
     }
     private inner class DateAxisValueFormatter(private val viewModel: HomepageStatisticsViewModel) : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {

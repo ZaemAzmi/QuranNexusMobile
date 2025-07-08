@@ -224,17 +224,27 @@ class HomepageStatisticsFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is HomepageStatisticsViewModel.UiState.Loading -> {
-                    // Show loading state if needed
+                    // Optional: show a loading spinner for the whole stats section
+                    chartViewPager.visibility = View.INVISIBLE
+                    chartTabLayout.visibility = View.INVISIBLE
                 }
                 is HomepageStatisticsViewModel.UiState.Success -> {
-                    // Always update basic stats
+                    // Data is available, so show the chart container
+                    chartViewPager.visibility = View.VISIBLE
+                    chartTabLayout.visibility = View.VISIBLE
                     updateStats(state.streakData)
                 }
                 is HomepageStatisticsViewModel.UiState.Error -> {
+                    // Hide charts on error
+                    chartViewPager.visibility = View.GONE
+                    chartTabLayout.visibility = View.GONE
                     showError(state.message)
                 }
-                HomepageStatisticsViewModel.UiState.Empty -> {
-                    // Update UI with empty/default values
+                is HomepageStatisticsViewModel.UiState.Empty -> {
+                    // The state is empty, so tell the child fragments
+                    // and also hide the main chart container.
+                    chartViewPager.visibility = View.VISIBLE // Keep pager visible for empty message
+                    chartTabLayout.visibility = View.VISIBLE
                     setupEmptyStates()
                 }
             }

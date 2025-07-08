@@ -72,7 +72,7 @@ class BookmarkQuotesAdapter(
         holder.shareButton.setOnClickListener {
             navigateToShareActivity(holder.itemView.context, quote)
         }
-
+        //TODO : change item touch helper to declare once in fragment, so it wont be created everytime it binds the items
         // Setup swipe-to-delete
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT

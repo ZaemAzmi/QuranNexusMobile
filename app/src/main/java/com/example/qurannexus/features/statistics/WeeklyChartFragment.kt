@@ -40,7 +40,7 @@ class WeeklyChartFragment : Fragment(), RecitationDataReceiver {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_chart_container, container, false)
+        val view = inflater.inflate(R.layout.fragment_weekly_chart, container, false)
         weeklyChart = view.findViewById(R.id.barChart)
         setupBarChart()
 
@@ -137,19 +137,22 @@ class WeeklyChartFragment : Fragment(), RecitationDataReceiver {
     }
 
     override fun onEmptyState() {
-        weeklyChart.apply {
-            setNoDataText("Weekly statistics will appear here")
-            setNoDataTextColor(ContextCompat.getColor(requireContext(), R.color.primaryColor))
-            invalidate()
-        }
+        if (!isAdded) return
+        weeklyChart.data = null
+        weeklyChart.setNoDataText("Weekly statistics will appear here")
+        weeklyChart.invalidate()
     }
 
     private fun updateWeeklyChart(data: List<Pair<Int, Int>>) {
+        if(!isAdded){
+            return
+        }
         if (data.isEmpty()) {
             onEmptyState()
             return
         }
-
+        weeklyChart.clear()
+        weeklyChart.setNoDataText("")
         val entries = data.map { (week, minutes) ->
             BarEntry(week.toFloat(), minutes.toFloat())
         }
@@ -190,7 +193,6 @@ class WeeklyChartFragment : Fragment(), RecitationDataReceiver {
         } else {
             weeklyChart.moveViewToX(entries.last().x - 4)
         }
-
         weeklyChart.animateY(1000)
         weeklyChart.invalidate()
     }
