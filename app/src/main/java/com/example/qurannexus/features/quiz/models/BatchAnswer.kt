@@ -1,5 +1,7 @@
 package com.example.qurannexus.features.quiz.models
 
+import com.google.gson.annotations.SerializedName
+
 data class BatchAnswer(
     val questionId: Int,
     val ayahKey: String,
@@ -16,7 +18,9 @@ data class BatchData(
 )
 
 data class SubmitBatchRequest(
-    val answers: List<SubmitAnswerRequest>
+    val answers: List<SubmitAnswerRequest>,
+    @SerializedName("batch_number")
+    val batchNumber: Int
 )
 
 data class BatchAnswerResponse(

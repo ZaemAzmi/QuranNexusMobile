@@ -5,11 +5,10 @@ import com.example.qurannexus.core.interfaces.AuthApi
 import com.example.qurannexus.core.interfaces.QuizApi
 import com.example.qurannexus.core.network.ApiService
 import com.example.qurannexus.features.home.models.User
-import com.example.qurannexus.features.quiz.models.AnswerResponse
 import com.example.qurannexus.features.quiz.models.BatchAnswer
 import com.example.qurannexus.features.quiz.models.BatchAnswerResponse
 import com.example.qurannexus.features.quiz.models.FinishQuizResponse
-import com.example.qurannexus.features.quiz.models.QuizProgressResponse
+import com.example.qurannexus.features.quiz.models.QuizProgressData
 import com.example.qurannexus.features.quiz.models.QuizResponse
 import com.example.qurannexus.features.quiz.models.StartQuizRequest
 import com.example.qurannexus.features.quiz.models.SubmitAnswerRequest
@@ -62,7 +61,10 @@ class QuizRepository @Inject constructor(private val api: QuizApi, private val a
         }
     }
 
-    suspend fun submitBatchAnswers(surahId: String, answers: List<BatchAnswer>): BatchAnswerResponse? {
+    suspend fun submitBatchAnswers(
+        surahId: String,
+        batchNumber: Int,
+        answers: List<BatchAnswer>): BatchAnswerResponse? {
         return withContext(Dispatchers.IO) {
             try {
                 // First ensure quiz is started
@@ -85,7 +87,10 @@ class QuizRepository @Inject constructor(private val api: QuizApi, private val a
                     )
                 }
 
-                val request = SubmitBatchRequest(answers = submitRequests)
+                val request = SubmitBatchRequest(
+                    answers = submitRequests,
+                    batchNumber = batchNumber
+                )
                 val response = api.submitBatchAnswers(getAuthHeader(), surahId, request).execute()
 
                 if (response.isSuccessful) {
@@ -102,7 +107,27 @@ class QuizRepository @Inject constructor(private val api: QuizApi, private val a
             }
         }
     }
-
+    suspend fun getQuizProgress(surahId: String): QuizProgressData? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = api.getQuizProgress(getAuthHeader(), surahId).execute()
+                if (response.isSuccessful) {
+                    response.body()?.quiz
+                } else {
+                    // It's normal for this to fail if a quiz hasn't started,
+                    // so we can just return null without logging a harsh error.
+                    // If the response code is 404, it just means no progress yet.
+                    if (response.code() != 404) {
+                        Log.e("QuizRepository", "Error getting quiz progress: ${response.errorBody()?.string()}")
+                    }
+                    null
+                }
+            } catch (e: Exception) {
+                Log.e("QuizRepository", "Exception getting quiz progress", e)
+                null
+            }
+        }
+    }
     suspend fun finishQuiz(surahId: String): FinishQuizResponse? {
         return withContext(Dispatchers.IO) {
             try {

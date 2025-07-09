@@ -41,7 +41,8 @@ class QuizViewModel @Inject constructor(
     private val currentBatchAnswers = mutableListOf<BatchAnswer>()
     private var currentSurahId: String? = null
     private val batchScores = mutableMapOf<Int, Score>()
-
+    private val _surahProgress = MutableStateFlow<Map<Int, Score>>(emptyMap())
+    val surahProgress: StateFlow<Map<Int, Score>> = _surahProgress
     private val _quizProgress = MutableStateFlow<List<QuizProgress>>(emptyList())
     val quizProgress: StateFlow<List<QuizProgress>> = _quizProgress
 
@@ -67,7 +68,19 @@ class QuizViewModel @Inject constructor(
             }
         }
     }
-
+    fun loadSurahProgress(surahId: String) {
+        viewModelScope.launch {
+            // You'll need a new repository function and API endpoint for this.
+            // Let's assume you have getQuizProgress(surahId) in your repo.
+            val progress = quizRepository.getQuizProgress(surahId)
+            progress?.batchScores?.let { scoresMap ->
+                // Assuming batch_scores is Map<String, BatchScoreDto> from backend
+                val scores = scoresMap.mapKeys { it.key.toInt() }
+                    .mapValues { Score(it.value.correct, it.value.total) }
+                _surahProgress.value = scores
+            }
+        }
+    }
     fun getUserQuizProgress(): StateFlow<List<QuizProgress>> {
         // Reload data when requested
         loadUserQuizProgress()
@@ -190,6 +203,7 @@ class QuizViewModel @Inject constructor(
 
                 val batchAnswerResponse = quizRepository.submitBatchAnswers(
                     surahId = currentSurahId ?: throw IllegalStateException("Surah ID is null"),
+                    batchNumber = currentBatch.value?.batchNumber ?: 0,
                     answers = currentBatchAnswers
                 )
 
@@ -201,19 +215,23 @@ class QuizViewModel @Inject constructor(
                             totalQuestions = batchAnswerResponse.total_questions
                         )
                     }
-                    val finishResponse = quizRepository.finishQuiz(currentSurahId!!)
-
-                    if (finishResponse != null) {
-                        val finishedState = QuizState.Finished(
-                            message = finishResponse.message,
-                            correctAnswers = batchAnswerResponse.correct_answers,
-                            totalQuestions = batchAnswerResponse.total_questions
-                        )
-                        lastQuizResult = finishedState  // Save the result
-                        _quizState.value = finishedState
-                    } else {
-                        _quizState.value = QuizState.Error("Failed to finish quiz")
+                    val totalBatches = (getTotalQuestionsInSurah() + QUESTIONS_PER_BATCH - 1) / QUESTIONS_PER_BATCH
+                    // Check if the number of completed batches now equals the total number of batches
+                    if (batchScores.size == totalBatches) {
+                        val finishResponse = quizRepository.finishQuiz(currentSurahId!!)
+                        if (finishResponse == null) {
+                            // Handle error, maybe log it. The quiz can proceed, but the chart might not update.
+                            Log.w("QuizViewModel", "Failed to mark Surah as completed.")
+                        }
                     }
+                    val finishedState = QuizState.Finished(
+                        message = "Batch completed!", // Generic message
+                        correctAnswers = batchAnswerResponse.correct_answers,
+                        totalQuestions = batchAnswerResponse.total_questions
+                    )
+                    lastQuizResult = finishedState
+                    _quizState.value = finishedState
+
                 } else {
                     _quizState.value = QuizState.Error("Failed to submit answers")
                 }
@@ -224,14 +242,16 @@ class QuizViewModel @Inject constructor(
         }
     }
     fun generateBatchList(totalBatches: Int, totalQuestions: Int): List<QuizBatch> {
+        val existingScores = _surahProgress.value
         return (1..totalBatches).map { batchNumber ->
             val startQuestion = ((batchNumber - 1) * QUESTIONS_PER_BATCH) + 1
             val endQuestion = minOf(batchNumber * QUESTIONS_PER_BATCH, totalQuestions)
+            val score = existingScores[batchNumber]
             QuizBatch(
                 batchNumber = batchNumber,
                 startQuestion = startQuestion,
                 endQuestion = endQuestion,
-                score = batchScores[batchNumber]
+                score = score // <-- Populate the score here!
             )
         }
     }

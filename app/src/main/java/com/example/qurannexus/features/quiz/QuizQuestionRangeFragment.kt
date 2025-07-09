@@ -18,6 +18,7 @@ import com.example.qurannexus.features.quiz.models.QuizBatchAdapter
 import com.example.qurannexus.features.quiz.models.QuizState
 import com.example.qurannexus.features.quiz.models.QuizViewModel
 import com.example.qurannexus.features.quiz.models.QuizViewModel.Companion.QUESTIONS_PER_BATCH
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,7 +44,6 @@ class QuizQuestionRangeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         observeViewModel()
-        viewModel.loadSurah(args.chapterNumber)
 
         binding.backArrowImageView.setOnClickListener {
             findNavController().popBackStack()
@@ -51,15 +51,32 @@ class QuizQuestionRangeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        batchAdapter = QuizBatchAdapter { batchNumber ->
-            navigateToQuizQuestions(batchNumber)
+        batchAdapter = QuizBatchAdapter { batch ->
+            // The 'batch' object is passed from the adapter's click listener
+            if (batch.score != null) {
+                // If the batch is already completed, show a confirmation dialog
+                showRetryConfirmationDialog(batch.batchNumber)
+            } else {
+                // If it's a new batch, navigate directly
+                navigateToQuizQuestions(batch.batchNumber)
+            }
         }
         binding.recyclerViewBatches.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = batchAdapter
         }
     }
-
+    private fun showRetryConfirmationDialog(batchNumber: Int) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Retry Quiz Batch")
+            .setMessage("You have already completed this batch. Are you sure you want to retry? Your previous score for this batch will be overwritten.")
+            .setNegativeButton("Cancel", null) // Does nothing
+            .setPositiveButton("Retry") { _, _ ->
+                // User clicked "Retry", navigate to the quiz
+                navigateToQuizQuestions(batchNumber)
+            }
+            .show()
+    }
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.quizState.collectLatest { state ->
@@ -105,6 +122,14 @@ class QuizQuestionRangeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("QuizRange", "onResume: Reloading surah progress.")
+        args.chapterNumber.let {
+            viewModel.loadSurahProgress(it.toString())
+            viewModel.loadSurah(it) // Also reload this to regenerate the batch list
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

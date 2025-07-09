@@ -28,6 +28,7 @@
     <item
         android:id="@+id/nav_test"
         android:icon="@drawable/ic_settings"
+        android:visible="false"
         android:title="Test Page" />
 
     <item

@@ -4,9 +4,11 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.qurannexus.R
 import com.example.qurannexus.databinding.ItemQuizBatchBinding
 
 data class QuizBatch(
@@ -23,7 +25,9 @@ data class Score(
         get() = ((correctAnswers.toFloat() / totalQuestions.toFloat()) * 100).toInt()
 }
 class QuizBatchAdapter(
-    private val onBatchSelected: (Int) -> Unit
+    // This is the lambda function that will be executed when a user clicks an item.
+    // It takes the batch's QuizBatch object as input and returns nothing (Unit).
+    private val onBatchClicked: (batch: QuizBatch) -> Unit
 ) : ListAdapter<QuizBatch, QuizBatchAdapter.BatchViewHolder>(BatchDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BatchViewHolder {
@@ -32,50 +36,54 @@ class QuizBatchAdapter(
             parent,
             false
         )
-        return BatchViewHolder(binding)
+        // Pass the click listener lambda to the ViewHolder
+        return BatchViewHolder(binding, onBatchClicked)
     }
 
     override fun onBindViewHolder(holder: BatchViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    inner class BatchViewHolder(
-        private val binding: ItemQuizBatchBinding
+    // The ViewHolder now takes the listener in its constructor
+    class BatchViewHolder(
+        private val binding: ItemQuizBatchBinding,
+        private val clickListener: (batch: QuizBatch) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.root.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    onBatchSelected(getItem(position).batchNumber)
-                }
-            }
-        }
-
+        // The bind method now only needs the batch object
         fun bind(batch: QuizBatch) {
-            binding.apply {
-                questionRangeText.text = "Questions ${batch.startQuestion}-${batch.endQuestion}"
+            binding.questionRangeText.text = "Questions ${batch.startQuestion}-${batch.endQuestion}"
 
-                batch.score?.let { score ->
-                    scoreText.text = "${score.correctAnswers}/${score.totalQuestions}"
-                    statusText.text = "${score.percentage}%"
-                    scoreContainer.visibility = View.VISIBLE
+            if (batch.score != null) {
+                // --- BATCH IS COMPLETED ---
+                binding.scoreText.visibility = View.VISIBLE
+                binding.statusText.visibility = View.VISIBLE
 
-                    // Set status text color based on score
-                    val color = when {
-                        score.percentage >= 90 -> Color.parseColor("#4CAF50") // Green
-                        score.percentage >= 70 -> Color.parseColor("#8BC34A") // Light Green
-                        score.percentage >= 50 -> Color.parseColor("#FFC107") // Yellow
-                        else -> Color.parseColor("#F44336") // Red
-                    }
-                    statusText.setTextColor(color)
-                } ?: run {
-                    scoreContainer.visibility = View.GONE
-                }
+                // Use the 'percentage' computed property from the Score data class
+                binding.scoreText.text = "Score: ${batch.score.percentage}%"
+                binding.statusText.text = "Completed (Tap to retry)"
+
+                binding.quizBatchCard.setCardBackgroundColor(
+                    ContextCompat.getColor(binding.root.context, R.color.accent_dark_teal_cyan)
+                )
+            } else {
+                // --- BATCH IS NOT COMPLETED ---
+                binding.scoreText.visibility = View.GONE
+                binding.statusText.text = "Start Quiz"
+
+                binding.quizBatchCard.setCardBackgroundColor(
+                    ContextCompat.getColor(binding.root.context, R.color.green_blue_100)
+                )
+            }
+
+            // Set the click listener on the entire item view
+            binding.root.setOnClickListener {
+                clickListener(batch) // Pass the entire batch object back to the fragment
             }
         }
     }
 
+    // DiffUtil remains the same
     private class BatchDiffCallback : DiffUtil.ItemCallback<QuizBatch>() {
         override fun areItemsTheSame(oldItem: QuizBatch, newItem: QuizBatch): Boolean {
             return oldItem.batchNumber == newItem.batchNumber

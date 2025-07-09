@@ -22,24 +22,30 @@ class RecentlyReadRepository @Inject constructor(
                 val token = tokenManager.getToken()
                     ?: return@withContext Result.error(AuthException(AuthException.NOT_LOGGED_IN))
 
-                val response = bookmarkApi.getRecentlyRead("Bearer $token")
+                // FIX: Execute the 'Call' object and get the response
+                val response = bookmarkApi.getRecentlyRead("Bearer $token").execute()
+                val responseBody = response.body()
 
-                if (response.status == "success") {
-                    val items = when (type) {
-                        RecentlyReadType.CHAPTER -> response.recentlyRead.chapters
-                        RecentlyReadType.PAGE -> response.recentlyRead.pages
-                        RecentlyReadType.JUZ -> response.recentlyRead.juzs
+                if (response.isSuccessful && responseBody != null) {
+                    if (responseBody.status == "success") {
+                        val items = when (type) {
+                            RecentlyReadType.CHAPTER -> responseBody.recentlyRead.chapters
+                            RecentlyReadType.PAGE -> responseBody.recentlyRead.pages
+                            RecentlyReadType.JUZ -> responseBody.recentlyRead.juzs
+                        }
+                        Result.success(items)
+                    } else {
+                        Result.error(Exception(responseBody.message ?: "API returned an error"))
                     }
-                    Result.success(items)
                 } else {
-                    Result.error(Exception(response.message ?: "Unknown error occurred"))
+                    // Handle unsuccessful HTTP responses (e.g., 401, 404, 500)
+                    Result.error(Exception("Network request failed with code: ${response.code()}"))
                 }
             } catch (e: Exception) {
                 Result.error(e)
             }
         }
     }
-
     suspend fun addRecentlyRead(type: RecentlyReadType, itemId: String, durationSeconds: Long): Result<Unit> {
         return withContext(dispatcher) {
             try {
@@ -49,38 +55,49 @@ class RecentlyReadRepository @Inject constructor(
                 val request = AddRecentlyReadRequest(
                     type = type.toApiString(),
                     itemId = itemId,
-                    durationSeconds = durationSeconds
+                    durationSeconds = durationSeconds// Make sure AddRecentlyReadRequest expects Int if so
                 )
 
-                val response = bookmarkApi.addRecentlyRead("Bearer $token", request)
+                // FIX: Execute the 'Call' object and get the response
+                val response = bookmarkApi.addRecentlyRead("Bearer $token", request).execute()
+                val responseBody = response.body()
 
-                if (response.status == "success") {
-                    Result.success(Unit)
+                if (response.isSuccessful && responseBody != null) {
+                    if (responseBody.status == "success") {
+                        Result.success(Unit)
+                    } else {
+                        Result.error(Exception(responseBody.message ?: "API returned an error"))
+                    }
                 } else {
-                    Result.error(Exception(response.message ?: "Unknown error occurred"))
+                    Result.error(Exception("Network request failed with code: ${response.code()}"))
                 }
             } catch (e: Exception) {
                 Result.error(e)
             }
         }
     }
-
     suspend fun removeRecentlyRead(item: RecentlyRead, type: RecentlyReadType): Result<Unit> {
         return withContext(dispatcher) {
             try {
                 val token = tokenManager.getToken()
                     ?: return@withContext Result.error(AuthException(AuthException.NOT_LOGGED_IN))
 
+                // FIX: Execute the 'Call' object and get the response
                 val response = bookmarkApi.removeRecentlyRead(
                     "Bearer $token",
                     type.toApiString(),
                     item.itemId
-                )
+                ).execute()
+                val responseBody = response.body()
 
-                if (response.status == "success") {
-                    Result.success(Unit)
+                if (response.isSuccessful && responseBody != null) {
+                    if (responseBody.status == "success") {
+                        Result.success(Unit)
+                    } else {
+                        Result.error(Exception(responseBody.message ?: "API returned an error"))
+                    }
                 } else {
-                    Result.error(Exception(response.message ?: "Unknown error occurred"))
+                    Result.error(Exception("Network request failed with code: ${response.code()}"))
                 }
             } catch (e: Exception) {
                 Result.error(e)

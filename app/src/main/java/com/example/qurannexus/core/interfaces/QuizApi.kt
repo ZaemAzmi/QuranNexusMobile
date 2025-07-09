@@ -1,6 +1,5 @@
 package com.example.qurannexus.core.interfaces
 
-import com.example.qurannexus.features.quiz.models.AnswerResponse
 import com.example.qurannexus.features.quiz.models.BatchAnswerResponse
 import com.example.qurannexus.features.quiz.models.FinishQuizResponse
 import com.example.qurannexus.features.quiz.models.QuizProgressResponse
@@ -34,4 +33,10 @@ interface QuizApi {
         @Header("Authorization") auth: String,
         @Query("surah_id") surahId: String
     ): Call<FinishQuizResponse>
+
+    @GET("quiz/progress")
+    fun getQuizProgress(
+        @Header("Authorization") token: String,
+        @Query("surah_id") surahId: String
+    ): Call<QuizProgressResponse>
 }

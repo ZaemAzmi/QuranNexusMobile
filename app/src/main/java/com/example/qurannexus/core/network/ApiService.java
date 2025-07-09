@@ -59,7 +59,7 @@ public class ApiService {
 
     private static OkHttpClient createHttpClient() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         // Custom logger to skip HTML content
 

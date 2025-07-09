@@ -12,26 +12,16 @@ import retrofit2.http.POST
 
 interface StatisticsApi {
 
-    @POST("recitation-times")
+    @POST("recitation-stats")
     fun updateRecitationTimes(
         @Header("Authorization") token: String,
         @Body request: UpdateRecitationTimesRequest
     ): Call<SimpleResponse>
 
-    @GET("recitation-times")
-    fun getRecitationTimes(
-        @Header("Authorization") token: String
-    ): Call<RecitationTimesResponse>
-
     // endpoints for streak
-    @GET("recitation-streak")
+    @GET("recitation-stats")
     fun getRecitationStreak(
         @Header("Authorization") token: String
     ): Call<RecitationStreakResponse>
 
-    @POST("recitation-streak")
-    fun updateRecitationStreak(
-        @Header("Authorization") token: String,
-        @Body request: UpdateRecitationTimesRequest
-    ): Call<RecitationStreakResponse>
 }

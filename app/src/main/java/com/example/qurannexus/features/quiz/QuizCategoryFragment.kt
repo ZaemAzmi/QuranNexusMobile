@@ -3,6 +3,7 @@ package com.example.qurannexus.features.quiz
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -45,7 +46,7 @@ class QuizCategoryFragment : Fragment() {
     private val wordViewModel: WordManagementViewModel by viewModels()
     private var currentDailyWord: WordDetails? = null
     private var isWordBookmarked = false
-
+    private val TAG = "QuizCategoryFragment"
     private var dailyActivityChart: LineChart? = null
     private var surahPerformanceChart: BarChart? = null
     private var chartsAdapter: ChartsAdapter? = null
@@ -84,14 +85,6 @@ class QuizCategoryFragment : Fragment() {
 
         var isBookmarked = false
         val heartBookmarkIcon = binding.dailyWordSection.bookmarkButton
-        heartBookmarkIcon.setOnClickListener{
-            if (isBookmarked) {
-                heartBookmarkIcon.setImageResource(R.drawable.ic_heart)
-            } else {
-                heartBookmarkIcon.setImageResource(R.drawable.ic_heart_bookmarked)
-            }
-            isBookmarked = !isBookmarked
-        }
 
 //        binding.seeAllQuizzesText.setOnClickListener{
 //            val transaction = parentFragmentManager.beginTransaction()
@@ -135,52 +128,67 @@ class QuizCategoryFragment : Fragment() {
     }
 
     private fun addWordBookmark(word: WordDetails) {
+        Log.d(TAG, "addWordBookmark: Attempting to add bookmark for '${word.word_text}'")
         val token = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
             .getString("token", null)
 
         if (token == null) {
+            Log.w(TAG, "addWordBookmark: Failed. Token is null.")
             Toast.makeText(context, "Please login to bookmark words", Toast.LENGTH_SHORT).show()
             return
         }
 
-//        val request = BookmarkRequest(
-//            type = "word",
-//            item_id = word.word_id,
-//            word_text = word.word_text,
-//            translation = word.translation,
-//            transliteration = word.transliteration,
-//            surah_name = word.first_occurrence.surah_name,
-//            ayah_key = word.first_occurrence.ayah_key
-//        )
+        val itemProperties = mapOf(
+            "word_text" to word.word_text,
+            "translation" to word.translation,
+            "transliteration" to word.transliteration,
+            "surah_name" to word.first_occurrence.surah_name,
+            "ayah_key" to word.first_occurrence.ayah_key
+        )
 
-//        wordViewModel.addBookmark("Bearer $token", request)
+        val request = BookmarkRequest(
+            type = "word",
+            itemProperties = itemProperties,
+            notes = ""
+        )
+        Log.d(TAG, "addWordBookmark: Sending request to ViewModel: $request")
+
+        wordViewModel.addBookmark("Bearer $token", request)
         wordViewModel.bookmarkStatus.observe(viewLifecycleOwner) { response ->
+            Log.d(TAG, "addWordBookmark: Observed response from ViewModel: $response")
             if (response.status == "success") {
                 isWordBookmarked = true
                 binding.dailyWordSection.bookmarkButton.setImageResource(R.drawable.ic_heart_bookmarked)
                 Toast.makeText(context, "Word bookmarked successfully", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Failed to bookmark word", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "addWordBookmark: API reported failure: ${response.message}")
+                Toast.makeText(context, "Failed to bookmark word: ${response.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
-    private fun removeWordBookmark(wordId: String) {
+
+    private fun removeWordBookmark(wordText: String) {
+        Log.d(TAG, "removeWordBookmark: Attempting to remove bookmark for '$wordText'")
         val token = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
             .getString("token", null)
 
         if (token == null) {
+            Log.w(TAG, "removeWordBookmark: Failed. Token is null.")
             Toast.makeText(context, "Please login to remove bookmarks", Toast.LENGTH_SHORT).show()
             return
         }
 
-        wordViewModel.removeBookmark(token, "word", wordId)
+        Log.d(TAG, "removeWordBookmark: Calling ViewModel to remove word.")
+        wordViewModel.removeBookmark(token, "word", wordText)
         wordViewModel.bookmarkStatus.observe(viewLifecycleOwner) { response ->
+            Log.d(TAG, "removeWordBookmark: Observed response from ViewModel: $response")
             if (response.status == "success") {
                 isWordBookmarked = false
                 binding.dailyWordSection.bookmarkButton.setImageResource(R.drawable.ic_heart)
                 Toast.makeText(context, "Bookmark removed successfully", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Failed to remove bookmark", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "removeWordBookmark: API reported failure: ${response.message}")
+                Toast.makeText(context, "Failed to remove bookmark: ${response.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -201,13 +209,9 @@ class QuizCategoryFragment : Fragment() {
     }
 
     private fun navigateToWordDetails(word: WordDetails) {
+        // FIX 2: Corrected the Intent to pass the data WordDetailsActivity expects.
         val intent = Intent(requireContext(), WordDetailsActivity::class.java).apply {
-            putExtra("WORD_ID", word.word_id)
-            putExtra("WORD_TEXT", word.word_text)
-            putExtra("TRANSLATION", word.translation)
-            putExtra("TRANSLITERATION", word.transliteration)
-            putExtra("SURAH_NAME", word.first_occurrence.surah_name)
-            putExtra("AYAH_KEY", word.first_occurrence.ayah_key)
+            putExtra(WordDetailsActivity.EXTRA_WORD_TEXT_FOR_PRESELECTION, word.word_text)
         }
         startActivity(intent)
     }
@@ -289,7 +293,7 @@ class QuizCategoryFragment : Fragment() {
     }
     private fun updateSurahPerformanceChart(chart: BarChart, quizProgress: List<QuizProgress>) {
         val surahPerformance = quizProgress
-            .filter { it.status == "completed" && it.surah_id != null }
+            .filter { it.surah_id != null }
             .map { progress ->
                 val total = progress.correct_answers + progress.wrong_answers
                 val correctPercentage = if (total > 0) {
