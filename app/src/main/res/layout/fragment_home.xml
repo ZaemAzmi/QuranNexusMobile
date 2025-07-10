@@ -17,27 +17,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/margin_medium">
+
             <ImageView
             android:id="@+id/fragmentHomeHeader"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/bg_gradient"
+            android:background="@drawable/bg_surah_list_fragment"
             app:layout_constraintHeight_max="@dimen/home_header_max_height"
             app:layout_constraintHeight_percent="@dimen/header_height_ratio"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/logoImageView"
+                android:layout_width="@dimen/home_logo_width_height"
+                android:layout_height="@dimen/home_logo_width_height"
+                android:layout_marginStart="@dimen/margin_xlarge"
+                android:layout_marginTop="@dimen/margin_large"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_quran_nexus_logo"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CircleImageView"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
             <TextView
                 android:id="@+id/homepageGreetingsText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_xlarge"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_xxlarge"
+                android:fontFamily="sans-serif-light"
                 android:text="Salaam,"
+                android:textColor="@color/accent_deep_indigo_purple"
+                android:textSize="@dimen/text_size_welcome"
                 android:textStyle="bold"
-                android:textSize="@dimen/text_size_title"
-                android:textColor="@color/white" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/logoImageView"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <include
@@ -48,7 +66,8 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
-                app:layout_constraintTop_toBottomOf="@+id/homepageGreetingsText" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logoImageView"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 />
             <androidx.recyclerview.widget.RecyclerView
@@ -136,7 +155,7 @@
                 android:paddingStart="@dimen/padding_medium"
                 android:paddingEnd="@dimen/padding_medium"
                 android:paddingBottom="@dimen/padding_large"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/statisticsContainer"

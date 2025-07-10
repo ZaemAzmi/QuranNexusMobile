@@ -3,12 +3,15 @@ package com.example.qurannexus.features.home.models
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -29,11 +32,14 @@ class DailyInspirationAdapter(
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         "QuotePreferences", Context.MODE_PRIVATE
     )
+    // MODIFIED: Added a Handler for main thread operations to avoid casting context to an activity.
+    // This is a cleaner and safer approach.
+    private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     class InspirationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val quoteTextView: TextView = itemView.findViewById(R.id.tvQuote)
         val sourceTextView: TextView = itemView.findViewById(R.id.tvSource)
-        val btnBookmark: ImageButton = itemView.findViewById(R.id.btnBookmark)
+        val btnBookmark: ImageView = itemView.findViewById(R.id.btnBookmark)
         val btnShare: Button = itemView.findViewById(R.id.btnShare)
     }
 
@@ -67,8 +73,11 @@ class DailyInspirationAdapter(
 
             // Set up bookmark button click listener
             holder.btnBookmark.setOnClickListener {
-                Log.d("DailyInspirationAdapter", "Bookmark button clicked for quote ID: ${quote.Id}")
-                toggleBookmark(quote, holder.btnBookmark)
+                // Ensure the position is valid before proceeding
+                if (holder.adapterPosition != RecyclerView.NO_POSITION) {
+                    // MODIFIED: Pass the adapter position instead of the button view.
+                    toggleBookmark(quote, holder.adapterPosition)
+                }
             }
         }
         // Set up share button click listener (this part is fine)
@@ -77,7 +86,7 @@ class DailyInspirationAdapter(
         }
     }
 
-    private fun updateBookmarkIcon(bookmarkButton: ImageButton, isBookmarked: Boolean) {
+    private fun updateBookmarkIcon(bookmarkButton: ImageView, isBookmarked: Boolean) {
         Log.d("DailyInspirationAdapter", "Updating icon to: ${if (isBookmarked) "bookmarked" else "not bookmarked"}")
         val iconRes = if (isBookmarked) R.drawable.ic_heart_bookmarked else R.drawable.ic_heart
         bookmarkButton.setImageResource(iconRes)
@@ -101,80 +110,75 @@ class DailyInspirationAdapter(
         return cachedValue || isBookmarkedInApi
     }
 
-    private fun toggleBookmark(quote: DailyQuote, bookmarkButton: ImageButton) {
+    private fun toggleBookmark(quote: DailyQuote, position: Int) {
         val quoteId = quote.Id
         val isCurrentlyBookmarked = isQuoteBookmarked(quoteId)
 
-        Log.d("DailyInspirationAdapter", "Toggling bookmark for quote $quoteId, current state: $isCurrentlyBookmarked")
+        // Optimistic UI Update: Change the state immediately for a responsive feel.
+        // We will revert it if the API call fails.
+        val newBookmarkState = !isCurrentlyBookmarked
+        updateLocalState(quoteId, newBookmarkState)
+        notifyItemChanged(position) // This triggers onBindViewHolder to redraw the item instantly.
 
-        // If we don't have a bookmark service or token, just toggle local state
+        // If no service or token, the local update is all we do.
         if (bookmarkService == null || token == null) {
-            val newState = !isCurrentlyBookmarked
-            toggleLocalBookmarkState(quoteId, newState)
-            updateBookmarkIcon(bookmarkButton, newState)
-
-            // Show message
-            val message = if (newState) "Quote bookmarked locally (login to sync)" else "Bookmark removed locally"
+            val message = if (newBookmarkState) "Quote bookmarked locally" else "Bookmark removed locally"
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             return
         }
 
-        // We have a bookmark service, so use the API
-        if (!isCurrentlyBookmarked) {
-            // Add bookmark
+        // Now, perform the network operation.
+        if (newBookmarkState) {
+            // Add bookmark via API
             bookmarkService.bookmarkQuote(token, quote, object : QuoteBookmarkService.BookmarkCallback {
                 override fun onSuccess(message: String) {
-                    // Update local state
-                    toggleLocalBookmarkState(quoteId, true)
-                    bookmarkedQuoteIds.add(quoteId)
-                    Log.d("DailyInspirationAdapter", "Successfully bookmarked quote $quoteId")
-
-                    // Update UI on main thread
-                    val activity = (context as? androidx.activity.ComponentActivity)
-                    activity?.runOnUiThread {
-                        updateBookmarkIcon(bookmarkButton, true)
+                    mainThreadHandler.post {
+                        Log.d("DailyInspirationAdapter", "Successfully bookmarked quote $quoteId on server.")
                         Toast.makeText(context, "Quote bookmarked", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onError(message: String) {
-                    Log.e("DailyInspirationAdapter", "Error bookmarking quote $quoteId: $message")
-                    // Show error message
-                    val activity = (context as? androidx.activity.ComponentActivity)
-                    activity?.runOnUiThread {
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    mainThreadHandler.post {
+                        Log.e("DailyInspirationAdapter", "Error bookmarking quote $quoteId: $message")
+                        // Revert the state since the API call failed
+                        updateLocalState(quoteId, false)
+                        notifyItemChanged(position)
+                        Toast.makeText(context, "Failed to bookmark: $message", Toast.LENGTH_SHORT).show()
                     }
                 }
             })
         } else {
-            // Remove bookmark
+            // Remove bookmark via API
             bookmarkService.removeQuoteBookmark(token, quoteId, object : QuoteBookmarkService.BookmarkCallback {
                 override fun onSuccess(message: String) {
-                    // Update local state
-                    toggleLocalBookmarkState(quoteId, false)
-                    bookmarkedQuoteIds.remove(quoteId)
-                    Log.d("DailyInspirationAdapter", "Successfully removed bookmark for quote $quoteId")
-
-                    // Update UI on main thread
-                    val activity = (context as? androidx.activity.ComponentActivity)
-                    activity?.runOnUiThread {
-                        updateBookmarkIcon(bookmarkButton, false)
+                    mainThreadHandler.post {
+                        Log.d("DailyInspirationAdapter", "Successfully removed bookmark for quote $quoteId on server.")
                         Toast.makeText(context, "Bookmark removed", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onError(message: String) {
-                    Log.e("DailyInspirationAdapter", "Error removing bookmark for quote $quoteId: $message")
-                    // Show error message
-                    val activity = (context as? androidx.activity.ComponentActivity)
-                    activity?.runOnUiThread {
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    mainThreadHandler.post {
+                        Log.e("DailyInspirationAdapter", "Error removing bookmark for quote $quoteId: $message")
+                        // Revert the state since the API call failed
+                        updateLocalState(quoteId, true)
+                        notifyItemChanged(position)
+                        Toast.makeText(context, "Failed to remove bookmark: $message", Toast.LENGTH_SHORT).show()
                     }
                 }
             })
         }
     }
-
+    private fun updateLocalState(quoteId: String, isBookmarked: Boolean) {
+        // Update both sources of truth
+        if (isBookmarked) {
+            bookmarkedQuoteIds.add(quoteId)
+        } else {
+            bookmarkedQuoteIds.remove(quoteId)
+        }
+        sharedPreferences.edit().putBoolean("quote_$quoteId", isBookmarked).apply()
+    }
     private fun toggleLocalBookmarkState(quoteId: String, isBookmarked: Boolean) {
         Log.d("DailyInspirationAdapter", "Setting local bookmark state for quote $quoteId to: $isBookmarked")
         sharedPreferences.edit()

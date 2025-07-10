@@ -32,7 +32,7 @@
        android:layout_height="wrap_content"
        android:layout_marginTop="@dimen/margin_large"
        android:text="Prayer Times"
-       android:textSize="@dimen/text_size_xlarge"
+       android:textSize="@dimen/text_size_xxlarge"
        android:textStyle="bold"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintHorizontal_bias="0.498"
@@ -46,6 +46,10 @@
        android:layout_marginTop="@dimen/margin_tiny"
        android:text="Current time: 12:00 PM"
        android:textSize="@dimen/text_size_medium"
+       android:shadowColor="#40000000"
+       android:shadowDx="1"
+       android:shadowDy="1"
+       android:shadowRadius="2"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintHorizontal_bias="0.497"
        app:layout_constraintStart_toStartOf="parent"
@@ -93,12 +97,14 @@
    <androidx.cardview.widget.CardView
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       app:layout_constraintHorizontal_bias="1.0"
        android:layout_margin="@dimen/margin_medium"
+       android:layout_marginTop="@dimen/margin_xlarge"
        android:paddingBottom="@dimen/meow_bottom_nav_height"
        android:background="@color/white"
        app:cardCornerRadius="25dp"
+       app:cardElevation="8dp"
        app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintTop_toBottomOf="@id/currentTimeTextView"
        >
 
@@ -107,28 +113,12 @@
           android:layout_height="match_parent"
           >
 
-<!--         <ImageView-->
-<!--             android:layout_width="wrap_content"-->
-<!--             android:layout_height="wrap_content"-->
-<!--             android:src="@drawable/ic_previous"-->
-<!--             android:layout_margin="@dimen/margin_large"-->
-<!--             app:layout_constraintStart_toStartOf="parent"-->
-<!--             app:layout_constraintTop_toTopOf="parent"/>-->
-<!--         <ImageView-->
-<!--             android:layout_width="wrap_content"-->
-<!--             android:layout_height="wrap_content"-->
-<!--             android:src="@drawable/ic_next"-->
-<!--             android:layout_margin="@dimen/margin_large"-->
-<!--             app:layout_constraintEnd_toEndOf="parent"-->
-<!--             app:layout_constraintTop_toTopOf="parent"-->
-<!--            />-->
-
          <ImageView
              android:id="@+id/locationIcon"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:src="@drawable/ic_place"
-             android:layout_marginTop="@dimen/margin_intermediate"
+             android:layout_marginTop="@dimen/margin_medium"
              android:layout_marginEnd="@dimen/margin_medium"
              app:layout_constraintTop_toTopOf="parent"
              app:layout_constraintEnd_toStartOf="@id/locationTextView"
@@ -137,9 +127,9 @@
              android:id="@+id/locationTextView"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:layout_marginTop="@dimen/margin_intermediate"
+             android:layout_marginTop="@dimen/margin_medium"
              android:text="Kuala Lumpur, MY"
-             android:textSize="@dimen/text_size_tiny"
+             android:textSize="@dimen/text_size_medium"
              android:textColor="#40CF8C"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintHorizontal_bias="0.498"
@@ -152,7 +142,7 @@
              android:layout_height="wrap_content"
              android:layout_marginTop="@dimen/margin_semi_medium"
              android:text="03 Oct 2024"
-             android:textSize="@dimen/text_size_medium"
+             android:textSize="@dimen/text_size_xlarge"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintHorizontal_bias="0.498"
              app:layout_constraintStart_toStartOf="parent"
@@ -164,7 +154,7 @@
              android:layout_height="wrap_content"
              android:layout_marginTop="@dimen/margin_medium"
              android:text="Thursday"
-             android:textSize="@dimen/text_size_tiny"
+             android:textSize="@dimen/text_size_medium"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintHorizontal_bias="0.498"
              app:layout_constraintStart_toStartOf="parent"

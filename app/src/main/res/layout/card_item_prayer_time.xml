@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginEnd="@dimen/prayer_times_card_margin"
     android:layout_marginStart="@dimen/prayer_times_card_margin"
-    android:layout_marginBottom="@dimen/margin_tiny"
-    android:layout_marginTop="@dimen/margin_tiny"
+    android:layout_marginBottom="@dimen/margin_intermediate"
+    android:layout_marginTop="@dimen/margin_small"
     app:cardElevation="5dp"
     app:cardBackgroundColor="#96FAD7"
     app:cardCornerRadius="25dp">
@@ -22,14 +22,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Fajr"
-            android:textSize="@dimen/text_size_medium"
+            android:textSize="@dimen/text_size_xlarge"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/prayer_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_medium"
+            android:textSize="@dimen/text_size_xlarge"
             android:text="05:43"/>
 
     </LinearLayout>

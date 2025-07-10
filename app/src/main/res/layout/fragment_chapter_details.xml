@@ -76,7 +76,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Chapter Subtitle"
-                        android:textColor="@color/primaryColor"
+                        android:textColor="@color/appPrimaryVariant"
                         android:textSize="@dimen/text_size_medium"
                         android:textStyle="bold" />
 

@@ -190,7 +190,7 @@ class WordAnalysisFragment : Fragment() {
 
         othersCategoryCard.setOnClickListener {
             showCategoryExplanationDialog(
-                iconResId = R.drawable.ic_bulb,
+                iconResId = R.drawable.ic_extension,
                 title = "Others / Special Groups",
                 explanation = "This category is assigned to any Quranic word that doesn't fit the standard root or lemma structure. It primarily includes particles (prepositions, conjunctions), pronouns, and crucially, the disconnected letters (Muqatta'at) at the start of some chapters.",
                 examples = "• Pronouns, such as 'هُوَ' (huwa), meaning 'He'.\n" +

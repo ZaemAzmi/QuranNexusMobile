@@ -14,7 +14,10 @@
         <item name="android:colorPrimaryDark">@color/dark_green_200</item>
     </style>
 
-
+    <style name="ShapeAppearance.App.CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
     <!-- 1. Define the style for the PopupMenu -->
     <style name="Widget.App.PopupMenu" parent="Widget.Material3.PopupMenu">
         <item name="android:popupBackground">@drawable/popup_menu_background_dark</item>

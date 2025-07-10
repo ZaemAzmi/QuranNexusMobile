@@ -444,7 +444,7 @@
                     <ImageView
                         android:layout_width="@dimen/word_analysis_image_card_height_small"
                         android:layout_height="@dimen/word_analysis_image_card_height_small"
-                        android:src="@drawable/ic_bulb"
+                        android:src="@drawable/ic_extension"
                         app:tint="@color/accent_deep_indigo_purple" />
 
                     <LinearLayout

@@ -106,7 +106,7 @@ class QuranAnalysisFragment : Fragment() {
         return listOf(
             QuranStat("114", "Chapters"),
             QuranStat("6,236", "Verses"),
-            QuranStat("~77,430", "Words"),
+            QuranStat("~77,429", "Words"),
             QuranStat("~330,000", "Letters"),
             QuranStat("30", "Parts (Juz)"),
             QuranStat("23", "Years of Revelation")

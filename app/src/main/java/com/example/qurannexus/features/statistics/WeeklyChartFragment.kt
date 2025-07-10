@@ -220,7 +220,7 @@ class WeeklyChartFragment : Fragment(), RecitationDataReceiver {
             // Add visual indicator for days recited (progress circle)
             findViewById<CircularProgressIndicator>(R.id.progressDaysRecited)?.apply {
                 progress = (daysWithRecitation * 100) / 7
-                setIndicatorColor(ContextCompat.getColor(context, R.color.primaryColor))
+                setIndicatorColor(ContextCompat.getColor(context, R.color.appPrimaryVariant))
             }
 
             // Set up RecyclerView for daily breakdown

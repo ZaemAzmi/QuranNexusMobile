@@ -59,7 +59,7 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <!-- Bookmark button -->
-            <ImageButton
+            <ImageView
                 android:id="@+id/btnBookmark"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -69,7 +69,8 @@
                 android:contentDescription="Bookmark quote"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                 />
 
             <!-- Share button -->
             <Button

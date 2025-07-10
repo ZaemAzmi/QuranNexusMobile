@@ -16,8 +16,8 @@
 
     <!-- MeowBottomNavigation default height plus some padding -->
     <dimen name="meow_bottom_nav_height">65dp</dimen>
-    <dimen name="nav_header_logo_height">80dp</dimen>
-    <dimen name="nav_header_logo_width">80dp</dimen>
+    <dimen name="nav_header_logo_height">70dp</dimen>
+    <dimen name="nav_header_logo_width">70dp</dimen>
 
     <dimen name="daily_recitation_indicator_size">48dp</dimen>
 
@@ -143,7 +143,7 @@
     <dimen name="text_size_tiny">12sp</dimen>
     <dimen name="text_size_extra_tiny">10sp</dimen>
 
-    <dimen name="header_height_ratio">0.2</dimen>
+    <dimen name="header_height_ratio">0.135</dimen>
     <dimen name="daily_quote_min_height">180dp</dimen>
 
     <dimen name="prayer_card_padding">16dp</dimen>
@@ -174,7 +174,7 @@
     <dimen name="button_icon_size">24dp</dimen>
     <dimen name="icon_touchable_area">48dp</dimen>
     <dimen name="icon_spacing">32dp</dimen>
-
+    <dimen name="home_logo_width_height">100dp</dimen>
     <dimen name="side_menu_icon_width">40dp</dimen>
     <dimen name="side_menu_icon_height">40dp</dimen>
     <dimen name="side_menu_icon_margin_start">26dp</dimen>

@@ -80,11 +80,6 @@ class HomeFragment : Fragment(), HighlightClickListener {
 
     private lateinit var achievementService: AchievementService
 
-    private lateinit var recitationChart: LineChart
-    private lateinit var weeklyRecitationChart: BarChart
-    private lateinit var currentStreakValue: TextView
-    private lateinit var longestStreakValue: TextView
-    private lateinit var consistencyScoreValue: TextView
     @Inject
     lateinit var dailyQuotesService: DailyQuotesService
     @Inject
@@ -370,6 +365,9 @@ class HomeFragment : Fragment(), HighlightClickListener {
         }
     }
     private fun loadInitialData() {
+        if (userToken != null) {
+            fetchBookmarkedQuotes()
+        }
         val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
         viewModel.fetchPrayerTimes(currentDate, "Kuala Lumpur", "MY")
     }

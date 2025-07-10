@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_small"
             android:textStyle="bold"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/appPrimaryVariant"
             android:text="45 mins" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

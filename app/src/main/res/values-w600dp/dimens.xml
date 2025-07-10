@@ -151,6 +151,7 @@
     <dimen name="button_icon_size">48dp</dimen>
     <dimen name="icon_touchable_area">64dp</dimen>
     <dimen name="icon_spacing">48dp</dimen>
+    <dimen name="home_logo_width_height">200dp</dimen>
 
     <dimen name="side_menu_icon_width">60dp</dimen>
     <dimen name="side_menu_icon_height">60dp</dimen>

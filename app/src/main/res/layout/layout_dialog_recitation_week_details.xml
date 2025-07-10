@@ -13,7 +13,7 @@
         android:text="Weekly Recitation Details"
         android:textSize="@dimen/text_size_large"
         android:textStyle="bold"
-        android:textColor="@color/primaryColor"
+        android:textColor="@color/card_background_dark_blue"
         android:layout_marginBottom="@dimen/margin_medium"/>
 
     <TextView
@@ -53,7 +53,7 @@
                     android:text="120 mins"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/primaryColor"/>
+                    android:textColor="@color/appPrimaryVariant"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                     android:text="20 mins/day"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/primaryColor"/>
+                    android:textColor="@color/appPrimaryVariant"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                     android:layout_width="@dimen/width_xxxlarge"
                     android:layout_height="@dimen/height_xxxlarge"
                     android:layout_gravity="center"
-                    app:indicatorColor="@color/primaryColor"
+                    app:indicatorColor="@color/appPrimaryVariant"
                     app:trackColor="#E0E0E0"
                     app:indicatorSize="@dimen/daily_recitation_indicator_size"
                     app:trackThickness="4dp"

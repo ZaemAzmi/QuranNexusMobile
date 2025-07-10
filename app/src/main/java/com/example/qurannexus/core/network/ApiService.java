@@ -85,37 +85,6 @@ public class ApiService {
         quranRetrofit = null;
     }
 
-    private static OkHttpClient createAuthenticatedClient() {
-        // Add logging interceptor
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        return new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request originalRequest = chain.request();
-
-                        // If we have an auth token, add it to the request
-                        if (authToken != null && !authToken.isEmpty()) {
-                            Request newRequest = originalRequest.newBuilder()
-                                    .header("Authorization", "Bearer " + authToken)
-                                    .build();
-                            Log.d("ApiService", "Adding auth header: Bearer " + authToken);
-                            return chain.proceed(newRequest);
-                        }
-
-                        Log.d("ApiService", "No auth token available");
-                        return chain.proceed(originalRequest);
-                    }
-                })
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .build();
-    }
-
     public static void clearInstance() {
         quranRetrofit = null;
         authToken = null;

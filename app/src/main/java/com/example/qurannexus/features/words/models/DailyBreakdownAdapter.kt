@@ -54,9 +54,9 @@ class DailyBreakdownAdapter(
             val context = itemView.context
             if (item.minutes > 0) {
                 progressBar.progressTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(context, R.color.primaryColor)
+                    ContextCompat.getColor(context, R.color.appPrimaryVariant)
                 )
-                tvMinutes.setTextColor(ContextCompat.getColor(context, R.color.primaryColor))
+                tvMinutes.setTextColor(ContextCompat.getColor(context, R.color.appPrimaryVariant))
             } else {
                 progressBar.progressTintList = ColorStateList.valueOf(
                     ContextCompat.getColor(context, R.color.light_gray)
